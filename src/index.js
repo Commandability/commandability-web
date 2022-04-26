@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
-import App from "components/App";
-import GlobalStyles from "components/GlobalStyles";
+import App from "components/app";
+import GlobalStyles from "components/global-styles";
 import reportWebVitals from "./reportWebVitals";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
