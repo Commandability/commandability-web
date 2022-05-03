@@ -1,6 +1,6 @@
 import { createGlobalStyle } from "styled-components/macro";
 
-import { COLORS } from "../../constants";
+import { COLORS } from "constants.js";
 
 const GlobalStyles = createGlobalStyle`
 
