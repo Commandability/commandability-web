@@ -7,16 +7,25 @@ const AuthContext = React.createContext();
 AuthContext.displayName = "AuthContext";
 
 function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = React.useState(null);
+  const [user, setUser] = React.useState({
+    status: "pending",
+    current: null,
+    error: null,
+  });
 
   React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-    });
-    return () => unsubscribe();
+    onAuthStateChanged(
+      auth,
+      (user) => {
+        setUser({ status: "resolved", current: user, error: null });
+      },
+      (error) => {
+        setUser({ status: "rejected", current: null, error });
+      }
+    );
   }, []);
 
-  const value = [currentUser];
+  const value = [user];
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

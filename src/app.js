@@ -7,11 +7,17 @@ const AuthenticatedApp = React.lazy(() => import("authenticated-app.js"));
 const UnauthenticatedApp = React.lazy(() => import("unauthenticated-app.js"));
 
 function App() {
-  const [currentUser] = useAuth();
+  const [user] = useAuth();
+
+  if (user.status === "pending") {
+    return <Spinner />;
+  } else if (user.status === "error") {
+    throw new Error(user.error);
+  }
 
   return (
     <React.Suspense fallback={<Spinner />}>
-      {currentUser ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      {user.current ? <AuthenticatedApp /> : <UnauthenticatedApp />}
     </React.Suspense>
   );
 }
