@@ -2,6 +2,7 @@ import * as React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "firebase.js";
+import Spinner from "components/spinner";
 
 const AuthContext = React.createContext();
 AuthContext.displayName = "AuthContext";
@@ -26,7 +27,22 @@ function AuthProvider({ children }) {
   }, []);
 
   const value = [user];
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+
+  if (user.status === "pending") {
+    return <Spinner />;
+  }
+
+  if (user.status === "rejected") {
+    throw new Error(user.error);
+  }
+
+  if (user.status === "resolved") {
+    return (
+      <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+    );
+  }
+
+  throw new Error(`Unhandled authentication status: ${user.status}`);
 }
 
 function useAuth() {
