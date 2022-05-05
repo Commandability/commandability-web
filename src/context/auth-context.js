@@ -15,7 +15,7 @@ function AuthProvider({ children }) {
   });
 
   React.useEffect(() => {
-    onAuthStateChanged(
+    const unsubscribe = onAuthStateChanged(
       auth,
       (user) => {
         setUser({ status: "resolved", current: user, error: null });
@@ -24,6 +24,7 @@ function AuthProvider({ children }) {
         setUser({ status: "rejected", current: null, error });
       }
     );
+    return () => unsubscribe();
   }, []);
 
   const value = [user];

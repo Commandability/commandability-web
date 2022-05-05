@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { useAuth } from "context/auth-provider";
+import { useAuth } from "context/auth-context";
 import Spinner from "components/spinner";
 
 const AuthenticatedApp = React.lazy(() => import("authenticated-app.js"));
