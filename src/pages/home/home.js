@@ -4,13 +4,12 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "firebase.js";
 
 import { useAuth } from "context/auth-context";
-import { QUERIES } from "constants.js";
 
 function Home() {
   const [user] = useAuth();
 
   return (
-    <div>
+    <Wrapper>
       <Picture>
         {/* Images generated with https://responsivebreakpoints.com/ */}
         <source
@@ -70,20 +69,23 @@ function Home() {
           Sign in
         </button>
       )}
-    </div>
+    </Wrapper>
   );
 }
 
 const Picture = styled.picture`
-  & > img {
-    height: 100vh;
-    width: 100vw;
-    object-fit: cover;
+  height: 100%;
 
-    @media ${QUERIES.tabletAndSmaller} {
-      object-position: left;
-    }
+  & > img {
+    min-height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: left;
   }
+`;
+
+const Wrapper = styled.div`
+  height: 100%;
 `;
 
 export default Home;

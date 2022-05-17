@@ -61,6 +61,7 @@ const GlobalStyles = createGlobalStyle`
   */
   #root, #__next {
     isolation: isolate;
+    height: 100%;
   }
 
   html {
