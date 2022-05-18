@@ -52,6 +52,7 @@ function Hero({ children }) {
         src={`${process.env.PUBLIC_URL}/images/hero/hero_dklzjh_ar_16_9,c_fill,g_auto__c_scale,w_1200.jpg`}
         alt=""
       />
+      <Gradient />
       <Content>{children}</Content>
     </Picture>
   );
@@ -59,6 +60,7 @@ function Hero({ children }) {
 
 const Picture = styled.picture`
   height: 100%;
+  position: relative;
 `;
 
 const Img = styled.img`
@@ -66,6 +68,16 @@ const Img = styled.img`
   width: 100%;
   object-fit: cover;
   object-position: left;
+  filter: saturate(40%);
+`;
+
+const Gradient = styled.div`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background: linear-gradient(270deg, rgba(186,37,37,0.5) 20%, rgba(0,0,0,0) 64%);
 `;
 
 const Content = styled.div`
