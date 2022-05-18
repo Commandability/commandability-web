@@ -10,12 +10,12 @@ import webp2003 from "assets/images/footer_gaugzs_ar_16_9,c_fill,g_auto__c_scale
 import webp1200 from "assets/images/footer_gaugzs_c_scale,w_1200.webp"
 import webp2449 from "assets/images/footer_gaugzs_c_scale,w_2449.webp"
 import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp"
-import footerjpg from "assets/images/footer_apkfbg_c_scale,w_1920.jpg"
+import jpg1920 from "assets/images/footer_apkfbg_c_scale,w_1920.jpg"
 
 function Footer() {
   return(
     <>
-      <picture>
+      <Picture>
       {/* Images generated with https://responsivebreakpoints.com/ */}
         <source
           type="image/webp"
@@ -51,18 +51,41 @@ function Footer() {
           ${webp2917} 2917w`}
         />
         <Img
-          src={`${footerjpg}`}
+          src={`${jpg1920}`}
           alt=""
         />
-      </picture>
+        {/* <Content>{children}</Content> */}
+        <Gradient/>
+      </Picture>
     </>
   );
 }
 
 const Img = styled.img`
-  height: 50%;
-  width: 100%;
+  height: 50vh;
+  width: 100vw;
   object-fit: cover;
+  filter: saturate(60%);
+`;
+
+const Picture = styled.picture`
+  position: relative;
+`;
+
+const Gradient = styled.div`
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  background: linear-gradient(90deg, rgba(186,37,37,0.5) 10%, rgba(0,0,0,0) 94%, rgba(0,0,0,0) 100%);
+`;
+
+const Content = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `;
 
 export default Footer;
