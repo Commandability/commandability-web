@@ -56,7 +56,7 @@ function Home() {
           ${process.env.PUBLIC_URL}/images/hero/hero_ub8rir_ar_16_9,c_fill,g_auto__c_scale,w_3236.webp 3236w,
           ${process.env.PUBLIC_URL}/images/hero/hero_ub8rir_ar_16_9,c_fill,g_auto__c_scale,w_3840.webp 3840w`}
         />
-        <img
+        <Img
           src={`${process.env.PUBLIC_URL}/images/hero/hero_dklzjh_ar_4_3,c_fill,g_auto__c_scale,w_1982.jpg`}
           alt=""
         />
@@ -75,13 +75,13 @@ function Home() {
 
 const Picture = styled.picture`
   height: 100%;
+`;
 
-  & > img {
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
-    object-position: left;
-  }
+const Img = styled.img`
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: left;
 `;
 
 const Wrapper = styled.div`
