@@ -1,22 +1,22 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import webp400 from "assets/images/footer_gaugzs_ar_1_1,c_fill,g_auto__c_scale,w_400.webp"
-import webp1127 from "assets/images/footer_gaugzs_ar_1_1,c_fill,g_auto__c_scale,w_1127.webp"
-import webp768 from "assets/images/footer_gaugzs_ar_4_3,c_fill,g_auto__c_scale,w_768.webp"
-import webp1502 from "assets/images/footer_gaugzs_ar_4_3,c_fill,g_auto__c_scale,w_1502.webp"
-import webp992 from "assets/images/footer_gaugzs_ar_16_9,c_fill,g_auto__c_scale,w_992.webp"
-import webp2003 from "assets/images/footer_gaugzs_ar_16_9,c_fill,g_auto__c_scale,w_2003.webp"
-import webp1200 from "assets/images/footer_gaugzs_c_scale,w_1200.webp"
-import webp2449 from "assets/images/footer_gaugzs_c_scale,w_2449.webp"
-import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp"
-import footerjpg from "assets/images/footer_apkfbg_c_scale,w_1920.jpg"
+import webp400 from "assets/images/footer_gaugzs_ar_1_1,c_fill,g_auto__c_scale,w_400.webp";
+import webp1127 from "assets/images/footer_gaugzs_ar_1_1,c_fill,g_auto__c_scale,w_1127.webp";
+import webp768 from "assets/images/footer_gaugzs_ar_4_3,c_fill,g_auto__c_scale,w_768.webp";
+import webp1502 from "assets/images/footer_gaugzs_ar_4_3,c_fill,g_auto__c_scale,w_1502.webp";
+import webp992 from "assets/images/footer_gaugzs_ar_16_9,c_fill,g_auto__c_scale,w_992.webp";
+import webp2003 from "assets/images/footer_gaugzs_ar_16_9,c_fill,g_auto__c_scale,w_2003.webp";
+import webp1200 from "assets/images/footer_gaugzs_c_scale,w_1200.webp";
+import webp2449 from "assets/images/footer_gaugzs_c_scale,w_2449.webp";
+import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp";
+import footerjpg from "assets/images/footer_apkfbg_c_scale,w_1920.jpg";
 
 function Footer() {
-  return(
+  return (
     <>
       <picture>
-      {/* Images generated with https://responsivebreakpoints.com/ */}
+        {/* Images generated with https://responsivebreakpoints.com/ */}
         <source
           type="image/webp"
           media="(max-width: 767px)"
@@ -50,10 +50,7 @@ function Footer() {
           ${webp2449} 2449w,
           ${webp2917} 2917w`}
         />
-        <Img
-          src={`${footerjpg}`}
-          alt=""
-        />
+        <Img src={`${footerjpg}`} alt="" />
       </picture>
     </>
   );
