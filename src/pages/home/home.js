@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "firebase.js";
 
 import { useAuth } from "context/auth-context";
+import Footer from "components/footer"
 
 function Home() {
   const [user] = useAuth();
@@ -69,6 +70,7 @@ function Home() {
           Sign in
         </button>
       )}
+      <Footer/>
     </Wrapper>
   );
 }
