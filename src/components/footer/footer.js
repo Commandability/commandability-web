@@ -13,7 +13,7 @@ import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp"
 import jpg1920 from "assets/images/footer_apkfbg_c_scale,w_1920.jpg"
 
 function Footer() {
-  return(
+  return (
     <>
       <Picture>
       {/* Images generated with https://responsivebreakpoints.com/ */}
