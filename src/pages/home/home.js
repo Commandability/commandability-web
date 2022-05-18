@@ -77,7 +77,7 @@ const Picture = styled.picture`
   height: 100%;
 
   & > img {
-    min-height: 100%;
+    height: 100%;
     width: 100%;
     object-fit: cover;
     object-position: left;
