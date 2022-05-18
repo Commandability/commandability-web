@@ -65,6 +65,8 @@ const GlobalStyles = createGlobalStyle`
   }
 
   html {
+    --color-white: hsl(${COLORS.white});
+
     --color-red-1: hsl(${COLORS.red[1]});
     --color-red-2: hsl(${COLORS.red[2]});
     --color-red-3: hsl(${COLORS.red[3]});
