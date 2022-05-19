@@ -64,7 +64,7 @@ const Picture = styled.picture`
 `;
 
 const Img = styled.img`
-  height: 50vh;
+  height: 64vh;
   width: 100vw;
   object-fit: cover;
   filter: saturate(50%);
@@ -78,7 +78,7 @@ const Gradient = styled.div`
   left: 0px;
   background: linear-gradient(
     90deg,
-    hsl(${COLORS.red[5]} / .5) 0%,
+    hsl(${COLORS.red[5]} / 0.5) 0%,
     hsl(0 0% 0% / 0) 60%
   );
 `;

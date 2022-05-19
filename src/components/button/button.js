@@ -1,22 +1,22 @@
 import * as React from "react";
 import styled from "styled-components";
 
-function Pill({ variant, children }) {
+function Button({ variant, children }) {
   let Component;
 
   if (variant === "light") {
-    Component = LightPill;
+    Component = LightButton;
   } else if (variant === "dark") {
-    Component = DarkPill;
+    Component = DarkButton;
   } else {
     throw new Error(`Unrecognized Button variant: ${variant}`);
   }
   return <Component>{children}</Component>;
 }
 
-const PillBase = styled.button`
+const ButtonBase = styled.button`
   font-weight: bold;
-  border-radius: 24px;
+  border-radius: 8px;
   border: 0;
   padding-top: 12px;
   padding-bottom: 12px;
@@ -24,14 +24,14 @@ const PillBase = styled.button`
   padding-right: 24px;
 `;
 
-const LightPill = styled(PillBase)`
+const LightButton = styled(ButtonBase)`
   background-color: var(--color-yellow-9);
   color: var(--color-yellow-2);
 `;
 
-const DarkPill = styled(PillBase)`
+const DarkButton = styled(ButtonBase)`
   background-color: var(--color-yellow-2);
   color: var(--color-yellow-9);
 `;
 
-export default Pill;
+export default Button;

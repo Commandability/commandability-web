@@ -21,9 +21,11 @@ function Home() {
             Sign in
           </button>
         )}
+        <Pill variant="light">Learn more</Pill>
+        <Pill variant="dark">Get started</Pill>
       </Hero>
       <Footer>
-        <Pill>Contact us</Pill>
+        <Pill variant={"light"}>Contact us</Pill>
       </Footer>
     </>
   );

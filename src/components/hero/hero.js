@@ -77,7 +77,11 @@ const Gradient = styled.div`
   right: 0px;
   bottom: 0px;
   left: 0px;
-  background: linear-gradient(270deg, rgba(186,37,37,0.5) 20%, rgba(0,0,0,0) 64%);
+  background: linear-gradient(
+    270deg,
+    rgba(186, 37, 37, 0.5) 20%,
+    rgba(0, 0, 0, 0.35) 60%
+  );
 `;
 
 const Content = styled.div`
