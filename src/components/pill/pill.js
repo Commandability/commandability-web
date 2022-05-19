@@ -1,5 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
+import { FiChevronRight } from "react-icons/fi";
+
+import Spacer from "components/spacer";
 
 function Pill({ variant, children }) {
   let Component;
@@ -11,17 +14,22 @@ function Pill({ variant, children }) {
   } else {
     throw new Error(`Unrecognized Button variant: ${variant}`);
   }
-  return <Component>{children}</Component>;
+  return (
+    <Component>
+      {children}
+      <Spacer size={8} axis="horizontal" />
+      <FiChevronRight />
+    </Component>
+  );
 }
 
 const PillBase = styled.button`
   font-weight: bold;
   border-radius: 24px;
   border: 0;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  padding-left: 24px;
-  padding-right: 24px;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
 `;
 
 const LightPill = styled(PillBase)`
