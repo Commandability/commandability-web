@@ -4,6 +4,7 @@ import { auth } from "firebase.js";
 
 import Hero from "components/hero";
 import Footer from "components/footer";
+import Pill from "components/pill";
 import { useAuth } from "context/auth-context";
 
 function Home() {
@@ -21,7 +22,9 @@ function Home() {
           </button>
         )}
       </Hero>
-      <Footer />
+      <Footer>
+        <Pill>Contact us</Pill>
+      </Footer>
     </>
   );
 }

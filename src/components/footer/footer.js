@@ -11,6 +11,7 @@ import webp1200 from "assets/images/footer_gaugzs_c_scale,w_1200.webp";
 import webp2449 from "assets/images/footer_gaugzs_c_scale,w_2449.webp";
 import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp";
 import jpg1920 from "assets/images/footer_apkfbg_c_scale,w_1920.jpg";
+import { COLORS } from "constants.js";
 
 function Footer({ children }) {
   return (
@@ -37,7 +38,7 @@ function Footer({ children }) {
           type="image/webp"
           media="(min-width: 992px) and (max-width: 1199px)"
           sizes="(max-width: 2003px) 100vw, 2003px"
-          srcset={`
+          srcSet={`
           ${webp992} 992w,
           ${webp2003} 2003w`}
         />
@@ -45,7 +46,7 @@ function Footer({ children }) {
           type="image/webp"
           media="(min-width: 1200px)"
           sizes="(max-width: 2917px) 100vw, 2917px"
-          srcset={`
+          srcSet={`
           ${webp1200} 1200w,
           ${webp2449} 2449w,
           ${webp2917} 2917w`}
@@ -77,8 +78,8 @@ const Gradient = styled.div`
   left: 0px;
   background: linear-gradient(
     90deg,
-    rgba(186, 37, 37, 0.5) 0%,
-    rgba(0, 0, 0, 0) 60%
+    hsl(${COLORS.red[5]} , .5) 0%,
+    hsl(0, 0%, 0% , 0) 60%
   );
 `;
 
