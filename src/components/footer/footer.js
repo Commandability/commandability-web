@@ -52,8 +52,8 @@ function Footer({ children }) {
           ${webp2917} 2917w`}
         />
         <Img src={`${jpg1920}`} alt="" />
-        <Content>{children}</Content>
         <Gradient />
+        <Content>{children}</Content>
       </Picture>
     </>
   );
