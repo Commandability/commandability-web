@@ -17,29 +17,29 @@ function Home() {
     <>
       <Hero>
         {user.current ? (
-          <Button onClick={() => signOut(auth)} variant="light" icon={FiLogOut}>
+          <Button onClick={() => signOut(auth)} theme="light" icon={FiLogOut}>
             Sign out
           </Button>
         ) : (
           <Button
             onClick={() => signInWithEmailAndPassword(auth, "", "")}
-            variant="light"
+            theme="light"
             icon={FiLogIn}
           >
             Sign in
           </Button>
         )}
         <Spacer size={8} axis="vertical" />
-        <Pill variant="light" angle>
+        <Pill theme="light" angle>
           Learn more
         </Pill>
         <Spacer size={8} axis="vertical" />
-        <Pill variant="dark" angle>
+        <Pill theme="dark" angle>
           Get started
         </Pill>
       </Hero>
       <Footer>
-        <Pill variant={"light"} angle>
+        <Pill theme="light" angle>
           Contact us
         </Pill>
       </Footer>

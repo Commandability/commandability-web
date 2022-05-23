@@ -1,6 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
 
+import { COLORS } from "constants.js";
+
 function Hero({ children }) {
   return (
     <Picture>
@@ -79,8 +81,8 @@ const Gradient = styled.div`
   left: 0px;
   background: linear-gradient(
     270deg,
-    rgba(186, 37, 37, 0.5) 20%,
-    rgba(0, 0, 0, 0.35) 60%
+    hsl(${COLORS.red[5]} / 0.5) 20%,
+    hsl(0 0% 0% / 0.4) 60%
   );
 `;
 
@@ -89,6 +91,10 @@ const Content = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default Hero;
