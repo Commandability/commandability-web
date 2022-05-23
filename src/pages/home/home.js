@@ -41,9 +41,20 @@ function Home() {
           </Pill>
         </Hero>
         <Footer>
-          <Pill theme="light" angle>
-            Contact us
-          </Pill>
+          <FooterBody>
+            <QuestionText>Have questions?</QuestionText>
+            <MessageText>Send us a message</MessageText>
+            <Spacer size={48} axis="vertical" />
+            <PillWrapper>
+              <Pill theme="light" angle>
+                Contact us
+              </Pill>
+            </PillWrapper>
+          </FooterBody>
+          <FooterLinks>
+            <Copyright>Copyright © 2022 Commandability</Copyright>
+            <PrivacyPolicy>Privacy Policy</PrivacyPolicy>
+          </FooterLinks>
         </Footer>
       </Section>
     </Main>
@@ -52,6 +63,55 @@ function Home() {
 
 const Main = styled.main`
   height: 100%;
+`;
+
+const FooterBody = styled.div`
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+  top: 50%;
+  transform: translateY(-50%);
+  @media (max-width: 580px) {
+    width: 15rem;
+  }
+`;
+
+const QuestionText = styled.p`
+  color: var(--color-yellow-9);
+  font-size: 1.5rem;
+  font-weight: bold;
+`;
+
+const MessageText = styled.p`
+  color: var(--color-gray-10);
+  font-size: 3rem;
+  text-transform: uppercase;
+`;
+
+const PillWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const FooterLinks = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Copyright = styled.div`
+  flex: 1;
+  padding: 24px;
+  color: var(--color-gray-10);
+`;
+
+const PrivacyPolicy = styled.a`
+  flex: 1;
+  padding: 24px;
+  color: var(--color-gray-10);
+  text-align: right;
 `;
 
 const Section = styled.section`

@@ -68,6 +68,15 @@ const Img = styled.img`
   width: 100vw;
   object-fit: cover;
   filter: saturate(50%);
+  @media (max-width: 1200px) {
+    height: 72vh;
+  }
+  @media (max-width: 767px) and (orientation: portrait) {
+    height: 80vh;
+  }
+  @media (max-width: 767px) and (orientation: landscape) {
+    height: 100vh;
+  }
 `;
 
 const Gradient = styled.div`
@@ -85,9 +94,10 @@ const Gradient = styled.div`
 
 const Content = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
 `;
 
 export default Footer;
