@@ -63,6 +63,7 @@ function Hero({ children }) {
 const Picture = styled.picture`
   height: 100%;
   position: relative;
+  background-color: var(--color-gray-1);
 `;
 
 const Img = styled.img`
