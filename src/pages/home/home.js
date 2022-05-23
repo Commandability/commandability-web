@@ -1,11 +1,14 @@
 import * as React from "react";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "firebase.js";
+import { FiLogOut, FiLogIn } from "react-icons/fi";
 
 import Hero from "components/hero";
 import Footer from "components/footer";
 import Pill from "components/pill";
 import { useAuth } from "context/auth-context";
+import Button from "components/button";
+import Spacer from "components/spacer";
 
 function Home() {
   const [user] = useAuth();
@@ -13,19 +16,32 @@ function Home() {
   return (
     <>
       <Hero>
-        <div>Home</div>
         {user.current ? (
-          <button onClick={() => signOut(auth)}>Sign out</button>
+          <Button onClick={() => signOut(auth)} variant="light" icon={FiLogOut}>
+            Sign out
+          </Button>
         ) : (
-          <button onClick={() => signInWithEmailAndPassword(auth, "", "")}>
+          <Button
+            onClick={() => signInWithEmailAndPassword(auth, "", "")}
+            variant="light"
+            icon={FiLogIn}
+          >
             Sign in
-          </button>
+          </Button>
         )}
-        <Pill variant="light">Learn more</Pill>
-        <Pill variant="dark">Get started</Pill>
+        <Spacer size={8} axis="vertical" />
+        <Pill variant="light" angle>
+          Learn more
+        </Pill>
+        <Spacer size={8} axis="vertical" />
+        <Pill variant="dark" angle>
+          Get started
+        </Pill>
       </Hero>
       <Footer>
-        <Pill variant={"light"}>Contact us</Pill>
+        <Pill variant={"light"} angle>
+          Contact us
+        </Pill>
       </Footer>
     </>
   );

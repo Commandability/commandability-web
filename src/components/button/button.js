@@ -1,7 +1,8 @@
+import Spacer from "components/spacer";
 import * as React from "react";
 import styled from "styled-components";
 
-function Button({ variant, children }) {
+function Button({ variant, icon, children }) {
   let Component;
 
   if (variant === "light") {
@@ -11,27 +12,42 @@ function Button({ variant, children }) {
   } else {
     throw new Error(`Unrecognized Button variant: ${variant}`);
   }
-  return <Component>{children}</Component>;
+
+  return (
+    <Component>
+      {icon ? icon() : null}
+      <Spacer size={8} axis="horizontal" />
+      {children}
+    </Component>
+  );
 }
 
 const ButtonBase = styled.button`
+  display: flex;
+  align-items: center;
   font-weight: bold;
+  padding: 8px 16px;
   border-radius: 8px;
-  border: 0;
-  padding-top: 12px;
-  padding-bottom: 12px;
-  padding-left: 24px;
-  padding-right: 24px;
+  border: none;
+  cursor: pointer;
 `;
 
 const LightButton = styled(ButtonBase)`
   background-color: var(--color-yellow-9);
   color: var(--color-yellow-2);
+
+  &:hover {
+    background-color: var(--color-yellow-10);
+  }
 `;
 
 const DarkButton = styled(ButtonBase)`
   background-color: var(--color-yellow-2);
   color: var(--color-yellow-9);
+
+  &:hover {
+    background-color: var(--color-yellow-3);
+  }
 `;
 
 export default Button;
