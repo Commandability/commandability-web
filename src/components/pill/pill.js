@@ -22,9 +22,9 @@ function Pill({ theme, angle, children }) {
 
   return (
     <PillBase style={styles}>
-      {children}
+      <Text>{children}</Text>
       <Spacer size={8} axis="horizontal" />
-      {angle ? <FiChevronRight size={20} /> : null}
+      {angle ? <FiChevronRight /> : null}
     </PillBase>
   );
 }
@@ -41,6 +41,10 @@ const PillBase = styled.button`
   background-color: var(--background-color);
   color: var(--color);
 
+  & > svg {
+    stroke-width: 0.175rem;
+  }
+
   &:hover {
     background-color: var(--hover-background-color);
   }
@@ -50,6 +54,11 @@ const PillBase = styled.button`
     outline-color: var(--color-yellow-9);
     outline-offset: 4px;
   }
+`;
+
+const Text = styled.span`
+  position: relative;
+  top: -0.05rem;
 `;
 
 export default Pill;
