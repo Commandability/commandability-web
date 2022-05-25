@@ -31,6 +31,7 @@ function Pill({ theme, angle, children }) {
 
 const PillBase = styled.button`
   display: flex;
+  width: max-content;
   align-items: center;
   font-weight: bold;
   padding: 8px 16px;

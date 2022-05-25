@@ -41,18 +41,19 @@ function Home() {
           </Pill>
         </Hero>
         <Footer>
-          <FooterBody>
-            <QuestionText>Have questions?</QuestionText>
-            <MessageText>Send us a message</MessageText>
-            <Spacer size={48} axis="vertical" />
-            <PillWrapper>
+          <FooterWrapper>
+            <FooterBody>
+              <QuestionText>Have questions?</QuestionText>
+              <MessageText>Send us a message</MessageText>
+              <Spacer size={32} axis="vertical" />
               <Pill theme="light" angle>
                 Contact us
               </Pill>
-            </PillWrapper>
-          </FooterBody>
+            </FooterBody>
+          </FooterWrapper>
           <FooterLinks>
             <Copyright>Copyright © 2022 Commandability</Copyright>
+            <FooterFlex />
             <PrivacyPolicy>Privacy Policy</PrivacyPolicy>
           </FooterLinks>
         </Footer>
@@ -65,32 +66,31 @@ const Main = styled.main`
   height: 100%;
 `;
 
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  /* padding: 24px; */
+`;
+
 const FooterBody = styled.div`
-  position: relative;
-  width: fit-content;
-  margin: 0 auto;
-  top: 50%;
-  transform: translateY(-50%);
-  @media (max-width: 580px) {
-    width: 15rem;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;
 
 const QuestionText = styled.p`
   color: var(--color-yellow-9);
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 1vw + 1rem, 2rem);
   font-weight: bold;
+  align-self: flex-start;
 `;
 
 const MessageText = styled.p`
   color: var(--color-gray-10);
-  font-size: 3rem;
+  font-size: clamp(1rem, 2vw + 1rem, 3rem);
   text-transform: uppercase;
-`;
-
-const PillWrapper = styled.div`
-  display: flex;
-  justify-content: center;
 `;
 
 const FooterLinks = styled.div`
@@ -102,16 +102,19 @@ const FooterLinks = styled.div`
 `;
 
 const Copyright = styled.div`
-  flex: 1;
+  font-size: 0.875rem;
   padding: 24px;
-  color: var(--color-gray-10);
+  color: var(--color-gray-7);
 `;
 
 const PrivacyPolicy = styled.a`
-  flex: 1;
+  font-size: 0.875rem;
   padding: 24px;
-  color: var(--color-gray-10);
-  text-align: right;
+  color: var(--color-gray-7);
+`;
+
+const FooterFlex = styled.div`
+  flex: 1;
 `;
 
 const Section = styled.section`

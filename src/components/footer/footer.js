@@ -64,19 +64,11 @@ const Picture = styled.picture`
 `;
 
 const Img = styled.img`
-  height: 64vh;
   width: 100vw;
+  height: clamp(600px, 80vh, 900px);
+  max-height: 100vh;
   object-fit: cover;
   filter: saturate(50%);
-  @media (max-width: 1200px) {
-    height: 72vh;
-  }
-  @media (max-width: 767px) and (orientation: portrait) {
-    height: 80vh;
-  }
-  @media (max-width: 767px) and (orientation: landscape) {
-    height: 100vh;
-  }
 `;
 
 const Gradient = styled.div`
