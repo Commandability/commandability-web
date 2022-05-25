@@ -22,7 +22,7 @@ function Button({ theme, icon, children }) {
     <ButtonBase style={styles}>
       {icon ? icon() : null}
       <Spacer size={8} axis="horizontal" />
-      {children}
+      <Text>{children}</Text>
     </ButtonBase>
   );
 }
@@ -36,9 +36,12 @@ const ButtonBase = styled.button`
   border: none;
   cursor: pointer;
   user-select: none;
-
   background-color: var(--background-color);
   color: var(--color);
+
+  & > svg {
+    stroke-width: 0.175rem;
+  }
 
   &:hover {
     background-color: var(--hover-background-color);
@@ -49,6 +52,11 @@ const ButtonBase = styled.button`
     outline-color: var(--color-yellow-9);
     outline-offset: 4px;
   }
+`;
+
+const Text = styled.span`
+  position: relative;
+  top: -0.05rem;
 `;
 
 export default Button;
