@@ -82,8 +82,11 @@ const Gradient = styled.div`
   left: 0px;
   background: linear-gradient(
     270deg,
-    hsl(${COLORS.red[5]} / 0.5) 20%,
-    hsl(0 0% 0% / 0.4) 60%
+    hsl(${COLORS.red[5]} / 0.5) 10%,
+    hsl(${COLORS.red[5]} / 0.4) 20%,
+    hsl(${COLORS.red[5]} / 0.2) 30%,
+    hsl(${COLORS.red[1]} / 0.1) 60%,
+    hsl(0 0% 0% / 0.45) 75%
   );
 `;
 

@@ -7,9 +7,11 @@ import { FiLogOut, FiLogIn } from "react-icons/fi";
 import Hero from "components/hero";
 import Footer from "components/footer";
 import Pill from "components/pill";
+import HowTo from "components/how-to";
 import { useAuth } from "context/auth-context";
 import Button from "components/button";
 import Spacer from "components/spacer";
+import { QUERIES } from "constants.js";
 
 function Home() {
   const [user] = useAuth();
@@ -40,6 +42,33 @@ function Home() {
             Get started
           </Pill>
         </Hero>
+        <HowToSection>
+          <HowToWrapper>
+            <HowTo step="1" heading="Setup an account">
+              Create an account on the Commandability website homepage. Add or
+              import personnel on the website roster page. Configure group names
+              and alerts on the website groups page
+            </HowTo>
+          </HowToWrapper>
+          <HowToWrapper>
+            <Spacer size={48} axis="vertical" />
+            <HowTo step="2" heading="Take control of incidents">
+              Download the Commandability app on your tablet device. Sign in and
+              update to load your department’s data, then start an incident.
+              Customize your groups to match the incident, and begin managing
+              on-site personnel in real time
+            </HowTo>
+          </HowToWrapper>
+
+          <HowToWrapper>
+            <Spacer size={96} axis="vertical" />
+            <HowTo step="3" heading="Stay accountable">
+              After the incident, enter the incident location and any additional
+              notes. Upload the report to your Commandability account. Review
+              all uploaded reports on the Commandability website
+            </HowTo>
+          </HowToWrapper>
+        </HowToSection>
         <Footer>
           <FooterWrapper>
             <FooterBody>
@@ -64,6 +93,27 @@ function Home() {
 
 const Main = styled.main`
   height: 100%;
+`;
+
+const HowToSection = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 72px;
+  padding: 72px 24px;
+  @media ${QUERIES.laptopAndSmaller} {
+    flex-direction: column;
+    align-items: center;
+    gap: 36px;
+    padding: 36px 16px;
+  }
+`;
+
+const HowToWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  @media ${QUERIES.laptopAndSmaller} {
+    flex-direction: row;
+  }
 `;
 
 const FooterWrapper = styled.div`

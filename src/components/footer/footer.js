@@ -80,7 +80,8 @@ const Gradient = styled.div`
   background: linear-gradient(
     90deg,
     hsl(${COLORS.red[5]} / 0.5) 0%,
-    hsl(0 0% 0% / 0) 60%
+    hsl(${COLORS.red[5]} / 0.2) 30%,
+    hsl(0 0% 0% / 0.5) 70%
   );
 `;
 
