@@ -21,7 +21,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "react-scripts build && firebase deploy",
-    "preview": "react-scripts build && firebase hosting:channel:deploy preview"
+    "deploy:preview": "react-scripts build && firebase hosting:channel:deploy preview"
   },
   "eslintConfig": {
     "extends": [
