@@ -4,8 +4,8 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "firebase.js";
 import { FiLogOut, FiLogIn } from "react-icons/fi";
 
-import Hero from "components/hero";
-import Footer from "components/footer";
+import HeroImage from "components/hero-image";
+import FooterImage from "components/footer-image";
 import Pill from "components/pill";
 import HowTo from "components/how-to";
 import { useAuth } from "context/auth-context";
@@ -19,7 +19,7 @@ function Home() {
   return (
     <Main>
       <Section>
-        <Hero>
+        <HeroImage>
           {user.current ? (
             <Button onClick={() => signOut(auth)} theme="light" icon={FiLogOut}>
               Sign out
@@ -41,7 +41,7 @@ function Home() {
           <Pill theme="dark" angle>
             Get started
           </Pill>
-        </Hero>
+        </HeroImage>
         <HowToSection>
           <HowToWrapper>
             <HowTo step="1" heading="Setup an account">
@@ -69,7 +69,7 @@ function Home() {
             </HowTo>
           </HowToWrapper>
         </HowToSection>
-        <Footer>
+        <FooterImage>
           <FooterWrapper>
             <FooterBody>
               <QuestionText>Have questions?</QuestionText>
@@ -85,7 +85,7 @@ function Home() {
             <FooterFlex />
             <PrivacyPolicy>Privacy Policy</PrivacyPolicy>
           </FooterLinks>
-        </Footer>
+        </FooterImage>
       </Section>
     </Main>
   );

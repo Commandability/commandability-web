@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { COLORS } from "constants.js";
 
-function Hero({ children }) {
+function HeroImage({ children }) {
   return (
     <Picture>
       <source
@@ -101,4 +101,4 @@ const Content = styled.div`
   align-items: center;
 `;
 
-export default Hero;
+export default HeroImage;

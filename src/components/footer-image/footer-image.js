@@ -13,7 +13,7 @@ import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp";
 import jpg1920 from "assets/images/footer_apkfbg_c_scale,w_1920.jpg";
 import { COLORS } from "constants.js";
 
-function Footer({ children }) {
+function FooterImage({ children }) {
   return (
     <>
       <Picture>
@@ -93,4 +93,4 @@ const Content = styled.div`
   left: 0px;
 `;
 
-export default Footer;
+export default FooterImage;
