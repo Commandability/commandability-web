@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "firebase.js";
+import { Link } from "react-router-dom";
 import { FiLogOut, FiLogIn } from "react-icons/fi";
 
 import HeroImage from "components/hero-image";
@@ -11,6 +12,7 @@ import HowTo from "components/how-to";
 import { useAuth } from "context/auth-context";
 import Button from "components/button";
 import Spacer from "components/spacer";
+import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 
 function Home() {
@@ -18,8 +20,8 @@ function Home() {
 
   return (
     <Main>
-      <Section>
-        <HeroImage>
+      <HeroImage>
+        <Header>
           {user.current ? (
             <Button onClick={() => signOut(auth)} theme="light" icon={FiLogOut}>
               Sign out
@@ -41,52 +43,57 @@ function Home() {
           <Pill theme="dark" angle>
             Get started
           </Pill>
-        </HeroImage>
-        <HowToSection>
-          <HowToWrapper>
-            <HowTo step="1" heading="Setup an account">
-              Create an account on the Commandability website homepage. Add or
-              import personnel on the website roster page. Configure group names
-              and alerts on the website groups page
-            </HowTo>
-          </HowToWrapper>
-          <HowToWrapper>
-            <Spacer size={48} axis="vertical" />
-            <HowTo step="2" heading="Take control of incidents">
-              Download the Commandability app on your tablet device. Sign in and
-              update to load your department’s data, then start an incident.
-              Customize your groups to match the incident, and begin managing
-              on-site personnel in real time
-            </HowTo>
-          </HowToWrapper>
+        </Header>
+      </HeroImage>
+      <HowToSection>
+        <HowToWrapper>
+          <HowTo step="1" heading="Setup an account">
+            Create an account on the Commandability website homepage. Add or
+            import personnel on the website roster page. Configure group names
+            and alerts on the website groups page.
+          </HowTo>
+        </HowToWrapper>
+        <HowToWrapper>
+          <Spacer size={48} axis="vertical" />
+          <HowTo step="2" heading="Take control of incidents">
+            Download the Commandability app on your tablet device. Sign in and
+            update to load your department’s data, then start an incident.
+            Customize your groups to match the incident, and begin managing
+            on-site personnel in real time.
+          </HowTo>
+        </HowToWrapper>
 
-          <HowToWrapper>
-            <Spacer size={96} axis="vertical" />
-            <HowTo step="3" heading="Stay accountable">
-              After the incident, enter the incident location and any additional
-              notes. Upload the report to your Commandability account. Review
-              all uploaded reports on the Commandability website
-            </HowTo>
-          </HowToWrapper>
-        </HowToSection>
-        <FooterImage>
-          <FooterWrapper>
-            <FooterBody>
-              <QuestionText>Have questions?</QuestionText>
-              <MessageText>Send us a message</MessageText>
-              <Spacer size={32} axis="vertical" />
-              <Pill theme="light" angle>
-                Contact us
-              </Pill>
-            </FooterBody>
-          </FooterWrapper>
-          <FooterLinks>
-            <Copyright>Copyright © 2022 Commandability</Copyright>
-            <FooterFlex />
-            <PrivacyPolicy>Privacy Policy</PrivacyPolicy>
-          </FooterLinks>
-        </FooterImage>
-      </Section>
+        <HowToWrapper>
+          <Spacer size={96} axis="vertical" />
+          <HowTo step="3" heading="Stay accountable">
+            After the incident, enter the incident location and any additional
+            notes. Upload the report to your Commandability account. Review all
+            uploaded reports on the Commandability website.
+          </HowTo>
+        </HowToWrapper>
+      </HowToSection>
+      <FooterImage>
+        <Footer>
+          <Contact>
+            <QuestionText>Have questions?</QuestionText>
+            <MessageText>Send us a message</MessageText>
+            <Spacer size={32} axis="vertical" />
+            <Pill theme="light" angle>
+              Contact us
+            </Pill>
+          </Contact>
+          <Legal>
+            <Copyright>
+              <FireIcon />
+              Copyright © {new Date().getFullYear()} Commandability
+            </Copyright>
+            <Policies>
+              <Policy to="/privacy-policy">Privacy Policy</Policy>
+              <Policy to="/terms-of-service">Terms of Service</Policy>
+            </Policies>
+          </Legal>
+        </Footer>
+      </FooterImage>
     </Main>
   );
 }
@@ -95,7 +102,11 @@ const Main = styled.main`
   height: 100%;
 `;
 
-const HowToSection = styled.div`
+const Header = styled.header`
+  height: 100%;
+`;
+
+const HowToSection = styled.section`
   display: flex;
   justify-content: center;
   gap: 72px;
@@ -116,15 +127,13 @@ const HowToWrapper = styled.div`
   }
 `;
 
-const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const Footer = styled.footer`
+  display: grid;
+  place-content: center;
   height: 100%;
-  /* padding: 24px; */
 `;
 
-const FooterBody = styled.div`
+const Contact = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -143,32 +152,39 @@ const MessageText = styled.p`
   text-transform: uppercase;
 `;
 
-const FooterLinks = styled.div`
+const Legal = styled.div`
   position: absolute;
   bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px 64px;
+  padding: 24px;
 `;
 
-const Copyright = styled.div`
-  font-size: 0.875rem;
-  padding: 24px;
+const Copyright = styled.p`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: ${14 / 16}rem;
   color: var(--color-gray-7);
 `;
 
-const PrivacyPolicy = styled.a`
-  font-size: 0.875rem;
-  padding: 24px;
+const Policies = styled.div`
+  display: flex;
+  gap: 16px;
+`;
+
+const Policy = styled(Link)`
+  font-size: ${14 / 16}rem;
   color: var(--color-gray-7);
 `;
 
-const FooterFlex = styled.div`
-  flex: 1;
-`;
-
-const Section = styled.section`
-  height: 100%;
+const FireIcon = styled(UnstyledFireIcon)`
+  fill: var(--color-yellow-9);
 `;
 
 export default Home;
