@@ -110,11 +110,14 @@ const GlobalStyles = createGlobalStyle`
     --color-cyan-8: hsl(${COLORS.cyan[8]});
     --color-cyan-9: hsl(${COLORS.cyan[9]});
     --color-cyan-10: hsl(${COLORS.cyan[10]});
+
+    --selection-color: hsl(${COLORS.yellow[10]});
+    --selection-background: hsl(${COLORS.yellow[3]});
   }
 
   ::selection {
-    color: hsl(${COLORS.white});
-    background: hsl(${COLORS.yellow[3]});
+    color: var(--selection-color);
+    background: var(--selection-background);
   }
 `;
 

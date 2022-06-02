@@ -12,6 +12,8 @@ const THEMES = {
     "--background-color": "var(--color-yellow-2)",
     "--hover-background-color": "var(--color-yellow-3)",
     "--color": "var(--color-yellow-9)",
+    "--selection-color": "var(--color-yellow-3)",
+    "--selection-background": "var(--color-yellow-10)",
   },
 };
 
@@ -35,7 +37,6 @@ const ButtonBase = styled.button`
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
   background-color: var(--background-color);
   font-weight: bold;
   color: var(--color);
