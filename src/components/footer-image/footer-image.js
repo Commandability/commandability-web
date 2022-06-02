@@ -61,6 +61,7 @@ function FooterImage({ children }) {
 
 const Picture = styled.picture`
   position: relative;
+  background-color: var(--color-gray-1);
 `;
 
 const Img = styled.img`
