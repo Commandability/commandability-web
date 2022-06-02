@@ -17,11 +17,16 @@ const THEMES = {
   },
 };
 
-function Pill({ theme, angle, children }) {
+function Pill({ theme, angle, href, onClick, children }) {
   const styles = THEMES[theme];
 
   return (
-    <PillBase style={styles}>
+    <PillBase
+      style={styles}
+      href={href}
+      onClick={onClick}
+      as={onClick ? "button" : "a"}
+    >
       <Text>{children}</Text>
       <Spacer size={8} axis="horizontal" />
       {angle ? <FiChevronRight /> : null}
@@ -31,29 +36,45 @@ function Pill({ theme, angle, children }) {
 
 const PillBase = styled.button`
   display: flex;
-  width: max-content;
   align-items: center;
-  font-weight: bold;
   padding: 8px 16px;
-  border-radius: 128px;
+  border-radius: 999999px;
   border: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
   background-color: var(--background-color);
+  font-weight: bold;
   color: var(--color);
+  text-decoration: none;
 
   & > svg {
     stroke-width: 0.175rem;
   }
 
-  &:hover {
+  &:active {
     background-color: var(--hover-background-color);
   }
 
-  &:focus {
-    outline-style: solid;
+  &:focus-visible {
+    background-color: var(--hover-background-color);
     outline-color: var(--color-yellow-9);
+    outline-style: solid;
+    outline-width: 2px;
     outline-offset: 4px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--hover-background-color);
+    }
+
+    &:active {
+      outline-color: var(--color-yellow-9);
+      outline-style: solid;
+      outline-width: 2px;
+      outline-offset: 4px;
+    }
   }
 `;
 

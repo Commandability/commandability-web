@@ -36,11 +36,11 @@ function Home() {
             </Button>
           )}
           <Spacer size={8} axis="vertical" />
-          <Pill theme="light" angle>
+          <Pill onClick={() => {}} theme="light" angle>
             Learn more
           </Pill>
           <Spacer size={8} axis="vertical" />
-          <Pill theme="dark" angle>
+          <Pill onClick={() => {}} theme="dark" angle>
             Get started
           </Pill>
         </Header>
@@ -62,7 +62,6 @@ function Home() {
             on-site personnel in real time.
           </HowTo>
         </HowToWrapper>
-
         <HowToWrapper>
           <Spacer size={96} axis="vertical" />
           <HowTo step="3" heading="Stay accountable">
@@ -78,7 +77,11 @@ function Home() {
             <QuestionText>Have questions?</QuestionText>
             <MessageText>Send us a message</MessageText>
             <Spacer size={32} axis="vertical" />
-            <Pill theme="light" angle>
+            <Pill
+              theme="light"
+              angle
+              href={"mailto:support@commandability.app?"}
+            >
               Contact us
             </Pill>
           </Contact>

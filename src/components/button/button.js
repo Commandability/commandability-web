@@ -30,27 +30,43 @@ function Button({ theme, icon, children }) {
 const ButtonBase = styled.button`
   display: flex;
   align-items: center;
-  font-weight: bold;
   padding: 8px 16px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   user-select: none;
   background-color: var(--background-color);
+  font-weight: bold;
   color: var(--color);
 
   & > svg {
     stroke-width: 0.175rem;
   }
 
-  &:hover {
+  &:active {
     background-color: var(--hover-background-color);
   }
 
-  &:focus {
-    outline-style: solid;
+  &:focus-visible {
+    background-color: var(--hover-background-color);
     outline-color: var(--color-yellow-9);
+    outline-style: solid;
+    outline-width: 2px;
     outline-offset: 4px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--hover-background-color);
+    }
+
+    &:active {
+      outline-color: var(--color-yellow-9);
+      outline-style: solid;
+      outline-width: 2px;
+      outline-offset: 4px;
+    }
   }
 `;
 
