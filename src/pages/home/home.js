@@ -3,14 +3,15 @@ import styled from "styled-components";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "firebase.js";
 import { Link } from "react-router-dom";
-import { FiLogOut, FiLogIn } from "react-icons/fi";
+import { FiLogOut, FiLogIn, FiCheckSquare } from "react-icons/fi";
 
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
-import Pill from "components/pill";
-import HowTo from "components/how-to";
+import Card from "components/card";
+import ListItem from "components/list-item";
 import { useAuth } from "context/auth-context";
 import Button from "components/button";
+import Pill from "components/pill";
 import Spacer from "components/spacer";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
@@ -45,32 +46,62 @@ function Home() {
           </Pill>
         </Header>
       </HeroImage>
-      <HowToSection>
-        <HowToWrapper>
-          <HowTo step="1" heading="Setup an account">
-            Create an account on the Commandability website homepage. Add or
-            import personnel on the website roster page. Configure group names
-            and alerts on the website groups page.
-          </HowTo>
-        </HowToWrapper>
-        <HowToWrapper>
-          <Spacer size={48} axis="vertical" />
-          <HowTo step="2" heading="Take control of incidents">
-            Download the Commandability app on your tablet device. Sign in and
-            update to load your department’s data, then start an incident.
-            Customize your groups to match the incident, and begin managing
-            on-site personnel in real time.
-          </HowTo>
-        </HowToWrapper>
-        <HowToWrapper>
-          <Spacer size={96} axis="vertical" />
-          <HowTo step="3" heading="Stay accountable">
-            After the incident, enter the incident location and any additional
-            notes. Upload the report to your Commandability account. Review all
-            uploaded reports on the Commandability website.
-          </HowTo>
-        </HowToWrapper>
-      </HowToSection>
+      <HowItWorks>
+        <StepOne
+          subheader="Step 1"
+          header="Setup an account"
+          backgroundColor="var(--color-red-3)"
+        >
+          <UnorderedList>
+            <ListItem icon={FiCheckSquare}>
+              Create an account on the Commandability website homepage
+            </ListItem>
+            <ListItem icon={FiCheckSquare}>
+              Add or import personnel on the website roster page
+            </ListItem>
+            <ListItem icon={FiCheckSquare}>
+              Configure group names and alerts on the website groups page
+            </ListItem>
+          </UnorderedList>
+        </StepOne>
+        <StepTwo
+          subheader="Step 2"
+          header="Take control of incidents"
+          backgroundColor="var(--color-red-2)"
+        >
+          <UnorderedList>
+            <ListItem icon={FiCheckSquare}>
+              Download the Commandability app on your tablet device
+            </ListItem>
+            <ListItem icon={FiCheckSquare}>
+              Sign in and update to load your department’s data, then start an
+              incident
+            </ListItem>
+            <ListItem icon={FiCheckSquare}>
+              Customize your groups to match the incident, and begin managing
+              on-site personnel in real time
+            </ListItem>
+          </UnorderedList>
+        </StepTwo>
+        <StepThree
+          subheader="Step 3"
+          header="Stay accountable"
+          backgroundColor="var(--color-red-1)"
+        >
+          <UnorderedList>
+            <ListItem icon={FiCheckSquare}>
+              After the incident, enter the incident location and any additional
+              notes
+            </ListItem>
+            <ListItem icon={FiCheckSquare}>
+              Upload the report to your Commandability account
+            </ListItem>
+            <ListItem icon={FiCheckSquare}>
+              Review all uploaded reports on the Commandability website
+            </ListItem>
+          </UnorderedList>
+        </StepThree>
+      </HowItWorks>
       <FooterImage>
         <Footer>
           <Contact>
@@ -109,25 +140,49 @@ const Header = styled.header`
   height: 100%;
 `;
 
-const HowToSection = styled.section`
+const HowItWorks = styled.section`
   display: flex;
   justify-content: center;
   gap: 72px;
+  min-height: calc(512px + 72px * 3);
   padding: 72px 24px;
+  background-color: var(--color-gray-10);
+
   @media ${QUERIES.laptopAndSmaller} {
     flex-direction: column;
     align-items: center;
     gap: 36px;
-    padding: 36px 16px;
+    padding: 36px;
   }
 `;
 
-const HowToWrapper = styled.div`
+const StepOne = styled(Card)`
+  align-self: flex-start;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    align-self: center;
+  }
+`;
+
+const StepTwo = styled(Card)`
+  align-self: center;
+`;
+
+const StepThree = styled(Card)`
+  align-self: flex-end;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    align-self: center;
+  }
+`;
+
+const UnorderedList = styled.ul`
+  list-style: none;
+  flex: 1;
+  padding: 36px;
   display: flex;
   flex-direction: column;
-  @media ${QUERIES.laptopAndSmaller} {
-    flex-direction: row;
-  }
+  gap: 24px;
 `;
 
 const Footer = styled.footer`
