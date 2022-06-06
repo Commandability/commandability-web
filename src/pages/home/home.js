@@ -14,6 +14,9 @@ import Button from "components/button";
 import Pill from "components/pill";
 import Spacer from "components/spacer";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
+import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
+import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
+import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
 import { QUERIES } from "constants.js";
 
 function Home() {
@@ -46,6 +49,43 @@ function Home() {
           </Pill>
         </Header>
       </HeroImage>
+      <Features>
+        <Feature>
+          <ManageIcon />
+          <FeatureContent>
+            <FeatureHeader>Manage</FeatureHeader>
+            <FeatureText>
+              Use the Commandability app’s interactive interface to move
+              personnel between on-site groups and track the location of all
+              personnel throughout an incident. Monitor the time personnel are
+              exposed to high risk areas using group alerts.
+            </FeatureText>
+          </FeatureContent>
+        </Feature>
+        <ReverseFeature>
+          <FeatureContent>
+            <FeatureHeader>Customize</FeatureHeader>
+            <FeatureText>
+              Use the Commandability website to configure your department’s
+              preferred groups and alert times, as well as to upload your
+              deparment’s roster for use during incidents.
+            </FeatureText>
+          </FeatureContent>
+          <CustomizeIcon />
+        </ReverseFeature>
+        <Feature>
+          <ReviewIcon />
+          <FeatureContent>
+            <FeatureHeader>Review</FeatureHeader>
+            <FeatureText>
+              View auto-generated reports of all in-app events on the
+              Commandability website. Reports include timestamped entries of
+              personnel movements, group changes, and overdue alerts, as well as
+              additional notes about each incident.
+            </FeatureText>
+          </FeatureContent>
+        </Feature>
+      </Features>
       <HowItWorks>
         <StepOne
           subheader="Step 1"
@@ -140,19 +180,93 @@ const Header = styled.header`
   height: 100%;
 `;
 
+const Features = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  background-color: var(--color-gray-10);
+  color: var(--color-neutral-1);
+  padding: 96px 24px;
+  padding-bottom: 48px;
+`;
+
+const Feature = styled.article`
+  display: flex;
+  gap: 24px 48px;
+  align-items: center;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    flex-direction: column;
+  }
+`;
+
+const ReverseFeature = styled(Feature)`
+  @media ${QUERIES.phoneAndSmaller} {
+    flex-direction: column-reverse;
+  }
+`;
+
+const FeatureContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const FeatureHeader = styled.h2`
+  font-size: ${20 / 16}rem;
+`;
+
+const FeatureText = styled.p`
+  font-size: ${18 / 16}rem;
+  max-width: 64ch;
+`;
+
+const ManageIcon = styled(UnstyledManageIcon)`
+  fill: var(--color-yellow-9);
+  background-color: var(--color-yellow-1);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  min-width: 192px;
+  min-height: 192px;
+  padding: 48px;
+`;
+
+const CustomizeIcon = styled(UnstyledCustomizeIcon)`
+  fill: var(--color-yellow-9);
+  background-color: var(--color-yellow-2);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  min-width: 192px;
+  min-height: 192px;
+  padding: 48px;
+`;
+
+const ReviewIcon = styled(UnstyledReviewIcon)`
+  fill: var(--color-yellow-9);
+  background-color: var(--color-yellow-3);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  min-width: 192px;
+  min-height: 192px;
+  padding: 48px;
+`;
+
 const HowItWorks = styled.section`
   display: flex;
   justify-content: center;
-  gap: 72px;
-  min-height: calc(512px + 72px * 3);
-  padding: 72px 24px;
+  gap: 64px;
+  min-height: calc(512px + 96px * 3);
+  padding: 96px 24px;
+  padding-top: 48px;
   background-color: var(--color-gray-10);
 
   @media ${QUERIES.laptopAndSmaller} {
     flex-direction: column;
     align-items: center;
-    gap: 36px;
-    padding: 36px;
+    gap: 64px;
+    padding: 96px 24px;
+    padding-top: 48px;
   }
 `;
 
@@ -179,7 +293,7 @@ const StepThree = styled(Card)`
 const UnorderedList = styled.ul`
   list-style: none;
   flex: 1;
-  padding: 36px;
+  padding: 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;

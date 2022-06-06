@@ -113,6 +113,8 @@ const GlobalStyles = createGlobalStyle`
 
     --selection-color: hsl(${COLORS.yellow[10]});
     --selection-background: hsl(${COLORS.yellow[3]});
+
+    --box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
   }
 
   ::selection {

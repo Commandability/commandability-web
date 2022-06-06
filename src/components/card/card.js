@@ -21,7 +21,7 @@ const Article = styled.article`
   min-height: 512px;
   max-width: 384px;
   border-radius: 8px;
-  box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
+  box-shadow: var(--box-shadow);
   background: var(--color-white);
 
   @media ${QUERIES.laptopAndSmaller} {
