@@ -53,7 +53,9 @@ function Home() {
         <Feature>
           <ManageIcon />
           <FeatureContent>
-            <FeatureHeader>Manage</FeatureHeader>
+            <FeatureHeader style={{ "--color": "var(--color-yellow-1)" }}>
+              Manage
+            </FeatureHeader>
             <FeatureText>
               Use the Commandability app’s interactive interface to move
               personnel between on-site groups and track the location of all
@@ -62,9 +64,11 @@ function Home() {
             </FeatureText>
           </FeatureContent>
         </Feature>
-        <ReverseFeature>
+        <Feature>
           <FeatureContent>
-            <FeatureHeader>Customize</FeatureHeader>
+            <FeatureHeader style={{ "--color": "var(--color-yellow-2)" }}>
+              Customize
+            </FeatureHeader>
             <FeatureText>
               Use the Commandability website to configure your department’s
               preferred groups and alert times, as well as to upload your
@@ -72,11 +76,13 @@ function Home() {
             </FeatureText>
           </FeatureContent>
           <CustomizeIcon />
-        </ReverseFeature>
+        </Feature>
         <Feature>
           <ReviewIcon />
           <FeatureContent>
-            <FeatureHeader>Review</FeatureHeader>
+            <FeatureHeader style={{ "--color": "var(--color-yellow-3)" }}>
+              Review
+            </FeatureHeader>
             <FeatureText>
               View auto-generated reports of all in-app events on the
               Commandability website. Reports include timestamped entries of
@@ -195,16 +201,6 @@ const Feature = styled.article`
   display: flex;
   gap: 24px 48px;
   align-items: center;
-
-  @media ${QUERIES.phoneAndSmaller} {
-    flex-direction: column;
-  }
-`;
-
-const ReverseFeature = styled(Feature)`
-  @media ${QUERIES.phoneAndSmaller} {
-    flex-direction: column-reverse;
-  }
 `;
 
 const FeatureContent = styled.div`
@@ -215,6 +211,9 @@ const FeatureContent = styled.div`
 
 const FeatureHeader = styled.h2`
   font-size: ${20 / 16}rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color);
 `;
 
 const FeatureText = styled.p`
@@ -230,6 +229,10 @@ const ManageIcon = styled(UnstyledManageIcon)`
   min-width: 192px;
   min-height: 192px;
   padding: 48px;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    display: none;
+  }
 `;
 
 const CustomizeIcon = styled(UnstyledCustomizeIcon)`
@@ -240,6 +243,10 @@ const CustomizeIcon = styled(UnstyledCustomizeIcon)`
   min-width: 192px;
   min-height: 192px;
   padding: 48px;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    display: none;
+  }
 `;
 
 const ReviewIcon = styled(UnstyledReviewIcon)`
@@ -250,6 +257,10 @@ const ReviewIcon = styled(UnstyledReviewIcon)`
   min-width: 192px;
   min-height: 192px;
   padding: 48px;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    display: none;
+  }
 `;
 
 const HowItWorks = styled.section`
@@ -291,12 +302,12 @@ const StepThree = styled(Card)`
 `;
 
 const UnorderedList = styled.ul`
-  list-style: none;
   flex: 1;
-  padding: 48px;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  list-style: none;
+  padding: 48px;
 `;
 
 const Footer = styled.footer`

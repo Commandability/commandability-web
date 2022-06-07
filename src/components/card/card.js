@@ -5,17 +5,17 @@ import { QUERIES } from "constants.js";
 
 function Card({ subheader, header, backgroundColor, children, className }) {
   return (
-    <Article className={className}>
+    <Wrapper className={className}>
       <Title style={{ "--background-color": backgroundColor }}>
         <Subheader>{subheader}</Subheader>
         <Header>{header}</Header>
       </Title>
       {children}
-    </Article>
+    </Wrapper>
   );
 }
 
-const Article = styled.article`
+const Wrapper = styled.article`
   display: flex;
   flex-direction: column;
   min-height: 512px;
