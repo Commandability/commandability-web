@@ -26,27 +26,19 @@ function Home() {
     <Main>
       <HeroImage>
         <Header>
-          {user.current ? (
-            <Button onClick={() => signOut(auth)} theme="light" icon={FiLogOut}>
-              Sign out
-            </Button>
-          ) : (
-            <Button
-              onClick={() => signInWithEmailAndPassword(auth, "", "")}
-              theme="light"
-              icon={FiLogIn}
-            >
-              Sign in
-            </Button>
-          )}
-          <Spacer size={8} axis="vertical" />
-          <Pill onClick={() => {}} theme="light" angle>
-            Learn more
-          </Pill>
-          <Spacer size={8} axis="vertical" />
-          <Pill onClick={() => {}} theme="dark" angle>
-            Get started
-          </Pill>
+          <Title>Keep your department’s incidents accountable</Title>
+          <Subtitle>
+            Manage your department’s personnel and automatically generate
+            incident reports for accountability, all from your tablet.
+          </Subtitle>
+          <ButtonWrapper>
+            <Pill onClick={() => {}} theme="light" angle>
+              Learn more
+            </Pill>
+            <Pill onClick={() => {}} theme="dark" angle>
+              Get started
+            </Pill>
+          </ButtonWrapper>
         </Header>
       </HeroImage>
       <Features>
@@ -184,6 +176,36 @@ const Main = styled.main`
 
 const Header = styled.header`
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  padding-left: clamp(24px, 8vw, 160px);
+  padding-right: 24px;
+  width: clamp(280px, 100%, 1800px);
+  max-width: 100%;
+`;
+
+const Title = styled.h1`
+  text-transform: uppercase;
+  color: var(--color-gray-10);
+  font-size: clamp(${24 / 16}rem, 3vw + 1rem, ${72 / 16}rem);
+  font-weight: normal;
+  max-width: 24ch;
+`;
+
+const Subtitle = styled.h2`
+  color: var(--color-gray-8);
+  font-size: clamp(${18 / 16}rem, 0.5vw + 1rem, ${32 / 16}rem);
+  font-weight: normal;
+  max-width: 48ch;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
 `;
 
 const Features = styled.section`
@@ -192,7 +214,7 @@ const Features = styled.section`
   align-items: center;
   gap: 64px;
   background-color: var(--color-gray-10);
-  color: var(--color-neutral-1);
+  color: var(--color-gray-1);
   padding: 96px 24px;
   padding-bottom: 48px;
 `;
