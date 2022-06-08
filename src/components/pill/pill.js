@@ -53,10 +53,6 @@ const PillBase = styled.button`
     stroke-width: 0.175rem;
   }
 
-  &:active {
-    background-color: var(--hover-background-color);
-  }
-
   &:focus-visible {
     background-color: var(--hover-background-color);
     outline-color: var(--color-yellow-9);
@@ -65,16 +61,13 @@ const PillBase = styled.button`
     outline-offset: 4px;
   }
 
+  &:active {
+    background-color: var(--hover-background-color);
+  }
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--hover-background-color);
-    }
-
-    &:active {
-      outline-color: var(--color-yellow-9);
-      outline-style: solid;
-      outline-width: 2px;
-      outline-offset: 4px;
     }
   }
 `;
