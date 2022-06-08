@@ -9,6 +9,8 @@ import Card from "components/card";
 import ListItem from "components/list-item";
 import Pill from "components/pill";
 import Spacer from "components/spacer";
+import UnstyledButton from "components/unstyled-button";
+import VisuallyHidden from "components/visually-hidden";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
@@ -42,6 +44,7 @@ function Home() {
         </DownloadsWrapper>
         <ScrollButton>
           <FiChevronDown />
+          <VisuallyHidden>Scroll down</VisuallyHidden>
         </ScrollButton>
       </HeroImage>
       <FeaturesWrapper>
@@ -243,11 +246,10 @@ const DownloadsWrapper = styled.div`
   }
 `;
 
-const ScrollButton = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
+const ScrollButton = styled(UnstyledButton)`
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: ${64 / 16}rem;
   bottom: 92px;
   color: var(--color-gray-10);
@@ -256,14 +258,16 @@ const ScrollButton = styled.div`
     font-size: ${48 / 16}rem;
     bottom: calc(24px - 0.2em);
     right: 24px;
-    justify-content: flex-end;
+    transform: revert;
+    left: revert;
   }
 
   @media (orientation: landscape) and (max-height: 600px) {
     font-size: ${48 / 16}rem;
     bottom: calc(24px - 0.2em);
     right: 24px;
-    justify-content: flex-end;
+    transform: revert;
+    left: revert;
   }
 `;
 

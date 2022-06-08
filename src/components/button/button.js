@@ -45,12 +45,8 @@ const ButtonBase = styled.button`
     stroke-width: 0.175rem;
   }
 
-  &:focus-visible {
-    background-color: var(--hover-background-color);
-    outline-color: var(--color-yellow-9);
-    outline-style: solid;
-    outline-width: 2px;
-    outline-offset: 4px;
+  &:focus {
+    outline-offset: 2px;
   }
 
   &:active {
