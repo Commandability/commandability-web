@@ -13,6 +13,7 @@ import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
+import { FiChevronDown } from "react-icons/fi";
 import { QUERIES } from "constants.js";
 
 function Home() {
@@ -35,8 +36,15 @@ function Home() {
             </Pill>
           </ButtonWrapper>
         </Header>
+        <DownloadsWrapper>
+          <Download href="http://www.google.com">Download for Android</Download>
+          <Download href="http://www.google.com">Download for iOS</Download>
+        </DownloadsWrapper>
+        <ScrollButton>
+          <FiChevronDown />
+        </ScrollButton>
       </HeroImage>
-      <Features>
+      <FeaturesWrapper>
         <Feature>
           <ManageIcon />
           <FeatureContent>
@@ -78,7 +86,7 @@ function Home() {
             </FeatureText>
           </FeatureContent>
         </Feature>
-      </Features>
+      </FeaturesWrapper>
       <HowItWorks>
         <StepOne
           subheader="Step 1"
@@ -180,6 +188,10 @@ const Header = styled.header`
   padding-right: 24px;
   width: clamp(280px, 100%, 1800px);
   max-width: 100%;
+
+  @media (orientation: landscape) and (max-height: 600px) {
+    gap: 24px;
+  }
 `;
 
 const Title = styled.h1`
@@ -188,8 +200,7 @@ const Title = styled.h1`
   font-size: clamp(${18 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
   font-weight: normal;
   max-width: 22ch;
-  letter-spacing: 0.1rem;
-  line-height: 1.1;
+  letter-spacing: 0.05em;
 `;
 
 const Subtitle = styled.h2`
@@ -197,9 +208,11 @@ const Subtitle = styled.h2`
   font-size: clamp(${18 / 16}rem, 0.5vw + 1rem, ${32 / 16}rem);
   font-weight: normal;
   max-width: 48ch;
+
   @media ${QUERIES.phoneAndSmaller} {
     max-width: 28ch;
   }
+
   @media (orientation: landscape) and (max-height: 600px) {
     display: none;
   }
@@ -211,7 +224,55 @@ const ButtonWrapper = styled.div`
   flex-wrap: wrap;
 `;
 
-const Features = styled.section`
+const DownloadsWrapper = styled.div`
+  position: absolute;
+  bottom: 48px;
+  left: 48px;
+  display: flex;
+  gap: 8px 16px;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    bottom: 24px;
+    left: 24px;
+    flex-direction: column;
+  }
+
+  @media (orientation: landscape) and (max-height: 600px) {
+    bottom: 24px;
+    left: 24px;
+  }
+`;
+
+const ScrollButton = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  position: absolute;
+  font-size: ${64 / 16}rem;
+  bottom: 92px;
+  color: var(--color-gray-10);
+
+  @media ${QUERIES.phoneAndSmaller} {
+    font-size: ${48 / 16}rem;
+    bottom: calc(24px - 0.2em);
+    right: 24px;
+    justify-content: flex-end;
+  }
+
+  @media (orientation: landscape) and (max-height: 600px) {
+    font-size: ${48 / 16}rem;
+    bottom: calc(24px - 0.2em);
+    right: 24px;
+    justify-content: flex-end;
+  }
+`;
+
+const Download = styled.a`
+  color: var(--color-yellow-9);
+  text-decoration: none;
+`;
+
+const FeaturesWrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
