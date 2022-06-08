@@ -1,16 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "firebase.js";
 import { Link } from "react-router-dom";
-import { FiLogOut, FiLogIn, FiCheckSquare } from "react-icons/fi";
+import { FiCheckSquare } from "react-icons/fi";
 
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
 import Card from "components/card";
 import ListItem from "components/list-item";
-import { useAuth } from "context/auth-context";
-import Button from "components/button";
 import Pill from "components/pill";
 import Spacer from "components/spacer";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
@@ -20,8 +16,6 @@ import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.s
 import { QUERIES } from "constants.js";
 
 function Home() {
-  const [user] = useAuth();
-
   return (
     <Main>
       <HeroImage>
@@ -354,6 +348,7 @@ const QuestionText = styled.p`
 const MessageText = styled.p`
   color: var(--color-gray-10);
   font-size: clamp(1rem, 2vw + 1rem, 3rem);
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 `;
 

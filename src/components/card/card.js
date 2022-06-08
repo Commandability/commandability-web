@@ -61,7 +61,7 @@ const Subheader = styled.h3`
   font-size: ${18 / 16}rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
 `;
 
 const Header = styled.h2`
