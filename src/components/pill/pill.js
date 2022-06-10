@@ -19,14 +19,14 @@ const THEMES = {
   },
 };
 
-function Pill({ theme, angle, id, href, onClick, children }) {
+function Pill({ theme, angle, targetId, href, onClick, children }) {
   const styles = THEMES[theme];
 
   function smoothScroll(ev) {
     // Disable the default anchor-clicking behavior
     // of scrolling to the element
     ev.preventDefault();
-    const target = document.querySelector(`#${id}`);
+    const target = document.querySelector(`#${targetId}`);
     target?.scrollIntoView({
       behavior: "smooth",
     });
@@ -35,12 +35,12 @@ function Pill({ theme, angle, id, href, onClick, children }) {
   return (
     <PillBase
       style={styles}
-      href={id ? `#${id}` : href}
+      href={targetId ? `#${targetId}` : href}
       onClick={(event) => {
-        id && smoothScroll(event);
+        targetId && smoothScroll(event);
         onClick(event);
       }}
-      as={href || id ? "a" : "button"}
+      as={href || targetId ? "a" : "button"}
     >
       <Text>{children}</Text>
       <Spacer size={8} axis="horizontal" />

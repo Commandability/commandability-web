@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { FiCheckSquare } from "react-icons/fi";
+import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
@@ -15,7 +15,6 @@ import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
-import { FiChevronDown } from "react-icons/fi";
 import { QUERIES } from "constants.js";
 import SmoothScrollTo from "components/smooth-scroll-to";
 
@@ -23,48 +22,52 @@ function Home() {
   return (
     <Main>
       <Nav>
-        <NavHome>
-          <HeaderFireIcon />
+        <SiteID targetId="home">
+          <NavFireIcon />
           Commandability
-        </NavHome>
-        <NavOptionWrapper>
-          <NavOption id="header">Home</NavOption>
-          <NavOption id="features">Features</NavOption>
-          <NavOption id="how-it-works">How it works</NavOption>
-          <NavOption id="footer">Contact</NavOption>
-        </NavOptionWrapper>
-        <AccountOptionWrapper>
+        </SiteID>
+        <TabsWrapper>
+          <Tab targetId="home">Home</Tab>
+          <Tab targetId="features">Features</Tab>
+          <Tab targetId="how-it-works">How it works</Tab>
+          <Tab targetId="contact">Contact</Tab>
+        </TabsWrapper>
+        <AccountOptions>
           <CreateAccount>Create an account</CreateAccount>
           <Login>Login</Login>
-        </AccountOptionWrapper>
+        </AccountOptions>
       </Nav>
       <HeroImage>
-        <Header id="header">
-          <Title>Keep your department safe and accountable</Title>
-          <Subtitle>
+        <Header id="home">
+          <Heading>Keep your department safe and accountable</Heading>
+          <Subheading>
             Manage your department’s personnel and automatically generate
             incident reports for safety and accountability, all from your
             tablet.
-          </Subtitle>
-          <ButtonWrapper>
-            <Pill onClick={() => {}} id="features" theme="light" angle smooth>
+          </Subheading>
+          <HeaderPills>
+            <Pill
+              onClick={() => {}}
+              targetId="features"
+              theme="light"
+              angle
+              smooth
+            >
               Learn more
             </Pill>
             <Pill onClick={() => {}} theme="dark" angle>
               Get started
             </Pill>
-          </ButtonWrapper>
+          </HeaderPills>
         </Header>
         <DownloadsWrapper>
           <Download href="http://www.google.com">Download for Android</Download>
           <Download href="http://www.google.com">Download for iOS</Download>
         </DownloadsWrapper>
-        <SmoothScrollTo id="features">
-          <ScrollButton>
-            <FiChevronDown />
-            <VisuallyHidden>Scroll down</VisuallyHidden>
-          </ScrollButton>
-        </SmoothScrollTo>
+        <ScrollDown targetId="features">
+          <FiChevronDown />
+          <VisuallyHidden>Scroll down</VisuallyHidden>
+        </ScrollDown>
       </HeroImage>
       <FeaturesWrapper id="features">
         <Feature>
@@ -166,8 +169,8 @@ function Home() {
         </StepThree>
       </HowItWorks>
       <FooterImage>
-        <Footer id="footer">
-          <Contact>
+        <Footer>
+          <Contact id="contact">
             <QuestionText>Have questions?</QuestionText>
             <MessageText>Send us a message</MessageText>
             <Spacer size={32} axis="vertical" />
@@ -181,7 +184,7 @@ function Home() {
           </Contact>
           <Legal>
             <Copyright>
-              <FireIcon />
+              <FooterFireIcon />
               Copyright © {new Date().getFullYear()} Commandability
             </Copyright>
             <Policies>
@@ -199,7 +202,7 @@ const Main = styled.main`
   height: 100%;
 `;
 
-const Nav = styled.div`
+const Nav = styled.nav`
   position: fixed;
   top: 0%;
   width: 100%;
@@ -207,10 +210,10 @@ const Nav = styled.div`
   display: flex;
   z-index: 9999999;
   align-items: center;
-  font-size: clamp(${18 / 16}rem, 0.25vw + 1rem, ${20 / 16}rem);
+  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
 `;
 
-const NavHome = styled.div`
+const SiteID = styled(SmoothScrollTo)`
   flex: 2;
   display: flex;
   justify-content: flex-start;
@@ -218,9 +221,16 @@ const NavHome = styled.div`
   color: var(--color-gray-10);
   align-items: center;
   gap: 8px;
+  text-decoration: none;
 `;
 
-const NavOptionWrapper = styled.div`
+const NavFireIcon = styled(UnstyledFireIcon)`
+  fill: var(--color-yellow-9);
+  min-width: 32px;
+  min-height: 32px;
+`;
+
+const TabsWrapper = styled.div`
   flex: 4;
   display: flex;
   max-width: 720px;
@@ -228,7 +238,7 @@ const NavOptionWrapper = styled.div`
   align-self: stretch;
 `;
 
-const NavOption = styled(SmoothScrollTo)`
+const Tab = styled(SmoothScrollTo)`
   text-transform: uppercase;
   padding: 0px 8px;
   display: flex;
@@ -237,20 +247,28 @@ const NavOption = styled(SmoothScrollTo)`
   color: var(--color-gray-8);
   letter-spacing: 0.05em;
   text-decoration: none;
+  border-bottom: 2px solid hsl(0 0% 0% / 0);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-white);
+      border-bottom: 2px solid var(--color-white);
+    }
+  }
 `;
 
-const AccountOptionWrapper = styled.div`
+const AccountOptions = styled.div`
   flex: 2;
   display: flex;
   padding-right: 24px;
-  color: var(--color-yellow-8);
+  color: var(--color-yellow-9);
   font-size: ${16 / 16}rem;
   align-self: stretch;
   justify-content: flex-end;
   gap: 16px;
 `;
 
-const CreateAccount = styled.div`
+const CreateAccount = styled(UnstyledButton)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -258,7 +276,7 @@ const CreateAccount = styled.div`
   text-align: center;
 `;
 
-const Login = styled.div`
+const Login = styled(UnstyledButton)`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -283,7 +301,7 @@ const Header = styled.header`
   }
 `;
 
-const Title = styled.h1`
+const Heading = styled.h1`
   text-transform: uppercase;
   color: var(--color-gray-10);
   font-size: clamp(${18 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
@@ -292,7 +310,7 @@ const Title = styled.h1`
   letter-spacing: 0.05em;
 `;
 
-const Subtitle = styled.h2`
+const Subheading = styled.h2`
   color: var(--color-gray-8);
   font-size: clamp(${18 / 16}rem, 0.5vw + 1rem, ${32 / 16}rem);
   font-weight: normal;
@@ -307,7 +325,7 @@ const Subtitle = styled.h2`
   }
 `;
 
-const ButtonWrapper = styled.div`
+const HeaderPills = styled.div`
   display: flex;
   gap: 32px;
   flex-wrap: wrap;
@@ -332,7 +350,7 @@ const DownloadsWrapper = styled.div`
   }
 `;
 
-const ScrollButton = styled(UnstyledButton)`
+const ScrollDown = styled(SmoothScrollTo)`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -543,15 +561,9 @@ const Policy = styled(Link)`
   color: var(--color-gray-7);
 `;
 
-const FireIcon = styled(UnstyledFireIcon)`
+const FooterFireIcon = styled(UnstyledFireIcon)`
   fill: var(--color-yellow-9);
   min-width: 1em;
-`;
-
-const HeaderFireIcon = styled(UnstyledFireIcon)`
-  fill: var(--color-yellow-9);
-  min-width: 40px;
-  height: 40px;
 `;
 
 export default Home;
