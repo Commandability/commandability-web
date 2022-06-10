@@ -17,12 +17,29 @@ import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
 import { FiChevronDown } from "react-icons/fi";
 import { QUERIES } from "constants.js";
+import SmoothScrollTo from "components/smooth-scroll-to";
 
 function Home() {
   return (
     <Main>
+      <Nav>
+        <NavHome>
+          <HeaderFireIcon />
+          Commandability
+        </NavHome>
+        <NavOptionWrapper>
+          <NavOption id="header">Home</NavOption>
+          <NavOption id="features">Features</NavOption>
+          <NavOption id="how-it-works">How it works</NavOption>
+          <NavOption id="footer">Contact</NavOption>
+        </NavOptionWrapper>
+        <AccountOptionWrapper>
+          <CreateAccount>Create an account</CreateAccount>
+          <Login>Login</Login>
+        </AccountOptionWrapper>
+      </Nav>
       <HeroImage>
-        <Header>
+        <Header id="header">
           <Title>Keep your department safe and accountable</Title>
           <Subtitle>
             Manage your department’s personnel and automatically generate
@@ -30,7 +47,7 @@ function Home() {
             tablet.
           </Subtitle>
           <ButtonWrapper>
-            <Pill onClick={() => {}} theme="light" angle>
+            <Pill onClick={() => {}} id="features" theme="light" angle smooth>
               Learn more
             </Pill>
             <Pill onClick={() => {}} theme="dark" angle>
@@ -42,12 +59,14 @@ function Home() {
           <Download href="http://www.google.com">Download for Android</Download>
           <Download href="http://www.google.com">Download for iOS</Download>
         </DownloadsWrapper>
-        <ScrollButton>
-          <FiChevronDown />
-          <VisuallyHidden>Scroll down</VisuallyHidden>
-        </ScrollButton>
+        <SmoothScrollTo id="features">
+          <ScrollButton>
+            <FiChevronDown />
+            <VisuallyHidden>Scroll down</VisuallyHidden>
+          </ScrollButton>
+        </SmoothScrollTo>
       </HeroImage>
-      <FeaturesWrapper>
+      <FeaturesWrapper id="features">
         <Feature>
           <ManageIcon />
           <FeatureContent>
@@ -90,7 +109,7 @@ function Home() {
           </FeatureContent>
         </Feature>
       </FeaturesWrapper>
-      <HowItWorks>
+      <HowItWorks id="how-it-works">
         <StepOne
           subheader="Step 1"
           header="Setup an account"
@@ -147,7 +166,7 @@ function Home() {
         </StepThree>
       </HowItWorks>
       <FooterImage>
-        <Footer>
+        <Footer id="footer">
           <Contact>
             <QuestionText>Have questions?</QuestionText>
             <MessageText>Send us a message</MessageText>
@@ -178,6 +197,73 @@ function Home() {
 
 const Main = styled.main`
   height: 100%;
+`;
+
+const Nav = styled.div`
+  position: fixed;
+  top: 0%;
+  width: 100%;
+  height: 72px;
+  display: flex;
+  z-index: 9999999;
+  align-items: center;
+  font-size: clamp(${18 / 16}rem, 0.25vw + 1rem, ${20 / 16}rem);
+`;
+
+const NavHome = styled.div`
+  flex: 2;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 24px;
+  color: var(--color-gray-10);
+  align-items: center;
+  gap: 8px;
+`;
+
+const NavOptionWrapper = styled.div`
+  flex: 4;
+  display: flex;
+  max-width: 720px;
+  justify-content: space-between;
+  align-self: stretch;
+`;
+
+const NavOption = styled(SmoothScrollTo)`
+  text-transform: uppercase;
+  padding: 0px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--color-gray-8);
+  letter-spacing: 0.05em;
+  text-decoration: none;
+`;
+
+const AccountOptionWrapper = styled.div`
+  flex: 2;
+  display: flex;
+  padding-right: 24px;
+  color: var(--color-yellow-8);
+  font-size: ${16 / 16}rem;
+  align-self: stretch;
+  justify-content: flex-end;
+  gap: 16px;
+`;
+
+const CreateAccount = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 8px;
+  text-align: center;
+`;
+
+const Login = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 8px;
+  text-align: center;
 `;
 
 const Header = styled.header`
@@ -459,6 +545,13 @@ const Policy = styled(Link)`
 
 const FireIcon = styled(UnstyledFireIcon)`
   fill: var(--color-yellow-9);
+  min-width: 1em;
+`;
+
+const HeaderFireIcon = styled(UnstyledFireIcon)`
+  fill: var(--color-yellow-9);
+  min-width: 40px;
+  height: 40px;
 `;
 
 export default Home;

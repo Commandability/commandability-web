@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function SmoothScrollTo({ id, children }) {
+function SmoothScrollTo({ id, className, children }) {
   function handleClick(ev) {
     // Disable the default anchor-clicking behavior
     // of scrolling to the element
@@ -11,7 +11,7 @@ function SmoothScrollTo({ id, children }) {
     });
   }
   return (
-    <a href={`#${id}`} onClick={handleClick}>
+    <a href={`#${id}`} onClick={handleClick} className={className}>
       {children}
     </a>
   );
