@@ -357,6 +357,7 @@ const ScrollDown = styled(SmoothScrollTo)`
   font-size: ${64 / 16}rem;
   bottom: 92px;
   color: var(--color-gray-10);
+  -webkit-tap-highlight-color: transparent;
 
   @media ${QUERIES.phoneAndSmaller} {
     font-size: ${48 / 16}rem;
