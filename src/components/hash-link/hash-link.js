@@ -5,13 +5,28 @@
 
 import { useLocation, useResolvedPath, Link } from "react-router-dom";
 
-function HashLink({ to, className, style: styleProp, children, ...props }) {
+function HashLink({
+  to,
+  className: classNameProp,
+  style: styleProp,
+  children,
+  ...props
+}) {
   const { hash: locationHash } = useLocation();
   const { hash: toHash } = useResolvedPath(to);
 
   const isActive = toHash ? locationHash === toHash : false;
   const style =
     typeof styleProp === "function" ? styleProp({ isActive }) : styleProp;
+
+  let className;
+  if (typeof classNameProp === "function") {
+    className = classNameProp({ isActive });
+  } else {
+    className = [classNameProp, isActive ? "active" : null]
+      .filter(Boolean)
+      .join(" ");
+  }
 
   return (
     <Link {...props} to={to} className={className} style={style}>

@@ -19,11 +19,6 @@ import { QUERIES } from "constants.js";
 import SmoothScrollTo from "components/smooth-scroll-to";
 
 function Home() {
-  const activeTabStyle = {
-    color: "var(--color-white)",
-    borderBottom: "2px solid var(--color-white)",
-  };
-
   return (
     <Main>
       <Nav>
@@ -32,38 +27,10 @@ function Home() {
           Commandability
         </SiteID>
         <TabsWrapper>
-          <Tab
-            targetId="home"
-            activeStyle={({ isActive }) =>
-              isActive ? activeTabStyle : undefined
-            }
-          >
-            Home
-          </Tab>
-          <Tab
-            targetId="features"
-            activeStyle={({ isActive }) =>
-              isActive ? activeTabStyle : undefined
-            }
-          >
-            Features
-          </Tab>
-          <Tab
-            targetId="how-it-works"
-            activeStyle={({ isActive }) =>
-              isActive ? activeTabStyle : undefined
-            }
-          >
-            How it works
-          </Tab>
-          <Tab
-            targetId="contact"
-            activeStyle={({ isActive }) =>
-              isActive ? activeTabStyle : undefined
-            }
-          >
-            Contact
-          </Tab>
+          <Tab targetId="home">Home</Tab>
+          <Tab targetId="features">Features</Tab>
+          <Tab targetId="how-it-works">How it works</Tab>
+          <Tab targetId="contact">Contact</Tab>
         </TabsWrapper>
         <AccountOptions>
           <CreateAccount>Create an account</CreateAccount>
@@ -281,6 +248,11 @@ const Tab = styled(SmoothScrollTo)`
   letter-spacing: 0.05em;
   text-decoration: none;
   border-bottom: 2px solid hsl(0 0% 0% / 0);
+
+  &.active {
+    color: var(--color-white);
+    border-bottom: 2px solid var(--color-white);
+  }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
