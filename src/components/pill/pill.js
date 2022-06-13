@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { FiChevronRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 import Spacer from "components/spacer";
 
@@ -19,13 +20,10 @@ const THEMES = {
   },
 };
 
-function Pill({ theme, angle, targetId, href, onClick, children }) {
+function Pill({ theme, angle, targetId, to, onClick, children }) {
   const styles = THEMES[theme];
 
-  function smoothScroll(ev) {
-    // Disable the default anchor-clicking behavior
-    // of scrolling to the element
-    ev.preventDefault();
+  function smoothScroll() {
     const target = document.querySelector(`#${targetId}`);
     target?.scrollIntoView({
       behavior: "smooth",
@@ -35,12 +33,12 @@ function Pill({ theme, angle, targetId, href, onClick, children }) {
   return (
     <PillBase
       style={styles}
-      href={targetId ? `#${targetId}` : href}
+      to={targetId ? `#${targetId}` : to}
       onClick={(event) => {
         targetId && smoothScroll(event);
-        onClick(event);
+        onClick && onClick(event);
       }}
-      as={href || targetId ? "a" : "button"}
+      as={to || targetId ? Link : "button"}
     >
       <Text>{children}</Text>
       <Spacer size={8} axis="horizontal" />

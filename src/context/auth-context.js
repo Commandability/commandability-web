@@ -2,7 +2,7 @@ import * as React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "firebase.js";
-import Spinner from "components/spinner";
+import FireLoader from "components/fire-loader";
 
 const AuthContext = React.createContext();
 AuthContext.displayName = "AuthContext";
@@ -30,7 +30,7 @@ function AuthProvider({ children }) {
   const value = [user];
 
   if (user.status === "pending") {
-    return <Spinner />;
+    return <FireLoader />;
   }
 
   if (user.status === "rejected") {

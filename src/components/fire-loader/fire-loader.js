@@ -3,7 +3,7 @@ import styled, { keyframes } from "styled-components";
 
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 
-function Spinner() {
+function FireLoader() {
   return (
     <Wrapper>
       <FireIconLoader />
@@ -41,4 +41,4 @@ const FireIconLoader = styled(UnstyledFireIcon)`
   animation-direction: alternate;
 `;
 
-export default Spinner;
+export default FireLoader;
