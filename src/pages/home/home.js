@@ -19,20 +19,71 @@ import { QUERIES } from "constants.js";
 import SmoothScrollTo from "components/smooth-scroll-to";
 
 function Home() {
+  const [scroll, setScroll] = React.useState(false);
+
+  React.useEffect(() => {
+    function handleScroll() {
+      if (window.scrollY > 0) {
+        setScroll(true);
+      } else {
+        setScroll(false);
+      }
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <Main>
-      <Nav>
-        <SiteID to="/">
-          <NavFireIcon />
+      <Nav
+        style={{
+          "--background-color": `${
+            scroll ? "var(--color-gray-10)" : "transparent"
+          }`,
+          "--box-shadow": `${scroll ? "inherit" : "none"}`,
+        }}
+      >
+        <SiteID
+          to="/"
+          style={{
+            "--color": `${
+              scroll ? "var(--color-gray-1)" : "var(--color-white)"
+            }`,
+          }}
+        >
+          <NavFireIcon
+            style={{
+              "--fill": `${
+                scroll ? "var(--color-red-3)" : "var(--color-yellow-9)"
+              }`,
+            }}
+          />
           Commandability
         </SiteID>
-        <TabsWrapper>
+        <TabsWrapper
+          style={{
+            "--color": `${
+              scroll ? "var(--color-gray-4)" : "var(--color-gray-6)"
+            }`,
+            "--active-color": `${
+              scroll ? "var(--color-red-3)" : "var(--color-white)"
+            }`,
+          }}
+        >
           <Tab targetId="home">Home</Tab>
           <Tab targetId="features">Features</Tab>
           <Tab targetId="how-it-works">How it works</Tab>
           <Tab targetId="contact">Contact</Tab>
         </TabsWrapper>
-        <AccountOptions>
+        <AccountOptions
+          style={{
+            "--color": `${
+              scroll ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+            }`,
+          }}
+        >
           <CreateAccount>Create an account</CreateAccount>
           <Login>Login</Login>
         </AccountOptions>
@@ -211,21 +262,23 @@ const Nav = styled.nav`
   z-index: 9999999;
   align-items: center;
   font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
+  background-color: var(--background-color);
+  box-shadow: var(--box-shadow);
 `;
 
 const SiteID = styled(Link)`
   flex: 2;
   display: flex;
   justify-content: flex-start;
-  padding-left: 24px;
-  color: var(--color-gray-10);
   align-items: center;
   gap: 8px;
   text-decoration: none;
+  padding-left: 24px;
+  color: var(--color);
 `;
 
 const NavFireIcon = styled(UnstyledFireIcon)`
-  fill: var(--color-yellow-9);
+  fill: var(--fill);
   min-width: 32px;
   min-height: 32px;
 `;
@@ -236,6 +289,7 @@ const TabsWrapper = styled.div`
   max-width: 720px;
   justify-content: space-between;
   align-self: stretch;
+  color: var(--color);
 `;
 
 const Tab = styled(SmoothScrollTo)`
@@ -244,19 +298,19 @@ const Tab = styled(SmoothScrollTo)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  color: var(--color-gray-8);
   letter-spacing: 0.05em;
   text-decoration: none;
-  border-bottom: 2px solid hsl(0 0% 0% / 0);
+  border-bottom: 4px solid hsl(0 0% 0% / 0);
+  color: inherit;
 
   &.active {
-    color: var(--color-white);
-    border-bottom: 2px solid var(--color-white);
+    color: var(--active-color);
+    border-bottom: 4px solid var(--active-color);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-white);
+      color: var(--active-color);
     }
   }
 `;
@@ -265,11 +319,12 @@ const AccountOptions = styled.div`
   flex: 2;
   display: flex;
   padding-right: 24px;
-  color: var(--color-yellow-9);
-  font-size: ${16 / 16}rem;
   align-self: stretch;
   justify-content: flex-end;
   gap: 16px;
+  color: var(--color);
+  font-size: ${16 / 16}rem;
+  font-weight: bold;
 `;
 
 const CreateAccount = styled(UnstyledButton)`
