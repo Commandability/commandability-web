@@ -19,18 +19,51 @@ import { QUERIES } from "constants.js";
 import SmoothScrollTo from "components/smooth-scroll-to";
 
 function Home() {
+  const activeTabStyle = {
+    color: "var(--color-white)",
+    borderBottom: "2px solid var(--color-white)",
+  };
+
   return (
     <Main>
       <Nav>
-        <SiteID targetId="home">
+        <SiteID to="/">
           <NavFireIcon />
           Commandability
         </SiteID>
         <TabsWrapper>
-          <Tab targetId="home">Home</Tab>
-          <Tab targetId="features">Features</Tab>
-          <Tab targetId="how-it-works">How it works</Tab>
-          <Tab targetId="contact">Contact</Tab>
+          <Tab
+            targetId="home"
+            activeStyle={({ isActive }) =>
+              isActive ? activeTabStyle : undefined
+            }
+          >
+            Home
+          </Tab>
+          <Tab
+            targetId="features"
+            activeStyle={({ isActive }) =>
+              isActive ? activeTabStyle : undefined
+            }
+          >
+            Features
+          </Tab>
+          <Tab
+            targetId="how-it-works"
+            activeStyle={({ isActive }) =>
+              isActive ? activeTabStyle : undefined
+            }
+          >
+            How it works
+          </Tab>
+          <Tab
+            targetId="contact"
+            activeStyle={({ isActive }) =>
+              isActive ? activeTabStyle : undefined
+            }
+          >
+            Contact
+          </Tab>
         </TabsWrapper>
         <AccountOptions>
           <CreateAccount>Create an account</CreateAccount>
@@ -213,7 +246,7 @@ const Nav = styled.nav`
   font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
 `;
 
-const SiteID = styled(SmoothScrollTo)`
+const SiteID = styled(Link)`
   flex: 2;
   display: flex;
   justify-content: flex-start;
@@ -252,7 +285,6 @@ const Tab = styled(SmoothScrollTo)`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--color-white);
-      border-bottom: 2px solid var(--color-white);
     }
   }
 `;

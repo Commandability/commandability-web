@@ -1,7 +1,15 @@
 import * as React from "react";
-import { NavLink } from "react-router-dom";
 
-function SmoothScrollTo({ targetId, onClick, className, children }) {
+import HashLink from "components/hash-link";
+
+function SmoothScrollTo({
+  targetId,
+  onClick,
+  className,
+  activeStyle,
+  children,
+  ...props
+}) {
   function smoothScroll() {
     const target = document.querySelector(`#${targetId}`);
     target?.scrollIntoView({
@@ -10,16 +18,18 @@ function SmoothScrollTo({ targetId, onClick, className, children }) {
   }
 
   return (
-    <NavLink
+    <HashLink
+      {...props}
       to={`#${targetId}`}
       onClick={(event) => {
         smoothScroll();
         onClick && onClick(event);
       }}
       className={className}
+      style={activeStyle}
     >
       {children}
-    </NavLink>
+    </HashLink>
   );
 }
 
