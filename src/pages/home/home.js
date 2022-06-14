@@ -65,7 +65,7 @@ function Home() {
         <TabsWrapper
           style={{
             "--color": `${
-              scroll ? "var(--color-gray-4)" : "var(--color-gray-6)"
+              scroll ? "var(--color-gray-4)" : "var(--color-gray-8)"
             }`,
             "--active-color": `${
               scroll ? "var(--color-red-3)" : "var(--color-white)"
@@ -84,8 +84,8 @@ function Home() {
             }`,
           }}
         >
-          <CreateAccount>Create an account</CreateAccount>
-          <Login>Login</Login>
+          <Option>Create an account</Option>
+          <Option>Login</Option>
         </AccountOptions>
       </Nav>
       <HeroImage>
@@ -322,25 +322,23 @@ const AccountOptions = styled.div`
   align-self: stretch;
   justify-content: flex-end;
   gap: 16px;
+`;
+
+const Option = styled(UnstyledButton)`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px 8px;
+  text-align: center;
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
-`;
 
-const CreateAccount = styled(UnstyledButton)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0px 8px;
-  text-align: center;
-`;
-
-const Login = styled(UnstyledButton)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0px 8px;
-  text-align: center;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-white);
+    }
+  }
 `;
 
 const Header = styled.header`
@@ -409,6 +407,17 @@ const DownloadsWrapper = styled.div`
   }
 `;
 
+const Download = styled.a`
+  color: var(--color-yellow-9);
+  text-decoration: none;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-white);
+    }
+  }
+`;
+
 const ScrollDown = styled(SmoothScrollTo)`
   position: absolute;
   left: 50%;
@@ -433,11 +442,6 @@ const ScrollDown = styled(SmoothScrollTo)`
     transform: revert;
     left: revert;
   }
-`;
-
-const Download = styled.a`
-  color: var(--color-yellow-9);
-  text-decoration: none;
 `;
 
 const FeaturesWrapper = styled.section`
