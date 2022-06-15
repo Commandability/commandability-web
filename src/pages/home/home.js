@@ -112,8 +112,12 @@ function Home() {
           </HeaderPills>
         </Header>
         <DownloadsWrapper>
-          <Download href="http://www.google.com">Download for Android</Download>
-          <Download href="http://www.google.com">Download for iOS</Download>
+          <Download href="https://play.google.com/store/apps/details?id=com.commandability&hl=en_US&gl=US">
+            Download for Android
+          </Download>
+          <Download href="https://apps.apple.com/us/app/commandability/id1579180681">
+            Download for iOS
+          </Download>
         </DownloadsWrapper>
         <ScrollDown targetId="features">
           <FiChevronDown />
