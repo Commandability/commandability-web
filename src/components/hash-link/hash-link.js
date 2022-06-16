@@ -9,13 +9,15 @@ function HashLink({
   to,
   className: classNameProp,
   style: styleProp,
+  inView: inViewProp,
   children,
   ...props
 }) {
   const { hash: locationHash } = useLocation();
   const { hash: toHash } = useResolvedPath(to);
 
-  const isActive = toHash ? locationHash === toHash : false;
+  let isActive = toHash ? locationHash === toHash : false;
+  isActive = inViewProp;
   const style =
     typeof styleProp === "function" ? styleProp({ isActive }) : styleProp;
 

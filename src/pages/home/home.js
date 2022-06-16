@@ -9,7 +9,7 @@ import Card from "components/card";
 import ListItem from "components/list-item";
 import Pill from "components/pill";
 import Spacer from "components/spacer";
-import UnstyledButton from "components/unstyled-button";
+import LandingNav from "components/landing-nav";
 import VisuallyHidden from "components/visually-hidden";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
@@ -17,79 +17,23 @@ import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
 import { QUERIES } from "constants.js";
 import SmoothScrollTo from "components/smooth-scroll-to";
+import { useInView } from "react-intersection-observer";
 
 function Home() {
-  const [scroll, setScroll] = React.useState(false);
-
-  React.useEffect(() => {
-    function handleScroll() {
-      if (window.scrollY > 0) {
-        setScroll(true);
-      } else {
-        setScroll(false);
-      }
-    }
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
+  const [headerRef, headerInView] = useInView({ threshold: 0.5 });
+  const [featuresRef, featuresInView] = useInView({ threshold: 0.5 });
+  const [howItWorksRef, howItWorksInView] = useInView({ threshold: 0.5 });
+  const [contactRef, contactInView] = useInView({ threshold: 0.5 });
   return (
     <Main>
-      <Nav
-        style={{
-          "--background-color": `${
-            scroll ? "var(--color-gray-10)" : "transparent"
-          }`,
-          "--box-shadow": `${scroll ? "inherit" : "none"}`,
-        }}
-      >
-        <SiteID
-          to="/"
-          style={{
-            "--color": `${
-              scroll ? "var(--color-gray-1)" : "var(--color-white)"
-            }`,
-          }}
-        >
-          <NavFireIcon
-            style={{
-              "--fill": `${
-                scroll ? "var(--color-red-3)" : "var(--color-yellow-9)"
-              }`,
-            }}
-          />
-          Commandability
-        </SiteID>
-        <TabsWrapper
-          style={{
-            "--color": `${
-              scroll ? "var(--color-gray-4)" : "var(--color-gray-8)"
-            }`,
-            "--active-color": `${
-              scroll ? "var(--color-red-3)" : "var(--color-white)"
-            }`,
-          }}
-        >
-          <Tab targetId="home">Home</Tab>
-          <Tab targetId="features">Features</Tab>
-          <Tab targetId="how-it-works">How it works</Tab>
-          <Tab targetId="contact">Contact</Tab>
-        </TabsWrapper>
-        <AccountOptions
-          style={{
-            "--color": `${
-              scroll ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
-            }`,
-          }}
-        >
-          <Option>Create an account</Option>
-          <Option>Login</Option>
-        </AccountOptions>
-      </Nav>
+      <LandingNav
+        headerInView={headerInView}
+        featuresInView={featuresInView}
+        howItWorksInView={howItWorksInView}
+        contactInView={contactInView}
+      ></LandingNav>
       <HeroImage>
-        <Header id="home">
+        <Header id="home" ref={headerRef}>
           <Heading>Keep your department safe and accountable</Heading>
           <Subheading>
             Manage your department’s personnel and automatically generate
@@ -124,7 +68,7 @@ function Home() {
           <VisuallyHidden>Scroll down</VisuallyHidden>
         </ScrollDown>
       </HeroImage>
-      <FeaturesWrapper id="features">
+      <FeaturesWrapper id="features" ref={featuresRef}>
         <Feature>
           <ManageIcon />
           <FeatureContent>
@@ -167,7 +111,7 @@ function Home() {
           </FeatureContent>
         </Feature>
       </FeaturesWrapper>
-      <HowItWorks id="how-it-works">
+      <HowItWorks id="how-it-works" ref={howItWorksRef}>
         <StepOne
           subheader="Step 1"
           header="Setup an account"
@@ -225,7 +169,7 @@ function Home() {
       </HowItWorks>
       <FooterImage>
         <Footer>
-          <Contact id="contact">
+          <Contact id="contact" ref={contactRef}>
             <QuestionText>Have questions?</QuestionText>
             <MessageText>Send us a message</MessageText>
             <Spacer size={32} axis="vertical" />
@@ -255,94 +199,6 @@ function Home() {
 
 const Main = styled.main`
   height: 100%;
-`;
-
-const Nav = styled.nav`
-  position: fixed;
-  top: 0%;
-  width: 100%;
-  height: 72px;
-  display: flex;
-  z-index: 9999999;
-  align-items: center;
-  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
-  background-color: var(--background-color);
-  box-shadow: var(--box-shadow);
-`;
-
-const SiteID = styled(Link)`
-  flex: 2;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  padding-left: 24px;
-  color: var(--color);
-`;
-
-const NavFireIcon = styled(UnstyledFireIcon)`
-  fill: var(--fill);
-  min-width: 32px;
-  min-height: 32px;
-`;
-
-const TabsWrapper = styled.div`
-  flex: 4;
-  display: flex;
-  max-width: 720px;
-  justify-content: space-between;
-  align-self: stretch;
-  color: var(--color);
-`;
-
-const Tab = styled(SmoothScrollTo)`
-  text-transform: uppercase;
-  padding: 0px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  border-bottom: 4px solid hsl(0 0% 0% / 0);
-  color: inherit;
-
-  &.active {
-    color: var(--active-color);
-    border-bottom: 4px solid var(--active-color);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--active-color);
-    }
-  }
-`;
-
-const AccountOptions = styled.div`
-  flex: 2;
-  display: flex;
-  padding-right: 24px;
-  align-self: stretch;
-  justify-content: flex-end;
-  gap: 16px;
-`;
-
-const Option = styled(UnstyledButton)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0px 8px;
-  text-align: center;
-  color: var(--color);
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-white);
-    }
-  }
 `;
 
 const Header = styled.header`
