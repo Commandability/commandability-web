@@ -50,11 +50,6 @@ export const COLORS = {
   },
 };
 
-export const WEIGHTS = {
-  normal: 400,
-  bold: 700,
-};
-
 export const BREAKPOINTS = {
   phone: 600,
   tablet: 950,

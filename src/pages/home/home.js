@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
+import { useInView } from "react-intersection-observer";
 
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
@@ -11,19 +12,20 @@ import Pill from "components/pill";
 import Spacer from "components/spacer";
 import LandingNav from "components/landing-nav";
 import VisuallyHidden from "components/visually-hidden";
+import SmoothScrollTo from "components/smooth-scroll-to";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
 import { QUERIES } from "constants.js";
-import SmoothScrollTo from "components/smooth-scroll-to";
-import { useInView } from "react-intersection-observer";
+
+const inViewOptions = { threshold: 0.5 };
 
 function Home() {
-  const [headerRef, headerInView] = useInView({ threshold: 0.5 });
-  const [featuresRef, featuresInView] = useInView({ threshold: 0.5 });
-  const [howItWorksRef, howItWorksInView] = useInView({ threshold: 0.5 });
-  const [contactRef, contactInView] = useInView({ threshold: 0.5 });
+  const [headerRef, headerInView] = useInView(inViewOptions);
+  const [featuresRef, featuresInView] = useInView(inViewOptions);
+  const [howItWorksRef, howItWorksInView] = useInView(inViewOptions);
+  const [contactRef, contactInView] = useInView(inViewOptions);
   return (
     <Main>
       <LandingNav
@@ -31,7 +33,7 @@ function Home() {
         featuresInView={featuresInView}
         howItWorksInView={howItWorksInView}
         contactInView={contactInView}
-      ></LandingNav>
+      />
       <HeroImage>
         <Header id="home" ref={headerRef}>
           <Heading>Keep your department safe and accountable</Heading>
@@ -91,7 +93,7 @@ function Home() {
             <FeatureText>
               Use the Commandability website to configure your department’s
               preferred groups and alert times, as well as to upload your
-              deparment’s roster for use during incidents.
+              department’s roster for use during incidents.
             </FeatureText>
           </FeatureContent>
           <CustomizeIcon />

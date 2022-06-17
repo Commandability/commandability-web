@@ -1,10 +1,14 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { FiMenu } from "react-icons/fi";
 
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
+import VisuallyHidden from "components/visually-hidden";
+import MobileMenu from "components/mobile-menu";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
+import { QUERIES } from "constants.js";
 
 function LandingNav({
   headerInView,
@@ -12,19 +16,17 @@ function LandingNav({
   howItWorksInView,
   contactInView,
 }) {
-  const [tabInView, setTabInView] = React.useState("home");
+  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
 
+  let tabInView;
   if (headerInView) {
-    setTabInView("home");
-  }
-  if (featuresInView) {
-    setTabInView("features");
-  }
-  if (howItWorksInView) {
-    setTabInView("hot-it-works");
-  }
-  if (contactInView) {
-    setTabInView("contact");
+    tabInView = "home";
+  } else if (featuresInView) {
+    tabInView = "features";
+  } else if (howItWorksInView) {
+    tabInView = "how-it-works";
+  } else if (contactInView) {
+    tabInView = "contact";
   }
 
   const [scroll, setScroll] = React.useState(false);
@@ -71,7 +73,7 @@ function LandingNav({
           Commandability
         </SiteID>
       </SiteIDWrapper>
-      <TabsWrapper
+      <DesktopNav
         style={{
           "--color": `${
             scroll ? "var(--color-gray-4)" : "var(--color-gray-8)"
@@ -99,7 +101,7 @@ function LandingNav({
         <Tab targetId="contact" inView={tabInView === "contact" ? true : false}>
           Contact
         </Tab>
-      </TabsWrapper>
+      </DesktopNav>
       <AccountOptions
         style={{
           "--color": `${
@@ -110,6 +112,17 @@ function LandingNav({
         <Option>Create an account</Option>
         <Option>Login</Option>
       </AccountOptions>
+      <MobileActions>
+        <MenuButton onClick={() => setShowMobileMenu(true)}>
+          <FiMenu />
+          <VisuallyHidden>Open menu</VisuallyHidden>
+        </MenuButton>
+      </MobileActions>
+      <MobileMenu
+        isOpen={showMobileMenu}
+        onDismiss={() => setShowMobileMenu(false)}
+        tabInView={tabInView}
+      />
     </Nav>
   );
 }
@@ -126,10 +139,11 @@ const Nav = styled.nav`
   padding: 0px 24px;
   background-color: var(--background-color);
   box-shadow: var(--box-shadow);
+  -webkit-tap-highlight-color: transparent;
 `;
 
 const SiteIDWrapper = styled.div`
-  flex: 2;
+  flex: 1;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -150,13 +164,17 @@ const NavFireIcon = styled(UnstyledFireIcon)`
   min-height: 32px;
 `;
 
-const TabsWrapper = styled.div`
-  flex: 4;
+const DesktopNav = styled.div`
+  flex: 2;
   display: flex;
-  max-width: 720px;
+  max-width: 640px;
   justify-content: space-between;
   align-self: stretch;
   color: var(--color);
+
+  @media ${QUERIES.tabletAndSmaller} {
+    display: none;
+  }
 `;
 
 const Tab = styled(SmoothScrollTo)`
@@ -183,11 +201,15 @@ const Tab = styled(SmoothScrollTo)`
 `;
 
 const AccountOptions = styled.div`
-  flex: 2;
+  flex: 1;
   display: flex;
   align-self: stretch;
   justify-content: flex-end;
   gap: 16px;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    display: none;
+  }
 `;
 
 const Option = styled(UnstyledButton)`
@@ -195,7 +217,6 @@ const Option = styled(UnstyledButton)`
   flex-direction: column;
   justify-content: center;
   padding: 0px 8px;
-  text-align: center;
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
@@ -206,5 +227,17 @@ const Option = styled(UnstyledButton)`
     }
   }
 `;
+
+const MobileActions = styled.div`
+  display: none;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+  }
+`;
+
+const MenuButton = styled(UnstyledButton)``;
 
 export default LandingNav;
