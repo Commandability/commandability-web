@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
+import useMedia from "react-use/lib/useMedia";
 
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
@@ -17,15 +18,24 @@ import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
-import { QUERIES } from "constants.js";
-
-const inViewOptions = { threshold: 0.5 };
+import { BREAKPOINTS, QUERIES } from "constants.js";
 
 function Home() {
+  const tabletAndSmaller = useMedia(QUERIES.tabletAndSmaller);
+  const [inViewOptions, setInViewOptions] = React.useState();
   const [headerRef, headerInView] = useInView(inViewOptions);
   const [featuresRef, featuresInView] = useInView(inViewOptions);
   const [howItWorksRef, howItWorksInView] = useInView(inViewOptions);
   const [contactRef, contactInView] = useInView(inViewOptions);
+
+  React.useEffect(() => {
+    if (tabletAndSmaller) {
+      setInViewOptions({ threshold: 0.1 });
+    } else {
+      setInViewOptions({ threshold: 0.5 });
+    }
+  }, [tabletAndSmaller]);
+
   return (
     <Main>
       <LandingNav
@@ -201,6 +211,10 @@ function Home() {
 
 const Main = styled.main`
   height: 100%;
+
+  @media (min-height: ${BREAKPOINTS.laptop}px) {
+    height: 80%;
+  }
 `;
 
 const Header = styled.header`
@@ -289,7 +303,7 @@ const ScrollDown = styled(SmoothScrollTo)`
   color: var(--color-gray-10);
   -webkit-tap-highlight-color: transparent;
 
-  @media ${QUERIES.phoneAndSmaller} {
+  @media ${QUERIES.tabletAndSmaller} {
     font-size: ${48 / 16}rem;
     bottom: calc(24px - 0.2em);
     right: 24px;

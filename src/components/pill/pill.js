@@ -20,7 +20,7 @@ const THEMES = {
   },
 };
 
-function Pill({ theme, angle, targetId, to, onClick, children }) {
+function Pill({ theme, angle, targetId, to, onClick, href, children }) {
   const styles = THEMES[theme];
 
   function smoothScroll() {
@@ -38,7 +38,20 @@ function Pill({ theme, angle, targetId, to, onClick, children }) {
         targetId && smoothScroll(event);
         onClick && onClick(event);
       }}
-      as={to || targetId ? Link : "button"}
+      href={href}
+      as={(() => {
+        if (to || targetId) {
+          return Link;
+        } else if (onClick) {
+          return "button";
+        } else if (href) {
+          return "a";
+        } else {
+          throw new Error(
+            "Pill must have either a to, targetId, onClick, or href"
+          );
+        }
+      })()}
     >
       <Text>{children}</Text>
       <Spacer size={8} axis="horizontal" />

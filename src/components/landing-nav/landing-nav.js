@@ -1,12 +1,12 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Link } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
+import * as Dialog from "@radix-ui/react-dialog";
 
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import VisuallyHidden from "components/visually-hidden";
-import MobileMenu from "components/mobile-menu";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 
@@ -16,7 +16,7 @@ function LandingNav({
   howItWorksInView,
   contactInView,
 }) {
-  const [showMobileMenu, setShowMobileMenu] = React.useState(false);
+  const [scroll, setScroll] = React.useState(false);
 
   let tabInView;
   if (headerInView) {
@@ -28,8 +28,6 @@ function LandingNav({
   } else if (contactInView) {
     tabInView = "contact";
   }
-
-  const [scroll, setScroll] = React.useState(false);
 
   React.useEffect(() => {
     function handleScroll() {
@@ -68,17 +66,20 @@ function LandingNav({
               "--fill": `${
                 scroll ? "var(--color-red-3)" : "var(--color-yellow-9)"
               }`,
+              "--fill-active": `${
+                scroll ? "var(--color-yellow-4)" : "var(--color-white)"
+              }`,
             }}
           />
           Commandability
         </SiteID>
       </SiteIDWrapper>
-      <DesktopNav
+      <Desktop
         style={{
           "--color": `${
             scroll ? "var(--color-gray-4)" : "var(--color-gray-8)"
           }`,
-          "--active-color": `${
+          "--color-active": `${
             scroll ? "var(--color-red-3)" : "var(--color-white)"
           }`,
         }}
@@ -101,35 +102,67 @@ function LandingNav({
         <Tab targetId="contact" inView={tabInView === "contact" ? true : false}>
           Contact
         </Tab>
-      </DesktopNav>
+      </Desktop>
+      <Mobile>
+        <Dialog.Root modal={false}>
+          <Trigger>
+            <FiMenu size={24} />
+            <VisuallyHidden>Toggle menu</VisuallyHidden>
+          </Trigger>
+          <Dialog.Portal>
+            <Content onInteractOutside={(e) => e.preventDefault()}>
+              <Dialog.Title />
+              <Dialog.Description />
+              <Menu>
+                <Item
+                  targetId="home"
+                  inView={tabInView === "home" ? true : false}
+                >
+                  Home
+                </Item>
+                <Item
+                  targetId="features"
+                  inView={tabInView === "features" ? true : false}
+                >
+                  Features
+                </Item>
+                <Item
+                  targetId="how-it-works"
+                  inView={tabInView === "how-it-works" ? true : false}
+                >
+                  How it works
+                </Item>
+                <Item
+                  targetId="contact"
+                  inView={tabInView === "contact" ? true : false}
+                >
+                  Contact
+                </Item>
+              </Menu>
+            </Content>
+          </Dialog.Portal>
+        </Dialog.Root>
+      </Mobile>
       <AccountOptions
         style={{
           "--color": `${
             scroll ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+          }`,
+          "--color-active": `${
+            scroll ? "var(--color-yellow-4)" : "var(--color-white)"
           }`,
         }}
       >
         <Option>Create an account</Option>
         <Option>Login</Option>
       </AccountOptions>
-      <MobileActions>
-        <MenuButton onClick={() => setShowMobileMenu(true)}>
-          <FiMenu />
-          <VisuallyHidden>Open menu</VisuallyHidden>
-        </MenuButton>
-      </MobileActions>
-      <MobileMenu
-        isOpen={showMobileMenu}
-        onDismiss={() => setShowMobileMenu(false)}
-        tabInView={tabInView}
-      />
     </Nav>
   );
 }
 
 const Nav = styled.nav`
   position: fixed;
-  top: 0%;
+  top: 0;
   width: 100%;
   height: 72px;
   display: flex;
@@ -140,6 +173,10 @@ const Nav = styled.nav`
   background-color: var(--background-color);
   box-shadow: var(--box-shadow);
   -webkit-tap-highlight-color: transparent;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    background-color: var(--color-white);
+  }
 `;
 
 const SiteIDWrapper = styled.div`
@@ -154,17 +191,30 @@ const SiteID = styled(Link)`
   align-items: center;
   text-decoration: none;
   color: var(--color);
-  padding: 0px 8px;
   gap: 8px;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    color: var(--color-gray-1);
+  }
 `;
 
 const NavFireIcon = styled(UnstyledFireIcon)`
   fill: var(--fill);
   min-width: 32px;
   min-height: 32px;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      fill: var(--fill-active);
+    }
+  }
+
+  @media ${QUERIES.tabletAndSmaller} {
+    fill: var(--color-red-3);
+  }
 `;
 
-const DesktopNav = styled.div`
+const Desktop = styled.div`
   flex: 2;
   display: flex;
   max-width: 640px;
@@ -189,14 +239,133 @@ const Tab = styled(SmoothScrollTo)`
   color: inherit;
 
   &.active {
-    color: var(--active-color);
-    border-bottom: 4px solid var(--active-color);
+    color: var(--color-active);
+    border-bottom: 4px solid var(--color-active);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--active-color);
+      color: var(--color-active);
     }
+  }
+`;
+
+const Mobile = styled.div`
+  display: none;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+  }
+`;
+
+const filler = keyframes`
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+`;
+
+const Content = styled(Dialog.Content)`
+  display: none;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    display: block;
+  }
+
+  position: fixed;
+  top: 72px;
+  width: 100%;
+  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
+  overflow: hidden;
+  // Add padding to bottom for box-shadow
+  padding-bottom: 8px;
+
+  @media (prefers-reduced-motion: no-preference) {
+    // Add filler animation because radix doesn't detect closed animations on children
+    &[data-state="closed"] {
+      animation: ${filler} 300ms ease-in forwards;
+    }
+  }
+`;
+
+const slideIn = keyframes`
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0%);
+  }
+`;
+
+const slideOut = keyframes`
+  from {
+    transform: translateY(0%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+`;
+
+const Menu = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--color-white);
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  padding: 24px 48px;
+  padding-top: 16px;
+  width: 100%;
+  box-shadow: var(--box-shadow);
+
+  @media (prefers-reduced-motion: no-preference) {
+    ${Content}[data-state="open"] & {
+      animation: ${slideIn} 300ms ease-out forwards;
+    }
+    ${Content}[data-state="closed"] & {
+      animation: ${slideOut} 300ms ease-in forwards;
+    }
+  }
+`;
+
+const Item = styled(SmoothScrollTo)`
+  color: var(--color-gray-1);
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &.active {
+    color: var(--color-red-3);
+    &::before {
+      content: "→ ";
+      position: relative;
+      top: -0.05em;
+    }
+  }
+`;
+
+const Trigger = styled(Dialog.Trigger)`
+  margin: 0;
+  padding: 0;
+  // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
+  padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+
+  &:focus {
+    outline-offset: 2px;
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
   }
 `;
 
@@ -206,6 +375,8 @@ const AccountOptions = styled.div`
   align-self: stretch;
   justify-content: flex-end;
   gap: 16px;
+  // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container
+  padding-right: calc((32px - 18.67px) / 2);
 
   @media ${QUERIES.tabletAndSmaller} {
     display: none;
@@ -216,28 +387,15 @@ const Option = styled(UnstyledButton)`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0px 8px;
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-white);
+      color: var(--color-active);
     }
   }
 `;
-
-const MobileActions = styled.div`
-  display: none;
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
-  }
-`;
-
-const MenuButton = styled(UnstyledButton)``;
 
 export default LandingNav;

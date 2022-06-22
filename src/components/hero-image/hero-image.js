@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import { COLORS } from "constants.js";
+import { BREAKPOINTS, COLORS } from "constants.js";
 
 function HeroImage({ children }) {
   return (
@@ -72,6 +72,10 @@ const Img = styled.img`
   object-fit: cover;
   object-position: left;
   filter: saturate(40%);
+
+  @media (min-height: ${BREAKPOINTS.laptop}px) {
+    object-position: center;
+  }
 `;
 
 const Gradient = styled.div`
