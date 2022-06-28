@@ -15,18 +15,22 @@ function LandingNav({ header, features, howItWorks, footer }) {
   const [state, dispatch] = React.useReducer(reducer, { active: "home" });
 
   function reducer(state, action) {
+    // Set header as active on refresh
     if (!scroll.y) return { ...state, active: header.id };
 
     switch (action.type) {
       case "scroll-update":
+        // Set the next element as active when the current element is no longer in view / the header intersects the next element
         if (scroll.direction === "down" && !action.payload.elementInView) {
           return { ...state, active: action.payload.adjacentSiblingId };
+          // Set the current element as active when the header intersects it
         } else if (scroll.direction === "up" && action.payload.elementInView) {
           return { ...state, active: action.payload.elementId };
         } else {
           return state;
         }
       case "bound-update":
+        // Set the current element as active when it's in view, otherwise set its sibling as active
         if (action.payload.elementInView) {
           return { ...state, active: action.payload.elementId };
         } else {

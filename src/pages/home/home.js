@@ -28,6 +28,7 @@ function Home() {
   const [featuresRef, featuresInView] = useInView(inViewOptions);
   const [howItWorksRef, howItWorksInView] = useInView(inViewOptions);
   const [footerRef, footerInView] = useInView({
+    // Account for pixel rounding and fixed header preventing the footer from being fully in view
     threshold: 0.99 - 72 / window.innerHeight,
   });
 
