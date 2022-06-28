@@ -10,32 +10,91 @@ import VisuallyHidden from "components/visually-hidden";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 
-function LandingNav({
-  headerInView,
-  featuresInView,
-  howItWorksInView,
-  contactInView,
-}) {
-  const [scroll, setScroll] = React.useState(false);
+function LandingNav({ header, features, howItWorks, footer }) {
+  const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
+  const [state, dispatch] = React.useReducer(reducer, { active: "home" });
 
-  let tabInView;
-  if (headerInView) {
-    tabInView = "home";
-  } else if (featuresInView) {
-    tabInView = "features";
-  } else if (howItWorksInView) {
-    tabInView = "how-it-works";
-  } else if (contactInView) {
-    tabInView = "contact";
+  function reducer(state, action) {
+    if (!scroll.y) return { ...state, active: header.id };
+
+    switch (action.type) {
+      case "scroll-update":
+        if (scroll.direction === "down" && !action.payload.elementInView) {
+          return { ...state, active: action.payload.adjacentSiblingId };
+        } else if (scroll.direction === "up" && action.payload.elementInView) {
+          return { ...state, active: action.payload.elementId };
+        } else {
+          return state;
+        }
+      case "bound-update":
+        if (action.payload.elementInView) {
+          return { ...state, active: action.payload.elementId };
+        } else {
+          return { ...state, active: action.payload.siblingId };
+        }
+      default:
+        throw new Error(`Unsupported action type: ${action.type}`);
+    }
   }
+
+  React.useEffect(
+    () =>
+      dispatch({
+        type: "scroll-update",
+        payload: {
+          elementInView: header.inView,
+          elementId: header.id,
+          adjacentSiblingId: features.id,
+        },
+      }),
+    [header.inView, header.id, features.id]
+  );
+
+  React.useEffect(
+    () =>
+      dispatch({
+        type: "scroll-update",
+        payload: {
+          elementInView: features.inView,
+          elementId: features.id,
+          adjacentSiblingId: howItWorks.id,
+        },
+      }),
+    [features.inView, features.id, howItWorks.id]
+  );
+
+  React.useEffect(
+    () =>
+      dispatch({
+        type: "scroll-update",
+        payload: {
+          elementInView: howItWorks.inView,
+          elementId: howItWorks.id,
+          adjacentSiblingId: footer.id,
+        },
+      }),
+    [howItWorks.inView, howItWorks.id, footer.id]
+  );
+
+  React.useEffect(
+    () =>
+      dispatch({
+        type: "bound-update",
+        payload: {
+          elementInView: footer.inView,
+          elementId: footer.id,
+          siblingId: howItWorks.id,
+        },
+      }),
+    [footer.inView, footer.id, howItWorks.id]
+  );
 
   React.useEffect(() => {
     function handleScroll() {
-      if (window.scrollY > 0) {
-        setScroll(true);
-      } else {
-        setScroll(false);
-      }
+      setScroll((prevScroll) => ({
+        y: window.scrollY,
+        direction: window.scrollY > prevScroll.y ? "down" : "up",
+      }));
     }
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
@@ -47,9 +106,9 @@ function LandingNav({
     <Nav
       style={{
         "--background-color": `${
-          scroll ? "var(--color-gray-10)" : "transparent"
+          scroll.y ? "var(--color-white)" : "transparent"
         }`,
-        "--box-shadow": `${scroll ? "inherit" : "none"}`,
+        "--box-shadow": `${scroll.y ? "inherit" : "none"}`,
       }}
     >
       <SiteIDWrapper>
@@ -57,17 +116,17 @@ function LandingNav({
           to="/"
           style={{
             "--color": `${
-              scroll ? "var(--color-gray-1)" : "var(--color-white)"
+              scroll.y ? "var(--color-gray-1)" : "var(--color-white)"
             }`,
           }}
         >
           <NavFireIcon
             style={{
               "--fill": `${
-                scroll ? "var(--color-red-3)" : "var(--color-yellow-9)"
+                scroll.y ? "var(--color-red-3)" : "var(--color-yellow-9)"
               }`,
               "--fill-active": `${
-                scroll ? "var(--color-yellow-4)" : "var(--color-white)"
+                scroll.y ? "var(--color-yellow-4)" : "var(--color-white)"
               }`,
             }}
           />
@@ -77,29 +136,32 @@ function LandingNav({
       <Desktop
         style={{
           "--color": `${
-            scroll ? "var(--color-gray-4)" : "var(--color-gray-8)"
+            scroll.y ? "var(--color-gray-4)" : "var(--color-gray-8)"
           }`,
           "--color-active": `${
-            scroll ? "var(--color-red-3)" : "var(--color-white)"
+            scroll.y ? "var(--color-red-3)" : "var(--color-white)"
           }`,
         }}
       >
-        <Tab targetId="home" inView={tabInView === "home" ? true : false}>
+        <Tab targetId="home" inView={state.active === "home" ? true : false}>
           Home
         </Tab>
         <Tab
           targetId="features"
-          inView={tabInView === "features" ? true : false}
+          inView={state.active === "features" ? true : false}
         >
           Features
         </Tab>
         <Tab
           targetId="how-it-works"
-          inView={tabInView === "how-it-works" ? true : false}
+          inView={state.active === "how-it-works" ? true : false}
         >
           How it works
         </Tab>
-        <Tab targetId="contact" inView={tabInView === "contact" ? true : false}>
+        <Tab
+          targetId="contact"
+          inView={state.active === "contact" ? true : false}
+        >
           Contact
         </Tab>
       </Desktop>
@@ -110,31 +172,34 @@ function LandingNav({
             <VisuallyHidden>Toggle menu</VisuallyHidden>
           </Trigger>
           <Dialog.Portal>
-            <Content onInteractOutside={(e) => e.preventDefault()}>
+            <Content
+              onInteractOutside={(e) => e.preventDefault()}
+              onOpenAutoFocus={(e) => e.preventDefault()}
+            >
               <Dialog.Title />
               <Dialog.Description />
               <Menu>
                 <Item
                   targetId="home"
-                  inView={tabInView === "home" ? true : false}
+                  inView={state.active === "home" ? true : false}
                 >
                   Home
                 </Item>
                 <Item
                   targetId="features"
-                  inView={tabInView === "features" ? true : false}
+                  inView={state.active === "features" ? true : false}
                 >
                   Features
                 </Item>
                 <Item
                   targetId="how-it-works"
-                  inView={tabInView === "how-it-works" ? true : false}
+                  inView={state.active === "how-it-works" ? true : false}
                 >
                   How it works
                 </Item>
                 <Item
                   targetId="contact"
-                  inView={tabInView === "contact" ? true : false}
+                  inView={state.active === "contact" ? true : false}
                 >
                   Contact
                 </Item>
@@ -146,10 +211,10 @@ function LandingNav({
       <AccountOptions
         style={{
           "--color": `${
-            scroll ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+            scroll.y ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
           }`,
           "--color-active": `${
-            scroll ? "var(--color-yellow-4)" : "var(--color-white)"
+            scroll.y ? "var(--color-yellow-4)" : "var(--color-white)"
           }`,
         }}
       >

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
-import useMedia from "react-use/lib/useMedia";
 
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
@@ -21,31 +20,48 @@ import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.s
 import { BREAKPOINTS, QUERIES } from "constants.js";
 
 function Home() {
-  const tabletAndSmaller = useMedia(QUERIES.tabletAndSmaller);
-  const [inViewOptions, setInViewOptions] = React.useState();
+  const inViewOptions = {
+    rootMargin: "-72px 0px",
+  };
+
   const [headerRef, headerInView] = useInView(inViewOptions);
   const [featuresRef, featuresInView] = useInView(inViewOptions);
   const [howItWorksRef, howItWorksInView] = useInView(inViewOptions);
-  const [contactRef, contactInView] = useInView(inViewOptions);
+  const [footerRef, footerInView] = useInView({
+    threshold: 0.99 - 72 / window.innerHeight,
+  });
 
-  React.useEffect(() => {
-    if (tabletAndSmaller) {
-      setInViewOptions({ threshold: 0.1 });
-    } else {
-      setInViewOptions({ threshold: 0.5 });
-    }
-  }, [tabletAndSmaller]);
+  const header = {
+    ref: headerRef,
+    id: "home",
+    inView: headerInView,
+  };
+  const features = {
+    ref: featuresRef,
+    id: "features",
+    inView: featuresInView,
+  };
+  const howItWorks = {
+    ref: howItWorksRef,
+    id: "how-it-works",
+    inView: howItWorksInView,
+  };
+  const footer = {
+    ref: footerRef,
+    id: "contact",
+    inView: footerInView,
+  };
 
   return (
     <Main>
       <LandingNav
-        headerInView={headerInView}
-        featuresInView={featuresInView}
-        howItWorksInView={howItWorksInView}
-        contactInView={contactInView}
+        header={header}
+        features={features}
+        howItWorks={howItWorks}
+        footer={footer}
       />
       <HeroImage>
-        <Header id="home" ref={headerRef}>
+        <Header id={header.id} ref={header.ref}>
           <Heading>Keep your department safe and accountable</Heading>
           <Subheading>
             Manage your department’s personnel and automatically generate
@@ -80,7 +96,7 @@ function Home() {
           <VisuallyHidden>Scroll down</VisuallyHidden>
         </ScrollDown>
       </HeroImage>
-      <FeaturesWrapper id="features" ref={featuresRef}>
+      <FeaturesWrapper id={features.id} ref={features.ref}>
         <Feature>
           <ManageIcon />
           <FeatureContent>
@@ -123,7 +139,7 @@ function Home() {
           </FeatureContent>
         </Feature>
       </FeaturesWrapper>
-      <HowItWorks id="how-it-works" ref={howItWorksRef}>
+      <HowItWorks id={howItWorks.id} ref={howItWorks.ref}>
         <StepOne
           subheader="Step 1"
           header="Setup an account"
@@ -180,8 +196,8 @@ function Home() {
         </StepThree>
       </HowItWorks>
       <FooterImage>
-        <Footer>
-          <Contact id="contact" ref={contactRef}>
+        <Footer id={footer.id} ref={footer.ref}>
+          <Contact>
             <QuestionText>Have questions?</QuestionText>
             <MessageText>Send us a message</MessageText>
             <Spacer size={32} axis="vertical" />
