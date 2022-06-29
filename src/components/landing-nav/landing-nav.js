@@ -179,6 +179,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
             <Content
               onInteractOutside={(e) => e.preventDefault()}
               onOpenAutoFocus={(e) => e.preventDefault()}
+              onCloseAutoFocus={(e) => e.preventDefault()}
             >
               <Dialog.Title />
               <Dialog.Description />
