@@ -115,12 +115,31 @@ const GlobalStyles = createGlobalStyle`
     --selection-background: hsl(${COLORS.yellow[3]});
 
     --box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
+
+    --scrollbar-thumb: hsl(${COLORS.gray[5]});
+    --scrollbar: hsl(${COLORS.white});
+
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar);
+    scrollbar-width: thin;
   }
 
   ::selection {
     color: var(--selection-color);
     background: var(--selection-background);
   }
-`;
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    background-color: var(--scrollbar);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    border: 2px solid var(--scrollbar);
+    background-color: var(--scrollbar-thumb);
+  }
+  ::-webkit-scrollbar-track {
+    margin: 2px 0px;
+  }
+  `;
 
 export default GlobalStyles;

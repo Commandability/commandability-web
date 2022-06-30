@@ -303,6 +303,8 @@ const DownloadsWrapper = styled.div`
 const Download = styled.a`
   color: var(--color-yellow-9);
   text-decoration: none;
+  will-change: color;
+  transition: color 200ms;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -319,6 +321,13 @@ const ScrollDown = styled(SmoothScrollTo)`
   bottom: 92px;
   color: var(--color-gray-10);
   -webkit-tap-highlight-color: transparent;
+  transition: transform 200ms;
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translate(-50%, -8px);
+    }
+  }
 
   @media ${QUERIES.tabletAndSmaller} {
     font-size: ${48 / 16}rem;

@@ -1,6 +1,5 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
-import { Link } from "react-router-dom";
 import { FiMenu } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 
@@ -117,7 +116,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
     >
       <SiteIDWrapper>
         <SiteID
-          to="/"
+          href="/"
           style={{
             "--color": `${
               scroll.y ? "var(--color-gray-1)" : "var(--color-white)"
@@ -236,13 +235,15 @@ const Nav = styled.nav`
   width: 100%;
   height: 72px;
   display: flex;
-  z-index: 9999999;
+  z-index: 999999;
   align-items: center;
   font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
   padding: 0px 24px;
   background-color: var(--background-color);
   box-shadow: var(--box-shadow);
   -webkit-tap-highlight-color: transparent;
+  will-change: background-color;
+  transition: background-color 400ms;
 
   @media ${QUERIES.tabletAndSmaller} {
     background-color: var(--color-white);
@@ -256,12 +257,14 @@ const SiteIDWrapper = styled.div`
   align-items: center;
 `;
 
-const SiteID = styled(Link)`
+const SiteID = styled.a`
   display: flex;
   align-items: center;
   text-decoration: none;
   color: var(--color);
   gap: 8px;
+  will-change: color;
+  transition: color 400ms;
 
   @media ${QUERIES.tabletAndSmaller} {
     color: var(--color-gray-1);
@@ -272,6 +275,8 @@ const NavFireIcon = styled(UnstyledFireIcon)`
   fill: var(--fill);
   min-width: 32px;
   min-height: 32px;
+  will-change: fill;
+  transition: fill 400ms;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -307,6 +312,8 @@ const Tab = styled(SmoothScrollTo)`
   text-decoration: none;
   border-bottom: 4px solid hsl(0 0% 0% / 0);
   color: inherit;
+  will-change: background-color;
+  transition: color 400ms, border-bottom 400ms;
 
   &.active {
     color: var(--color-active);
@@ -406,6 +413,8 @@ const Item = styled(SmoothScrollTo)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
+  will-change: color;
+  transition: color 400ms;
 
   &.active {
     color: var(--color-red-3);
@@ -413,6 +422,7 @@ const Item = styled(SmoothScrollTo)`
       content: "→ ";
       position: relative;
       top: -0.05em;
+      opacity: 1;
     }
   }
 `;
@@ -460,6 +470,8 @@ const Option = styled(UnstyledButton)`
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
+  will-change: color;
+  transition: color 400ms;
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
