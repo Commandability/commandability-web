@@ -242,8 +242,11 @@ const Nav = styled.nav`
   background-color: var(--background-color);
   box-shadow: var(--box-shadow);
   -webkit-tap-highlight-color: transparent;
-  will-change: background-color;
-  transition: background-color 400ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: background-color;
+    transition: background-color 400ms;
+  }
 
   @media ${QUERIES.tabletAndSmaller} {
     background-color: var(--color-white);
@@ -263,8 +266,11 @@ const SiteID = styled.a`
   text-decoration: none;
   color: var(--color);
   gap: 8px;
-  will-change: color;
-  transition: color 400ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: color;
+    transition: color 400ms;
+  }
 
   @media ${QUERIES.tabletAndSmaller} {
     color: var(--color-gray-1);
@@ -275,8 +281,11 @@ const NavFireIcon = styled(UnstyledFireIcon)`
   fill: var(--fill);
   min-width: 32px;
   min-height: 32px;
-  will-change: fill;
-  transition: fill 400ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: fill;
+    transition: fill 400ms;
+  }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
@@ -312,8 +321,11 @@ const Tab = styled(SmoothScrollTo)`
   text-decoration: none;
   border-bottom: 4px solid hsl(0 0% 0% / 0);
   color: inherit;
-  will-change: background-color;
-  transition: color 400ms, border-bottom 400ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: color;
+    transition: color 400ms, border-bottom 400ms;
+  }
 
   &.active {
     color: var(--color-active);
@@ -413,8 +425,11 @@ const Item = styled(SmoothScrollTo)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
-  will-change: color;
-  transition: color 400ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: color;
+    transition: color 400ms;
+  }
 
   &.active {
     color: var(--color-red-3);
@@ -470,8 +485,11 @@ const Option = styled(UnstyledButton)`
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
-  will-change: color;
-  transition: color 400ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: color;
+    transition: color 400ms;
+  }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {

@@ -72,7 +72,11 @@ const PillBase = styled.button`
   font-weight: bold;
   color: var(--color);
   text-decoration: none;
-  transition: background-color 200ms;
+
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: background-color;
+    transition: background-color 200ms;
+  }
 
   & > svg {
     stroke-width: 0.175rem;
