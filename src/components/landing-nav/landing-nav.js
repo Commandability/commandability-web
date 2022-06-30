@@ -1,13 +1,12 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
-import { FiMenu } from "react-icons/fi";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
-import VisuallyHidden from "components/visually-hidden";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
+import MenuButton from "components/menu-button";
 
 function LandingNav({ header, features, howItWorks, footer }) {
   const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
@@ -170,9 +169,8 @@ function LandingNav({ header, features, howItWorks, footer }) {
       </Desktop>
       <Mobile>
         <Dialog.Root modal={false}>
-          <Trigger>
-            <FiMenu size={24} />
-            <VisuallyHidden>Toggle menu</VisuallyHidden>
+          <Trigger asChild>
+            <MenuButton />
           </Trigger>
           <Dialog.Portal>
             <Content
@@ -443,17 +441,8 @@ const Item = styled(SmoothScrollTo)`
 `;
 
 const Trigger = styled(Dialog.Trigger)`
-  margin: 0;
-  padding: 0;
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  text-align: left;
-  font: inherit;
-  color: inherit;
 
   &:focus {
     outline-offset: 2px;
