@@ -32,7 +32,7 @@ const Wrapper = styled(UnstyledButton)`
   }
 `;
 
-const Bar = styled.div`
+const Bar = styled.span`
   width: 24px;
   height: 2px;
   background-color: var(--color-gray-1);

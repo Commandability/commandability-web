@@ -93,8 +93,10 @@ function Home() {
           </Download>
         </DownloadsWrapper>
         <ScrollDown targetId="features">
-          <FiChevronDown />
-          <VisuallyHidden>Scroll down</VisuallyHidden>
+          <ScrollDownContents>
+            <FiChevronDown />
+            <VisuallyHidden>Scroll down</VisuallyHidden>
+          </ScrollDownContents>
         </ScrollDown>
       </HeroImage>
       <FeaturesWrapper id={features.id} ref={features.ref}>
@@ -325,17 +327,6 @@ const ScrollDown = styled(SmoothScrollTo)`
   color: var(--color-gray-10);
   -webkit-tap-highlight-color: transparent;
 
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: transform;
-    transition: transform 200ms;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      transform: translate(-50%, -8px);
-    }
-  }
-
   @media ${QUERIES.tabletAndSmaller} {
     font-size: ${48 / 16}rem;
     bottom: calc(24px - 0.2em);
@@ -350,6 +341,19 @@ const ScrollDown = styled(SmoothScrollTo)`
     right: 24px;
     transform: revert;
     left: revert;
+  }
+`;
+
+const ScrollDownContents = styled.div`
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: transform;
+    transition: transform 200ms;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      transform: translateY(-8px);
+    }
   }
 `;
 
