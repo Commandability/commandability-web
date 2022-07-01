@@ -364,7 +364,8 @@ const Content = styled(Dialog.Content)`
   }
 
   position: fixed;
-  top: 72px;
+  // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
+  top: calc(72px - 1px);
   width: 100%;
   font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
   overflow: hidden;

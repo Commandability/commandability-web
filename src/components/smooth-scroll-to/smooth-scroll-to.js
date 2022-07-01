@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import usePrefersReducedMotion from "hooks/use-prefers-reduced-motion";
 import HashLink from "components/hash-link";
 
 function SmoothScrollTo({
@@ -10,10 +11,12 @@ function SmoothScrollTo({
   children,
   ...props
 }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   function smoothScroll() {
     const target = document.querySelector(`#${targetId}`);
     target?.scrollIntoView({
-      behavior: "smooth",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
     });
   }
 

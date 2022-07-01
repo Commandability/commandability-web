@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FiChevronRight } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
+import usePrefersReducedMotion from "hooks/use-prefers-reduced-motion";
 import Spacer from "components/spacer";
 
 const THEMES = {
@@ -21,12 +22,13 @@ const THEMES = {
 };
 
 function Pill({ theme, angle, targetId, to, onClick, href, children }) {
+  const prefersReducedMotion = usePrefersReducedMotion();
   const styles = THEMES[theme];
 
   function smoothScroll() {
     const target = document.querySelector(`#${targetId}`);
     target?.scrollIntoView({
-      behavior: "smooth",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
     });
   }
 
