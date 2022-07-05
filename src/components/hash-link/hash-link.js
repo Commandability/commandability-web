@@ -3,16 +3,20 @@
   Based on https://github.com/remix-run/react-router/blob/main/packages/react-router-dom/index.tsx#L321
 */
 
+import * as React from "react";
 import { useLocation, useResolvedPath, Link } from "react-router-dom";
 
-function HashLink({
-  to,
-  className: classNameProp,
-  style: styleProp,
-  inView: inViewProp,
-  children,
-  ...props
-}) {
+function HashLink(
+  {
+    to,
+    className: classNameProp,
+    style: styleProp,
+    inView: inViewProp,
+    children,
+    ...props
+  },
+  ref
+) {
   const { hash: locationHash } = useLocation();
   const { hash: toHash } = useResolvedPath(to);
 
@@ -31,10 +35,10 @@ function HashLink({
   }
 
   return (
-    <Link {...props} to={to} className={className} style={style}>
+    <Link {...props} ref={ref} to={to} className={className} style={style}>
       {children}
     </Link>
   );
 }
 
-export default HashLink;
+export default React.forwardRef(HashLink);

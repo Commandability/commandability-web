@@ -9,30 +9,54 @@ import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
 
 function LandingNav({ header, features, howItWorks, footer }) {
-  const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
-  const [state, dispatch] = React.useReducer(reducer, { active: "home" });
+  const homeTabRef = React.useRef();
+  const featuresTabRef = React.useRef();
+  const howItWorksTabRef = React.useRef();
+  const contactTabRef = React.useRef();
 
-  function reducer(state, action) {
+  const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
+  const [state, dispatch] = React.useReducer(activeReducer, {
+    activeTargetId: header.id,
+    activeTab: homeTabRef,
+  });
+
+  function activeReducer(state, action) {
     // Set header as active on refresh
-    if (!scroll.y) return { ...state, active: header.id };
+    if (!scroll.y) return { ...state, activeTargetId: header.id };
 
     switch (action.type) {
       case "scroll-update":
         // Set the next element as active when the current element is no longer in view / the header intersects the next element
         if (scroll.direction === "down" && !action.payload.elementInView) {
-          return { ...state, active: action.payload.adjacentSiblingId };
+          return {
+            ...state,
+            activeTargetId: action.payload.adjacentSiblingId,
+            activeTab: action.payload.adjacentTabRef,
+          };
           // Set the current element as active when the header intersects it
         } else if (scroll.direction === "up" && action.payload.elementInView) {
-          return { ...state, active: action.payload.elementId };
+          return {
+            ...state,
+            activeTargetId: action.payload.elementId,
+            activeTab: action.payload.tabRef,
+          };
         } else {
           return state;
         }
       case "bound-update":
         // Set the current element as active when it's in view, otherwise set its sibling as active
         if (action.payload.elementInView) {
-          return { ...state, active: action.payload.elementId };
+          return {
+            ...state,
+            activeTargetId: action.payload.elementId,
+            activeTab: action.payload.tabRef,
+          };
         } else {
-          return { ...state, active: action.payload.siblingId };
+          return {
+            ...state,
+            activeTargetId: action.payload.siblingId,
+            activeTab: action.payload.siblingTabRef,
+          };
         }
       default:
         throw new Error(`Unsupported action type: ${action.type}`);
@@ -46,7 +70,9 @@ function LandingNav({ header, features, howItWorks, footer }) {
         payload: {
           elementInView: header.inView,
           elementId: header.id,
+          tabRef: homeTabRef,
           adjacentSiblingId: features.id,
+          adjacentTabRef: featuresTabRef,
         },
       }),
     [header.inView, header.id, features.id]
@@ -59,7 +85,9 @@ function LandingNav({ header, features, howItWorks, footer }) {
         payload: {
           elementInView: features.inView,
           elementId: features.id,
+          tabRef: featuresTabRef,
           adjacentSiblingId: howItWorks.id,
+          adjacentTabRef: howItWorksTabRef,
         },
       }),
     [features.inView, features.id, howItWorks.id]
@@ -73,6 +101,8 @@ function LandingNav({ header, features, howItWorks, footer }) {
           elementInView: howItWorks.inView,
           elementId: howItWorks.id,
           adjacentSiblingId: footer.id,
+          tabRef: howItWorksTabRef,
+          adjacentTabRef: contactTabRef,
         },
       }),
     [howItWorks.inView, howItWorks.id, footer.id]
@@ -86,6 +116,8 @@ function LandingNav({ header, features, howItWorks, footer }) {
           elementInView: footer.inView,
           elementId: footer.id,
           siblingId: howItWorks.id,
+          tabRef: contactTabRef,
+          siblingTabRef: howItWorksTabRef,
         },
       }),
     [footer.inView, footer.id, howItWorks.id]
@@ -108,9 +140,9 @@ function LandingNav({ header, features, howItWorks, footer }) {
     <Nav
       style={{
         "--background-color": `${
-          scroll.y ? "var(--color-white)" : "transparent"
+          window.scrollY ? "var(--color-white)" : "transparent"
         }`,
-        "--box-shadow": `${scroll.y ? "inherit" : "none"}`,
+        "--box-shadow": `${window.scrollY ? "inherit" : "none"}`,
       }}
     >
       <SiteIDWrapper>
@@ -118,17 +150,17 @@ function LandingNav({ header, features, howItWorks, footer }) {
           href="/"
           style={{
             "--color": `${
-              scroll.y ? "var(--color-gray-1)" : "var(--color-white)"
+              window.scrollY ? "var(--color-gray-1)" : "var(--color-white)"
             }`,
           }}
         >
           <NavFireIcon
             style={{
               "--fill": `${
-                scroll.y ? "var(--color-red-3)" : "var(--color-yellow-9)"
+                window.scrollY ? "var(--color-red-3)" : "var(--color-yellow-9)"
               }`,
               "--fill-active": `${
-                scroll.y ? "var(--color-yellow-4)" : "var(--color-white)"
+                window.scrollY ? "var(--color-yellow-4)" : "var(--color-white)"
               }`,
             }}
           />
@@ -138,31 +170,42 @@ function LandingNav({ header, features, howItWorks, footer }) {
       <Desktop
         style={{
           "--color": `${
-            scroll.y ? "var(--color-gray-4)" : "var(--color-gray-8)"
+            window.scrollY ? "var(--color-gray-4)" : "var(--color-gray-8)"
           }`,
           "--color-active": `${
-            scroll.y ? "var(--color-red-3)" : "var(--color-white)"
+            window.scrollY ? "var(--color-red-3)" : "var(--color-white)"
           }`,
+          "--tab-width": `${state.activeTab?.current?.clientWidth}px`,
+          "--tab-location": `${
+            state.activeTab?.current?.getBoundingClientRect().left
+          }px`,
         }}
       >
-        <Tab targetId="home" inView={state.active === "home" ? true : false}>
+        <Tab
+          ref={homeTabRef}
+          targetId={header.id}
+          inView={state.activeTargetId === header.id ? true : false}
+        >
           Home
         </Tab>
         <Tab
-          targetId="features"
-          inView={state.active === "features" ? true : false}
+          ref={featuresTabRef}
+          targetId={features.id}
+          inView={state.activeTargetId === features.id ? true : false}
         >
           Features
         </Tab>
         <Tab
-          targetId="how-it-works"
-          inView={state.active === "how-it-works" ? true : false}
+          ref={howItWorksTabRef}
+          targetId={howItWorks.id}
+          inView={state.activeTargetId === howItWorks.id ? true : false}
         >
           How it works
         </Tab>
         <Tab
-          targetId="contact"
-          inView={state.active === "contact" ? true : false}
+          ref={contactTabRef}
+          targetId={footer.id}
+          inView={state.activeTargetId === footer.id ? true : false}
         >
           Contact
         </Tab>
@@ -182,26 +225,26 @@ function LandingNav({ header, features, howItWorks, footer }) {
               <Dialog.Description />
               <Menu>
                 <Item
-                  targetId="home"
-                  inView={state.active === "home" ? true : false}
+                  targetId={header.id}
+                  inView={state.activeTargetId === header.id ? true : false}
                 >
                   Home
                 </Item>
                 <Item
-                  targetId="features"
-                  inView={state.active === "features" ? true : false}
+                  targetId={features.id}
+                  inView={state.activeTargetId === features.id ? true : false}
                 >
                   Features
                 </Item>
                 <Item
-                  targetId="how-it-works"
-                  inView={state.active === "how-it-works" ? true : false}
+                  targetId={howItWorks.id}
+                  inView={state.activeTargetId === howItWorks.id ? true : false}
                 >
                   How it works
                 </Item>
                 <Item
-                  targetId="contact"
-                  inView={state.active === "contact" ? true : false}
+                  targetId={footer.id}
+                  inView={state.activeTargetId === footer.id ? true : false}
                 >
                   Contact
                 </Item>
@@ -213,10 +256,10 @@ function LandingNav({ header, features, howItWorks, footer }) {
       <AccountOptions
         style={{
           "--color": `${
-            scroll.y ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+            window.scrollY ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
           }`,
           "--color-active": `${
-            scroll.y ? "var(--color-yellow-4)" : "var(--color-white)"
+            window.scrollY ? "var(--color-yellow-4)" : "var(--color-white)"
           }`,
         }}
       >
@@ -302,7 +345,21 @@ const Desktop = styled.div`
   max-width: 640px;
   justify-content: space-between;
   align-self: stretch;
-  color: var(--color);
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: calc(72px - 4px);
+    left: var(--tab-location);
+    height: 4px;
+    width: var(--tab-width);
+    background-color: var(--color-active);
+
+    @media (prefers-reduced-motion: no-preference) {
+      will-change: left, width;
+      transition: left 400ms, width 400ms;
+    }
+  }
 
   @media ${QUERIES.tabletAndSmaller} {
     display: none;
@@ -317,17 +374,15 @@ const Tab = styled(SmoothScrollTo)`
   justify-content: center;
   letter-spacing: 0.05em;
   text-decoration: none;
-  border-bottom: 4px solid hsl(0 0% 0% / 0);
-  color: inherit;
+  color: var(--color);
 
   @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
+    will-change: color, border-bottom;
     transition: color 400ms, border-bottom 400ms;
   }
 
   &.active {
     color: var(--color-active);
-    border-bottom: 4px solid var(--color-active);
   }
 
   @media (hover: hover) and (pointer: fine) {
