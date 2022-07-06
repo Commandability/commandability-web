@@ -1,5 +1,9 @@
 import * as React from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword as signIn,
+  signOut,
+} from "firebase/auth";
 
 import { auth } from "firebase.js";
 import FireLoader from "components/fire-loader";
@@ -27,7 +31,11 @@ function AuthProvider({ children }) {
     return () => unsubscribe();
   }, []);
 
-  const value = [user];
+  const value = {
+    user,
+    signIn: (...args) => signIn(auth, ...args),
+    signOut: () => signOut(auth),
+  };
 
   if (user.status === "pending") {
     return <FireLoader />;

@@ -7,7 +7,7 @@ const AuthenticatedApp = React.lazy(() => import("authenticated-app.js"));
 const UnauthenticatedApp = React.lazy(() => import("unauthenticated-app.js"));
 
 function App() {
-  const [user] = useAuth();
+  const { user } = useAuth();
 
   return (
     <React.Suspense fallback={<FireLoader />}>
