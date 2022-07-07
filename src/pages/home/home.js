@@ -366,6 +366,7 @@ const FeaturesWrapper = styled.section`
   color: var(--color-gray-1);
   padding: 96px 24px;
   padding-bottom: 48px;
+  scroll-margin: calc(72px - 1px);
 `;
 
 const Feature = styled.article`
@@ -442,6 +443,7 @@ const HowItWorks = styled.section`
   padding: 96px 24px;
   padding-top: 48px;
   background-color: var(--color-gray-10);
+  scroll-margin: calc(72px - 1px);
 
   @media ${QUERIES.laptopAndSmaller} {
     flex-direction: column;
