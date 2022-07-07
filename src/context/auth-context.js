@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
   signInWithEmailAndPassword as signIn,
   signOut,
 } from "firebase/auth";
@@ -33,6 +34,8 @@ function AuthProvider({ children }) {
 
   const value = {
     user,
+    createUserWithEmailAndPassword: (...args) =>
+      createUserWithEmailAndPassword(auth, ...args),
     signIn: (...args) => signIn(auth, ...args),
     signOut: () => signOut(auth),
   };
