@@ -2,7 +2,7 @@ import * as React from "react";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword as signIn,
+  signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
 
@@ -36,7 +36,8 @@ function AuthProvider({ children }) {
     user,
     createUserWithEmailAndPassword: (...args) =>
       createUserWithEmailAndPassword(auth, ...args),
-    signIn: (...args) => signIn(auth, ...args),
+    signInWithEmailAndPassword: (...args) =>
+      signInWithEmailAndPassword(auth, ...args),
     signOut: () => signOut(auth),
   };
 
