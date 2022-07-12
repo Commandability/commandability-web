@@ -2,6 +2,7 @@ import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
+import { useAuth } from "context/auth-context";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
@@ -14,15 +15,18 @@ function LandingNav({ header, features, howItWorks, footer }) {
   const howItWorksTabRef = React.useRef();
   const contactTabRef = React.useRef();
 
+  const { user } = useAuth();
+
   const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
   const [state, dispatch] = React.useReducer(activeReducer, {
-    activeTargetId: header.id,
-    activeTab: homeTabRef,
+    activeTargetId: "",
+    activeTabRef: null,
   });
 
   function activeReducer(state, action) {
     // Set header as active on refresh
-    if (!scroll.y) return { ...state, activeTargetId: header.id };
+    if (!scroll.y)
+      return { ...state, activeTargetId: header.id, activeTabRef: homeTabRef };
 
     switch (action.type) {
       case "scroll-update":
@@ -31,14 +35,14 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
-            activeTab: action.payload.adjacentTabRef,
+            activeTabRef: action.payload.adjacentTabRef,
           };
           // Set the current element as active when the header intersects it
         } else if (scroll.direction === "up" && action.payload.elementInView) {
           return {
             ...state,
             activeTargetId: action.payload.elementId,
-            activeTab: action.payload.tabRef,
+            activeTabRef: action.payload.tabRef,
           };
         } else {
           return state;
@@ -49,13 +53,13 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return {
             ...state,
             activeTargetId: action.payload.elementId,
-            activeTab: action.payload.tabRef,
+            activeTabRef: action.payload.tabRef,
           };
         } else {
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
-            activeTab: action.payload.siblingTabRef,
+            activeTabRef: action.payload.siblingTabRef,
           };
         }
       default:
@@ -63,8 +67,10 @@ function LandingNav({ header, features, howItWorks, footer }) {
     }
   }
 
-  React.useEffect(
-    () =>
+  React.useEffect(() => {
+    const effect = async () => {
+      await document.fonts.ready;
+
       dispatch({
         type: "scroll-update",
         payload: {
@@ -74,12 +80,15 @@ function LandingNav({ header, features, howItWorks, footer }) {
           adjacentSiblingId: features.id,
           adjacentTabRef: featuresTabRef,
         },
-      }),
-    [header.inView, header.id, features.id]
-  );
+      });
+    };
+    effect();
+  }, [header.inView, header.id, features.id]);
 
-  React.useEffect(
-    () =>
+  React.useEffect(() => {
+    const effect = async () => {
+      await document.fonts.ready;
+
       dispatch({
         type: "scroll-update",
         payload: {
@@ -89,12 +98,15 @@ function LandingNav({ header, features, howItWorks, footer }) {
           adjacentSiblingId: howItWorks.id,
           adjacentTabRef: howItWorksTabRef,
         },
-      }),
-    [features.inView, features.id, howItWorks.id]
-  );
+      });
+    };
+    effect();
+  }, [features.inView, features.id, howItWorks.id]);
 
-  React.useEffect(
-    () =>
+  React.useEffect(() => {
+    const effect = async () => {
+      await document.fonts.ready;
+
       dispatch({
         type: "scroll-update",
         payload: {
@@ -104,12 +116,15 @@ function LandingNav({ header, features, howItWorks, footer }) {
           tabRef: howItWorksTabRef,
           adjacentTabRef: contactTabRef,
         },
-      }),
-    [howItWorks.inView, howItWorks.id, footer.id]
-  );
+      });
+    };
+    effect();
+  }, [howItWorks.inView, howItWorks.id, footer.id]);
 
-  React.useEffect(
-    () =>
+  React.useEffect(() => {
+    const effect = async () => {
+      await document.fonts.ready;
+
       dispatch({
         type: "bound-update",
         payload: {
@@ -119,9 +134,10 @@ function LandingNav({ header, features, howItWorks, footer }) {
           tabRef: contactTabRef,
           siblingTabRef: howItWorksTabRef,
         },
-      }),
-    [footer.inView, footer.id, howItWorks.id]
-  );
+      });
+    };
+    effect();
+  }, [footer.inView, footer.id, howItWorks.id]);
 
   React.useEffect(() => {
     function handleScroll() {
@@ -145,7 +161,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
         "--box-shadow": `${window.scrollY ? "inherit" : "none"}`,
       }}
     >
-      <SiteIDWrapper>
+      <LeftSide>
         <SiteID
           href="/"
           style={{
@@ -166,7 +182,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
           />
           Commandability
         </SiteID>
-      </SiteIDWrapper>
+      </LeftSide>
       <Desktop
         style={{
           "--color": `${
@@ -175,9 +191,9 @@ function LandingNav({ header, features, howItWorks, footer }) {
           "--color-active": `${
             window.scrollY ? "var(--color-red-3)" : "var(--color-white)"
           }`,
-          "--tab-width": `${state.activeTab?.current?.clientWidth}px`,
+          "--tab-width": `${state.activeTabRef?.current?.clientWidth}px`,
           "--tab-location": `${
-            state.activeTab?.current?.getBoundingClientRect().left
+            state.activeTabRef?.current?.getBoundingClientRect().left
           }px`,
         }}
       >
@@ -221,8 +237,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
               onOpenAutoFocus={(e) => e.preventDefault()}
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
-              <Dialog.Title />
-              <Dialog.Description />
+              <Dialog.Title>Navigation</Dialog.Title>
               <Menu>
                 <Item
                   targetId={header.id}
@@ -253,19 +268,25 @@ function LandingNav({ header, features, howItWorks, footer }) {
           </Dialog.Portal>
         </Dialog.Root>
       </Mobile>
-      <AccountOptions
-        style={{
-          "--color": `${
-            window.scrollY ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
-          }`,
-          "--color-active": `${
-            window.scrollY ? "var(--color-yellow-4)" : "var(--color-white)"
-          }`,
-        }}
-      >
-        <Option>Create an account</Option>
-        <Option>Login</Option>
-      </AccountOptions>
+      <RightSide>
+        <AccountOptions
+          style={{
+            "--color": `${
+              window.scrollY ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+            }`,
+            "--color-active": `${
+              window.scrollY ? "var(--color-yellow-4)" : "var(--color-white)"
+            }`,
+          }}
+        >
+          {user.current ? (
+            <Option>Go to dashboard</Option>
+          ) : (
+            <Option>Create an account</Option>
+          )}
+          {user.current ? <Option>Sign out</Option> : <Option>Sign in</Option>}
+        </AccountOptions>
+      </RightSide>
     </Nav>
   );
 }
@@ -294,7 +315,7 @@ const Nav = styled.nav`
   }
 `;
 
-const SiteIDWrapper = styled.div`
+const LeftSide = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-start;
@@ -499,28 +520,24 @@ const Item = styled(SmoothScrollTo)`
 const Trigger = styled(Dialog.Trigger)`
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
-
-  &:focus {
-    outline-offset: 2px;
-  }
-
-  &:focus:not(:focus-visible) {
-    outline: none;
-  }
 `;
 
-const AccountOptions = styled.div`
+const RightSide = styled.div`
   flex: 1;
   display: flex;
-  align-self: stretch;
   justify-content: flex-end;
-  gap: 16px;
+  align-self: center;
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container
   padding-right: calc((32px - 18.67px) / 2);
 
   @media ${QUERIES.tabletAndSmaller} {
     display: none;
   }
+`;
+
+const AccountOptions = styled.div`
+  display: flex;
+  gap: 16px;
 `;
 
 const Option = styled(UnstyledButton)`

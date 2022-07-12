@@ -5,7 +5,7 @@ import { COLORS } from "constants.js";
 const GlobalStyles = createGlobalStyle`
 
   /*
-    Josh Comeau CSS Reset
+    Adapted from Josh Comeau's CSS Reset
     https://www.joshwcomeau.com/css/custom-css-reset/
     License: none (public domain)
   */
@@ -36,6 +36,9 @@ const GlobalStyles = createGlobalStyle`
   body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+
+    // scrollbar-gutter color
+    background-color: var(--scrollbar);
   }
   /*
     6. Improve media defaults
@@ -116,11 +119,13 @@ const GlobalStyles = createGlobalStyle`
 
     --box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
 
-    --scrollbar-thumb: hsl(${COLORS.gray[5]});
-    --scrollbar: hsl(${COLORS.white});
+    --scrollbar-thumb: hsl(${COLORS.gray[4]});
+    --scrollbar: hsl(${COLORS.gray[8]});
 
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar);
     scrollbar-width: thin;
+
+    scrollbar-gutter: stable;
   }
 
   ::selection {
