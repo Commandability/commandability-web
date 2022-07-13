@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { useAuth } from "context/auth-context";
+import VisuallyHidden from "components/visually-hidden";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
@@ -237,7 +238,9 @@ function LandingNav({ header, features, howItWorks, footer }) {
               onOpenAutoFocus={(e) => e.preventDefault()}
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
-              <Dialog.Title>Navigation</Dialog.Title>
+              <Dialog.Title>
+                <VisuallyHidden>Navigation</VisuallyHidden>
+              </Dialog.Title>
               <Menu>
                 <Item
                   targetId={header.id}

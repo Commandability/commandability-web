@@ -6,6 +6,7 @@ import { FiChevronDown } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
 import UnstyledButton from "components/unstyled-button";
+import VisuallyHidden from "components/visually-hidden";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
@@ -65,27 +66,31 @@ function MainNav() {
           </Tab>
         </Desktop>
       ) : null}
-      <Mobile>
-        <Dialog.Root modal={false}>
-          <Trigger asChild>
-            <MenuButton />
-          </Trigger>
-          <Dialog.Portal>
-            <Content
-              onInteractOutside={(e) => e.preventDefault()}
-              onOpenAutoFocus={(e) => e.preventDefault()}
-              onCloseAutoFocus={(e) => e.preventDefault()}
-            >
-              <Dialog.Title>Navigation</Dialog.Title>
-              <Menu>
-                <Item>Reports</Item>
-                <Item>Roster</Item>
-                <Item>Groups</Item>
-              </Menu>
-            </Content>
-          </Dialog.Portal>
-        </Dialog.Root>
-      </Mobile>
+      {user.current ? (
+        <Mobile>
+          <Dialog.Root modal={false}>
+            <Trigger asChild>
+              <MenuButton />
+            </Trigger>
+            <Dialog.Portal>
+              <Content
+                onInteractOutside={(e) => e.preventDefault()}
+                onOpenAutoFocus={(e) => e.preventDefault()}
+                onCloseAutoFocus={(e) => e.preventDefault()}
+              >
+                <Dialog.Title>
+                  <VisuallyHidden>Navigation</VisuallyHidden>
+                </Dialog.Title>
+                <Menu>
+                  <Item to="/dashboard/reports">Reports</Item>
+                  <Item to="/dashboard/roster">Roster</Item>
+                  <Item to="/dashboard/groups">Groups</Item>
+                </Menu>
+              </Content>
+            </Dialog.Portal>
+          </Dialog.Root>
+        </Mobile>
+      ) : null}
       <RightSide>
         {user.current ? (
           <DropDown>
@@ -304,7 +309,7 @@ const Menu = styled.div`
   }
 `;
 
-const Item = styled(UnstyledButton)`
+const Item = styled(NavLink)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
