@@ -21,13 +21,25 @@ function LandingNav({ header, features, howItWorks, footer }) {
   const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: "",
-    activeTabRef: null,
+    activeTab: {
+      width: homeTabRef.current?.getBoundingClientRect().width,
+      left: homeTabRef.current?.getBoundingClientRect().left,
+      ref: homeTabRef,
+    },
   });
 
   function activeReducer(state, action) {
     // Set header as active on refresh
-    if (!scroll.y)
-      return { ...state, activeTargetId: header.id, activeTabRef: homeTabRef };
+    if (!scroll.y && action.type !== "window-resize")
+      return {
+        ...state,
+        activeTargetId: header.id,
+        activeTab: {
+          width: homeTabRef.current?.getBoundingClientRect().width,
+          left: homeTabRef.current?.getBoundingClientRect().left,
+          ref: homeTabRef,
+        },
+      };
 
     switch (action.type) {
       case "scroll-update":
@@ -36,14 +48,26 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
-            activeTabRef: action.payload.adjacentTabRef,
+            activeTab: {
+              width:
+                action.payload.adjacentTabRef.current.getBoundingClientRect()
+                  .width,
+              left: action.payload.adjacentTabRef.current.getBoundingClientRect()
+                .left,
+              ref: action.payload.adjacentTabRef,
+            },
           };
           // Set the current element as active when the header intersects it
         } else if (scroll.direction === "up" && action.payload.elementInView) {
           return {
             ...state,
             activeTargetId: action.payload.elementId,
-            activeTabRef: action.payload.tabRef,
+            activeTab: {
+              width:
+                action.payload.tabRef.current.getBoundingClientRect().width,
+              left: action.payload.tabRef.current.getBoundingClientRect().left,
+              ref: action.payload.tabRef,
+            },
           };
         } else {
           return state;
@@ -54,15 +78,37 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return {
             ...state,
             activeTargetId: action.payload.elementId,
-            activeTabRef: action.payload.tabRef,
+            activeTab: {
+              width:
+                action.payload.tabRef.current.getBoundingClientRect().width,
+              left: action.payload.tabRef.current.getBoundingClientRect().left,
+              ref: action.payload.tabRef,
+            },
           };
         } else {
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
-            activeTabRef: action.payload.siblingTabRef,
+            activeTab: {
+              width:
+                action.payload.siblingTabRef.current.getBoundingClientRect()
+                  .width,
+              left: action.payload.siblingTabRef.current.getBoundingClientRect()
+                .left,
+              ref: action.payload.siblingTabRef,
+            },
           };
         }
+      case "window-resize":
+        return {
+          ...state,
+          activeTargetId: state.activeTargetId,
+          activeTab: {
+            width: state.activeTab.ref?.current?.getBoundingClientRect().width,
+            left: state.activeTab.ref?.current?.getBoundingClientRect().left,
+            ref: state.activeTab.ref,
+          },
+        };
       default:
         throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -140,6 +186,18 @@ function LandingNav({ header, features, howItWorks, footer }) {
     effect();
   }, [footer.inView, footer.id, howItWorks.id]);
 
+  React.useLayoutEffect(() => {
+    function handleResize() {
+      dispatch({
+        type: "window-resize",
+      });
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   React.useEffect(() => {
     function handleScroll() {
       setScroll((prevScroll) => ({
@@ -192,10 +250,8 @@ function LandingNav({ header, features, howItWorks, footer }) {
           "--color-active": `${
             window.scrollY ? "var(--color-red-3)" : "var(--color-white)"
           }`,
-          "--tab-width": `${state.activeTabRef?.current?.clientWidth}px`,
-          "--tab-location": `${
-            state.activeTabRef?.current?.getBoundingClientRect().left
-          }px`,
+          "--tab-width": `${state.activeTab.width}px`,
+          "--tab-left": `${state.activeTab.left}px`,
         }}
       >
         <Tab
@@ -374,9 +430,9 @@ const Desktop = styled.div`
     content: "";
     position: absolute;
     top: calc(72px - 4px);
-    left: var(--tab-location);
-    height: 4px;
+    left: var(--tab-left);
     width: var(--tab-width);
+    height: 4px;
     background-color: var(--color-active);
 
     @media (prefers-reduced-motion: no-preference) {

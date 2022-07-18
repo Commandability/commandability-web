@@ -16,25 +16,52 @@ function MainNav() {
   const rosterTabRef = React.useRef();
   const groupsTabRef = React.useRef();
 
-  const [activeTabRef, setActiveTabRef] = React.useState();
+  const [activeTab, setActiveTab] = React.useState({ ref: null });
 
   const { user } = useAuth();
   const { pathname } = useLocation();
 
-  // Don't calculate tab with until the font has loaded
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const effect = async () => {
+      // Don't calculate tab with until the font has loaded
       await document.fonts.ready;
 
-      if (/\/dashboard\/reports(?:$|\/)/.test(pathname))
-        setActiveTabRef(reportsTabRef);
-      if (/\/dashboard\/roster(?:$|\/)/.test(pathname))
-        setActiveTabRef(rosterTabRef);
-      if (/\/dashboard\/groups(?:$|\/)/.test(pathname))
-        setActiveTabRef(groupsTabRef);
+      if (/\/dashboard\/reports(?:$|\/)/.test(pathname)) {
+        setActiveTab({
+          width: reportsTabRef.current.getBoundingClientRect().width,
+          left: reportsTabRef.current.getBoundingClientRect().left,
+          ref: reportsTabRef,
+        });
+      } else if (/\/dashboard\/roster(?:$|\/)/.test(pathname)) {
+        setActiveTab({
+          width: rosterTabRef.current.getBoundingClientRect().width,
+          left: rosterTabRef.current.getBoundingClientRect().left,
+          ref: rosterTabRef,
+        });
+      } else if (/\/dashboard\/groups(?:$|\/)/.test(pathname)) {
+        setActiveTab({
+          width: groupsTabRef.current.getBoundingClientRect().width,
+          left: groupsTabRef.current.getBoundingClientRect().left,
+          ref: groupsTabRef,
+        });
+      }
     };
     effect();
   }, [pathname]);
+
+  React.useLayoutEffect(() => {
+    function handleResize() {
+      setActiveTab((prevActiveTab) => ({
+        width: prevActiveTab.ref.current.getBoundingClientRect().width,
+        left: prevActiveTab.ref.current.getBoundingClientRect().left,
+        ref: prevActiveTab.ref,
+      }));
+    }
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Nav>
@@ -47,12 +74,8 @@ function MainNav() {
       {user.current ? (
         <Desktop
           style={{
-            "--tab-width": `${
-              activeTabRef?.current?.getBoundingClientRect().width
-            }px`,
-            "--tab-location": `${
-              activeTabRef?.current?.getBoundingClientRect().left
-            }px`,
+            "--tab-width": `${activeTab?.width}px`,
+            "--tab-left": `${activeTab?.left}px`,
           }}
         >
           <Tab ref={reportsTabRef} to="/dashboard/reports">
@@ -184,9 +207,9 @@ const Desktop = styled.div`
     content: "";
     position: absolute;
     top: calc(72px - 4px);
-    left: var(--tab-location);
-    height: 4px;
+    left: var(--tab-left);
     width: var(--tab-width);
+    height: 4px;
     background-color: var(--color-red-3);
 
     @media (prefers-reduced-motion: no-preference) {
