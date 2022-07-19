@@ -1,11 +1,13 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
+import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import { useAuth } from "context/auth-context";
-import VisuallyHidden from "components/visually-hidden";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
+import VisuallyHidden from "components/visually-hidden";
+import UserAccountDialog from "components/user-account-dialog";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
@@ -213,6 +215,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
 
   return (
     <Nav
+      className={zeroRightClassName}
       style={{
         "--background-color": `${
           window.scrollY ? "var(--color-white)" : "transparent"
@@ -338,6 +341,14 @@ function LandingNav({ header, features, howItWorks, footer }) {
             }`,
           }}
         >
+          <UserAccountDialog
+            dialog="CurrentUser"
+            button={<Option>Login</Option>}
+          />
+          <UserAccountDialog
+            dialog="NewUser"
+            button={<Option>Create an Account</Option>}
+          />
           {user.current ? (
             <Option>Go to dashboard</Option>
           ) : (
@@ -353,7 +364,8 @@ function LandingNav({ header, features, howItWorks, footer }) {
 const Nav = styled.nav`
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: 72px;
   display: flex;
   z-index: 999999;
