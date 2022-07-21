@@ -52,8 +52,8 @@ function MainNav() {
   React.useLayoutEffect(() => {
     function handleResize() {
       setActiveTab((prevActiveTab) => ({
-        width: prevActiveTab.ref.current.getBoundingClientRect().width,
-        left: prevActiveTab.ref.current.getBoundingClientRect().left,
+        width: prevActiveTab.ref?.current.getBoundingClientRect().width,
+        left: prevActiveTab.ref?.current.getBoundingClientRect().left,
         ref: prevActiveTab.ref,
       }));
     }
