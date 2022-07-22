@@ -4,11 +4,17 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as Popover from "@radix-ui/react-popover";
 import * as Separator from "@radix-ui/react-separator";
-import { FiChevronDown } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiHelpCircle,
+  FiSettings,
+  FiLogOut,
+} from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
+import Spacer from "components/spacer";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
@@ -132,21 +138,31 @@ function MainNav() {
                 <PopoverArrow />
                 <PopoverList>
                   <PopoverItem>
-                    <PopoverLink
+                    <PopoverAction
                       as="a"
                       href="mailto:support@commandability.app?"
                     >
+                      <FiHelpCircle />
+                      <Spacer axis="horizontal" size={8} />
                       Help
-                    </PopoverLink>
+                    </PopoverAction>
                   </PopoverItem>
                   <PopoverItem>
-                    <PopoverLink to="/dashboard/settings">Settings</PopoverLink>
+                    <PopoverAction to="/dashboard/settings">
+                      <FiSettings />
+                      <Spacer axis="horizontal" size={8} />
+                      Settings
+                    </PopoverAction>
                   </PopoverItem>
                 </PopoverList>
                 <PopoverSeparator />
                 <PopoverList>
                   <PopoverItem>
-                    <PopoverButton>Sign out</PopoverButton>
+                    <PopoverAction as={UnstyledButton}>
+                      <FiLogOut />
+                      <Spacer axis="horizontal" size={8} />
+                      Sign out
+                    </PopoverAction>
                   </PopoverItem>
                 </PopoverList>
               </PopoverContent>
@@ -434,30 +450,34 @@ const PopoverItem = styled.li`
   width: 100%;
   padding: 0px 16px;
   color: var(--color-gray-1);
+  stroke: var(--color-yellow-2);
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--color-yellow-2);
       color: var(--color-white);
+      stroke: var(--color-white);
     }
   }
 `;
 
-const PopoverLink = styled(Link)`
-  display: inline-block;
+const PopoverAction = styled(Link)`
+  display: flex;
   width: 100%;
   text-decoration: none;
   color: inherit;
+
+  & > svg {
+    stroke: inherit;
+    position: relative;
+    top: 0.25em;
+  }
 `;
 
 const PopoverSeparator = styled(Separator.Root)`
   height: 1px;
   width: "100%";
   background-color: var(--color-gray-6);
-`;
-
-const PopoverButton = styled(UnstyledButton)`
-  width: 100%;
 `;
 
 const DropDown = styled(UnstyledButton)`
