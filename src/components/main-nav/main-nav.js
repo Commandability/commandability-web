@@ -1,7 +1,9 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
+import * as Popover from "@radix-ui/react-popover";
+import * as Separator from "@radix-ui/react-separator";
 import { FiChevronDown } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
@@ -44,6 +46,8 @@ function MainNav() {
           left: groupsTabRef.current.getBoundingClientRect().left,
           ref: groupsTabRef,
         });
+      } else {
+        setActiveTab({ ref: null });
       }
     };
     effect();
@@ -92,11 +96,11 @@ function MainNav() {
       {user.current ? (
         <Mobile>
           <Dialog.Root modal={false}>
-            <Trigger asChild>
+            <DialogTrigger asChild>
               <MenuButton />
-            </Trigger>
+            </DialogTrigger>
             <Dialog.Portal>
-              <Content
+              <DialogContent
                 onInteractOutside={(e) => e.preventDefault()}
                 onOpenAutoFocus={(e) => e.preventDefault()}
                 onCloseAutoFocus={(e) => e.preventDefault()}
@@ -104,22 +108,50 @@ function MainNav() {
                 <Dialog.Title>
                   <VisuallyHidden>Navigation</VisuallyHidden>
                 </Dialog.Title>
-                <Menu>
-                  <Item to="/dashboard/reports">Reports</Item>
-                  <Item to="/dashboard/roster">Roster</Item>
-                  <Item to="/dashboard/groups">Groups</Item>
-                </Menu>
-              </Content>
+                <DialogMenu>
+                  <DialogItem to="/dashboard/reports">Reports</DialogItem>
+                  <DialogItem to="/dashboard/roster">Roster</DialogItem>
+                  <DialogItem to="/dashboard/groups">Groups</DialogItem>
+                </DialogMenu>
+              </DialogContent>
             </Dialog.Portal>
           </Dialog.Root>
         </Mobile>
       ) : null}
       <RightSide>
         {user.current ? (
-          <DropDown>
-            {user.current.displayName}
-            <FiChevronDown />
-          </DropDown>
+          <Popover.Root>
+            <Popover.Trigger asChild>
+              <DropDown>
+                {user.current.displayName}
+                <FiChevronDown />
+              </DropDown>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <PopoverContent>
+                <PopoverArrow />
+                <PopoverList>
+                  <PopoverItem>
+                    <PopoverLink
+                      as="a"
+                      href="mailto:support@commandability.app?"
+                    >
+                      Help
+                    </PopoverLink>
+                  </PopoverItem>
+                  <PopoverItem>
+                    <PopoverLink to="/dashboard/settings">Settings</PopoverLink>
+                  </PopoverItem>
+                </PopoverList>
+                <PopoverSeparator />
+                <PopoverList>
+                  <PopoverItem>
+                    <PopoverButton>Sign out</PopoverButton>
+                  </PopoverItem>
+                </PopoverList>
+              </PopoverContent>
+            </Popover.Portal>
+          </Popover.Root>
         ) : (
           <AccountOptions>
             <Option>Create an account</Option>
@@ -268,7 +300,7 @@ const filler = keyframes`
   }
 `;
 
-const Content = styled(Dialog.Content)`
+const DialogContent = styled(Dialog.Content)`
   display: none;
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -279,7 +311,7 @@ const Content = styled(Dialog.Content)`
   // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
   top: calc(72px - 1px);
   width: 100%;
-  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
+  font-size: ${18 / 16}rem;
   overflow: hidden;
   // Add padding to bottom for box-shadow
   padding-bottom: 8px;
@@ -310,7 +342,7 @@ const slideOut = keyframes`
   }
 `;
 
-const Menu = styled.div`
+const DialogMenu = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -323,16 +355,16 @@ const Menu = styled.div`
   box-shadow: var(--box-shadow);
 
   @media (prefers-reduced-motion: no-preference) {
-    ${Content}[data-state="open"] & {
+    ${DialogContent}[data-state="open"] & {
       animation: ${slideIn} 300ms ease-out forwards;
     }
-    ${Content}[data-state="closed"] & {
+    ${DialogContent}[data-state="closed"] & {
       animation: ${slideOut} 300ms ease-in forwards;
     }
   }
 `;
 
-const Item = styled(NavLink)`
+const DialogItem = styled(NavLink)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
@@ -353,22 +385,79 @@ const Item = styled(NavLink)`
   }
 `;
 
-const Trigger = styled(Dialog.Trigger)`
+const DialogTrigger = styled(Dialog.Trigger)`
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
 
 const RightSide = styled.div`
+  align-self: center;
   flex: 1;
   display: flex;
   justify-content: flex-end;
-  align-self: center;
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container
   padding-right: calc((32px - 18.67px) / 2);
 
   @media ${QUERIES.tabletAndSmaller} {
     display: none;
   }
+`;
+
+const PopoverContent = styled(Popover.Content)`
+  width: 160px;
+  background-color: var(--color-gray-8);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  position: relative;
+  top: 8px;
+  padding: 8px 0px;
+  display: flex;
+  flex-direction: column;
+
+  @media ${QUERIES.tabletAndSmaller} {
+    display: none;
+  }
+`;
+
+const PopoverArrow = styled(Popover.Arrow)`
+  fill: var(--color-gray-8);
+  position: relative;
+  right: calc(160px / 2 - 16px);
+`;
+
+const PopoverList = styled.ul`
+  list-style: none;
+  padding: 4px 0px;
+`;
+
+const PopoverItem = styled.li`
+  width: 100%;
+  padding: 0px 16px;
+  color: var(--color-gray-1);
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--color-yellow-2);
+      color: var(--color-white);
+    }
+  }
+`;
+
+const PopoverLink = styled(Link)`
+  display: inline-block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+`;
+
+const PopoverSeparator = styled(Separator.Root)`
+  height: 1px;
+  width: "100%";
+  background-color: var(--color-gray-6);
+`;
+
+const PopoverButton = styled(UnstyledButton)`
+  width: 100%;
 `;
 
 const DropDown = styled(UnstyledButton)`
