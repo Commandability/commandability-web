@@ -12,7 +12,6 @@ import Groups from "pages/groups";
 import Settings from "pages/settings";
 import NotFound from "pages/not-found";
 import PrivacyPolicy from "pages/privacy-policy";
-import TermsOfService from "pages/terms-of-service";
 
 function AuthenticatedApp() {
   return (
@@ -33,7 +32,6 @@ function AuthenticatedApp() {
       <Route path="*" element={<Layout />}>
         <Route path="*" element={<NotFound />} />
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="terms-of-service" element={<TermsOfService />} />
       </Route>
     </Routes>
   );

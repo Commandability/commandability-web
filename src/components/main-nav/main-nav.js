@@ -421,7 +421,7 @@ const RightSide = styled.div`
 
 const PopoverContent = styled(Popover.Content)`
   width: 160px;
-  background-color: var(--color-gray-8);
+  background-color: var(--color-gray-9);
   border-radius: 8px;
   box-shadow: var(--box-shadow);
   position: relative;
@@ -436,7 +436,7 @@ const PopoverContent = styled(Popover.Content)`
 `;
 
 const PopoverArrow = styled(Popover.Arrow)`
-  fill: var(--color-gray-8);
+  fill: var(--color-gray-9);
   position: relative;
   right: calc(160px / 2 - 16px);
 `;

@@ -541,12 +541,12 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   max-width: calc(75ch + 64px);
-  padding: 32px;
+  padding: 16px 32px;
   background-color: var(--color-white);
   border-radius: 8px;
 
   @media ${QUERIES.phoneAndSmaller} {
-    padding: 32px 8px;
+    padding: 0px 8px;
     border-radius: 0;
   }
 `;

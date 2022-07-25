@@ -219,7 +219,6 @@ function Home() {
             </Copyright>
             <Policies>
               <Policy to="/privacy-policy">Privacy Policy</Policy>
-              <Policy to="/terms-of-service">Terms of Service</Policy>
             </Policies>
           </Legal>
         </Footer>
