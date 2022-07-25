@@ -8,6 +8,7 @@ function Layout() {
   return (
     <Main>
       <MainNav />
+      <Background />
       <Wrapper>
         <Outlet />
       </Wrapper>
@@ -16,8 +17,14 @@ function Layout() {
 }
 
 const Main = styled.main`
-  height: 100%;
-  background-color: magenta;
+  min-height: 100%;
+`;
+
+const Background = styled.div`
+  width: 100%;
+  height: calc(100% - 72px);
+  position: fixed;
+  top: 72px;
   background-image: radial-gradient(
       circle at 104% calc(92% + 72px),
       hsl(360 54% 32% / 0.6),
