@@ -23,7 +23,7 @@ function Button({ theme, icon, children }) {
   return (
     <ButtonBase style={styles}>
       {icon ? icon() : null}
-      <Spacer size={8} axis="horizontal" />
+      {icon ? <Spacer size={8} axis="horizontal" /> : null}
       <Text>{children}</Text>
     </ButtonBase>
   );
