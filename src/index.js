@@ -4,6 +4,7 @@ import AppProviders from "context/app-providers";
 
 import App from "app";
 import GlobalStyles from "global-styles.js";
+import ScrollRestore from "scroll-restore.js";
 import reportWebVitals from "reportWebVitals.js";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -11,6 +12,7 @@ root.render(
   <React.StrictMode>
     <GlobalStyles />
     <AppProviders>
+      <ScrollRestore />
       <App />
     </AppProviders>
   </React.StrictMode>

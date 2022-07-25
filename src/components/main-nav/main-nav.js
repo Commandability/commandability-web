@@ -31,7 +31,7 @@ function MainNav() {
 
   React.useLayoutEffect(() => {
     const effect = async () => {
-      // Don't calculate tab with until the font has loaded
+      // Don't calculate tab width until the font has loaded
       await document.fonts.ready;
 
       if (/\/dashboard\/reports(?:$|\/)/.test(pathname)) {
