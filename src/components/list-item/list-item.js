@@ -1,9 +1,9 @@
 import * as React from "react";
 import styled from "styled-components";
 
-function ListItem({ icon, children }) {
+function ListItem({ icon, children, ...props }) {
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       {icon ? icon() : null}
       {children}
     </Wrapper>

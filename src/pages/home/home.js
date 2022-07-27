@@ -70,13 +70,7 @@ function Home() {
             tablet.
           </Subheading>
           <HeaderPills>
-            <Pill
-              onClick={() => {}}
-              targetId="features"
-              theme="light"
-              angle
-              smooth
-            >
+            <Pill onClick={() => {}} targetId="features" theme="light" angle>
               Learn more
             </Pill>
             <Pill onClick={() => {}} theme="dark" angle>

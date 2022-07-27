@@ -5,7 +5,7 @@ import styled from "styled-components";
 const THEMES = {
   light: {
     "--background-color": "var(--color-yellow-9)",
-    "--hover-background-color": "var(--color-yellow-10)",
+    "--hover-background-color": "var(--color-yellow-8)",
     "--color": "var(--color-yellow-2)",
   },
   dark: {
@@ -17,11 +17,11 @@ const THEMES = {
   },
 };
 
-function Button({ theme, icon, children }) {
-  const styles = THEMES[theme];
+function Button({ theme, icon, children, style, ...props }) {
+  const themeStyles = THEMES[theme];
 
   return (
-    <ButtonBase style={styles}>
+    <ButtonBase {...props} style={{ ...themeStyles, ...style }}>
       {icon ? icon() : null}
       {icon ? <Spacer size={8} axis="horizontal" /> : null}
       <Text>{children}</Text>
@@ -39,6 +39,7 @@ const ButtonBase = styled.button`
   -webkit-tap-highlight-color: transparent;
   background-color: var(--background-color);
   font-weight: bold;
+  text-transform: uppercase;
   color: var(--color);
 
   & > svg {

@@ -3,9 +3,9 @@ import styled from "styled-components";
 
 import { QUERIES } from "constants.js";
 
-function Card({ subheader, header, backgroundColor, children, className }) {
+function Card({ subheader, header, backgroundColor, children, ...props }) {
   return (
-    <Wrapper className={className}>
+    <Wrapper {...props}>
       <Title style={{ "--background-color": backgroundColor }}>
         <Subheader>{subheader}</Subheader>
         <Header>{header}</Header>

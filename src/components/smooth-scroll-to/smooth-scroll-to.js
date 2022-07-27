@@ -4,7 +4,7 @@ import usePrefersReducedMotion from "hooks/use-prefers-reduced-motion";
 import HashLink from "components/hash-link";
 
 function SmoothScrollTo(
-  { targetId, onClick, className, style, activeStyle, children, ...props },
+  { targetId, onClick, style, activeStyle, children, ...props },
   ref
 ) {
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -25,7 +25,6 @@ function SmoothScrollTo(
         smoothScroll();
         onClick && onClick(event);
       }}
-      className={className}
       style={{ ...style, ...activeStyle }}
     >
       {children}

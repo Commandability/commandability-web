@@ -21,9 +21,19 @@ const THEMES = {
   },
 };
 
-function Pill({ theme, angle, targetId, to, onClick, href, children }) {
+function Pill({
+  theme,
+  angle,
+  targetId,
+  to,
+  onClick,
+  href,
+  children,
+  style,
+  ...props
+}) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const styles = THEMES[theme];
+  const themeStyles = THEMES[theme];
 
   function smoothScroll() {
     const target = document.querySelector(`#${targetId}`);
@@ -34,7 +44,8 @@ function Pill({ theme, angle, targetId, to, onClick, href, children }) {
 
   return (
     <PillBase
-      style={styles}
+      {...props}
+      style={{ ...themeStyles, ...style }}
       to={targetId ? `#${targetId}` : to}
       onClick={(event) => {
         targetId && smoothScroll(event);
