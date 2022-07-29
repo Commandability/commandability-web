@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
+import useRect from "hooks/use-rect";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
@@ -20,13 +21,14 @@ import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
 
 function MainNav() {
-  const reportsTabRef = React.useRef();
-  const rosterTabRef = React.useRef();
-  const groupsTabRef = React.useRef();
-
-  const [activeTab, setActiveTab] = React.useState({ ref: null });
-
   const { user } = useAuth();
+
+  const [reportsTabRef, reportsTabRect] = useRect();
+  const [rosterTabRef, rosterTabRect] = useRect();
+  const [groupsTabRef, groupsTabRect] = useRect();
+
+  const [activeTabRect, setActiveTabRect] = React.useState(null);
+
   const { pathname } = useLocation();
 
   React.useLayoutEffect(() => {
@@ -35,43 +37,17 @@ function MainNav() {
       await document.fonts.ready;
 
       if (/\/dashboard\/reports(?:$|\/)/.test(pathname)) {
-        setActiveTab({
-          width: reportsTabRef.current.getBoundingClientRect().width,
-          left: reportsTabRef.current.getBoundingClientRect().left,
-          ref: reportsTabRef,
-        });
+        setActiveTabRect(reportsTabRect);
       } else if (/\/dashboard\/roster(?:$|\/)/.test(pathname)) {
-        setActiveTab({
-          width: rosterTabRef.current.getBoundingClientRect().width,
-          left: rosterTabRef.current.getBoundingClientRect().left,
-          ref: rosterTabRef,
-        });
+        setActiveTabRect(rosterTabRect);
       } else if (/\/dashboard\/groups(?:$|\/)/.test(pathname)) {
-        setActiveTab({
-          width: groupsTabRef.current.getBoundingClientRect().width,
-          left: groupsTabRef.current.getBoundingClientRect().left,
-          ref: groupsTabRef,
-        });
+        setActiveTabRect(groupsTabRect);
       } else {
-        setActiveTab({ ref: null });
+        setActiveTabRect(null);
       }
     };
     effect();
-  }, [pathname]);
-
-  React.useLayoutEffect(() => {
-    function handleResize() {
-      setActiveTab((prevActiveTab) => ({
-        width: prevActiveTab.ref?.current.getBoundingClientRect().width,
-        left: prevActiveTab.ref?.current.getBoundingClientRect().left,
-        ref: prevActiveTab.ref,
-      }));
-    }
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  }, [pathname, reportsTabRect, rosterTabRect, groupsTabRect]);
 
   return (
     <Nav>
@@ -84,8 +60,8 @@ function MainNav() {
       {user.current ? (
         <Desktop
           style={{
-            "--tab-width": `${activeTab?.width}px`,
-            "--tab-left": `${activeTab?.left}px`,
+            "--tab-width": `${activeTabRect?.width}px`,
+            "--tab-left": `${activeTabRect?.left}px`,
           }}
         >
           <Tab ref={reportsTabRef} to="/dashboard/reports">

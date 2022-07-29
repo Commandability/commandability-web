@@ -3,6 +3,7 @@ import styled, { keyframes } from "styled-components";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { useAuth } from "context/auth-context";
+import useRect from "hooks/use-rect";
 import VisuallyHidden from "components/visually-hidden";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
@@ -11,34 +12,31 @@ import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
 
 function LandingNav({ header, features, howItWorks, footer }) {
-  const homeTabRef = React.useRef();
-  const featuresTabRef = React.useRef();
-  const howItWorksTabRef = React.useRef();
-  const contactTabRef = React.useRef();
-
   const { user } = useAuth();
+
+  const [homeTabRef, homeTabRect] = useRect();
+  const [featuresTabRef, featuresTabRect] = useRect();
+  const [howItWorksTabRef, howItWorksTabRect] = useRect();
+  const [contactTabRef, contactTabRect] = useRect();
+
+  const rectsById = {
+    [header.id]: homeTabRect,
+    [features.id]: featuresTabRect,
+    [howItWorks.id]: howItWorksTabRect,
+    [footer.id]: contactTabRect,
+  };
 
   const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: "",
-    activeTab: {
-      width: homeTabRef.current?.getBoundingClientRect().width,
-      left: homeTabRef.current?.getBoundingClientRect().left,
-      ref: homeTabRef,
-    },
   });
 
   function activeReducer(state, action) {
     // Set header as active on refresh
-    if (!scroll.y && action.type !== "window-resize")
+    if (!scroll.y)
       return {
         ...state,
         activeTargetId: header.id,
-        activeTab: {
-          width: homeTabRef.current?.getBoundingClientRect().width,
-          left: homeTabRef.current?.getBoundingClientRect().left,
-          ref: homeTabRef,
-        },
       };
 
     switch (action.type) {
@@ -48,26 +46,12 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
-            activeTab: {
-              width:
-                action.payload.adjacentTabRef.current.getBoundingClientRect()
-                  .width,
-              left: action.payload.adjacentTabRef.current.getBoundingClientRect()
-                .left,
-              ref: action.payload.adjacentTabRef,
-            },
           };
           // Set the current element as active when the header intersects it
         } else if (scroll.direction === "up" && action.payload.elementInView) {
           return {
             ...state,
             activeTargetId: action.payload.elementId,
-            activeTab: {
-              width:
-                action.payload.tabRef.current.getBoundingClientRect().width,
-              left: action.payload.tabRef.current.getBoundingClientRect().left,
-              ref: action.payload.tabRef,
-            },
           };
         } else {
           return state;
@@ -78,37 +62,13 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return {
             ...state,
             activeTargetId: action.payload.elementId,
-            activeTab: {
-              width:
-                action.payload.tabRef.current.getBoundingClientRect().width,
-              left: action.payload.tabRef.current.getBoundingClientRect().left,
-              ref: action.payload.tabRef,
-            },
           };
         } else {
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
-            activeTab: {
-              width:
-                action.payload.siblingTabRef.current.getBoundingClientRect()
-                  .width,
-              left: action.payload.siblingTabRef.current.getBoundingClientRect()
-                .left,
-              ref: action.payload.siblingTabRef,
-            },
           };
         }
-      case "window-resize":
-        return {
-          ...state,
-          activeTargetId: state.activeTargetId,
-          activeTab: {
-            width: state.activeTab.ref?.current?.getBoundingClientRect().width,
-            left: state.activeTab.ref?.current?.getBoundingClientRect().left,
-            ref: state.activeTab.ref,
-          },
-        };
       default:
         throw new Error(`Unsupported action type: ${action.type}`);
     }
@@ -123,9 +83,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
         payload: {
           elementInView: header.inView,
           elementId: header.id,
-          tabRef: homeTabRef,
           adjacentSiblingId: features.id,
-          adjacentTabRef: featuresTabRef,
         },
       });
     };
@@ -141,9 +99,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
         payload: {
           elementInView: features.inView,
           elementId: features.id,
-          tabRef: featuresTabRef,
           adjacentSiblingId: howItWorks.id,
-          adjacentTabRef: howItWorksTabRef,
         },
       });
     };
@@ -160,8 +116,6 @@ function LandingNav({ header, features, howItWorks, footer }) {
           elementInView: howItWorks.inView,
           elementId: howItWorks.id,
           adjacentSiblingId: footer.id,
-          tabRef: howItWorksTabRef,
-          adjacentTabRef: contactTabRef,
         },
       });
     };
@@ -178,25 +132,11 @@ function LandingNav({ header, features, howItWorks, footer }) {
           elementInView: footer.inView,
           elementId: footer.id,
           siblingId: howItWorks.id,
-          tabRef: contactTabRef,
-          siblingTabRef: howItWorksTabRef,
         },
       });
     };
     effect();
   }, [footer.inView, footer.id, howItWorks.id]);
-
-  React.useLayoutEffect(() => {
-    function handleResize() {
-      dispatch({
-        type: "window-resize",
-      });
-    }
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
   React.useEffect(() => {
     function handleScroll() {
@@ -250,8 +190,8 @@ function LandingNav({ header, features, howItWorks, footer }) {
           "--color-active": `${
             window.scrollY ? "var(--color-red-3)" : "var(--color-white)"
           }`,
-          "--tab-width": `${state.activeTab.width}px`,
-          "--tab-left": `${state.activeTab.left}px`,
+          "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
+          "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
         }}
       >
         <Tab
