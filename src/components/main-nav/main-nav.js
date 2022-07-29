@@ -20,6 +20,8 @@ import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
 
+const TAB_TRANSITION_DURATION = 400;
+
 function MainNav() {
   const { user } = useAuth();
 
@@ -27,6 +29,7 @@ function MainNav() {
   const [rosterTabRef, rosterTabRect] = useRect();
   const [groupsTabRef, groupsTabRect] = useRect();
 
+  const [transition, setTransition] = React.useState(false);
   const [activeTabRect, setActiveTabRect] = React.useState(null);
 
   const { pathname } = useLocation();
@@ -49,6 +52,17 @@ function MainNav() {
     effect();
   }, [pathname, reportsTabRect, rosterTabRect, groupsTabRect]);
 
+  React.useEffect(() => {
+    let transitionTimeoutID;
+    if (transition) {
+      transitionTimeoutID = setTimeout(
+        () => setTransition(false),
+        TAB_TRANSITION_DURATION
+      );
+    }
+    return () => clearTimeout(transitionTimeoutID);
+  }, [transition]);
+
   return (
     <Nav>
       <LeftSide>
@@ -60,17 +74,32 @@ function MainNav() {
       {user.current ? (
         <Desktop
           style={{
+            "--transition": transition
+              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
+              : "none",
             "--tab-width": `${activeTabRect?.width}px`,
             "--tab-left": `${activeTabRect?.left}px`,
           }}
         >
-          <Tab ref={reportsTabRef} to="/dashboard/reports">
+          <Tab
+            ref={reportsTabRef}
+            to="/dashboard/reports"
+            onClick={() => setTransition(true)}
+          >
             Reports
           </Tab>
-          <Tab ref={rosterTabRef} to="/dashboard/roster">
+          <Tab
+            ref={rosterTabRef}
+            to="/dashboard/roster"
+            onClick={() => setTransition(true)}
+          >
             Roster
           </Tab>
-          <Tab ref={groupsTabRef} to="/dashboard/groups">
+          <Tab
+            ref={groupsTabRef}
+            to="/dashboard/groups"
+            onClick={() => setTransition(true)}
+          >
             Groups
           </Tab>
         </Desktop>
@@ -238,7 +267,7 @@ const Desktop = styled.div`
 
     @media (prefers-reduced-motion: no-preference) {
       will-change: left, width;
-      transition: left 400ms, width 400ms;
+      transition: var(--transition);
     }
   }
 

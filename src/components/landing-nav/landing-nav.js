@@ -4,12 +4,15 @@ import * as Dialog from "@radix-ui/react-dialog";
 
 import { useAuth } from "context/auth-context";
 import useRect from "hooks/use-rect";
+import useScroll from "hooks/use-scroll";
 import VisuallyHidden from "components/visually-hidden";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
+
+const TAB_TRANSITION_DURATION = 400;
 
 function LandingNav({ header, features, howItWorks, footer }) {
   const { user } = useAuth();
@@ -26,14 +29,16 @@ function LandingNav({ header, features, howItWorks, footer }) {
     [footer.id]: contactTabRect,
   };
 
-  const [scroll, setScroll] = React.useState({ y: 0, direction: "" });
+  const { y, direction, status } = useScroll();
+  const [transition, setTransition] = React.useState(false);
+
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: "",
   });
 
   function activeReducer(state, action) {
     // Set header as active on refresh
-    if (!scroll.y)
+    if (!y)
       return {
         ...state,
         activeTargetId: header.id,
@@ -42,13 +47,15 @@ function LandingNav({ header, features, howItWorks, footer }) {
     switch (action.type) {
       case "scroll-update":
         // Set the next element as active when the current element is no longer in view / the header intersects the next element
-        if (scroll.direction === "down" && !action.payload.elementInView) {
+        if (direction === "down" && !action.payload.elementInView) {
+          setTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
           };
           // Set the current element as active when the header intersects it
-        } else if (scroll.direction === "up" && action.payload.elementInView) {
+        } else if (direction === "up" && action.payload.elementInView) {
+          setTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.elementId,
@@ -59,11 +66,13 @@ function LandingNav({ header, features, howItWorks, footer }) {
       case "bound-update":
         // Set the current element as active when it's in view, otherwise set its sibling as active
         if (action.payload.elementInView) {
+          setTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.elementId,
           };
         } else {
+          setTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
@@ -139,43 +148,35 @@ function LandingNav({ header, features, howItWorks, footer }) {
   }, [footer.inView, footer.id, howItWorks.id]);
 
   React.useEffect(() => {
-    function handleScroll() {
-      setScroll((prevScroll) => ({
-        y: window.scrollY,
-        direction: window.scrollY > prevScroll.y ? "down" : "up",
-      }));
+    let transitionTimeoutID;
+    if (status === "idle") {
+      transitionTimeoutID = setTimeout(
+        () => setTransition(false),
+        TAB_TRANSITION_DURATION
+      );
     }
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+    return () => clearTimeout(transitionTimeoutID);
+  }, [status]);
 
   return (
     <Nav
       style={{
-        "--background-color": `${
-          window.scrollY ? "var(--color-white)" : "transparent"
-        }`,
-        "--box-shadow": `${window.scrollY ? "inherit" : "none"}`,
+        "--background-color": `${y ? "var(--color-white)" : "transparent"}`,
+        "--box-shadow": `${y ? "inherit" : "none"}`,
       }}
     >
       <LeftSide>
         <SiteID
           href="/"
           style={{
-            "--color": `${
-              window.scrollY ? "var(--color-gray-1)" : "var(--color-white)"
-            }`,
+            "--color": `${y ? "var(--color-gray-1)" : "var(--color-white)"}`,
           }}
         >
           <NavFireIcon
             style={{
-              "--fill": `${
-                window.scrollY ? "var(--color-red-3)" : "var(--color-yellow-9)"
-              }`,
+              "--fill": `${y ? "var(--color-red-3)" : "var(--color-yellow-9)"}`,
               "--fill-active": `${
-                window.scrollY ? "var(--color-yellow-4)" : "var(--color-white)"
+                y ? "var(--color-yellow-4)" : "var(--color-white)"
               }`,
             }}
           />
@@ -184,12 +185,13 @@ function LandingNav({ header, features, howItWorks, footer }) {
       </LeftSide>
       <Desktop
         style={{
-          "--color": `${
-            window.scrollY ? "var(--color-gray-4)" : "var(--color-gray-8)"
-          }`,
+          "--color": `${y ? "var(--color-gray-4)" : "var(--color-gray-8)"}`,
           "--color-active": `${
-            window.scrollY ? "var(--color-red-3)" : "var(--color-white)"
+            y ? "var(--color-red-3)" : "var(--color-white)"
           }`,
+          "--transition": transition
+            ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
+            : "none",
           "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
           "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
         }}
@@ -271,10 +273,10 @@ function LandingNav({ header, features, howItWorks, footer }) {
         <AccountOptions
           style={{
             "--color": `${
-              window.scrollY ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+              y ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
             }`,
             "--color-active": `${
-              window.scrollY ? "var(--color-yellow-4)" : "var(--color-white)"
+              y ? "var(--color-yellow-4)" : "var(--color-white)"
             }`,
           }}
         >
@@ -377,7 +379,7 @@ const Desktop = styled.div`
 
     @media (prefers-reduced-motion: no-preference) {
       will-change: left, width;
-      transition: left 400ms, width 400ms;
+      transition: var(--transition);
     }
   }
 
