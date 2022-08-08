@@ -11,10 +11,17 @@ import SmoothScrollTo from "components/smooth-scroll-to";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
+import { hashIds } from "pages/home";
 
+const HEADER_TRANSITION_DURATION = 400;
 const TAB_TRANSITION_DURATION = 400;
 
-function LandingNav({ header, features, howItWorks, footer }) {
+function LandingNav({
+  headerInView,
+  featuresInView,
+  howItWorksInView,
+  footerInView,
+}) {
   const { user } = useAuth();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -23,39 +30,37 @@ function LandingNav({ header, features, howItWorks, footer }) {
   const [contactTabRef, contactTabRect] = useRect();
 
   const rectsById = {
-    [header.id]: homeTabRect,
-    [features.id]: featuresTabRect,
-    [howItWorks.id]: howItWorksTabRect,
-    [footer.id]: contactTabRect,
+    [hashIds.header]: homeTabRect,
+    [hashIds.features]: featuresTabRect,
+    [hashIds.howItWorks]: howItWorksTabRect,
+    [hashIds.footer]: contactTabRect,
   };
 
-  const { y, direction, status } = useScroll();
-  const [transition, setTransition] = React.useState(false);
+  const { y, status } = useScroll();
+  const [tabTransition, setTabTransition] = React.useState(false);
 
   const [state, dispatch] = React.useReducer(activeReducer, {
-    activeTargetId: "",
+    activeTargetId: hashIds.header,
   });
 
   function activeReducer(state, action) {
-    // Set header as active on refresh
-    if (!y)
-      return {
-        ...state,
-        activeTargetId: header.id,
-      };
-
     switch (action.type) {
+      case "initial-state":
+        return {
+          ...state,
+          activeTargetId: action.payload.initialId,
+        };
       case "scroll-update":
         // Set the next element as active when the current element is no longer in view / the header intersects the next element
-        if (direction === "down" && !action.payload.elementInView) {
-          setTransition(true);
+        if (status === "scrolling-down" && !action.payload.elementInView) {
+          setTabTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
           };
           // Set the current element as active when the header intersects it
-        } else if (direction === "up" && action.payload.elementInView) {
-          setTransition(true);
+        } else if (status === "scrolling-up" && action.payload.elementInView) {
+          setTabTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.elementId,
@@ -64,19 +69,21 @@ function LandingNav({ header, features, howItWorks, footer }) {
           return state;
         }
       case "bound-update":
-        // Set the current element as active when it's in view, otherwise set its sibling as active
+        // Set the current element as active when it's inView threshold is triggered, and set its sibling as active as soon as it's no longer triggered
         if (action.payload.elementInView) {
-          setTransition(true);
+          setTabTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.elementId,
           };
-        } else {
-          setTransition(true);
+        } else if (action.payload.siblingInView && status === "scrolling-up") {
+          setTabTransition(true);
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
           };
+        } else {
+          return state;
         }
       default:
         throw new Error(`Unsupported action type: ${action.type}`);
@@ -88,70 +95,85 @@ function LandingNav({ header, features, howItWorks, footer }) {
       await document.fonts.ready;
 
       dispatch({
-        type: "scroll-update",
+        type: "initial-state",
         payload: {
-          elementInView: header.inView,
-          elementId: header.id,
-          adjacentSiblingId: features.id,
+          initialId: hashIds.header,
         },
       });
     };
     effect();
-  }, [header.inView, header.id, features.id]);
+  }, []);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const effect = async () => {
       await document.fonts.ready;
 
       dispatch({
         type: "scroll-update",
         payload: {
-          elementInView: features.inView,
-          elementId: features.id,
-          adjacentSiblingId: howItWorks.id,
+          elementInView: headerInView,
+          elementId: hashIds.header,
+          adjacentSiblingId: hashIds.features,
         },
       });
     };
     effect();
-  }, [features.inView, features.id, howItWorks.id]);
+  }, [headerInView]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const effect = async () => {
       await document.fonts.ready;
 
       dispatch({
         type: "scroll-update",
         payload: {
-          elementInView: howItWorks.inView,
-          elementId: howItWorks.id,
-          adjacentSiblingId: footer.id,
+          elementInView: featuresInView,
+          elementId: hashIds.features,
+          adjacentSiblingId: hashIds.howItWorks,
         },
       });
     };
     effect();
-  }, [howItWorks.inView, howItWorks.id, footer.id]);
+  }, [featuresInView]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
+    const effect = async () => {
+      await document.fonts.ready;
+
+      dispatch({
+        type: "scroll-update",
+        payload: {
+          elementInView: howItWorksInView,
+          elementId: hashIds.howItWorks,
+          adjacentSiblingId: hashIds.footer,
+        },
+      });
+    };
+    effect();
+  }, [howItWorksInView]);
+
+  React.useLayoutEffect(() => {
     const effect = async () => {
       await document.fonts.ready;
 
       dispatch({
         type: "bound-update",
         payload: {
-          elementInView: footer.inView,
-          elementId: footer.id,
-          siblingId: howItWorks.id,
+          elementInView: footerInView,
+          siblingInView: howItWorksInView,
+          elementId: hashIds.footer,
+          siblingId: hashIds.howItWorks,
         },
       });
     };
     effect();
-  }, [footer.inView, footer.id, howItWorks.id]);
+  }, [footerInView, howItWorksInView]);
 
   React.useEffect(() => {
     let transitionTimeoutID;
     if (status === "idle") {
       transitionTimeoutID = setTimeout(
-        () => setTransition(false),
+        () => setTabTransition(false),
         TAB_TRANSITION_DURATION
       );
     }
@@ -189,7 +211,7 @@ function LandingNav({ header, features, howItWorks, footer }) {
           "--color-active": `${
             y ? "var(--color-red-3)" : "var(--color-white)"
           }`,
-          "--transition": transition
+          "--tab-transition": tabTransition
             ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
             : "none",
           "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
@@ -198,29 +220,29 @@ function LandingNav({ header, features, howItWorks, footer }) {
       >
         <Tab
           ref={homeTabRef}
-          targetId={header.id}
-          inView={state.activeTargetId === header.id ? true : false}
+          targetId={hashIds.header}
+          inView={state.activeTargetId === hashIds.header ? true : false}
         >
           Home
         </Tab>
         <Tab
           ref={featuresTabRef}
-          targetId={features.id}
-          inView={state.activeTargetId === features.id ? true : false}
+          targetId={hashIds.features}
+          inView={state.activeTargetId === hashIds.features ? true : false}
         >
           Features
         </Tab>
         <Tab
           ref={howItWorksTabRef}
-          targetId={howItWorks.id}
-          inView={state.activeTargetId === howItWorks.id ? true : false}
+          targetId={hashIds.howItWorks}
+          inView={state.activeTargetId === hashIds.howItWorks ? true : false}
         >
           How it works
         </Tab>
         <Tab
           ref={contactTabRef}
-          targetId={footer.id}
-          inView={state.activeTargetId === footer.id ? true : false}
+          targetId={hashIds.footer}
+          inView={state.activeTargetId === hashIds.footer ? true : false}
         >
           Contact
         </Tab>
@@ -241,26 +263,34 @@ function LandingNav({ header, features, howItWorks, footer }) {
               </Dialog.Title>
               <Menu>
                 <Item
-                  targetId={header.id}
-                  inView={state.activeTargetId === header.id ? true : false}
+                  targetId={hashIds.Header}
+                  inView={
+                    state.activeTargetId === hashIds.header ? true : false
+                  }
                 >
                   Home
                 </Item>
                 <Item
-                  targetId={features.id}
-                  inView={state.activeTargetId === features.id ? true : false}
+                  targetId={hashIds.features}
+                  inView={
+                    state.activeTargetId === hashIds.features ? true : false
+                  }
                 >
                   Features
                 </Item>
                 <Item
-                  targetId={howItWorks.id}
-                  inView={state.activeTargetId === howItWorks.id ? true : false}
+                  targetId={hashIds.HowItWorks}
+                  inView={
+                    state.activeTargetId === hashIds.howItWorks ? true : false
+                  }
                 >
                   How it works
                 </Item>
                 <Item
-                  targetId={footer.id}
-                  inView={state.activeTargetId === footer.id ? true : false}
+                  targetId={hashIds.footer}
+                  inView={
+                    state.activeTargetId === hashIds.footer ? true : false
+                  }
                 >
                   Contact
                 </Item>
@@ -308,7 +338,7 @@ const Nav = styled.nav`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: background-color;
-    transition: background-color 400ms;
+    transition: background-color ${HEADER_TRANSITION_DURATION}ms;
   }
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -332,7 +362,7 @@ const SiteID = styled.a`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
-    transition: color 400ms;
+    transition: color ${HEADER_TRANSITION_DURATION}ms;
   }
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -379,7 +409,7 @@ const Desktop = styled.div`
 
     @media (prefers-reduced-motion: no-preference) {
       will-change: left, width;
-      transition: var(--transition);
+      transition: var(--tab-transition);
     }
   }
 

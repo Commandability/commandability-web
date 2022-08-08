@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
+import useCombineRefs from "hooks/use-combine-refs";
+import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
 import Card from "components/card";
@@ -19,50 +21,49 @@ import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
 import { BREAKPOINTS, QUERIES } from "constants.js";
 
-function Home() {
-  const inViewOptions = {
-    rootMargin: "-72px 0px",
-  };
+export const hashIds = {
+  header: "home",
+  features: "features",
+  howItWorks: "how-it-works",
+  footer: "contact",
+};
 
-  const [headerRef, headerInView] = useInView(inViewOptions);
-  const [featuresRef, featuresInView] = useInView(inViewOptions);
-  const [howItWorksRef, howItWorksInView] = useInView(inViewOptions);
-  const [footerRef, footerInView] = useInView({
+const inViewOptions = {
+  rootMargin: "-72px 0px",
+};
+
+function Home() {
+  const [headerInViewRef, headerInView] = useInView(inViewOptions);
+  const [featuresInViewRef, featuresInView] = useInView(inViewOptions);
+  const [howItWorksInViewRef, howItWorksInView] = useInView(inViewOptions);
+  const [footerInViewRef, footerInView] = useInView({
     // Account for pixel rounding and fixed header preventing the footer from being fully in view
     threshold: 0.99 - 72 / window.innerHeight,
   });
 
-  const header = {
-    ref: headerRef,
-    id: "home",
-    inView: headerInView,
-  };
-  const features = {
-    ref: featuresRef,
-    id: "features",
-    inView: featuresInView,
-  };
-  const howItWorks = {
-    ref: howItWorksRef,
-    id: "how-it-works",
-    inView: howItWorksInView,
-  };
-  const footer = {
-    ref: footerRef,
-    id: "contact",
-    inView: footerInView,
-  };
+  const headerFragmentRef = useFragment(hashIds.header);
+  const featuresFragmentRef = useFragment(hashIds.features);
+  const howItWorksFragmentRef = useFragment(hashIds.howItWorks);
+  const footerFragmentRef = useFragment(hashIds.footer);
+
+  const headerRef = useCombineRefs(headerInViewRef, headerFragmentRef);
+  const featuresRef = useCombineRefs(featuresInViewRef, featuresFragmentRef);
+  const howItWorksRef = useCombineRefs(
+    howItWorksInViewRef,
+    howItWorksFragmentRef
+  );
+  const footerRef = useCombineRefs(footerInViewRef, footerFragmentRef);
 
   return (
     <Main>
       <LandingNav
-        header={header}
-        features={features}
-        howItWorks={howItWorks}
-        footer={footer}
+        headerInView={headerInView}
+        featuresInView={featuresInView}
+        howItWorksInView={howItWorksInView}
+        footerInView={footerInView}
       />
       <HeroImage>
-        <Header id={header.id} ref={header.ref}>
+        <Header id={hashIds.header} ref={headerRef}>
           <Heading>Keep your department safe and accountable</Heading>
           <Subheading>
             Manage your department’s personnel and automatically generate
@@ -93,7 +94,7 @@ function Home() {
           </ScrollDownContents>
         </ScrollDown>
       </HeroImage>
-      <FeaturesWrapper id={features.id} ref={features.ref}>
+      <FeaturesWrapper id={hashIds.features} ref={featuresRef}>
         <Feature>
           <ManageIcon />
           <FeatureContent>
@@ -136,7 +137,7 @@ function Home() {
           </FeatureContent>
         </Feature>
       </FeaturesWrapper>
-      <HowItWorks id={howItWorks.id} ref={howItWorks.ref}>
+      <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
         <StepOne
           subheader="Step 1"
           header="Setup an account"
@@ -193,7 +194,7 @@ function Home() {
         </StepThree>
       </HowItWorks>
       <FooterImage>
-        <Footer id={footer.id} ref={footer.ref}>
+        <Footer id={hashIds.footer} ref={footerRef}>
           <Contact>
             <QuestionText>Have questions?</QuestionText>
             <MessageText>Send us a message</MessageText>

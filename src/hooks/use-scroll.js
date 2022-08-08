@@ -3,7 +3,6 @@ import * as React from "react";
 function useScroll() {
   const [scroll, setScroll] = React.useState({
     y: 0,
-    direction: "",
     status: "idle",
   });
 
@@ -12,8 +11,8 @@ function useScroll() {
     function handleScroll() {
       setScroll((prevScroll) => ({
         y: window.scrollY,
-        direction: window.scrollY > prevScroll.y ? "down" : "up",
-        status: "scrolling",
+        status:
+          window.scrollY > prevScroll.y ? "scrolling-down" : "scrolling-up",
       }));
 
       // Set status to idle if the scroll event doesn't fire for 100ms
