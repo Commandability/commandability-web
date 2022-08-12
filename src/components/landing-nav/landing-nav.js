@@ -39,7 +39,7 @@ function LandingNav({
   };
 
   const { y, status } = useScroll();
-  const [tabTransition, setTabTransition] = React.useState(false);
+  const [tabTransition, setTabTransition] = React.useState("inactive");
 
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: hashIds.header,
@@ -67,6 +67,7 @@ function LandingNav({
           state.hashUpdate !== "active" &&
           action.payload.origin === "effect"
         ) {
+          setTabTransition("deferred");
           return {
             ...state,
             activeTargetId: action.payload.hashId,
@@ -81,14 +82,14 @@ function LandingNav({
       case "scroll-update":
         // Set the next element as active when the current element is no longer in view / the header intersects the next element
         if (status === "scrolling-down" && !action.payload.elementInView) {
-          setTabTransition(true);
+          setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
           };
           // Set the current element as active when the header intersects it
         } else if (status === "scrolling-up" && action.payload.elementInView) {
-          setTabTransition(true);
+          setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.elementId,
@@ -99,13 +100,13 @@ function LandingNav({
       case "bound-update":
         // Set the current element as active when it's inView threshold is triggered, and set its sibling as active as soon as it's no longer triggered
         if (action.payload.elementInView) {
-          setTabTransition(true);
+          setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.elementId,
           };
         } else if (status === "scrolling-up" && action.payload.siblingInView) {
-          setTabTransition(true);
+          setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
@@ -214,14 +215,14 @@ function LandingNav({
 
   React.useEffect(() => {
     let transitionTimeoutID;
-    if (status === "idle") {
+    if (status === "idle" && tabTransition !== "inactive") {
       transitionTimeoutID = setTimeout(
-        () => setTabTransition(false),
+        () => setTabTransition("inactive"),
         TAB_TRANSITION_DURATION
       );
     }
     return () => clearTimeout(transitionTimeoutID);
-  }, [status]);
+  }, [status, tabTransition]);
 
   return (
     <Nav
@@ -254,9 +255,10 @@ function LandingNav({
           "--color-active": `${
             y ? "var(--color-red-3)" : "var(--color-white)"
           }`,
-          "--tab-transition": tabTransition
-            ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
-            : "none",
+          "--tab-transition":
+            tabTransition === "active"
+              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
+              : "none",
           "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
           "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
         }}
