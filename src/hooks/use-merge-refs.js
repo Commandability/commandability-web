@@ -1,9 +1,9 @@
 import * as React from "react";
 
-function useCombineRefs(...refs) {
+function useMergeRefs(...refs) {
   const targetRef = React.useRef();
 
-  const combinedRefs = React.useCallback(
+  const mergedRefs = React.useCallback(
     (node) => {
       targetRef.current = node;
 
@@ -22,7 +22,7 @@ function useCombineRefs(...refs) {
     [...refs]
   );
 
-  return combinedRefs;
+  return mergedRefs;
 }
 
-export default useCombineRefs;
+export default useMergeRefs;

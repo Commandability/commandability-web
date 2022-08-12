@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
-import useCombineRefs from "hooks/use-combine-refs";
+import useMergeRefs from "hooks/use-merge-refs";
 import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
@@ -46,13 +46,13 @@ function Home() {
   const howItWorksFragmentRef = useFragment(hashIds.howItWorks);
   const footerFragmentRef = useFragment(hashIds.footer);
 
-  const headerRef = useCombineRefs(headerInViewRef, headerFragmentRef);
-  const featuresRef = useCombineRefs(featuresInViewRef, featuresFragmentRef);
-  const howItWorksRef = useCombineRefs(
+  const headerRef = useMergeRefs(headerInViewRef, headerFragmentRef);
+  const featuresRef = useMergeRefs(featuresInViewRef, featuresFragmentRef);
+  const howItWorksRef = useMergeRefs(
     howItWorksInViewRef,
     howItWorksFragmentRef
   );
-  const footerRef = useCombineRefs(footerInViewRef, footerFragmentRef);
+  const footerRef = useMergeRefs(footerInViewRef, footerFragmentRef);
 
   return (
     <Main>

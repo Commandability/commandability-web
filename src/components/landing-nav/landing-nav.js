@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
+import { Link, useLocation } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { useAuth } from "context/auth-context";
@@ -22,6 +23,7 @@ function LandingNav({
   howItWorksInView,
   footerInView,
 }) {
+  const { hash } = useLocation();
   const { user } = useAuth();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -41,6 +43,7 @@ function LandingNav({
 
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: hashIds.header,
+    hashUpdate: "inactive",
   });
 
   function activeReducer(state, action) {
@@ -50,6 +53,31 @@ function LandingNav({
           ...state,
           activeTargetId: action.payload.initialId,
         };
+      // hash-update handles hash changes that do not smooth scroll and may be too fast to trigger scroll updates and bound updates
+      case "hash-update":
+        // The effect always dispatches after the onclick dispatches, so set hashUpdate to "active"
+        // so hash-update knows the hash change is handled by scroll-update and bound-update
+        if (action.payload.origin === "onclick") {
+          return {
+            ...state,
+            hashUpdate: "active",
+          };
+          // If the effect was not triggered by the onclick's dispatch
+        } else if (
+          state.hashUpdate !== "active" &&
+          action.payload.origin === "effect"
+        ) {
+          return {
+            ...state,
+            activeTargetId: action.payload.hashId,
+          };
+          // If the effect was triggered by the onclick's dispatch, reset hashUpdate to "inactive"
+        } else {
+          return {
+            ...state,
+            hashUpdate: "inactive",
+          };
+        }
       case "scroll-update":
         // Set the next element as active when the current element is no longer in view / the header intersects the next element
         if (status === "scrolling-down" && !action.payload.elementInView) {
@@ -76,7 +104,7 @@ function LandingNav({
             ...state,
             activeTargetId: action.payload.elementId,
           };
-        } else if (action.payload.siblingInView && status === "scrolling-up") {
+        } else if (status === "scrolling-up" && action.payload.siblingInView) {
           setTabTransition(true);
           return {
             ...state,
@@ -103,6 +131,21 @@ function LandingNav({
     };
     effect();
   }, []);
+
+  React.useLayoutEffect(() => {
+    const effect = async () => {
+      await document.fonts.ready;
+
+      dispatch({
+        type: "hash-update",
+        payload: {
+          origin: "effect",
+          hashId: hash.replace("#", "") || hashIds.header,
+        },
+      });
+    };
+    effect();
+  }, [hash]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -222,6 +265,14 @@ function LandingNav({
           ref={homeTabRef}
           targetId={hashIds.header}
           inView={state.activeTargetId === hashIds.header ? true : false}
+          onClick={() =>
+            dispatch({
+              type: "hash-update",
+              payload: {
+                origin: "onclick",
+              },
+            })
+          }
         >
           Home
         </Tab>
@@ -229,6 +280,14 @@ function LandingNav({
           ref={featuresTabRef}
           targetId={hashIds.features}
           inView={state.activeTargetId === hashIds.features ? true : false}
+          onClick={() =>
+            dispatch({
+              type: "hash-update",
+              payload: {
+                origin: "onclick",
+              },
+            })
+          }
         >
           Features
         </Tab>
@@ -236,6 +295,14 @@ function LandingNav({
           ref={howItWorksTabRef}
           targetId={hashIds.howItWorks}
           inView={state.activeTargetId === hashIds.howItWorks ? true : false}
+          onClick={() =>
+            dispatch({
+              type: "hash-update",
+              payload: {
+                origin: "onclick",
+              },
+            })
+          }
         >
           How it works
         </Tab>
@@ -243,6 +310,14 @@ function LandingNav({
           ref={contactTabRef}
           targetId={hashIds.footer}
           inView={state.activeTargetId === hashIds.footer ? true : false}
+          onClick={() =>
+            dispatch({
+              type: "hash-update",
+              payload: {
+                origin: "onclick",
+              },
+            })
+          }
         >
           Contact
         </Tab>
@@ -263,9 +338,17 @@ function LandingNav({
               </Dialog.Title>
               <Menu>
                 <Item
-                  targetId={hashIds.Header}
+                  targetId={hashIds.header}
                   inView={
                     state.activeTargetId === hashIds.header ? true : false
+                  }
+                  onClick={() =>
+                    dispatch({
+                      type: "hash-update",
+                      payload: {
+                        origin: "onclick",
+                      },
+                    })
                   }
                 >
                   Home
@@ -275,13 +358,29 @@ function LandingNav({
                   inView={
                     state.activeTargetId === hashIds.features ? true : false
                   }
+                  onClick={() =>
+                    dispatch({
+                      type: "hash-update",
+                      payload: {
+                        origin: "onclick",
+                      },
+                    })
+                  }
                 >
                   Features
                 </Item>
                 <Item
-                  targetId={hashIds.HowItWorks}
+                  targetId={hashIds.howItWorks}
                   inView={
                     state.activeTargetId === hashIds.howItWorks ? true : false
+                  }
+                  onClick={() =>
+                    dispatch({
+                      type: "hash-update",
+                      payload: {
+                        origin: "onclick",
+                      },
+                    })
                   }
                 >
                   How it works
@@ -290,6 +389,14 @@ function LandingNav({
                   targetId={hashIds.footer}
                   inView={
                     state.activeTargetId === hashIds.footer ? true : false
+                  }
+                  onClick={() =>
+                    dispatch({
+                      type: "hash-update",
+                      payload: {
+                        origin: "onclick",
+                      },
+                    })
                   }
                 >
                   Contact
@@ -311,7 +418,9 @@ function LandingNav({
           }}
         >
           {user.current ? (
-            <Option>Go to dashboard</Option>
+            <Option as={Link} to="/dashboard/reports">
+              Go to dashboard
+            </Option>
           ) : (
             <Option>Create an account</Option>
           )}
@@ -578,6 +687,8 @@ const Option = styled(UnstyledButton)`
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
+
+  text-decoration: none;
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
