@@ -15,7 +15,7 @@ import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
 import { hashIds } from "pages/home";
 
-const HEADER_TRANSITION_DURATION = 400;
+const NAV_TRANSITION_DURATION = 400;
 const TAB_TRANSITION_DURATION = 400;
 
 function LandingNav({
@@ -42,6 +42,7 @@ function LandingNav({
 
   const { y, status } = useScroll();
   const [tabTransition, setTabTransition] = React.useState("inactive");
+  const [scrolled, setScrolled] = React.useState(false);
 
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: hashIds.header,
@@ -232,25 +233,41 @@ function LandingNav({
     }
   }, [initialLoad]);
 
+  React.useLayoutEffect(() => {
+    // Only use y went in the hero image section to prevent transition flashes
+    if (headerInView) {
+      setScrolled(y ? true : false);
+    } else {
+      setScrolled(true);
+    }
+  }, [headerInView, y]);
+
   return (
     <Nav
+      data-nav-transition={headerInView ? "true" : "false"}
       style={{
-        "--background-color": `${y ? "var(--color-white)" : "transparent"}`,
-        "--box-shadow": `${y ? "inherit" : "none"}`,
+        "--background-color": `${
+          scrolled ? "var(--color-white)" : "transparent"
+        }`,
+        "--box-shadow": `${scrolled ? "inherit" : "none"}`,
       }}
     >
       <LeftSide>
         <SiteID
           href="/"
           style={{
-            "--color": `${y ? "var(--color-gray-1)" : "var(--color-white)"}`,
+            "--color": `${
+              scrolled ? "var(--color-gray-1)" : "var(--color-white)"
+            }`,
           }}
         >
           <NavFireIcon
             style={{
-              "--fill": `${y ? "var(--color-red-3)" : "var(--color-yellow-9)"}`,
+              "--fill": `${
+                scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
+              }`,
               "--fill-active": `${
-                y ? "var(--color-yellow-4)" : "var(--color-white)"
+                scrolled ? "var(--color-yellow-4)" : "var(--color-white)"
               }`,
             }}
           />
@@ -259,9 +276,11 @@ function LandingNav({
       </LeftSide>
       <Desktop
         style={{
-          "--color": `${y ? "var(--color-gray-4)" : "var(--color-gray-8)"}`,
+          "--color": `${
+            scrolled ? "var(--color-gray-4)" : "var(--color-gray-8)"
+          }`,
           "--color-active": `${
-            y ? "var(--color-red-3)" : "var(--color-white)"
+            scrolled ? "var(--color-red-3)" : "var(--color-white)"
           }`,
           "--tab-transition":
             tabTransition === "active"
@@ -420,10 +439,10 @@ function LandingNav({
         <AccountOptions
           style={{
             "--color": `${
-              y ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+              scrolled ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
             }`,
             "--color-active": `${
-              y ? "var(--color-yellow-4)" : "var(--color-white)"
+              scrolled ? "var(--color-yellow-4)" : "var(--color-white)"
             }`,
           }}
         >
@@ -449,7 +468,7 @@ const Nav = styled.nav`
   display: flex;
   z-index: 999999;
   align-items: center;
-  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
+  font-size: ${18 / 16}rem;
   padding: 0px 24px;
   background-color: var(--background-color);
   box-shadow: var(--box-shadow);
@@ -457,7 +476,9 @@ const Nav = styled.nav`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: background-color;
-    transition: background-color ${HEADER_TRANSITION_DURATION}ms;
+    &[data-nav-transition="true"] {
+      transition: background-color ${NAV_TRANSITION_DURATION}ms;
+    }
   }
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -481,7 +502,9 @@ const SiteID = styled.a`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
-    transition: color ${HEADER_TRANSITION_DURATION}ms;
+    ${Nav}[data-nav-transition="true"] & {
+      transition: color ${NAV_TRANSITION_DURATION}ms;
+    }
   }
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -496,7 +519,9 @@ const NavFireIcon = styled(UnstyledFireIcon)`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: fill;
-    transition: fill 400ms;
+    ${Nav}[data-nav-transition="true"] & {
+      transition: fill ${NAV_TRANSITION_DURATION}ms;
+    }
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -549,7 +574,10 @@ const Tab = styled(SmoothScrollTo)`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color, border-bottom;
-    transition: color 400ms, border-bottom 400ms;
+    ${Nav}[data-nav-transition="true"] & {
+      transition: color ${NAV_TRANSITION_DURATION}ms,
+        border-bottom ${NAV_TRANSITION_DURATION}ms;
+    }
   }
 
   &.active {
@@ -651,11 +679,6 @@ const Item = styled(SmoothScrollTo)`
   text-decoration: none;
   text-transform: uppercase;
 
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
-    transition: color 400ms;
-  }
-
   &.active {
     color: var(--color-red-3);
     &::before {
@@ -702,7 +725,9 @@ const Option = styled(UnstyledButton)`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
-    transition: color 400ms;
+    ${Nav}[data-nav-transition="true"] & {
+      transition: color ${NAV_TRANSITION_DURATION}ms;
+    }
   }
 
   @media (hover: hover) and (pointer: fine) {
