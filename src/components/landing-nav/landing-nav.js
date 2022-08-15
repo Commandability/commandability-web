@@ -244,7 +244,7 @@ function LandingNav({
 
   return (
     <Nav
-      data-nav-transition={headerInView ? "true" : "false"}
+      data-nav-transition={scrolled ? "true" : "false"}
       style={{
         "--background-color": `${
           scrolled ? "var(--color-white)" : "transparent"

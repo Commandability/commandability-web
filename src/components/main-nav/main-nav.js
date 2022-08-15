@@ -149,7 +149,7 @@ function MainNav() {
                     >
                       <FiHelpCircle />
                       <Spacer axis="horizontal" size={8} />
-                      Help
+                      Contact us
                     </PopoverAction>
                   </PopoverItem>
                   <PopoverItem>
@@ -192,7 +192,7 @@ const Nav = styled.nav`
   display: flex;
   z-index: 999999;
   align-items: center;
-  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
+  font-size: ${18 / 16}rem;
   padding: 0px 24px;
   background-color: var(--color-white);
   box-shadow: var(--box-shadow);
