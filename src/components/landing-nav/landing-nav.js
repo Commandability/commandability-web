@@ -4,6 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import { useAuth } from "context/auth-context";
+import { useInitialLoad } from "context/initial-load-context";
 import useRect from "hooks/use-rect";
 import useScroll from "hooks/use-scroll";
 import VisuallyHidden from "components/visually-hidden";
@@ -25,6 +26,7 @@ function LandingNav({
 }) {
   const { hash } = useLocation();
   const { user } = useAuth();
+  const initialLoad = useInitialLoad();
 
   const [homeTabRef, homeTabRect] = useRect();
   const [featuresTabRef, featuresTabRect] = useRect();
@@ -82,14 +84,14 @@ function LandingNav({
       case "scroll-update":
         // Set the next element as active when the current element is no longer in view / the header intersects the next element
         if (status === "scrolling-down" && !action.payload.elementInView) {
-          setTabTransition("active");
+          if (tabTransition !== "deferred") setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.adjacentSiblingId,
           };
           // Set the current element as active when the header intersects it
         } else if (status === "scrolling-up" && action.payload.elementInView) {
-          setTabTransition("active");
+          if (tabTransition !== "deferred") setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.elementId,
@@ -98,15 +100,15 @@ function LandingNav({
           return state;
         }
       case "bound-update":
-        // Set the current element as active when it's inView threshold is triggered, and set its sibling as active as soon as it's no longer triggered
+        // Set the current element as active when its inView threshold is triggered, and set its sibling as active as soon as it's no longer triggered
         if (action.payload.elementInView) {
-          setTabTransition("active");
+          if (tabTransition !== "deferred") setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.elementId,
           };
         } else if (status === "scrolling-up" && action.payload.siblingInView) {
-          setTabTransition("active");
+          if (tabTransition !== "deferred") setTabTransition("active");
           return {
             ...state,
             activeTargetId: action.payload.siblingId,
@@ -223,6 +225,12 @@ function LandingNav({
     }
     return () => clearTimeout(transitionTimeoutID);
   }, [status, tabTransition]);
+
+  React.useLayoutEffect(() => {
+    if (!initialLoad) {
+      setTabTransition("deferred");
+    }
+  }, [initialLoad]);
 
   return (
     <Nav
