@@ -284,7 +284,7 @@ function LandingNav({
           }`,
           "--tab-transition":
             tabTransition === "active"
-              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
+              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms, background-color ${TAB_TRANSITION_DURATION}ms`
               : "none",
           "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
           "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
@@ -552,7 +552,7 @@ const Desktop = styled.div`
     background-color: var(--color-active);
 
     @media (prefers-reduced-motion: no-preference) {
-      will-change: left, width;
+      will-change: left, width, background-color;
       transition: var(--tab-transition);
     }
   }
