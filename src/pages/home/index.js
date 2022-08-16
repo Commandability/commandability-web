@@ -1,1 +1,1 @@
-export { default, hashIds } from "./home";
+export { default } from "./home";

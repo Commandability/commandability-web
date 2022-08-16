@@ -21,7 +21,7 @@ import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
 import { BREAKPOINTS, QUERIES } from "constants.js";
 
-export const hashIds = {
+const hashIds = {
   header: "home",
   features: "features",
   howItWorks: "how-it-works",
@@ -41,13 +41,19 @@ function Home() {
     threshold: 0.99 - 72 / window.innerHeight,
   });
 
+  const featuresScrollRef = React.useRef();
+
   const headerFragmentRef = useFragment(hashIds.header);
   const featuresFragmentRef = useFragment(hashIds.features);
   const howItWorksFragmentRef = useFragment(hashIds.howItWorks);
   const footerFragmentRef = useFragment(hashIds.footer);
 
   const headerRef = useMergeRefs(headerInViewRef, headerFragmentRef);
-  const featuresRef = useMergeRefs(featuresInViewRef, featuresFragmentRef);
+  const featuresRef = useMergeRefs(
+    featuresInViewRef,
+    featuresFragmentRef,
+    featuresScrollRef
+  );
   const howItWorksRef = useMergeRefs(
     howItWorksInViewRef,
     howItWorksFragmentRef
@@ -57,6 +63,7 @@ function Home() {
   return (
     <Main>
       <LandingNav
+        hashIds={hashIds}
         headerInView={headerInView}
         featuresInView={featuresInView}
         howItWorksInView={howItWorksInView}
@@ -71,7 +78,12 @@ function Home() {
             tablet.
           </Subheading>
           <HeaderPills>
-            <Pill onClick={() => {}} targetId="features" theme="light" angle>
+            <Pill
+              onClick={() => {}}
+              targetRef={featuresScrollRef}
+              theme="light"
+              angle
+            >
               Learn more
             </Pill>
             <Pill onClick={() => {}} theme="dark" angle>
@@ -87,7 +99,7 @@ function Home() {
             Download for iOS
           </Download>
         </DownloadsWrapper>
-        <ScrollDown targetId="features">
+        <ScrollDown targetRef={featuresScrollRef}>
           <ScrollDownContents>
             <FiChevronDown />
             <VisuallyHidden>Scroll down</VisuallyHidden>

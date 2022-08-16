@@ -13,12 +13,12 @@ import SmoothScrollTo from "components/smooth-scroll-to";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
-import { hashIds } from "pages/home";
 
 const NAV_TRANSITION_DURATION = 400;
 const TAB_TRANSITION_DURATION = 400;
 
 function LandingNav({
+  hashIds,
   headerInView,
   featuresInView,
   howItWorksInView,
@@ -134,7 +134,7 @@ function LandingNav({
       });
     };
     effect();
-  }, []);
+  }, [hashIds]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -149,7 +149,7 @@ function LandingNav({
       });
     };
     effect();
-  }, [hash]);
+  }, [hashIds, hash]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -165,7 +165,7 @@ function LandingNav({
       });
     };
     effect();
-  }, [headerInView]);
+  }, [hashIds, headerInView]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -181,7 +181,7 @@ function LandingNav({
       });
     };
     effect();
-  }, [featuresInView]);
+  }, [hashIds, featuresInView]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -197,7 +197,7 @@ function LandingNav({
       });
     };
     effect();
-  }, [howItWorksInView]);
+  }, [hashIds, howItWorksInView]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -214,7 +214,7 @@ function LandingNav({
       });
     };
     effect();
-  }, [footerInView, howItWorksInView]);
+  }, [hashIds, footerInView, howItWorksInView]);
 
   React.useEffect(() => {
     let transitionTimeoutID;

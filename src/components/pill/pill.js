@@ -24,7 +24,7 @@ const THEMES = {
 function Pill({
   theme,
   angle,
-  targetId,
+  targetRef,
   to,
   onClick,
   href,
@@ -36,8 +36,7 @@ function Pill({
   const themeStyles = THEMES[theme];
 
   function smoothScroll() {
-    const target = document.querySelector(`#${targetId}`);
-    target?.scrollIntoView({
+    targetRef.current.scrollIntoView({
       behavior: prefersReducedMotion ? "auto" : "smooth",
     });
   }
@@ -46,22 +45,22 @@ function Pill({
     <PillBase
       {...props}
       style={{ ...themeStyles, ...style }}
-      to={targetId ? `#${targetId}` : to}
+      to={to}
       onClick={(event) => {
-        targetId && smoothScroll(event);
+        targetRef && smoothScroll(event);
         onClick && onClick(event);
       }}
       href={href}
       as={(() => {
-        if (to || targetId) {
+        if (to) {
           return Link;
-        } else if (onClick) {
+        } else if (onClick || targetRef) {
           return "button";
         } else if (href) {
           return "a";
         } else {
           throw new Error(
-            "Pill must have either a to, targetId, onClick, or href"
+            "Pill must have either a to, onClick, targetRef, or href"
           );
         }
       })()}
