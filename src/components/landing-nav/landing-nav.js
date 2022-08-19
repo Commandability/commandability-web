@@ -45,7 +45,7 @@ function LandingNav({
   const [scrolled, setScrolled] = React.useState(false);
 
   const [state, dispatch] = React.useReducer(activeReducer, {
-    activeTargetId: hashIds.header,
+    activeTargetId: "",
     hashUpdate: "inactive",
   });
 
@@ -56,10 +56,10 @@ function LandingNav({
           ...state,
           activeTargetId: action.payload.initialId,
         };
-      // hash-update handles hash changes that do not smooth scroll and may be too fast to trigger scroll updates and bound updates
-      case "hash-update":
+      // path-update handles path changes that do not smooth scroll and may be too fast to trigger scroll updates and bound updates
+      case "path-update":
         // The effect always dispatches after the onclick dispatches, so set hashUpdate to "active"
-        // so hash-update knows the hash change is handled by scroll-update and bound-update
+        // so path-update knows the hash change is handled by scroll-update and bound-update
         if (action.payload.origin === "onclick") {
           return {
             ...state,
@@ -126,30 +126,34 @@ function LandingNav({
     const effect = async () => {
       await document.fonts.ready;
 
-      dispatch({
-        type: "initial-state",
-        payload: {
-          initialId: hashIds.header,
-        },
-      });
+      if (initialLoad) {
+        dispatch({
+          type: "initial-state",
+          payload: {
+            initialId: hashIds.header,
+          },
+        });
+      }
     };
     effect();
-  }, [hashIds]);
+  }, [hashIds, initialLoad]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
       await document.fonts.ready;
 
-      dispatch({
-        type: "hash-update",
-        payload: {
-          origin: "effect",
-          hashId: hash.replace("#", "") || hashIds.header,
-        },
-      });
+      if (!initialLoad) {
+        dispatch({
+          type: "path-update",
+          payload: {
+            origin: "effect",
+            hashId: hash.replace("#", "") || hashIds.header,
+          },
+        });
+      }
     };
     effect();
-  }, [hashIds, hash]);
+  }, [hashIds, initialLoad, hash]);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -228,23 +232,24 @@ function LandingNav({
   }, [status, tabTransition]);
 
   React.useLayoutEffect(() => {
-    if (!initialLoad) {
-      setTabTransition("deferred");
-    }
-  }, [initialLoad]);
-
-  React.useLayoutEffect(() => {
-    // Only use y went in the hero image section to prevent transition flashes
-    if (headerInView) {
-      setScrolled(y ? true : false);
+    if (initialLoad) {
+      setScrolled(false);
     } else {
       setScrolled(true);
     }
-  }, [headerInView, y]);
+  }, [initialLoad]);
+
+  React.useEffect(() => {
+    if (y) {
+      setScrolled(true);
+    } else {
+      setScrolled(false);
+    }
+  }, [y]);
 
   return (
     <Nav
-      data-nav-transition={scrolled ? "true" : "false"}
+      data-nav-transition={scrolled ? "false" : "true"}
       style={{
         "--background-color": `${
           scrolled ? "var(--color-white)" : "transparent"
@@ -296,7 +301,7 @@ function LandingNav({
           inView={state.activeTargetId === hashIds.header ? true : false}
           onClick={() =>
             dispatch({
-              type: "hash-update",
+              type: "path-update",
               payload: {
                 origin: "onclick",
               },
@@ -311,7 +316,7 @@ function LandingNav({
           inView={state.activeTargetId === hashIds.features ? true : false}
           onClick={() =>
             dispatch({
-              type: "hash-update",
+              type: "path-update",
               payload: {
                 origin: "onclick",
               },
@@ -326,7 +331,7 @@ function LandingNav({
           inView={state.activeTargetId === hashIds.howItWorks ? true : false}
           onClick={() =>
             dispatch({
-              type: "hash-update",
+              type: "path-update",
               payload: {
                 origin: "onclick",
               },
@@ -341,7 +346,7 @@ function LandingNav({
           inView={state.activeTargetId === hashIds.footer ? true : false}
           onClick={() =>
             dispatch({
-              type: "hash-update",
+              type: "path-update",
               payload: {
                 origin: "onclick",
               },
@@ -373,7 +378,7 @@ function LandingNav({
                   }
                   onClick={() =>
                     dispatch({
-                      type: "hash-update",
+                      type: "path-update",
                       payload: {
                         origin: "onclick",
                       },
@@ -389,7 +394,7 @@ function LandingNav({
                   }
                   onClick={() =>
                     dispatch({
-                      type: "hash-update",
+                      type: "path-update",
                       payload: {
                         origin: "onclick",
                       },
@@ -405,7 +410,7 @@ function LandingNav({
                   }
                   onClick={() =>
                     dispatch({
-                      type: "hash-update",
+                      type: "path-update",
                       payload: {
                         origin: "onclick",
                       },
@@ -421,7 +426,7 @@ function LandingNav({
                   }
                   onClick={() =>
                     dispatch({
-                      type: "hash-update",
+                      type: "path-update",
                       payload: {
                         origin: "onclick",
                       },
@@ -720,7 +725,6 @@ const Option = styled(UnstyledButton)`
   color: var(--color);
   font-size: ${16 / 16}rem;
   font-weight: bold;
-
   text-decoration: none;
 
   @media (prefers-reduced-motion: no-preference) {
