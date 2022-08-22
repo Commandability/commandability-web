@@ -4,7 +4,9 @@
   "private": true,
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-label": "^1.0.0",
     "@radix-ui/react-popover": "^1.0.0",
+    "@radix-ui/react-select": "^1.0.0",
     "@radix-ui/react-separator": "^1.0.0",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.1.1",

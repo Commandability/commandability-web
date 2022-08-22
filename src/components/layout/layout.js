@@ -17,7 +17,7 @@ function Layout() {
 }
 
 const Main = styled.main`
-  min-height: 100%;
+  height: 100%;
 `;
 
 const Background = styled.div`
