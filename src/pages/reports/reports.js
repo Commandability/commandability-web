@@ -10,8 +10,9 @@ import {
 
 import { Select, SelectItem } from "components/select";
 import UnstyledButton from "components/unstyled-button";
+import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
-
+import SearchInput from "components/search-input";
 import { QUERIES } from "constants.js";
 
 const selectValues = {
@@ -26,6 +27,7 @@ function Reports() {
     <Wrapper>
       <Content>
         <Top>
+          <SearchInput id="reports-search" placeholder="Location" />
           <Button theme="light" icon={FiSliders}>
             Filter
           </Button>
@@ -48,9 +50,11 @@ function Reports() {
             Delete all
           </Button>
           <UnstyledButton>
+            <VisuallyHidden>Page left</VisuallyHidden>
             <FiChevronLeft />
           </UnstyledButton>
           <UnstyledButton>
+            <VisuallyHidden>Page right</VisuallyHidden>
             <FiChevronRight />
           </UnstyledButton>
         </Bottom>
