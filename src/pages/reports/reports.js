@@ -9,6 +9,7 @@ import {
 } from "react-icons/fi";
 
 import { Select, SelectItem } from "components/select";
+import ListCheckbox from "components/list-checkbox";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
@@ -22,6 +23,7 @@ const selectValues = {
 
 function Reports() {
   const [select, setSelect] = React.useState(selectValues.newest);
+  const [checked, setChecked] = React.useState(false);
 
   return (
     <Wrapper>
@@ -41,6 +43,13 @@ function Reports() {
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
         </Top>
+        <ListHeader>
+          <ListCheckbox
+            label="Select all"
+            checked={checked}
+            onCheckedChange={(checked) => setChecked(checked)}
+          />
+        </ListHeader>
         <List></List>
         <Bottom>
           <Button theme="light" icon={FiDownload}>
@@ -68,7 +77,7 @@ const Wrapper = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 72px 16px;
+  padding: 32px 16px;
 
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0;
@@ -92,11 +101,10 @@ const Content = styled.div`
 
 const Top = styled.div`
   width: 100%;
-  height: 100px;
   display: flex;
   align-items: flex-end;
   gap: 24px;
-  padding: 0 48px;
+  padding: 32px 48px;
 `;
 
 const ReportsSearch = styled(SearchInput)`
@@ -105,6 +113,11 @@ const ReportsSearch = styled(SearchInput)`
 
 const ReportsSelect = styled(Select)`
   width: 160px;
+`;
+
+const ListHeader = styled.div`
+  display: flex;
+  padding: 8px 48px;
 `;
 
 const List = styled.div`
