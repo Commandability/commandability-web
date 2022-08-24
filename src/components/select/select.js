@@ -47,13 +47,14 @@ const LabelText = styled.span`
 const SelectButton = styled(UnstyledButton)`
   display: flex;
   justify-content: space-between;
+  gap: 32px;
   align-items: center;
   border-radius: 8px;
   border: 1px solid var(--color-gray-5);
   color: var(--color-gray-2);
   padding: 8px;
   background-color: var(--color-white);
-  width: 160px;
+  width: 100%;
 `;
 
 const SelectContent = styled(RadixSelect.Content)`
@@ -82,10 +83,11 @@ const SelectItemWrapper = styled(RadixSelect.Item)`
   all: unset;
   display: flex;
   padding: 8px;
+  padding-left: 24px;
+  padding-right: 32px;
   user-select: none;
   // Outer radius - padding
   border-radius: calc(8px - 4px);
-  padding-left: 24px;
   display: flex;
   align-items: center;
 

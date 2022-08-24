@@ -47,6 +47,7 @@ const InputWrapper = styled.div`
   display: flex;
   align-items: center;
   position: relative;
+  flex: 1;
 `;
 
 const Label = styled.label`
@@ -59,6 +60,7 @@ const TextInput = styled.input`
   border-radius: 8px;
   padding: 8px;
   padding-left: 36px;
+  flex: 1;
 
   &::placeholder {
     color: var(--color-gray-5);

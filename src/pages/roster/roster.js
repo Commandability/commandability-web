@@ -1,12 +1,129 @@
 import * as React from "react";
 import styled from "styled-components";
+import {
+  FiUserPlus,
+  FiUpload,
+  FiDownload,
+  FiChevronLeft,
+  FiChevronRight,
+} from "react-icons/fi";
+
+import { Select, SelectItem } from "components/select";
+import UnstyledButton from "components/unstyled-button";
+import VisuallyHidden from "components/visually-hidden";
+import Button from "components/button";
+import SearchInput from "components/search-input";
+import { QUERIES } from "constants.js";
+
+const selectValues = {
+  alphabetical: "alphabetical",
+  badgeNumber: "badge number",
+};
 
 function Roster() {
-  return <Wrapper>Roster</Wrapper>;
+  const [select, setSelect] = React.useState(selectValues.newest);
+
+  return (
+    <Wrapper>
+      <Content>
+        <Top>
+          <RosterSearch id="roster-search" placeholder="Name, badge, shift" />
+          <RosterSelect
+            select={select}
+            onValueChange={(select) => setSelect(select)}
+            defaultValue={selectValues.alphabetical}
+            label="Sort"
+          >
+            <SelectItem value={selectValues.alphabetical}>
+              Alphabetical (a-z)
+            </SelectItem>
+            <SelectItem value={selectValues.badgeNumber}>
+              Badge Number
+            </SelectItem>
+          </RosterSelect>
+          <Button theme="light" icon={FiUserPlus}>
+            Add Person
+          </Button>
+        </Top>
+        <List></List>
+        <Bottom>
+          <Button theme="light" icon={FiUpload}>
+            Import
+          </Button>
+          <Button theme="light" icon={FiDownload}>
+            Export all
+          </Button>
+          <UnstyledButton>
+            <VisuallyHidden>Page left</VisuallyHidden>
+            <FiChevronLeft />
+          </UnstyledButton>
+          <UnstyledButton>
+            <VisuallyHidden>Page right</VisuallyHidden>
+            <FiChevronRight />
+          </UnstyledButton>
+        </Bottom>
+      </Content>
+    </Wrapper>
+  );
 }
 
 const Wrapper = styled.div`
-  color: var(--color-white);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 72px 16px;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    padding: 0;
+  }
+`;
+
+const Content = styled.div`
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  background-color: var(--color-gray-10);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+
+  @media ${QUERIES.phoneAndSmaller} {
+    padding: 0px 8px;
+    border-radius: 0;
+  }
+`;
+
+const Top = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 0 48px;
+`;
+
+const RosterSearch = styled(SearchInput)`
+  width: 256px;
+`;
+
+const RosterSelect = styled(Select)`
+  width: 208px;
+`;
+
+const List = styled.div`
+  flex: 1;
+  width: 100%;
+`;
+
+const Bottom = styled.div`
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  padding: 0 48px;
 `;
 
 export default Roster;

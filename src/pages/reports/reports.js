@@ -27,11 +27,11 @@ function Reports() {
     <Wrapper>
       <Content>
         <Top>
-          <SearchInput id="reports-search" placeholder="Location" />
+          <ReportsSearch id="reports-search" placeholder="Location" />
           <Button theme="light" icon={FiSliders}>
             Filter
           </Button>
-          <Select
+          <ReportsSelect
             select={select}
             onValueChange={(select) => setSelect(select)}
             defaultValue={selectValues.newest}
@@ -39,7 +39,7 @@ function Reports() {
           >
             <SelectItem value={selectValues.newest}>Newest first</SelectItem>
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
-          </Select>
+          </ReportsSelect>
         </Top>
         <List></List>
         <Bottom>
@@ -97,6 +97,14 @@ const Top = styled.div`
   align-items: flex-end;
   gap: 24px;
   padding: 0 48px;
+`;
+
+const ReportsSearch = styled(SearchInput)`
+  width: 256px;
+`;
+
+const ReportsSelect = styled(Select)`
+  width: 160px;
 `;
 
 const List = styled.div`
