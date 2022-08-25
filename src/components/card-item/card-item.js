@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-function ListItem({ icon, children, ...props }) {
+function CardItem({ icon, children, ...props }) {
   return (
     <Wrapper {...props}>
       {icon ? icon() : null}
@@ -25,4 +25,4 @@ const Wrapper = styled.li`
   }
 `;
 
-export default ListItem;
+export default CardItem;

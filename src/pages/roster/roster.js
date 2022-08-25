@@ -8,6 +8,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
+import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import { Select, SelectItem } from "components/select";
 import ListCheckbox from "components/list-checkbox";
 import UnstyledButton from "components/unstyled-button";
@@ -43,9 +44,17 @@ function Roster() {
               Badge Number
             </SelectItem>
           </RosterSelect>
-          <Button theme="light" icon={FiUserPlus}>
-            Add Person
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button theme="light" icon={FiUserPlus}>
+                Add Person
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              title="Add person"
+              description="Add a new person to the roster here."
+            ></DialogContent>
+          </Dialog>
         </Top>
         <ListHeader>
           <ListCheckbox

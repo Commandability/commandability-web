@@ -17,17 +17,23 @@ const THEMES = {
   },
 };
 
-function Button({ theme, icon, children, style, ...props }) {
-  const themeStyles = THEMES[theme];
+const Button = React.forwardRef(
+  ({ theme, icon, children, style, ...props }, forwardedRef) => {
+    const themeStyles = THEMES[theme];
 
-  return (
-    <ButtonBase {...props} style={{ ...themeStyles, ...style }}>
-      {icon ? icon() : null}
-      {icon ? <Spacer size={8} axis="horizontal" /> : null}
-      <Text>{children}</Text>
-    </ButtonBase>
-  );
-}
+    return (
+      <ButtonBase
+        {...props}
+        ref={forwardedRef}
+        style={{ ...themeStyles, ...style }}
+      >
+        {icon ? icon() : null}
+        {icon ? <Spacer size={8} axis="horizontal" /> : null}
+        <Text>{children}</Text>
+      </ButtonBase>
+    );
+  }
+);
 
 const ButtonBase = styled.button`
   display: flex;
