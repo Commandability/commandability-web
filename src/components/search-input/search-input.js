@@ -41,6 +41,7 @@ const Wrapper = styled.form`
   display: flex;
   flex-direction: column;
   gap: 4px;
+  color: var(--color-gray-2);
 `;
 
 const InputWrapper = styled.div`
@@ -51,16 +52,17 @@ const InputWrapper = styled.div`
 `;
 
 const Label = styled.label`
-  color: var(--color-gray-1);
+  color: var(--color-gray-2);
   font-size: ${14 / 16}rem;
 `;
 
 const TextInput = styled.input`
-  border: 1px solid var(--color-gray-3);
+  border: 1px solid var(--color-gray-5);
   border-radius: 8px;
-  padding: 8px;
+  padding: 8px 12px;
   padding-left: 36px;
   flex: 1;
+  color: inherit;
 
   &::placeholder {
     color: var(--color-gray-5);
@@ -78,7 +80,7 @@ const SearchButton = styled(UnstyledButton)`
   padding: 4px;
 
   & > svg {
-    stroke: var(--color-gray-4);
+    stroke: var(--color-gray-2);
   }
 
   ${TextInput}:focus-visible + & {

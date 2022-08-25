@@ -40,7 +40,7 @@ const SelectWrapper = styled.div`
 `;
 
 const LabelText = styled.span`
-  color: var(--color-gray-1);
+  color: var(--color-gray-2);
   font-size: ${14 / 16}rem;
 `;
 
@@ -59,7 +59,7 @@ const SelectButton = styled(UnstyledButton)`
 
 const SelectContent = styled(RadixSelect.Content)`
   background-color: var(--color-white);
-  color: var(--color-gray-2);
+  color: inherit;
   border-radius: 8px;
   box-shadow: var(--box-shadow);
 `;

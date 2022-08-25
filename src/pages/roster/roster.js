@@ -10,6 +10,7 @@ import {
 
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import { Select, SelectItem } from "components/select";
+import LabelInput from "components/label-input";
 import ListCheckbox from "components/list-checkbox";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
@@ -25,6 +26,8 @@ const selectValues = {
 function Roster() {
   const [select, setSelect] = React.useState(selectValues.newest);
   const [checked, setChecked] = React.useState(false);
+
+  const [name, setName] = React.useState("");
 
   return (
     <Wrapper>
@@ -53,7 +56,16 @@ function Roster() {
             <DialogContent
               title="Add person"
               description="Add a new person to the roster here."
-            ></DialogContent>
+            >
+              <DialogForm>
+                <DialogLabelInput
+                  id="name-input"
+                  label="Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </DialogForm>
+            </DialogContent>
           </Dialog>
         </Top>
         <ListHeader>
@@ -126,6 +138,16 @@ const RosterSearch = styled(SearchInput)`
 
 const RosterSelect = styled(Select)`
   width: 208px;
+`;
+
+const DialogForm = styled.form`
+  display: flex;
+  justify-content: flex-end;
+  width: 448px;
+`;
+
+const DialogLabelInput = styled(LabelInput)`
+  width: 384px;
 `;
 
 const ListHeader = styled.div`
