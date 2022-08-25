@@ -9,25 +9,26 @@ import VisuallyHidden from "components/visually-hidden";
 export const DialogContent = React.forwardRef(
   ({ title, description, children, ...props }, forwardedRef) => (
     <RadixDialog.Portal>
-      <RadixDialogOverlay />
-      <RadixDialogContent
-        {...props}
-        ref={forwardedRef}
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onCloseAutoFocus={(e) => e.preventDefault()}
-      >
-        <Header>
-          <RadixDialogTitle>{title}</RadixDialogTitle>
-          <RadixDialogDescription>{description}</RadixDialogDescription>
-        </Header>
-        {children}
-        <RadixDialog.Close asChild>
-          <CloseButton>
-            <VisuallyHidden>Close</VisuallyHidden>
-            <FiX />
-          </CloseButton>
-        </RadixDialog.Close>
-      </RadixDialogContent>
+      <RadixDialogOverlay>
+        <RadixDialogContent
+          {...props}
+          ref={forwardedRef}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+        >
+          <Header>
+            <RadixDialogTitle>{title}</RadixDialogTitle>
+            <RadixDialogDescription>{description}</RadixDialogDescription>
+          </Header>
+          {children}
+          <RadixDialog.Close asChild>
+            <CloseButton>
+              <VisuallyHidden>Close</VisuallyHidden>
+              <FiX />
+            </CloseButton>
+          </RadixDialog.Close>
+        </RadixDialogContent>
+      </RadixDialogOverlay>
     </RadixDialog.Portal>
   )
 );
@@ -48,6 +49,8 @@ const RadixDialogOverlay = styled(RadixDialog.Overlay)`
   background-color: hsl(0 0% 0% / 0.5);
   position: fixed;
   inset: 0;
+  display: grid;
+  place-content: center;
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;
@@ -55,10 +58,7 @@ const RadixDialogOverlay = styled(RadixDialog.Overlay)`
 `;
 
 const RadixDialogContent = styled(RadixDialog.Content)`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   padding: 24px;
   border-radius: 8px;
   background-color: var(--color-white);

@@ -142,7 +142,9 @@ const RosterSelect = styled(Select)`
 
 const DialogForm = styled.form`
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
   width: 448px;
 `;
 
