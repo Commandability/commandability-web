@@ -4,9 +4,9 @@ import styled from "styled-components";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 
-function MenuButton(props, ref) {
+function MenuButton(props, forwardedRef) {
   return (
-    <Wrapper ref={ref} {...props}>
+    <Wrapper ref={forwardedRef} {...props}>
       <BarOne />
       <BarTwo />
       <BarThree />

@@ -6,7 +6,7 @@ import UnstyledButton from "components/unstyled-button";
 
 function SmoothScrollTo(
   { targetId, targetRef, onClick, style, activeStyle, children, ...props },
-  ref
+  forwardedRef
 ) {
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -23,7 +23,7 @@ function SmoothScrollTo(
     return (
       <HashLink
         {...props}
-        ref={ref}
+        ref={forwardedRef}
         to={`#${targetId}`}
         onClick={(event) => {
           smoothScroll();

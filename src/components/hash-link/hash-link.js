@@ -15,7 +15,7 @@ function HashLink(
     children,
     ...props
   },
-  ref
+  forwardedRef
 ) {
   const { hash: locationHash } = useLocation();
   const { hash: toHash } = useResolvedPath(to);
@@ -35,7 +35,13 @@ function HashLink(
   }
 
   return (
-    <Link {...props} ref={ref} to={to} className={className} style={style}>
+    <Link
+      {...props}
+      ref={forwardedRef}
+      to={to}
+      className={className}
+      style={style}
+    >
       {children}
     </Link>
   );

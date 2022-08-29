@@ -7,11 +7,11 @@ import { FiCheck } from "react-icons/fi";
 import VisuallyHidden from "components/visually-hidden";
 
 export default React.forwardRef(
-  ({ className, children, label, ...props }, ref) => {
+  ({ className, children, label, ...props }, forwardedRef) => {
     return (
       <RadixLabel.Root>
         <VisuallyHidden>{label}</VisuallyHidden>
-        <RadixCheckboxRoot ref={ref} {...props}>
+        <RadixCheckboxRoot ref={forwardedRef} {...props}>
           <RadixCheckbox.Indicator>
             <StyledFiCheck />
           </RadixCheckbox.Indicator>

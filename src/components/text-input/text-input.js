@@ -1,47 +1,48 @@
 import React from "react";
 import styled from "styled-components";
 
-const LabelInput = ({ id, className, label, value, onChange, ...props }) => {
+const TextInput = ({
+  id,
+  type,
+  className,
+  label,
+  value,
+  onChange,
+  ...props
+}) => {
   if (!id) {
-    throw new Error("LabelInput must have an id");
+    throw new Error("TextInput must have an id");
   }
 
   return (
-    <Wrapper role="search" className={className}>
+    <Wrapper className={className}>
       <label htmlFor={id}>{label}</label>
-      <InputWrapper>
-        <TextInput
-          type="text"
-          id={id}
-          value={value}
-          onChange={onChange}
-          {...props}
-        />
-      </InputWrapper>
+      <Input
+        type={type ? type : "text"}
+        id={id}
+        value={value}
+        onChange={onChange}
+        {...props}
+      />
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: baseline;
   gap: 16px;
   color: var(--color-yellow-2);
-`;
-
-const InputWrapper = styled.div`
-  display: flex;
-  align-items: center;
   position: relative;
-  flex: 1;
 `;
 
-const TextInput = styled.input`
+const Input = styled.input`
   border: 1px solid var(--color-yellow-3);
   border-radius: 8px;
   padding: 8px 12px;
-  flex: 1;
   color: inherit;
+  width: 320px;
 
   &::placeholder {
     color: var(--color-gray-5);
@@ -53,4 +54,4 @@ const TextInput = styled.input`
   }
 `;
 
-export default LabelInput;
+export default TextInput;

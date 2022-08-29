@@ -7,13 +7,13 @@ import { FiChevronDown, FiCheck } from "react-icons/fi";
 import UnstyledButton from "components/unstyled-button";
 
 export const Select = React.forwardRef(
-  ({ className, children, label, ...props }, ref) => {
+  ({ className, children, label, ...props }, forwardedRef) => {
     return (
       <SelectWrapper className={className}>
         <RadixLabel.Root>
           <LabelText>{label}</LabelText>
           <RadixSelect.Root {...props}>
-            <RadixSelect.Trigger ref={ref} asChild>
+            <RadixSelect.Trigger ref={forwardedRef} asChild>
               <SelectButton>
                 <RadixSelect.Value />
                 <RadixSelect.Icon>
@@ -68,16 +68,18 @@ const SelectViewport = styled(RadixSelect.Viewport)`
   padding: 4px;
 `;
 
-export const SelectItem = React.forwardRef(({ children, ...props }, ref) => {
-  return (
-    <SelectItemWrapper {...props} ref={ref}>
-      <SelectItemIndicator>
-        <FiCheck />
-      </SelectItemIndicator>
-      <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
-    </SelectItemWrapper>
-  );
-});
+export const SelectItem = React.forwardRef(
+  ({ children, ...props }, forwardedRef) => {
+    return (
+      <SelectItemWrapper {...props} ref={forwardedRef}>
+        <SelectItemIndicator>
+          <FiCheck />
+        </SelectItemIndicator>
+        <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
+      </SelectItemWrapper>
+    );
+  }
+);
 
 const SelectItemWrapper = styled(RadixSelect.Item)`
   all: unset;
