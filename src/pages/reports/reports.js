@@ -9,7 +9,8 @@ import {
 } from "react-icons/fi";
 
 import { Select, SelectItem } from "components/select";
-import ListCheckbox from "components/list-checkbox";
+import AlertDialog from "components/alert-dialog";
+import Checkbox from "components/checkbox";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
@@ -44,7 +45,7 @@ function Reports() {
           </ReportsSelect>
         </Top>
         <ListHeader>
-          <ListCheckbox
+          <Checkbox
             label="Select all"
             checked={checked}
             onCheckedChange={(checked) => setChecked(checked)}
@@ -55,9 +56,15 @@ function Reports() {
           <Button theme="light" icon={FiDownload}>
             Export all
           </Button>
-          <Button theme="light" icon={FiTrash2}>
-            Delete all
-          </Button>
+          <AlertDialog
+            triggerText="Delete all"
+            triggerIcon={FiTrash2}
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete all reports from your account."
+            cancelText="Cancel"
+            actionText="Yes, delete all reports"
+            requireAuth
+          />
           <UnstyledButton>
             <VisuallyHidden>Page left</VisuallyHidden>
             <FiChevronLeft />
