@@ -27,7 +27,7 @@ function LandingNav({
   footerInView,
 }) {
   const { hash } = useLocation();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const initialLoad = useInitialLoad();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -454,22 +454,27 @@ function LandingNav({
             }`,
           }}
         >
-          <UserAccountDialog
-            dialog="CurrentUser"
-            button={<Option>Login</Option>}
-          />
-          <UserAccountDialog
-            dialog="NewUser"
-            button={<Option>Create an Account</Option>}
-          />
           {user.current ? (
             <Option as={Link} to="/dashboard/reports">
               Go to dashboard
             </Option>
           ) : (
-            <Option>Create an account</Option>
+            <UserAccountDialog
+              dialog="NewUser"
+              button={<Option>Create an Account</Option>}
+            />
           )}
-          {user.current ? <Option>Sign out</Option> : <Option>Sign in</Option>}
+          {user.current ? (
+            <>
+              <Option onClick={() => signOut()}>Sign out</Option>
+              <div>{user.current.displayName}</div>
+            </>
+          ) : (
+            <UserAccountDialog
+              dialog="CurrentUser"
+              button={<Option>Sign in</Option>}
+            />
+          )}
         </AccountOptions>
       </RightSide>
     </Nav>

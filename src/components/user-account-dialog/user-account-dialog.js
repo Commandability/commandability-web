@@ -2,14 +2,24 @@ import * as React from "react";
 import styled from "styled-components";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useAuth } from "context/auth-context";
+import VisuallyHidden from "components/visually-hidden";
+import { FiX } from "react-icons/fi";
 
 import UnstyledButton from "components/unstyled-button";
 
-const validDisplayName = new RegExp("^([a-zA-Z0-9._-]).{3,}");
+const validDisplayName = new RegExp("^([a-zA-Z0-9._-]).{2,}");
 const validEmail = new RegExp("^[a-zA-Z0-9._:$!%-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$");
 const validPassword = new RegExp("^(?=.*?[A-Za-z]).{8,}$");
 
 function UserAccountDialog(props) {
+  const {
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail,
+    updateProfile,
+  } = useAuth();
+
   const [displayName, setDisplayName] = React.useState("");
   const [displayNameError, setDisplayNameError] = React.useState(false);
   const [email, setEmail] = React.useState("");
@@ -18,6 +28,7 @@ function UserAccountDialog(props) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [dialog, setDialog] = React.useState(props.dialog);
   const [isAnimating, setIsAnimating] = React.useState(false);
+  const [openStatus, setOpenStatus] = React.useState(false);
 
   function validateNewAccount(event) {
     event.preventDefault();
@@ -39,8 +50,15 @@ function UserAccountDialog(props) {
     }
   }
 
-  function submitNewAccount() {
-    console.log("Submitted");
+  async function submitNewAccount() {
+    // createNewUser(email, password, displayName);
+    const userCredentials = await createUserWithEmailAndPassword(
+      email,
+      password
+    );
+    await updateProfile(userCredentials.user, { displayName: displayName });
+    setOpenStatus(false);
+    handleClose();
   }
 
   function validateLogin(event) {
@@ -57,7 +75,9 @@ function UserAccountDialog(props) {
   }
 
   function submitLogin() {
-    console.log("Login");
+    signInWithEmailAndPassword(email, password);
+    setOpenStatus(false);
+    handleClose();
   }
 
   function validateRecoverAccount(event) {
@@ -71,7 +91,9 @@ function UserAccountDialog(props) {
   }
 
   function submitRecoverAccount() {
-    console.log("Recover");
+    sendPasswordResetEmail(email);
+    setOpenStatus(false);
+    handleClose();
   }
 
   function handleNavClick(target) {
@@ -100,7 +122,10 @@ function UserAccountDialog(props) {
   }
 
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      open={openStatus}
+      onOpenChange={() => setOpenStatus(!openStatus)}
+    >
       <AccountTrigger>
         <div>{props.button}</div>
       </AccountTrigger>
@@ -112,7 +137,7 @@ function UserAccountDialog(props) {
           onInteractOutside={handleClose}
           className={zeroRightClassName}
         >
-          <AnimationControl
+          <DialogContent
             className={isAnimating ? "animate" : ""}
             onAnimationEnd={() => setIsAnimating(false)}
           >
@@ -138,8 +163,6 @@ function UserAccountDialog(props) {
                     ) : (
                       <InputError />
                     )}
-                  </InputWrapper>
-                  <InputWrapper>
                     <Label htmlFor="emailInput">Email</Label>
                     <Input
                       id="emailInput"
@@ -156,8 +179,6 @@ function UserAccountDialog(props) {
                     ) : (
                       <InputError />
                     )}
-                  </InputWrapper>
-                  <InputWrapper>
                     <Label htmlFor="passwordInput">Password</Label>
                     <Input
                       id="passwordInput"
@@ -181,14 +202,11 @@ function UserAccountDialog(props) {
                     Create Account
                   </SubmitButton>
                 </AccountForm>
-                <DialogSwitchWrapper>
-                  <hr />
-                  <DialogSwitchButton
-                    onClick={() => handleNavClick("CurrentUser")}
-                  >
-                    Already have an account?
-                  </DialogSwitchButton>
-                </DialogSwitchWrapper>
+                <DialogSwitchButton
+                  onClick={() => handleNavClick("CurrentUser")}
+                >
+                  Already have an account?
+                </DialogSwitchButton>
               </>
             ) : dialog === "CurrentUser" ? (
               <>
@@ -210,8 +228,6 @@ function UserAccountDialog(props) {
                     ) : (
                       <InputError />
                     )}
-                  </InputWrapper>
-                  <InputWrapper>
                     <Label htmlFor="passwordInput">Password</Label>
                     <Input
                       id="passwordInput"
@@ -230,23 +246,21 @@ function UserAccountDialog(props) {
                     ) : (
                       <InputError />
                     )}
+                    <ForgotPasswordButton
+                      type="button"
+                      onClick={() => handleNavClick("ForgotPassword")}
+                    >
+                      Forgot password?
+                    </ForgotPasswordButton>
                   </InputWrapper>
 
                   <SubmitButton type="submit" onClick={validateLogin}>
                     Login
                   </SubmitButton>
                 </AccountForm>
-                <ForgotPasswordButton
-                  onClick={() => handleNavClick("ForgotPassword")}
-                >
-                  Forgot password?
-                </ForgotPasswordButton>
-                <DialogSwitchWrapper>
-                  <hr />
-                  <DialogSwitchButton onClick={() => handleNavClick("NewUser")}>
-                    Create an account
-                  </DialogSwitchButton>
-                </DialogSwitchWrapper>
+                <DialogSwitchButton onClick={() => handleNavClick("NewUser")}>
+                  Create an account
+                </DialogSwitchButton>
               </>
             ) : (
               <>
@@ -269,31 +283,51 @@ function UserAccountDialog(props) {
                       <InputError />
                     )}
                   </InputWrapper>
-                  <Dialog.Close asChild>
-                    <SubmitButton
-                      type="submit"
-                      onClick={validateRecoverAccount}
-                    >
-                      Reset Password
-                    </SubmitButton>
-                  </Dialog.Close>
+                  <SubmitButton type="submit" onClick={validateRecoverAccount}>
+                    Reset Password
+                  </SubmitButton>
                 </AccountForm>
-                <DialogSwitchWrapper>
-                  <hr />
-                  <DialogSwitchButton
-                    onClick={() => handleNavClick("CurrentUser")}
-                  >
-                    Return to login
-                  </DialogSwitchButton>
-                </DialogSwitchWrapper>
+                <DialogSwitchButton
+                  onClick={() => handleNavClick("CurrentUser")}
+                >
+                  Return to login
+                </DialogSwitchButton>
               </>
             )}
-          </AnimationControl>
+          </DialogContent>
+          <Dialog.Close asChild>
+            <CloseButton>
+              <VisuallyHidden>Close</VisuallyHidden>
+              <FiX />
+            </CloseButton>
+          </Dialog.Close>
         </AccountContent>
       </Dialog.Portal>
     </Dialog.Root>
   );
 }
+
+const CloseButton = styled(UnstyledButton)`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border-radius: 100%;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-content: center;
+  color: var(--color-yellow-2);
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      background-color: var(--color-yellow-9);
+    }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-yellow-3);
+    border-color: var(--color-yellow-3);
+  }
+`;
 
 const AccountContent = styled(Dialog.Content)`
   position: fixed;
@@ -302,10 +336,11 @@ const AccountContent = styled(Dialog.Content)`
   height: 600px;
   width: 480px;
   background-color: var(--color-gray-10);
-  border-radius: 16px;
+  border-radius: 8px;
   padding: 36px;
   box-shadow: var(--box-shadow);
   z-index: 1000;
+  display: flex;
 
   @media (prefers-reduced-motion: no-preference) {
     &[data-state="open"] {
@@ -315,7 +350,6 @@ const AccountContent = styled(Dialog.Content)`
       animation: fadeOut 250ms ease-in forwards;
     }
   }
-
   @keyframes fadeIn {
     0% {
       opacity: 0;
@@ -347,7 +381,10 @@ const Overlay = styled(Dialog.Overlay)`
   background: hsl(360, 10%, 25%, 0.4);
 `;
 
-const AnimationControl = styled.div`
+const DialogContent = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   @media (prefers-reduced-motion: no-preference) {
     &.animate {
       animation: fade 300ms ease-in-out;
@@ -368,76 +405,39 @@ const AnimationControl = styled.div`
 
 const AccountForm = styled.form`
   display: flex;
-  position: relative;
-  gap: 16px;
+  flex: 1;
   flex-direction: column;
-  width: 100%;
+  justify-content: space-between;
 `;
 
 const InputWrapper = styled.div`
-  flex: 1;
   display: flex;
-  width: 100%;
-  gap: 4px;
   flex-direction: column;
-  align-items: center;
+  gap: 6px;
 `;
 
 const Label = styled.label`
+  /* font-weight: bold; */
   text-transform: uppercase;
-  font-weight: bold;
-  align-self: flex-start;
+  color: var(--color-yellow-2);
+  /* color: var(--color-gray-3); */
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const Input = styled.input`
-  height: 48px;
-  padding: 12px;
+  padding: 8px 12px;
   width: 100%;
   border: solid 1px var(--color-gray-5);
-  border-radius: 6px;
-  &:focus {
-    outline: none;
-    border: solid 1px var(--color-red-3);
+  /* border: solid 1px var(--color-yellow-3); */
+  &::placeholder {
+    color: var(--color-gray-5);
   }
-`;
-
-const InputError = styled.div`
-  position: flex;
-  align-self: flex-start;
-  height: 16px;
-  color: var(--color-red-3);
-  font-size: ${14 / 16}rem;
-`;
-
-const SubmitButton = styled(UnstyledButton)`
-  padding: 12px;
-  margin-top: 12px;
-  width: 100%;
-  background-color: var(--color-red-3);
-  border: none;
-  border-radius: 6px;
-  color: var(--color-white);
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  text-align: center;
-
-  &:focus {
-    outline-offset: 3px;
-  }
-  &:hover {
-    cursor: pointer;
-    animation: morph 200ms linear;
-    background-color: var(--color-yellow-3);
-  }
-  @keyframes morph {
-    0% {
-      background-color: var(--color-red-3);
-    }
-    100% {
-      background-color: var(--color-yellow-3);
-    }
+  border-radius: 8px;
+  &:focus-visible {
+    outline: solid 2px var(--color-yellow-3);
+    border-color: var(--color-yellow-3);
   }
 `;
 
@@ -451,19 +451,49 @@ const ForgotPasswordButton = styled(UnstyledButton)`
   }
 `;
 
-const DialogSwitchWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
+const InputError = styled.div`
+  position: flex;
+  align-self: flex-end;
+  height: 16px;
+  color: var(--color-red-3);
+  font-size: ${14 / 16}rem;
+`;
+
+const SubmitButton = styled(UnstyledButton)`
+  padding: 12px;
   width: 100%;
-  padding: 36px;
+  background-color: var(--color-yellow-2);
+  border: none;
+  border-radius: 8px;
+  color: var(--color-white);
+  font-size: ${16 / 16}rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  text-align: center;
+  &:focus {
+    outline-offset: 3px;
+  }
+  &:hover {
+    cursor: pointer;
+    animation: morph 200ms linear;
+    background-color: var(--color-yellow-3);
+  }
+  @keyframes morph {
+    0% {
+      background-color: var(--color-yellow-2);
+    }
+    100% {
+      background-color: var(--color-yellow-3);
+    }
+  }
 `;
 
 const DialogSwitchButton = styled(UnstyledButton)`
   color: var(--color-yellow-2);
   font-weight: bold;
-  padding-top: 12px;
   margin: auto;
+  padding-top: 18px;
   &:hover {
     color: var(--color-yellow-4);
     cursor: pointer;
