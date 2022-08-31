@@ -6,6 +6,9 @@ import { FiX } from "react-icons/fi";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 
+export const Dialog = RadixDialog.Root;
+export const DialogTrigger = RadixDialog.Trigger;
+
 export const DialogContent = React.forwardRef(
   ({ title, description, children, ...props }, forwardedRef) => (
     <RadixDialog.Portal>
@@ -32,9 +35,6 @@ export const DialogContent = React.forwardRef(
     </RadixDialog.Portal>
   )
 );
-
-export const Dialog = RadixDialog.Root;
-export const DialogTrigger = RadixDialog.Trigger;
 
 const fadeIn = keyframes`
   from {
@@ -65,7 +65,7 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  color: var(--color-yellow-2);
+  color: var(--color-gray-2);
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;
@@ -97,10 +97,16 @@ const CloseButton = styled(UnstyledButton)`
   height: 24px;
   display: grid;
   place-content: center;
+  color: var(--color-yellow-2);
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--color-yellow-9);
     }
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-yellow-3);
+    border-color: var(--color-yellow-3);
   }
 `;

@@ -10,8 +10,8 @@ import {
 
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import { Select, SelectItem } from "components/select";
-import LabelInput from "components/label-input";
-import ListCheckbox from "components/list-checkbox";
+import TextInput from "components/text-input";
+import Checkbox from "components/checkbox";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
@@ -27,7 +27,16 @@ function Roster() {
   const [select, setSelect] = React.useState(selectValues.newest);
   const [checked, setChecked] = React.useState(false);
 
-  const [name, setName] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+  const [firstName, setFirstName] = React.useState("");
+  const [lastName, setLastName] = React.useState("");
+  const [shift, setShift] = React.useState("");
+  const [badge, setBadge] = React.useState("");
+
+  function addPersonSubmit(e) {
+    e.preventDefault();
+    setOpen(false);
+  }
 
   return (
     <Wrapper>
@@ -47,7 +56,7 @@ function Roster() {
               Badge Number
             </SelectItem>
           </RosterSelect>
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button theme="light" icon={FiUserPlus}>
                 Add Person
@@ -57,19 +66,47 @@ function Roster() {
               title="Add person"
               description="Add a new person to the roster here."
             >
-              <DialogForm>
-                <DialogLabelInput
-                  id="name-input"
-                  label="Name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                />
+              <DialogForm onSubmit={addPersonSubmit}>
+                <DialogInputs>
+                  <TextInput
+                    id="first-name-input"
+                    label="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                  <TextInput
+                    id="last-name-input"
+                    label="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                  <TextInput
+                    id="shift-input"
+                    label="Shift"
+                    value={shift}
+                    onChange={(e) => setShift(e.target.value)}
+                  />
+                  <TextInput
+                    id="badge-input"
+                    label="Badge"
+                    value={badge}
+                    onChange={(e) => setBadge(e.target.value)}
+                  />
+                </DialogInputs>
+                <Button
+                  type="submit"
+                  onClick={addPersonSubmit}
+                  theme="light"
+                  icon={FiUserPlus}
+                >
+                  Add Person
+                </Button>
               </DialogForm>
             </DialogContent>
           </Dialog>
         </Top>
         <ListHeader>
-          <ListCheckbox
+          <Checkbox
             label="Select all"
             checked={checked}
             onCheckedChange={(checked) => setChecked(checked)}
@@ -144,12 +181,14 @@ const DialogForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 16px;
+  gap: 32px;
   width: 448px;
 `;
 
-const DialogLabelInput = styled(LabelInput)`
-  width: 384px;
+const DialogInputs = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 const ListHeader = styled.div`

@@ -91,7 +91,7 @@ const SearchButton = styled(UnstyledButton)`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      border-radius: 999999px;
+      border-radius: 100%;
       background-color: var(--color-gray-9);
 
       ${TextInput}:focus-visible + & {
