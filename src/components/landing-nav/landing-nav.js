@@ -467,7 +467,6 @@ function LandingNav({
           {user.current ? (
             <>
               <Option onClick={() => signOut()}>Sign out</Option>
-              <div>{user.current.displayName}</div>
             </>
           ) : (
             <UserAccountDialog
