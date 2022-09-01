@@ -3,18 +3,26 @@ import styled from "styled-components";
 import {
   FiSliders,
   FiTrash2,
+  FiX,
+  FiCheck,
   FiDownload,
   FiChevronLeft,
   FiChevronRight,
 } from "react-icons/fi";
 
 import { Select, SelectItem } from "components/select";
-import AlertDialog from "components/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogContent,
+} from "components/alert-dialog";
 import Checkbox from "components/checkbox";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
-import SearchInput from "components/search-input";
+import TextInput from "components/text-input";
 import { QUERIES } from "constants.js";
 
 const selectValues = {
@@ -26,14 +34,18 @@ function Reports() {
   const [select, setSelect] = React.useState(selectValues.newest);
   const [checked, setChecked] = React.useState(false);
 
+  const [openAlertDialog, setAlertDialogOpen] = React.useState(false);
+  const [password, setPassword] = React.useState("");
+
+  function onAlertDialogAction(e) {
+    e.preventDefault();
+    setAlertDialogOpen(false);
+  }
+
   return (
     <Wrapper>
       <Content>
         <Top>
-          <ReportsSearch id="reports-search" placeholder="Location" />
-          <Button theme="light" icon={FiSliders}>
-            Filter
-          </Button>
           <ReportsSelect
             select={select}
             onValueChange={(select) => setSelect(select)}
@@ -43,6 +55,9 @@ function Reports() {
             <SelectItem value={selectValues.newest}>Newest first</SelectItem>
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
+          <Button theme="light" icon={FiSliders}>
+            Filter
+          </Button>
         </Top>
         <ListHeader>
           <Checkbox
@@ -56,15 +71,41 @@ function Reports() {
           <Button theme="light" icon={FiDownload}>
             Export all
           </Button>
-          <AlertDialog
-            triggerText="Delete all"
-            triggerIcon={FiTrash2}
-            title="Are you absolutely sure?"
-            description="This action cannot be undone. This will permanently delete all reports from your account."
-            cancelText="Cancel"
-            actionText="Yes, delete all reports"
-            requireAuth
-          />
+          <AlertDialog open={openAlertDialog} onOpenChange={setAlertDialogOpen}>
+            <AlertDialogTrigger asChild>
+              <Button theme="light" icon={FiTrash2}>
+                Delete All
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent
+              title="Are you absolutely sure?"
+              description="This action cannot be undone. This will permanently delete all reports from your account."
+            >
+              <TextInput
+                type="password"
+                id="password-input"
+                label="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Options>
+                <AlertDialogCancel asChild>
+                  <Button icon={FiX} theme="light">
+                    Cancel
+                  </Button>
+                </AlertDialogCancel>
+                <AlertDialogAction asChild>
+                  <Button
+                    onClick={onAlertDialogAction}
+                    icon={FiCheck}
+                    theme="light"
+                  >
+                    Yes, Delete All Reports
+                  </Button>
+                </AlertDialogAction>
+              </Options>
+            </AlertDialogContent>
+          </AlertDialog>
           <UnstyledButton>
             <VisuallyHidden>Page left</VisuallyHidden>
             <FiChevronLeft />
@@ -114,10 +155,6 @@ const Top = styled.div`
   padding: 32px 48px;
 `;
 
-const ReportsSearch = styled(SearchInput)`
-  width: 256px;
-`;
-
 const ReportsSelect = styled(Select)`
   width: 160px;
 `;
@@ -140,6 +177,12 @@ const Bottom = styled.div`
   align-items: center;
   gap: 24px;
   padding: 0 48px;
+`;
+
+const Options = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
 `;
 
 export default Reports;

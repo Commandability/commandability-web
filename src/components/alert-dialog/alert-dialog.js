@@ -2,78 +2,33 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixAlertDialog from "@radix-ui/react-alert-dialog";
 
-import TextInput from "components/text-input";
-import Button from "components/button";
+export const AlertDialog = RadixAlertDialog.Root;
+export const AlertDialogTrigger = RadixAlertDialog.Trigger;
+export const AlertDialogCancel = RadixAlertDialog.Cancel;
+export const AlertDialogAction = RadixAlertDialog.Action;
 
-function AlertDialog({
-  triggerText,
-  triggerIcon,
-  title,
-  description,
-  cancelText,
-  actionText,
-  onAction,
-  requireAuth,
-  ...props
-}) {
-  const [open, setOpen] = React.useState(false);
-  const [password, setPassword] = React.useState("");
-
-  function onClick(e) {
-    if (!requireAuth) {
-      onAction();
-      return;
-    }
-
-    e.preventDefault();
-    setOpen(false);
-  }
-
-  return (
-    <RadixAlertDialog.Root open={open} onOpenChange={setOpen}>
-      <RadixAlertDialog.Trigger asChild>
-        <Button theme="light" icon={triggerIcon}>
-          {triggerText}
-        </Button>
-      </RadixAlertDialog.Trigger>
-      <RadixAlertDialog.Portal>
-        <RadixDialogOverlay>
-          <RadixDialogContent
-            {...props}
-            onOpenAutoFocus={(e) => e.preventDefault()}
-            onCloseAutoFocus={(e) => e.preventDefault()}
-          >
-            <Header>
-              <RadixDialogTitle>{title}</RadixDialogTitle>
-              <RadixDialogDescription>{description}</RadixDialogDescription>
-            </Header>
-            {requireAuth ? (
-              <TextInput
-                type="password"
-                id="password-input"
-                label="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            ) : null}
-            <Options>
-              <RadixAlertDialog.Cancel asChild>
-                <Button theme="light">{cancelText}</Button>
-              </RadixAlertDialog.Cancel>
-              <RadixAlertDialog.Action asChild>
-                <Button onClick={onClick} theme="dark">
-                  {actionText}
-                </Button>
-              </RadixAlertDialog.Action>
-            </Options>
-          </RadixDialogContent>
-        </RadixDialogOverlay>
-      </RadixAlertDialog.Portal>
-    </RadixAlertDialog.Root>
-  );
-}
-
-export default AlertDialog;
+export const AlertDialogContent = React.forwardRef(
+  ({ title, description, children, ...props }, forwardedRef) => (
+    <RadixAlertDialog.Portal>
+      <RadixAlertDialogOverlay>
+        <RadixAlertDialogContent
+          {...props}
+          ref={forwardedRef}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+        >
+          <Header>
+            <RadixAlertDialogTitle>{title}</RadixAlertDialogTitle>
+            <RadixAlertDialogDescription>
+              {description}
+            </RadixAlertDialogDescription>
+          </Header>
+          {children}
+        </RadixAlertDialogContent>
+      </RadixAlertDialogOverlay>
+    </RadixAlertDialog.Portal>
+  )
+);
 
 const fadeIn = keyframes`
   from {
@@ -84,7 +39,7 @@ const fadeIn = keyframes`
   }
 `;
 
-const RadixDialogOverlay = styled(RadixAlertDialog.Overlay)`
+const RadixAlertDialogOverlay = styled(RadixAlertDialog.Overlay)`
   background-color: hsl(0 0% 0% / 0.5);
   position: fixed;
   inset: 0;
@@ -96,12 +51,13 @@ const RadixDialogOverlay = styled(RadixAlertDialog.Overlay)`
   }
 `;
 
-const RadixDialogContent = styled(RadixAlertDialog.Content)`
+const RadixAlertDialogContent = styled(RadixAlertDialog.Content)`
   position: relative;
   padding: 24px;
   border-radius: 8px;
   background-color: var(--color-white);
   color: var(--color-yellow-2);
+  min-width: 384px;
   max-width: 512px;
   display: flex;
   flex-direction: column;
@@ -118,18 +74,12 @@ const Header = styled.div`
   gap: 8px;
 `;
 
-const RadixDialogTitle = styled(RadixAlertDialog.Title)`
+const RadixAlertDialogTitle = styled(RadixAlertDialog.Title)`
   font-size: ${18 / 16}rem;
   font-weight: bold;
   color: var(--color-gray-3);
 `;
 
-const RadixDialogDescription = styled(RadixAlertDialog.Description)`
+const RadixAlertDialogDescription = styled(RadixAlertDialog.Description)`
   color: var(--color-gray-4);
-`;
-
-const Options = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
 `;

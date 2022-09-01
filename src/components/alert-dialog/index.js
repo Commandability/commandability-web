@@ -1,1 +1,7 @@
-export { default } from "./alert-dialog";
+export {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogCancel,
+  AlertDialogAction,
+  AlertDialogContent,
+} from "./alert-dialog";
