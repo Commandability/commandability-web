@@ -23,7 +23,7 @@ function UserAccountDialog(props) {
   const [displayName, setDisplayName] = React.useState("");
   const [displayNameError, setDisplayNameError] = React.useState(false);
   const [email, setEmail] = React.useState("");
-  const [emailError, setEmailError] = React.useState(false);
+  const [emailError, setEmailError] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
   const [dialog, setDialog] = React.useState(props.dialog);
@@ -33,13 +33,13 @@ function UserAccountDialog(props) {
   function validateNewAccount(event) {
     event.preventDefault();
     if (!validDisplayName.test(displayName)) {
-      setDisplayNameError(true);
+      setDisplayNameError("Display name must be at least 3 characters");
     }
     if (!validEmail.test(email)) {
-      setEmailError(true);
+      setEmailError("Invalid email");
     }
     if (!validPassword.test(password)) {
-      setPasswordError(true);
+      setPasswordError("Password must be at least 8 characters");
     }
     if (
       validDisplayName.test(displayName) &&
@@ -64,10 +64,10 @@ function UserAccountDialog(props) {
   function validateLogin(event) {
     event.preventDefault();
     if (!validEmail.test(email)) {
-      setEmailError(true);
+      setEmailError("Invalid email");
     }
     if (!validPassword.test(password)) {
-      setPasswordError(true);
+      setPasswordError("Password must be at least 8 characters");
     }
     if (validEmail.test(email) && validPassword.test(password)) {
       submitLogin();
@@ -83,7 +83,7 @@ function UserAccountDialog(props) {
   function validateRecoverAccount(event) {
     event.preventDefault();
     if (!validEmail.test(email)) {
-      setEmailError(true);
+      setEmailError("Invalid email");
     }
     if (validEmail.test(email)) {
       submitRecoverAccount();
@@ -116,9 +116,9 @@ function UserAccountDialog(props) {
     setDisplayName("");
     setEmail("");
     setPassword("");
-    setDisplayNameError(false);
-    setEmailError(false);
-    setPasswordError(false);
+    setDisplayNameError("");
+    setEmailError("");
+    setPasswordError("");
   }
 
   return (
@@ -152,17 +152,11 @@ function UserAccountDialog(props) {
                       placeholder="Department One"
                       onChange={(e) => {
                         setDisplayName(e.target.value);
-                        setDisplayNameError(false);
+                        setDisplayNameError("");
                       }}
                       value={displayName}
                     />
-                    {displayNameError ? (
-                      <InputError>
-                        Display name must be at least 3 characters
-                      </InputError>
-                    ) : (
-                      <InputError />
-                    )}
+                    <InputError>{displayNameError}</InputError>
                     <Label htmlFor="emailInput">Email</Label>
                     <Input
                       id="emailInput"
@@ -170,15 +164,11 @@ function UserAccountDialog(props) {
                       placeholder="example@example.com"
                       onChange={(e) => {
                         setEmail(e.target.value);
-                        setEmailError(false);
+                        setEmailError("");
                       }}
                       value={email}
                     />
-                    {emailError ? (
-                      <InputError>Invalid email</InputError>
-                    ) : (
-                      <InputError />
-                    )}
+                    <InputError>{emailError}</InputError>
                     <Label htmlFor="passwordInput">Password</Label>
                     <Input
                       id="passwordInput"
@@ -186,17 +176,11 @@ function UserAccountDialog(props) {
                       placeholder="example password"
                       onChange={(e) => {
                         setPassword(e.target.value);
-                        setPasswordError(false);
+                        setPasswordError("");
                       }}
                       value={password}
                     />
-                    {passwordError ? (
-                      <InputError>
-                        Password must be at least 8 characters
-                      </InputError>
-                    ) : (
-                      <InputError />
-                    )}
+                    <InputError>{passwordError}</InputError>
                   </InputWrapper>
                   <SubmitButton type="submit" onClick={validateNewAccount}>
                     Create Account
@@ -219,15 +203,11 @@ function UserAccountDialog(props) {
                       placeholder="example@example.com"
                       onChange={(e) => {
                         setEmail(e.target.value);
-                        setEmailError(false);
+                        setEmailError("");
                       }}
                       value={email}
                     />
-                    {emailError ? (
-                      <InputError>Invalid email</InputError>
-                    ) : (
-                      <InputError />
-                    )}
+                    <InputError>{emailError}</InputError>
                     <Label htmlFor="passwordInput">Password</Label>
                     <Input
                       id="passwordInput"
@@ -235,17 +215,11 @@ function UserAccountDialog(props) {
                       placeholder="example password"
                       onChange={(e) => {
                         setPassword(e.target.value);
-                        setPasswordError(false);
+                        setPasswordError("");
                       }}
                       value={password}
                     />
-                    {passwordError ? (
-                      <InputError>
-                        Password must be at least 8 characters
-                      </InputError>
-                    ) : (
-                      <InputError />
-                    )}
+                    <InputError>{passwordError}</InputError>
                     <ForgotPasswordButton
                       type="button"
                       onClick={() => handleNavClick("ForgotPassword")}
@@ -273,15 +247,11 @@ function UserAccountDialog(props) {
                       placeholder="example@example.com"
                       onChange={(e) => {
                         setEmail(e.target.value);
-                        setEmailError(false);
+                        setEmailError("");
                       }}
                       value={email}
                     />
-                    {emailError ? (
-                      <InputError>Invalid email</InputError>
-                    ) : (
-                      <InputError />
-                    )}
+                    <InputError>{emailError}</InputError>
                   </InputWrapper>
                   <SubmitButton type="submit" onClick={validateRecoverAccount}>
                     Reset Password
