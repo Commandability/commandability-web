@@ -3,6 +3,8 @@ import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
   signOut,
 } from "firebase/auth";
 
@@ -34,10 +36,16 @@ function AuthProvider({ children }) {
 
   const value = {
     user,
-    createUserWithEmailAndPassword: (...args) =>
-      createUserWithEmailAndPassword(auth, ...args),
-    signInWithEmailAndPassword: (...args) =>
-      signInWithEmailAndPassword(auth, ...args),
+    createUserWithEmailAndPassword: async (...args) =>
+      await createUserWithEmailAndPassword(auth, ...args),
+    signInWithEmailAndPassword: async (...args) =>
+      await signInWithEmailAndPassword(auth, ...args),
+    sendPasswordResetEmail: async (...args) =>
+      await sendPasswordResetEmail(auth, ...args),
+    updateProfile: async (user, ...args) => {
+      await updateProfile(user, ...args);
+      setUser((prevUser) => ({ ...prevUser, current: user }));
+    },
     signOut: () => signOut(auth),
   };
 

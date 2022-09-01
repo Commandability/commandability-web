@@ -15,6 +15,7 @@ import Spacer from "components/spacer";
 import LandingNav from "components/landing-nav";
 import VisuallyHidden from "components/visually-hidden";
 import SmoothScrollTo from "components/smooth-scroll-to";
+import UserAccountDialog from "components/user-account-dialog";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
@@ -86,9 +87,14 @@ function Home() {
             >
               Learn more
             </Pill>
-            <Pill onClick={() => {}} theme="dark" angle>
-              Get started
-            </Pill>
+            <UserAccountDialog
+              dialog="NewUser"
+              button={
+                <Pill onClick={() => {}} theme="dark" angle>
+                  Get started
+                </Pill>
+              }
+            />
           </HeaderPills>
         </Header>
         <DownloadsWrapper>

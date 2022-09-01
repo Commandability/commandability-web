@@ -2,14 +2,16 @@ import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
+import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import { useAuth } from "context/auth-context";
 import { useInitialLoad } from "context/initial-load-context";
 import useRect from "hooks/use-rect";
 import useScroll from "hooks/use-scroll";
-import VisuallyHidden from "components/visually-hidden";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
+import VisuallyHidden from "components/visually-hidden";
+import UserAccountDialog from "components/user-account-dialog";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
@@ -25,7 +27,7 @@ function LandingNav({
   footerInView,
 }) {
   const { hash } = useLocation();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const initialLoad = useInitialLoad();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -250,6 +252,7 @@ function LandingNav({
   return (
     <Nav
       data-nav-transition={scrolled ? "false" : "true"}
+      className={zeroRightClassName}
       style={{
         "--background-color": `${
           scrolled ? "var(--color-white)" : "transparent"
@@ -456,9 +459,21 @@ function LandingNav({
               Go to dashboard
             </Option>
           ) : (
-            <Option>Create an account</Option>
+            <UserAccountDialog
+              dialog="NewUser"
+              button={<Option>Create an Account</Option>}
+            />
           )}
-          {user.current ? <Option>Sign out</Option> : <Option>Sign in</Option>}
+          {user.current ? (
+            <>
+              <Option onClick={() => signOut()}>Sign out</Option>
+            </>
+          ) : (
+            <UserAccountDialog
+              dialog="CurrentUser"
+              button={<Option>Sign in</Option>}
+            />
+          )}
         </AccountOptions>
       </RightSide>
     </Nav>
@@ -468,7 +483,8 @@ function LandingNav({
 const Nav = styled.nav`
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: 72px;
   display: flex;
   z-index: 999999;
