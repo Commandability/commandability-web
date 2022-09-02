@@ -3,17 +3,25 @@ import styled from "styled-components";
 import {
   FiUserPlus,
   FiUpload,
+  FiCheckSquare,
+  FiArrowRight,
+  FiAlertTriangle,
+  FiCheck,
   FiDownload,
-  FiChevronLeft,
-  FiChevronRight,
 } from "react-icons/fi";
+import * as Papa from "papaparse";
+import { v4 as uuidv4 } from "uuid";
 
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+} from "components/alert-dialog";
 import { Select, SelectItem } from "components/select";
+import IconItem from "components/icon-item";
 import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
-import UnstyledButton from "components/unstyled-button";
-import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
 import SearchInput from "components/search-input";
 import { QUERIES } from "constants.js";
@@ -24,19 +32,74 @@ const selectValues = {
 };
 
 function Roster() {
-  const [select, setSelect] = React.useState(selectValues.newest);
-  const [checked, setChecked] = React.useState(false);
+  const [selectSort, setSelectSort] = React.useState(selectValues.newest);
+  const [checkedAll, setCheckedAll] = React.useState(false);
 
-  const [open, setOpen] = React.useState(false);
+  const [addPersonOpen, setAddPersonOpen] = React.useState(false);
   const [firstName, setFirstName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
   const [shift, setShift] = React.useState("");
   const [badge, setBadge] = React.useState("");
 
+  const [importCSVOpen, setImportCSVOpen] = React.useState(false);
+  const [importAlertDialogOpen, setImportAlertDialogOpen] =
+    React.useState(false);
+  const [importStatus, setImportStatus] = React.useState(null);
+
+  function onImportAlertDialogActionClick() {
+    setImportStatus(null);
+  }
+
+  function addPersonnel(personnelList) {}
+
   function addPersonSubmit(e) {
     e.preventDefault();
-    setOpen(false);
+    addPersonnel();
+    setAddPersonOpen(false);
   }
+
+  async function importCSVOnClick() {
+    setImportCSVOpen(false);
+
+    try {
+      const fileHandles = await window.showOpenFilePicker();
+
+      const file = await fileHandles[0].getFile();
+      const contents = await file.text();
+      const personnelList = await Papa.parse(contents, {
+        header: true,
+        skipEmptyLines: true,
+      });
+
+      if (personnelList.errors?.length) {
+        setImportStatus({
+          parseErrors: personnelList.errors.map((error) => ({
+            ...error,
+            id: uuidv4(),
+          })),
+          title: "Import failed",
+          description: "Resolve all formatting issues in the CSV file.",
+        });
+      } else {
+        console.log(personnelList);
+        addPersonnel(personnelList);
+        setImportStatus({
+          title: "Import successful",
+          description: "All CSV files were successfully imported.",
+        });
+      }
+    } catch (error) {
+      if (error.name === "AbortError") return;
+      setImportStatus({
+        title: "Import failed",
+        description: "Try again later or contact support.",
+      });
+    }
+
+    setImportAlertDialogOpen(true);
+  }
+
+  async function parseCSVAndExport(personnelList) {}
 
   return (
     <Wrapper>
@@ -44,8 +107,8 @@ function Roster() {
         <Top>
           <RosterSearch id="roster-search" placeholder="Name, badge, shift" />
           <RosterSelect
-            select={select}
-            onValueChange={(select) => setSelect(select)}
+            select={selectSort}
+            onValueChange={(select) => setSelectSort(select)}
             defaultValue={selectValues.alphabetical}
             label="Sort"
           >
@@ -56,7 +119,7 @@ function Roster() {
               Badge Number
             </SelectItem>
           </RosterSelect>
-          <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
             <DialogTrigger asChild>
               <Button theme="light" icon={FiUserPlus}>
                 Add Person
@@ -108,26 +171,85 @@ function Roster() {
         <ListHeader>
           <Checkbox
             label="Select all"
-            checked={checked}
-            onCheckedChange={(checked) => setChecked(checked)}
+            checked={checkedAll}
+            onCheckedChange={(checked) => setCheckedAll(checked)}
           />
         </ListHeader>
         <List></List>
         <Bottom>
-          <Button theme="light" icon={FiUpload}>
-            Import
+          <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
+            <DialogTrigger asChild>
+              <Button theme="light" icon={FiUpload}>
+                Import CSV
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              title="Import CSV"
+              description="Add personnel from a file here."
+            >
+              <DialogContainer>
+                <UnorderedList>
+                  <IconItem icon={FiCheckSquare}>
+                    The file should be a Comma Separated Value (CSV) file
+                  </IconItem>
+                  <IconItem icon={FiCheckSquare}>
+                    The first line in the file should be a comma-separated
+                    header with columns labeled:{" "}
+                    <Highlight>LAST_NAME,FIRST_NAME,SHIFT,BADGE</Highlight>
+                  </IconItem>
+                  <IconItem icon={FiCheckSquare}>
+                    All other lines should contain comma-separated personnel
+                    data corresponding to the columns in the header
+                  </IconItem>
+                </UnorderedList>
+                <DialogActions>
+                  <Button
+                    onClick={importCSVOnClick}
+                    theme="light"
+                    icon={FiArrowRight}
+                  >
+                    Continue
+                  </Button>
+                </DialogActions>
+              </DialogContainer>
+            </DialogContent>
+          </Dialog>
+          <AlertDialog
+            open={importAlertDialogOpen}
+            onOpenChange={setImportAlertDialogOpen}
+          >
+            <AlertDialogContent
+              title={importStatus?.title}
+              description={importStatus?.description}
+            >
+              {importStatus?.parseErrors?.length ? (
+                <DialogScrollContainer>
+                  <UnorderedList>
+                    {importStatus.parseErrors.map((error) => (
+                      <IconItem
+                        key={error.id}
+                        icon={FiAlertTriangle}
+                      >{`Row ${error.row} - ${error.message}`}</IconItem>
+                    ))}
+                  </UnorderedList>
+                </DialogScrollContainer>
+              ) : null}
+              <DialogActions>
+                <AlertDialogAction asChild>
+                  <Button
+                    onClick={onImportAlertDialogActionClick}
+                    icon={FiCheck}
+                    theme="light"
+                  >
+                    Ok
+                  </Button>
+                </AlertDialogAction>
+              </DialogActions>
+            </AlertDialogContent>
+          </AlertDialog>
+          <Button onClick={parseCSVAndExport} theme="light" icon={FiDownload}>
+            Export CSV
           </Button>
-          <Button theme="light" icon={FiDownload}>
-            Export all
-          </Button>
-          <UnstyledButton>
-            <VisuallyHidden>Page left</VisuallyHidden>
-            <FiChevronLeft />
-          </UnstyledButton>
-          <UnstyledButton>
-            <VisuallyHidden>Page right</VisuallyHidden>
-            <FiChevronRight />
-          </UnstyledButton>
         </Bottom>
       </Content>
     </Wrapper>
@@ -183,11 +305,64 @@ const DialogForm = styled.form`
   align-items: flex-end;
   gap: 32px;
   width: 448px;
+  color: var(--color-yellow-2);
 `;
 
 const DialogInputs = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 16px;
+`;
+
+const DialogContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 32px;
+  width: 512px;
+`;
+
+const DialogScrollContainer = styled.div`
+  width: 544px;
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 16px 0px;
+
+  scrollbar-color: var(--color-gray-5) var(--color-white);
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--color-white);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    border: 2px solid var(--color-white);
+    background-color: var(--color-gray-5);
+  }
+  ::-webkit-scrollbar-track {
+    margin: 2px 0px;
+  }
+`;
+
+const UnorderedList = styled.ul`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  list-style: none;
+  color: var(--color-gray-2);
+  padding: 0 32px;
+`;
+
+const Highlight = styled.span`
+  color: var(--color-yellow-2);
+`;
+
+const DialogActions = styled.div`
+  align-self: stretch;
+  display: flex;
+  justify-content: flex-end;
   gap: 16px;
 `;
 
