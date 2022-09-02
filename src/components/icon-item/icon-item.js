@@ -1,11 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
 
-function CardItem({ icon, children, ...props }) {
+function IconItem({ icon, children, ...props }) {
   return (
     <Wrapper {...props}>
       {icon ? icon() : null}
-      {children}
+      <span>{children}</span>
     </Wrapper>
   );
 }
@@ -14,7 +14,6 @@ const Wrapper = styled.li`
   display: flex;
   flex-direction: row;
   gap: 16px;
-  font-size: ${18 / 16}rem;
 
   & > svg {
     stroke-width: 0.175rem;
@@ -25,4 +24,4 @@ const Wrapper = styled.li`
   }
 `;
 
-export default CardItem;
+export default IconItem;

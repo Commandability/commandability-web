@@ -9,7 +9,7 @@ import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
 import Card from "components/card";
-import CardItem from "components/card-item";
+import IconItem from "components/icon-item";
 import Pill from "components/pill";
 import Spacer from "components/spacer";
 import LandingNav from "components/landing-nav";
@@ -162,15 +162,15 @@ function Home() {
           backgroundColor="var(--color-red-3)"
         >
           <UnorderedList>
-            <CardItem icon={FiCheckSquare}>
+            <IconItem icon={FiCheckSquare}>
               Create an account on the Commandability website homepage
-            </CardItem>
-            <CardItem icon={FiCheckSquare}>
+            </IconItem>
+            <IconItem icon={FiCheckSquare}>
               Add or import personnel on the website roster page
-            </CardItem>
-            <CardItem icon={FiCheckSquare}>
+            </IconItem>
+            <IconItem icon={FiCheckSquare}>
               Configure group names and alerts on the website groups page
-            </CardItem>
+            </IconItem>
           </UnorderedList>
         </StepOne>
         <StepTwo
@@ -179,17 +179,17 @@ function Home() {
           backgroundColor="var(--color-red-2)"
         >
           <UnorderedList>
-            <CardItem icon={FiCheckSquare}>
+            <IconItem icon={FiCheckSquare}>
               Download the Commandability app on your tablet device
-            </CardItem>
-            <CardItem icon={FiCheckSquare}>
+            </IconItem>
+            <IconItem icon={FiCheckSquare}>
               Sign in and update to load your department’s data, then start an
               incident
-            </CardItem>
-            <CardItem icon={FiCheckSquare}>
+            </IconItem>
+            <IconItem icon={FiCheckSquare}>
               Customize your groups to match the incident, and begin managing
               on-site personnel in real time
-            </CardItem>
+            </IconItem>
           </UnorderedList>
         </StepTwo>
         <StepThree
@@ -198,16 +198,16 @@ function Home() {
           backgroundColor="var(--color-red-1)"
         >
           <UnorderedList>
-            <CardItem icon={FiCheckSquare}>
+            <IconItem icon={FiCheckSquare}>
               After the incident, enter the incident location and any additional
               notes
-            </CardItem>
-            <CardItem icon={FiCheckSquare}>
+            </IconItem>
+            <IconItem icon={FiCheckSquare}>
               Upload the report to your Commandability account
-            </CardItem>
-            <CardItem icon={FiCheckSquare}>
+            </IconItem>
+            <IconItem icon={FiCheckSquare}>
               Review all uploaded reports on the Commandability website
-            </CardItem>
+            </IconItem>
           </UnorderedList>
         </StepThree>
       </HowItWorks>
@@ -493,6 +493,7 @@ const UnorderedList = styled.ul`
   gap: 24px;
   list-style: none;
   padding: 48px;
+  font-size: ${18 / 16}rem;
 `;
 
 const Footer = styled.footer`
