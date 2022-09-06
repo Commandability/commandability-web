@@ -21,56 +21,48 @@ const THEMES = {
   },
 };
 
-function Pill({
-  theme,
-  angle,
-  targetRef,
-  to,
-  onClick,
-  href,
-  children,
-  style,
-  ...props
-}) {
-  const prefersReducedMotion = usePrefersReducedMotion();
-  const themeStyles = THEMES[theme];
+const Pill = React.forwardRef(
+  (
+    { theme, angle, targetRef, to, onClick, href, children, style, ...props },
+    forwardedRef
+  ) => {
+    const prefersReducedMotion = usePrefersReducedMotion();
+    const themeStyles = THEMES[theme];
 
-  function smoothScroll() {
-    targetRef.current.scrollIntoView({
-      behavior: prefersReducedMotion ? "auto" : "smooth",
-    });
+    function smoothScroll() {
+      targetRef.current.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+      });
+    }
+
+    return (
+      <PillBase
+        {...props}
+        ref={forwardedRef}
+        style={{ ...themeStyles, ...style }}
+        to={to}
+        onClick={(event) => {
+          targetRef && smoothScroll(event);
+          onClick && onClick(event);
+        }}
+        href={href}
+        as={(() => {
+          if (to) {
+            return Link;
+          } else if (href) {
+            return "a";
+          } else {
+            return "button";
+          }
+        })()}
+      >
+        <Text>{children}</Text>
+        <Spacer size={8} axis="horizontal" />
+        {angle ? <FiChevronRight /> : null}
+      </PillBase>
+    );
   }
-
-  return (
-    <PillBase
-      {...props}
-      style={{ ...themeStyles, ...style }}
-      to={to}
-      onClick={(event) => {
-        targetRef && smoothScroll(event);
-        onClick && onClick(event);
-      }}
-      href={href}
-      as={(() => {
-        if (to) {
-          return Link;
-        } else if (onClick || targetRef) {
-          return "button";
-        } else if (href) {
-          return "a";
-        } else {
-          throw new Error(
-            "Pill must have either a to, onClick, targetRef, or href"
-          );
-        }
-      })()}
-    >
-      <Text>{children}</Text>
-      <Spacer size={8} axis="horizontal" />
-      {angle ? <FiChevronRight /> : null}
-    </PillBase>
-  );
-}
+);
 
 const PillBase = styled.button`
   display: flex;
