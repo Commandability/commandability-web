@@ -7,7 +7,7 @@ import { FiCheck } from "react-icons/fi";
 import VisuallyHidden from "components/visually-hidden";
 
 export default React.forwardRef(
-  ({ className, children, label, ...props }, forwardedRef) => {
+  ({ children, label, ...props }, forwardedRef) => {
     return (
       <RadixLabel.Root>
         <VisuallyHidden>{label}</VisuallyHidden>
