@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
+import { useAuth } from "context/auth-context";
 import useMergeRefs from "hooks/use-merge-refs";
 import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
@@ -15,7 +16,10 @@ import Spacer from "components/spacer";
 import LandingNav from "components/landing-nav";
 import VisuallyHidden from "components/visually-hidden";
 import SmoothScrollTo from "components/smooth-scroll-to";
-import UserAccountDialog from "components/user-account-dialog";
+import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import AccountDialogContent, {
+  accountContentType,
+} from "components/account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
@@ -61,6 +65,9 @@ function Home() {
   );
   const footerRef = useMergeRefs(footerInViewRef, footerFragmentRef);
 
+  const { user } = useAuth();
+  const [accountOpen, setAccountOpen] = React.useState(false);
+
   return (
     <Main>
       <LandingNav
@@ -87,14 +94,26 @@ function Home() {
             >
               Learn more
             </Pill>
-            <UserAccountDialog
-              dialog="NewUser"
-              button={
-                <Pill onClick={() => {}} theme="dark" angle>
-                  Get started
-                </Pill>
-              }
-            />
+            {user.current ? (
+              <Pill to="/dashboard/reports" theme="dark" angle>
+                Go to dashboard
+              </Pill>
+            ) : (
+              <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
+                <DialogTrigger asChild>
+                  <Pill theme="dark" angle>
+                    Get started
+                  </Pill>
+                </DialogTrigger>
+                <DialogContent title="Get started">
+                  <AccountDialogContent
+                    defaultContent={accountContentType.NEW_USER}
+                    open={accountOpen}
+                    setOpen={setAccountOpen}
+                  />
+                </DialogContent>
+              </Dialog>
+            )}
           </HeaderPills>
         </Header>
         <DownloadsWrapper>

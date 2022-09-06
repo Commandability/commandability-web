@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
-import * as Dialog from "@radix-ui/react-dialog";
+import * as RadixDialog from "@radix-ui/react-dialog";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import { useAuth } from "context/auth-context";
@@ -11,7 +11,10 @@ import useScroll from "hooks/use-scroll";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import VisuallyHidden from "components/visually-hidden";
-import UserAccountDialog from "components/user-account-dialog";
+import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import AccountDialogContent, {
+  accountContentType,
+} from "components/account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 import MenuButton from "components/menu-button";
@@ -50,6 +53,8 @@ function LandingNav({
     activeTargetId: "",
     hashUpdate: "inactive",
   });
+
+  const [accountOpen, setAccountOpen] = React.useState(false);
 
   function activeReducer(state, action) {
     switch (action.type) {
@@ -252,6 +257,11 @@ function LandingNav({
   return (
     <Nav
       data-nav-transition={scrolled ? "false" : "true"}
+      /* 
+        zeroRightClassName makes sure any fixed position elements have their right position modified
+        to match the original right position before the scroll bar is removed.
+        https://github.com/theKashey/react-remove-scroll-bar#the-right-border
+      */
       className={zeroRightClassName}
       style={{
         "--background-color": `${
@@ -360,19 +370,19 @@ function LandingNav({
         </Tab>
       </Desktop>
       <Mobile>
-        <Dialog.Root modal={false}>
+        <RadixDialog.Root modal={false}>
           <Trigger asChild>
             <MenuButton />
           </Trigger>
-          <Dialog.Portal>
+          <RadixDialog.Portal>
             <Content
               onInteractOutside={(e) => e.preventDefault()}
               onOpenAutoFocus={(e) => e.preventDefault()}
               onCloseAutoFocus={(e) => e.preventDefault()}
             >
-              <Dialog.Title>
+              <RadixDialog.Title>
                 <VisuallyHidden>Navigation</VisuallyHidden>
-              </Dialog.Title>
+              </RadixDialog.Title>
               <Menu>
                 <Item
                   targetId={hashIds.header}
@@ -440,8 +450,8 @@ function LandingNav({
                 </Item>
               </Menu>
             </Content>
-          </Dialog.Portal>
-        </Dialog.Root>
+          </RadixDialog.Portal>
+        </RadixDialog.Root>
       </Mobile>
       <RightSide>
         <AccountOptions
@@ -459,20 +469,34 @@ function LandingNav({
               Go to dashboard
             </Option>
           ) : (
-            <UserAccountDialog
-              dialog="NewUser"
-              button={<Option>Create an Account</Option>}
-            />
+            <Dialog>
+              <DialogTrigger asChild>
+                <Option>Create an account</Option>
+              </DialogTrigger>
+              <DialogContent title="Create an account">
+                <AccountDialogContent
+                  defaultContent={accountContentType.NEW_USER}
+                  open={accountOpen}
+                  setOpen={setAccountOpen}
+                />
+              </DialogContent>
+            </Dialog>
           )}
           {user.current ? (
-            <>
-              <Option onClick={() => signOut()}>Sign out</Option>
-            </>
+            <Option onClick={() => signOut()}>Sign out</Option>
           ) : (
-            <UserAccountDialog
-              dialog="CurrentUser"
-              button={<Option>Sign in</Option>}
-            />
+            <Dialog>
+              <DialogTrigger asChild>
+                <Option>Sign in</Option>
+              </DialogTrigger>
+              <DialogContent title="Sign in">
+                <AccountDialogContent
+                  defaultContent={accountContentType.CURRENT_USER}
+                  open={accountOpen}
+                  setOpen={setAccountOpen}
+                />
+              </DialogContent>
+            </Dialog>
           )}
         </AccountOptions>
       </RightSide>
@@ -631,7 +655,7 @@ const filler = keyframes`
   }
 `;
 
-const Content = styled(Dialog.Content)`
+const Content = styled(RadixDialog.Content)`
   display: none;
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -711,7 +735,7 @@ const Item = styled(SmoothScrollTo)`
   }
 `;
 
-const Trigger = styled(Dialog.Trigger)`
+const Trigger = styled(RadixDialog.Trigger)`
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
