@@ -10,19 +10,31 @@ export const Dialog = RadixDialog.Root;
 export const DialogTrigger = RadixDialog.Trigger;
 
 export const DialogContent = React.forwardRef(
-  ({ title, description, children, ...props }, forwardedRef) => (
+  ({ header, title, description, children, ...props }, forwardedRef) => (
     <RadixDialog.Portal>
       <RadixDialogOverlay>
         <RadixDialogContent
           {...props}
           ref={forwardedRef}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
+          style={{
+            "--content-padding": `${header ? "24px" : "36px 24px"}`,
+          }}
         >
-          <Header>
-            <RadixDialogTitle>{title}</RadixDialogTitle>
-            <RadixDialogDescription>{description}</RadixDialogDescription>
-          </Header>
+          {header ? (
+            <Header>
+              <RadixDialogTitle>{title}</RadixDialogTitle>
+              {description ? (
+                <RadixDialogDescription>{description}</RadixDialogDescription>
+              ) : null}
+            </Header>
+          ) : (
+            <VisuallyHidden>
+              <RadixDialog.Title>{title}</RadixDialog.Title>
+              {description ? (
+                <RadixDialog.Description>{description}</RadixDialog.Description>
+              ) : null}
+            </VisuallyHidden>
+          )}
           {children}
           <RadixDialog.Close asChild>
             <CloseButton>
@@ -59,7 +71,7 @@ const RadixDialogOverlay = styled(RadixDialog.Overlay)`
 
 const RadixDialogContent = styled(RadixDialog.Content)`
   position: relative;
-  padding: 24px;
+  padding: var(--content-padding);
   border-radius: 8px;
   background-color: var(--color-white);
   display: flex;

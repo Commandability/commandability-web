@@ -2,27 +2,37 @@ import React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixAlertDialog from "@radix-ui/react-alert-dialog";
 
+import VisuallyHidden from "components/visually-hidden";
+
 export const AlertDialog = RadixAlertDialog.Root;
 export const AlertDialogTrigger = RadixAlertDialog.Trigger;
 export const AlertDialogCancel = RadixAlertDialog.Cancel;
 export const AlertDialogAction = RadixAlertDialog.Action;
 
 export const AlertDialogContent = React.forwardRef(
-  ({ title, description, children, ...props }, forwardedRef) => (
+  ({ header, title, description, children, ...props }, forwardedRef) => (
     <RadixAlertDialog.Portal>
       <RadixAlertDialogOverlay>
-        <RadixAlertDialogContent
-          {...props}
-          ref={forwardedRef}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
-        >
-          <Header>
-            <RadixAlertDialogTitle>{title}</RadixAlertDialogTitle>
-            <RadixAlertDialogDescription>
-              {description}
-            </RadixAlertDialogDescription>
-          </Header>
+        <RadixAlertDialogContent {...props} ref={forwardedRef}>
+          {header ? (
+            <Header>
+              <RadixAlertDialogTitle>{title}</RadixAlertDialogTitle>
+              {description ? (
+                <RadixAlertDialogDescription>
+                  {description}
+                </RadixAlertDialogDescription>
+              ) : null}
+            </Header>
+          ) : (
+            <VisuallyHidden>
+              <RadixAlertDialog.Title>{title}</RadixAlertDialog.Title>
+              {description ? (
+                <RadixAlertDialog.Description>
+                  {description}
+                </RadixAlertDialog.Description>
+              ) : null}
+            </VisuallyHidden>
+          )}
           {children}
         </RadixAlertDialogContent>
       </RadixAlertDialogOverlay>
@@ -58,7 +68,7 @@ const RadixAlertDialogContent = styled(RadixAlertDialog.Content)`
   background-color: var(--color-white);
   color: var(--color-yellow-2);
   min-width: 384px;
-  max-width: 768px;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
   gap: 32px;
