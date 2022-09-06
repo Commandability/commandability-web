@@ -124,8 +124,6 @@ const GlobalStyles = createGlobalStyle`
 
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar);
     scrollbar-width: thin;
-
-    scrollbar-gutter: stable;
   }
 
   ::selection {
