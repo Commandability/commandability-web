@@ -62,7 +62,17 @@ function Roster() {
     setImportCSVOpen(false);
 
     try {
-      const fileHandles = await window.showOpenFilePicker();
+      const options = {
+        types: [
+          {
+            description: "CSV Files",
+            accept: {
+              "text/csv": [".csv"],
+            },
+          },
+        ],
+      };
+      const fileHandles = await window.showOpenFilePicker(options);
 
       const file = await fileHandles[0].getFile();
       const contents = await file.text();
@@ -81,7 +91,6 @@ function Roster() {
           description: "Resolve all formatting issues in the CSV file.",
         });
       } else {
-        console.log(personnelList);
         addPersonnel(personnelList);
         setImportStatus({
           title: "Import successful",
@@ -105,7 +114,7 @@ function Roster() {
     <Wrapper>
       <Content>
         <Top>
-          <RosterSearch id="roster-search" placeholder="Name, badge, shift" />
+          <RosterSearch id="roster-search" placeholder="name, badge, shift" />
           <RosterSelect
             select={selectSort}
             onValueChange={(select) => setSelectSort(select)}
@@ -184,6 +193,7 @@ function Roster() {
               </Button>
             </DialogTrigger>
             <DialogContent
+              header
               title="Import CSV"
               description="Add personnel from a file here."
             >
@@ -219,6 +229,7 @@ function Roster() {
             onOpenChange={setImportAlertDialogOpen}
           >
             <AlertDialogContent
+              header
               title={importStatus?.title}
               description={importStatus?.description}
             >

@@ -77,7 +77,8 @@ function Reports() {
                 Delete All
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent
+            <DeleteAllAlertDialogContent
+              header
               title="Are you absolutely sure?"
               description="This action cannot be undone. This will permanently delete all reports from your account."
             >
@@ -104,7 +105,7 @@ function Reports() {
                   </Button>
                 </AlertDialogAction>
               </Options>
-            </AlertDialogContent>
+            </DeleteAllAlertDialogContent>
           </AlertDialog>
           <UnstyledButton>
             <VisuallyHidden>Page left</VisuallyHidden>
@@ -177,6 +178,10 @@ const Bottom = styled.div`
   align-items: center;
   gap: 24px;
   padding: 0 48px;
+`;
+
+const DeleteAllAlertDialogContent = styled(AlertDialogContent)`
+  width: 512px;
 `;
 
 const Options = styled.div`
