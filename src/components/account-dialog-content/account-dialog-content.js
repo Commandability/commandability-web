@@ -103,6 +103,9 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       try {
         await signInWithEmailAndPassword(email, password);
         setOpen(false);
+
+        // Help password managers understand a form has been submitted
+        History.pushState();
       } catch {
         setLoading(false);
       }
@@ -155,6 +158,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
               <Input
                 id="display-name"
                 type="text"
+                required
                 placeholder="ExampleDept"
                 onChange={(e) => {
                   setDisplayName(e.target.value);
@@ -169,10 +173,12 @@ function AccountDialogContent({ defaultContent, setOpen }) {
               </InputError>
             </InputGroup>
             <InputGroup>
-              <Label htmlFor="email-input">Email</Label>
+              <Label htmlFor="new-email">Email</Label>
               <Input
-                id="email-input"
+                id="new-email"
                 type="email"
+                autoComplete="username"
+                required
                 placeholder="example@example.com"
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -185,10 +191,12 @@ function AccountDialogContent({ defaultContent, setOpen }) {
               <InputError>{emailError ? errors.email : null}</InputError>
             </InputGroup>
             <InputGroup>
-              <Label htmlFor="password-input">Password</Label>
+              <Label htmlFor="new-password">Password</Label>
               <Input
-                id="password-input"
+                id="new-password"
                 type="password"
+                autoComplete="new-password"
+                required
                 placeholder="password"
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -218,10 +226,12 @@ function AccountDialogContent({ defaultContent, setOpen }) {
         <AccountForm>
           <FormInputs>
             <InputGroup>
-              <Label htmlFor="email-input">Email</Label>
+              <Label htmlFor="current-email">Email</Label>
               <Input
-                id="email-input"
+                id="current-email"
                 type="email"
+                autoComplete="username"
+                required
                 placeholder="example@example.com"
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -232,10 +242,12 @@ function AccountDialogContent({ defaultContent, setOpen }) {
               <InputError>{emailError ? errors.email : null}</InputError>
             </InputGroup>
             <InputGroup>
-              <Label htmlFor="password-input">Password</Label>
+              <Label htmlFor="current-password">Password</Label>
               <Input
-                id="password-input"
+                id="current-password"
                 type="password"
+                autoComplete="current-password"
+                required
                 placeholder="password"
                 onChange={(e) => {
                   setPassword(e.target.value);
@@ -270,10 +282,12 @@ function AccountDialogContent({ defaultContent, setOpen }) {
         <AccountForm>
           <FormInputs>
             <InputGroup>
-              <Label htmlFor="email-input">Email</Label>
+              <Label htmlFor="current-email">Email</Label>
               <Input
-                id="email-input"
+                id="current-email"
                 type="email"
+                autoComplete="username"
+                required
                 placeholder="example@example.com"
                 onChange={(e) => {
                   setEmail(e.target.value);

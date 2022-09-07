@@ -469,14 +469,13 @@ function LandingNav({
               Go to dashboard
             </Option>
           ) : (
-            <Dialog>
+            <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
               <DialogTrigger asChild>
                 <Option>Create an account</Option>
               </DialogTrigger>
               <DialogContent title="Create an account">
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
-                  open={accountOpen}
                   setOpen={setAccountOpen}
                 />
               </DialogContent>
@@ -485,14 +484,13 @@ function LandingNav({
           {user.current ? (
             <Option onClick={() => signOut()}>Sign out</Option>
           ) : (
-            <Dialog>
+            <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
               <DialogTrigger asChild>
                 <Option>Sign in</Option>
               </DialogTrigger>
               <DialogContent title="Sign in">
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
-                  open={accountOpen}
                   setOpen={setAccountOpen}
                 />
               </DialogContent>
