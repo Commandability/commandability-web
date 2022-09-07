@@ -4,6 +4,7 @@ import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 
 import { useAuth } from "context/auth-context";
+import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 
 export const accountContentType = {
@@ -50,17 +51,27 @@ function AccountDialogContent({ defaultContent, setOpen }) {
   const [content, setContent] = React.useState(defaultContent);
   const [isAnimating, setIsAnimating] = React.useState(false);
 
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (content === accountContentType.NEW_USER) {
+      setDisplayNameError(true);
+      setEmailError(true);
+      setPasswordError(true);
+    }
+  }, [content]);
+
   async function onCreateAccountSubmit(event) {
     event.preventDefault();
 
     if (!isDisplayName.test(displayName)) {
-      setDisplayNameError(errors.displayName);
+      setDisplayNameError(true);
     }
     if (!isEmail(email)) {
-      setEmailError(errors.email);
+      setEmailError(true);
     }
     if (!isStrongPassword(password, passwordRequirements)) {
-      setPasswordError(errors.password);
+      setPasswordError(true);
     }
 
     if (
@@ -68,12 +79,17 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       isEmail(email) &&
       isStrongPassword(password)
     ) {
-      const userCredentials = await createUserWithEmailAndPassword(
-        email,
-        password
-      );
-      await updateProfile(userCredentials.user, { displayName: displayName });
-      setOpen(false);
+      setLoading(true);
+      try {
+        const userCredentials = await createUserWithEmailAndPassword(
+          email,
+          password
+        );
+        await updateProfile(userCredentials.user, { displayName: displayName });
+        setOpen(false);
+      } catch {
+        setLoading(false);
+      }
     }
   }
 
@@ -81,10 +97,15 @@ function AccountDialogContent({ defaultContent, setOpen }) {
     event.preventDefault();
 
     if (!isEmail(email)) {
-      setEmailError("Please enter a valid email");
+      setEmailError(true);
     } else {
-      await signInWithEmailAndPassword(email, password);
-      setOpen(false);
+      setLoading(true);
+      try {
+        await signInWithEmailAndPassword(email, password);
+        setOpen(false);
+      } catch {
+        setLoading(false);
+      }
     }
   }
 
@@ -92,29 +113,39 @@ function AccountDialogContent({ defaultContent, setOpen }) {
     event.preventDefault();
 
     if (!isEmail(email)) {
-      setEmailError("Invalid email");
+      setEmailError(true);
     } else {
-      await sendPasswordResetEmail(email);
-      setOpen(false);
+      setLoading(true);
+      try {
+        await sendPasswordResetEmail(email);
+        setOpen(false);
+      } catch {
+        setLoading(false);
+      }
     }
   }
 
   function handleContentSwitch(target) {
+    // Animating is disabled on mount
     setIsAnimating(true);
+
     setTimeout(() => {
       setContent(target);
-      setIsAnimating(false);
       setDisplayName("");
       setEmail("");
       setPassword("");
-      setDisplayNameError("");
-      setEmailError("");
-      setPasswordError("");
+      setDisplayNameError(false);
+      setEmailError(false);
+      setPasswordError(false);
+
+      // Reset content halfway through the animation when the content has opacity: 0
     }, ANIMATION_DURATION / 2);
   }
 
   let renderedContent;
-  if (content === accountContentType.NEW_USER) {
+  if (loading) {
+    renderedContent = <FireLoader />;
+  } else if (content === accountContentType.NEW_USER) {
     renderedContent = (
       <Content>
         <AccountForm>
@@ -127,11 +158,15 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 placeholder="ExampleDept"
                 onChange={(e) => {
                   setDisplayName(e.target.value);
-                  setDisplayNameError("");
+                  isDisplayName.test(e.target.value)
+                    ? setDisplayNameError(false)
+                    : setDisplayNameError(true);
                 }}
                 value={displayName}
               />
-              <InputError>{displayNameError}</InputError>
+              <InputError>
+                {displayNameError ? errors.displayName : null}
+              </InputError>
             </InputGroup>
             <InputGroup>
               <Label htmlFor="email-input">Email</Label>
@@ -141,11 +176,13 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 placeholder="example@example.com"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setEmailError("");
+                  isEmail(e.target.value)
+                    ? setEmailError(false)
+                    : setEmailError(true);
                 }}
                 value={email}
               />
-              <InputError>{emailError}</InputError>
+              <InputError>{emailError ? errors.email : null}</InputError>
             </InputGroup>
             <InputGroup>
               <Label htmlFor="password-input">Password</Label>
@@ -155,11 +192,13 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 placeholder="password"
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setPasswordError("");
+                  isStrongPassword(e.target.value, passwordRequirements)
+                    ? setPasswordError(false)
+                    : setPasswordError(true);
                 }}
                 value={password}
               />
-              <InputError>{passwordError}</InputError>
+              <InputError>{passwordError ? errors.password : null}</InputError>
             </InputGroup>
           </FormInputs>
           <SubmitButton type="submit" onClick={onCreateAccountSubmit}>
@@ -186,11 +225,11 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 placeholder="example@example.com"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setEmailError("");
+                  setEmailError(false);
                 }}
                 value={email}
               />
-              <InputError>{emailError}</InputError>
+              <InputError>{emailError ? errors.email : null}</InputError>
             </InputGroup>
             <InputGroup>
               <Label htmlFor="password-input">Password</Label>
@@ -200,11 +239,10 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 placeholder="password"
                 onChange={(e) => {
                   setPassword(e.target.value);
-                  setPasswordError("");
+                  setPasswordError(false);
                 }}
                 value={password}
               />
-              <InputError>{passwordError}</InputError>
             </InputGroup>
             <TextButton
               type="button"
@@ -239,11 +277,11 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 placeholder="example@example.com"
                 onChange={(e) => {
                   setEmail(e.target.value);
-                  setEmailError("");
+                  setEmailError(false);
                 }}
                 value={email}
               />
-              <InputError>{emailError}</InputError>
+              <InputError>{emailError ? errors.email : null}</InputError>
             </InputGroup>
           </FormInputs>
           <SubmitButton type="submit" onClick={onRecoverAccountSubmit}>
@@ -275,6 +313,7 @@ const ContentSwitch = styled.div`
   width: 480px;
   display: flex;
   flex-direction: column;
+  background-color: var(--color-gray-10);
 
   @media (prefers-reduced-motion: no-preference) {
     &[data-animating="true"] {

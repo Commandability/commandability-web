@@ -73,7 +73,7 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   position: relative;
   padding: var(--content-padding);
   border-radius: 8px;
-  background-color: var(--color-white);
+  background-color: var(--color-gray-10);
   display: flex;
   flex-direction: column;
   gap: 32px;

@@ -65,7 +65,7 @@ const RadixAlertDialogContent = styled(RadixAlertDialog.Content)`
   position: relative;
   padding: 24px;
   border-radius: 8px;
-  background-color: var(--color-white);
+  background-color: var(--color-gray-10);
   color: var(--color-yellow-2);
   min-width: 384px;
   max-width: 640px;

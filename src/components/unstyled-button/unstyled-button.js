@@ -6,7 +6,7 @@ export default styled.button`
   padding: 0;
   border: none;
   background: transparent;
-  cursor: pointer;
+  cursor: ${(props) => (props.disabled ? "auto" : "pointer")};
   -webkit-tap-highlight-color: transparent;
   text-align: left;
   font: inherit;
