@@ -54,7 +54,8 @@ function LandingNav({
     hashUpdate: "inactive",
   });
 
-  const [accountOpen, setAccountOpen] = React.useState(false);
+  const [currentAccountOpen, setCurrentAccountOpen] = React.useState(false);
+  const [newAccountOpen, setNewAccountOpen] = React.useState(false);
 
   function activeReducer(state, action) {
     switch (action.type) {
@@ -469,14 +470,14 @@ function LandingNav({
               Go to dashboard
             </Option>
           ) : (
-            <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
+            <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
               <DialogTrigger asChild>
                 <Option>Create an account</Option>
               </DialogTrigger>
               <DialogContent title="Create an account">
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
-                  setOpen={setAccountOpen}
+                  setOpen={setNewAccountOpen}
                 />
               </DialogContent>
             </Dialog>
@@ -484,14 +485,17 @@ function LandingNav({
           {user.current ? (
             <Option onClick={() => signOut()}>Sign out</Option>
           ) : (
-            <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
+            <Dialog
+              open={currentAccountOpen}
+              onOpenChange={setCurrentAccountOpen}
+            >
               <DialogTrigger asChild>
                 <Option>Sign in</Option>
               </DialogTrigger>
               <DialogContent title="Sign in">
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
-                  setOpen={setAccountOpen}
+                  setOpen={setCurrentAccountOpen}
                 />
               </DialogContent>
             </Dialog>

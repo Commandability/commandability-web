@@ -66,7 +66,7 @@ function Home() {
   const footerRef = useMergeRefs(footerInViewRef, footerFragmentRef);
 
   const { user } = useAuth();
-  const [accountOpen, setAccountOpen] = React.useState(false);
+  const [newAccountOpen, setNewAccountOpen] = React.useState(false);
 
   return (
     <Main>
@@ -99,7 +99,7 @@ function Home() {
                 Go to dashboard
               </Pill>
             ) : (
-              <Dialog open={accountOpen} onOpenChange={setAccountOpen}>
+              <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
                 <DialogTrigger asChild>
                   <Pill theme="dark" angle>
                     Get started
@@ -108,7 +108,7 @@ function Home() {
                 <DialogContent title="Get started">
                   <AccountDialogContent
                     defaultContent={accountContentType.NEW_USER}
-                    setOpen={setAccountOpen}
+                    setOpen={setNewAccountOpen}
                   />
                 </DialogContent>
               </Dialog>
