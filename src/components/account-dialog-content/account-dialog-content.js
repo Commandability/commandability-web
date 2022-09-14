@@ -7,7 +7,7 @@ import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 import { Toast, ToastProvider, ToastViewport } from "components/toast";
-import errorMessage from "error-message";
+import firebaseErrors from "utils/firebase-errors";
 
 export const accountContentType = {
   NEW_USER: "NEW_USER",
@@ -93,11 +93,9 @@ function AccountDialogContent({ defaultContent, setOpen }) {
           password
         );
         await updateProfile(userCredentials.user, { displayName: displayName });
-
         setOpen(false);
       } catch (err) {
-        const readableError = await errorMessage(err);
-        setToastState(readableError);
+        setToastState(firebaseErrors(err));
         setToastOpen(true);
         setLoading(false);
       }
@@ -112,13 +110,11 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       setLoading(true);
       try {
         await signInWithEmailAndPassword(email, password);
-
         setOpen(false);
         // Help password managers understand a form has been submitted
         // History.pushState();
       } catch (err) {
-        const readableError = await errorMessage(err);
-        setToastState(readableError);
+        setToastState(firebaseErrors(err));
         setToastOpen(true);
         setLoading(false);
       }
@@ -127,18 +123,15 @@ function AccountDialogContent({ defaultContent, setOpen }) {
 
   async function onRecoverAccountSubmit(event) {
     event.preventDefault();
-
     if (!isEmail(email)) {
       setEmailError(true);
     } else {
       setLoading(true);
       try {
         await sendPasswordResetEmail(email);
-
         setOpen(false);
       } catch (err) {
-        const readableError = await errorMessage(err);
-        setToastState(readableError);
+        setToastState(firebaseErrors(err));
         setToastOpen(true);
         setLoading(false);
       }
@@ -337,21 +330,21 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       >
         {renderedContent}
       </ContentSwitch>
-      <ToastProvider>
+      <ToastProvider duration={3000}>
         <Toast
           open={toastOpen}
           onOpenChange={setToastOpen}
           title={toastState.title}
           content={toastState.message}
         />
-        <ToastLocation />
+        <ToastErrorViewport />
       </ToastProvider>
     </>
   );
 }
 
 const ContentSwitch = styled.div`
-  height: 608px;
+  height: 512px;
   width: 480px;
   display: flex;
   flex-direction: column;
@@ -466,10 +459,13 @@ const SubmitButton = styled(UnstyledButton)`
   }
 `;
 
-const ToastLocation = styled(ToastViewport)`
+const ToastErrorViewport = styled(ToastViewport)`
   position: fixed;
-  bottom: 48px;
-  right: 24px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  list-style: none;
+  padding: 24px;
 `;
 
 export default AccountDialogContent;

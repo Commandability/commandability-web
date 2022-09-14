@@ -1,76 +1,59 @@
 import * as React from "react";
-import styled from "styled-components";
-import * as ToastPrimitive from "@radix-ui/react-toast";
-import { FiX } from "react-icons/fi";
+import styled, { keyframes } from "styled-components";
+import * as RadixToast from "@radix-ui/react-toast";
 
-import UnstyledButton from "components/unstyled-button";
-import VisuallyHidden from "components/visually-hidden";
-
-export const ToastProvider = ToastPrimitive.Provider;
-export const ToastViewport = ToastPrimitive.Viewport;
+export const ToastProvider = RadixToast.Provider;
+export const ToastViewport = RadixToast.Viewport;
 
 export function Toast({ title, content, children, ...props }) {
   return (
-    <ToastPrimitive.Root {...props} style={{ listStyleType: "none" }}>
+    <ToastRoot {...props} onSwipeEnd={(e) => e.preventDefault()}>
       <ToastContent>
-        {title && <ToastTitle>{title}</ToastTitle>}
+        {title ? <ToastTitle>{title}</ToastTitle> : null}
         <ToastDescription>{content}</ToastDescription>
-        {children && (
-          <ToastPrimitive.Action altText="alt text">
-            {children}
-          </ToastPrimitive.Action>
-        )}
-        <ToastPrimitive.Close asChild>
-          <CloseButton>
-            <VisuallyHidden>Close</VisuallyHidden>
-            <FiX />
-          </CloseButton>
-        </ToastPrimitive.Close>
       </ToastContent>
-    </ToastPrimitive.Root>
+      {children ? (
+        <RadixToast.Action asChild>{children}</RadixToast.Action>
+      ) : null}
+    </ToastRoot>
   );
 }
 
-const ToastContent = styled.div`
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const ToastRoot = styled(RadixToast.Root)`
   position: relative;
   padding: 24px;
   border-radius: 8px;
-  background-color: var(--color-gray-10);
   display: flex;
-  flex-direction: column;
   gap: 12px;
   color: var(--color-gray-2);
+  background-color: var(--color-gray-10);
+  box-shadow: var(--box-shadow);
+
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ${fadeIn} 200ms ease-out forwards;
+  }
 `;
 
-const ToastTitle = styled(ToastPrimitive.Title)`
+const ToastContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ToastTitle = styled(RadixToast.Title)`
   font-size: ${18 / 16}rem;
   font-weight: bold;
-  color: var(--color-gray-3);
-`;
-
-const ToastDescription = styled(ToastPrimitive.Description)`
-  color: var(--color-gray-4);
-`;
-
-const CloseButton = styled(UnstyledButton)`
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  border-radius: 100%;
-  width: 24px;
-  height: 24px;
-  display: grid;
-  place-content: center;
   color: var(--color-yellow-2);
+`;
 
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--color-yellow-9);
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-yellow-3);
-    border-color: var(--color-yellow-3);
-  }
+const ToastDescription = styled(RadixToast.Description)`
+  color: var(--color-gray-4);
 `;
