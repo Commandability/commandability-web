@@ -7,6 +7,7 @@ import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import errorMessage from "error-message";
 
 export const accountContentType = {
   NEW_USER: "NEW_USER",
@@ -95,7 +96,8 @@ function AccountDialogContent({ defaultContent, setOpen }) {
 
         setOpen(false);
       } catch (err) {
-        setToastState({ title: err.message, message: err.message });
+        const readableError = await errorMessage(err);
+        setToastState(readableError);
         setToastOpen(true);
         setLoading(false);
       }
@@ -115,7 +117,8 @@ function AccountDialogContent({ defaultContent, setOpen }) {
         // Help password managers understand a form has been submitted
         // History.pushState();
       } catch (err) {
-        setToastState({ title: err.message, message: err.message });
+        const readableError = await errorMessage(err);
+        setToastState(readableError);
         setToastOpen(true);
         setLoading(false);
       }
@@ -134,7 +137,8 @@ function AccountDialogContent({ defaultContent, setOpen }) {
 
         setOpen(false);
       } catch (err) {
-        setToastState({ title: err.message, message: err.message });
+        const readableError = await errorMessage(err);
+        setToastState(readableError);
         setToastOpen(true);
         setLoading(false);
       }
