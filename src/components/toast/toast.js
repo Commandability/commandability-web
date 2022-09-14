@@ -11,7 +11,7 @@ export const ToastViewport = ToastPrimitive.Viewport;
 
 export function Toast({ title, content, children, ...props }) {
   return (
-    <ToastPrimitive.Root {...props} style={{ "list-style-type": "none" }}>
+    <ToastPrimitive.Root {...props} style={{ listStyleType: "none" }}>
       <ToastContent>
         {title && <ToastTitle>{title}</ToastTitle>}
         <ToastDescription>{content}</ToastDescription>

@@ -6,6 +6,7 @@ import isStrongPassword from "validator/lib/isStrongPassword";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
+import { Toast, ToastProvider, ToastViewport } from "components/toast";
 
 export const accountContentType = {
   NEW_USER: "NEW_USER",
@@ -48,6 +49,12 @@ function AccountDialogContent({ defaultContent, setOpen }) {
   const [password, setPassword] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
 
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    message: "",
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
+
   const [content, setContent] = React.useState(defaultContent);
   const [isAnimating, setIsAnimating] = React.useState(false);
 
@@ -63,7 +70,6 @@ function AccountDialogContent({ defaultContent, setOpen }) {
 
   async function onCreateAccountSubmit(event) {
     event.preventDefault();
-
     if (!isDisplayName.test(displayName)) {
       setDisplayNameError(true);
     }
@@ -77,7 +83,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
     if (
       isDisplayName.test(displayName) &&
       isEmail(email) &&
-      isStrongPassword(password)
+      isStrongPassword(password, passwordRequirements)
     ) {
       setLoading(true);
       try {
@@ -86,8 +92,11 @@ function AccountDialogContent({ defaultContent, setOpen }) {
           password
         );
         await updateProfile(userCredentials.user, { displayName: displayName });
+
         setOpen(false);
-      } catch {
+      } catch (err) {
+        setToastState({ title: err.message, message: err.message });
+        setToastOpen(true);
         setLoading(false);
       }
     }
@@ -95,18 +104,19 @@ function AccountDialogContent({ defaultContent, setOpen }) {
 
   async function onSignInSubmit(event) {
     event.preventDefault();
-
     if (!isEmail(email)) {
       setEmailError(true);
     } else {
       setLoading(true);
       try {
         await signInWithEmailAndPassword(email, password);
-        setOpen(false);
 
+        setOpen(false);
         // Help password managers understand a form has been submitted
-        History.pushState();
-      } catch {
+        // History.pushState();
+      } catch (err) {
+        setToastState({ title: err.message, message: err.message });
+        setToastOpen(true);
         setLoading(false);
       }
     }
@@ -121,8 +131,11 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       setLoading(true);
       try {
         await sendPasswordResetEmail(email);
+
         setOpen(false);
-      } catch {
+      } catch (err) {
+        setToastState({ title: err.message, message: err.message });
+        setToastOpen(true);
         setLoading(false);
       }
     }
@@ -311,14 +324,25 @@ function AccountDialogContent({ defaultContent, setOpen }) {
     );
   }
   return (
-    <ContentSwitch
-      aria-live="polite"
-      aria-atomic="true"
-      data-animating={isAnimating ? "true" : "false"}
-      onAnimationEnd={() => setIsAnimating(false)}
-    >
-      {renderedContent}
-    </ContentSwitch>
+    <>
+      <ContentSwitch
+        aria-live="polite"
+        aria-atomic="true"
+        data-animating={isAnimating ? "true" : "false"}
+        onAnimationEnd={() => setIsAnimating(false)}
+      >
+        {renderedContent}
+      </ContentSwitch>
+      <ToastProvider>
+        <Toast
+          open={toastOpen}
+          onOpenChange={setToastOpen}
+          title={toastState.title}
+          content={toastState.message}
+        />
+        <ToastLocation />
+      </ToastProvider>
+    </>
   );
 }
 
@@ -436,6 +460,12 @@ const SubmitButton = styled(UnstyledButton)`
     will-change: background-color;
     transition: background-color ${ANIMATION_DURATION}ms;
   }
+`;
+
+const ToastLocation = styled(ToastViewport)`
+  position: fixed;
+  bottom: 48px;
+  right: 24px;
 `;
 
 export default AccountDialogContent;
