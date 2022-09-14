@@ -1,5 +1,4 @@
 function errorMessage(error) {
-  console.log(error.message);
   switch (error.message) {
     case "Firebase: Error (auth/email-already-exists).":
       return {
