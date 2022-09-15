@@ -36,9 +36,6 @@ const GlobalStyles = createGlobalStyle`
   body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-
-    // scrollbar-gutter color
-    background-color: var(--scrollbar);
   }
   /*
     6. Improve media defaults

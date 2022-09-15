@@ -11,13 +11,13 @@ import useScroll from "hooks/use-scroll";
 import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import VisuallyHidden from "components/visually-hidden";
+import MenuButton from "components/menu-button";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import AccountDialogContent, {
   accountContentType,
 } from "components/account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
-import MenuButton from "components/menu-button";
 
 const NAV_TRANSITION_DURATION = 400;
 const TAB_TRANSITION_DURATION = 400;
@@ -260,7 +260,7 @@ function LandingNav({
       data-nav-transition={scrolled ? "false" : "true"}
       /* 
         zeroRightClassName makes sure any fixed position elements have their right position modified
-        to match the original right position before the scroll bar is removed.
+        to match the original right position before the scroll bar is removed
         https://github.com/theKashey/react-remove-scroll-bar#the-right-border
       */
       className={zeroRightClassName}
@@ -477,7 +477,6 @@ function LandingNav({
               <DialogContent title="Create an account">
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
-                  setOpen={setNewAccountOpen}
                 />
               </DialogContent>
             </Dialog>
@@ -495,7 +494,6 @@ function LandingNav({
               <DialogContent title="Sign in">
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
-                  setOpen={setCurrentAccountOpen}
                 />
               </DialogContent>
             </Dialog>

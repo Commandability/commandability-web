@@ -80,10 +80,7 @@ const Img = styled.img`
 
 const Gradient = styled.div`
   position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
+  inset: 0;
   background: linear-gradient(
     270deg,
     hsl(${COLORS.red[5]} / 0.5) 10%,
@@ -96,10 +93,7 @@ const Gradient = styled.div`
 
 const Content = styled.div`
   position: absolute;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
+  inset: 0;
 `;
 
 export default HeroImage;
