@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
+import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import MainNav from "components/main-nav";
 
@@ -8,7 +9,14 @@ function Layout() {
   return (
     <Main>
       <MainNav />
-      <Background />
+      <Background
+        /* 
+          zeroRightClassName makes sure any fixed position elements have their right position modified
+          to match the original right position before the scroll bar is removed
+          https://github.com/theKashey/react-remove-scroll-bar#the-right-border
+        */
+        className={zeroRightClassName}
+      />
       <Wrapper>
         <Outlet />
       </Wrapper>

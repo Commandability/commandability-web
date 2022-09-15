@@ -1,9 +1,10 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import * as Dialog from "@radix-ui/react-dialog";
-import * as Popover from "@radix-ui/react-popover";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import * as RadixDialog from "@radix-ui/react-dialog";
+import * as RadixPopover from "@radix-ui/react-popover";
 import * as Separator from "@radix-ui/react-separator";
+import { zeroRightClassName } from "react-remove-scroll-bar";
 import {
   FiChevronDown,
   FiHelpCircle,
@@ -15,15 +16,21 @@ import { useAuth } from "context/auth-context";
 import useRect from "hooks/use-rect";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
+import MenuButton from "components/menu-button";
 import Spacer from "components/spacer";
+import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import AccountDialogContent, {
+  accountContentType,
+} from "components/account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
-import MenuButton from "components/menu-button";
 
 const TAB_TRANSITION_DURATION = 400;
 
 function MainNav() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { user, signOut } = useAuth();
 
   const [reportsTabRef, reportsTabRect] = useRect();
   const [rosterTabRef, rosterTabRect] = useRect();
@@ -32,7 +39,8 @@ function MainNav() {
   const [transition, setTransition] = React.useState(false);
   const [activeTabRect, setActiveTabRect] = React.useState(null);
 
-  const { pathname } = useLocation();
+  const [currentAccountOpen, setCurrentAccountOpen] = React.useState(false);
+  const [newAccountOpen, setNewAccountOpen] = React.useState(false);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -63,8 +71,20 @@ function MainNav() {
     return () => clearTimeout(transitionTimeoutID);
   }, [transition]);
 
+  function handleSignOut() {
+    signOut();
+    if (/\/dashboard\//.test(pathname)) navigate("/");
+  }
+
   return (
-    <Nav>
+    <Nav
+      /* 
+        zeroRightClassName makes sure any fixed position elements have their right position modified
+        to match the original right position before the scroll bar is removed
+        https://github.com/theKashey/react-remove-scroll-bar#the-right-border
+      */
+      className={zeroRightClassName}
+    >
       <LeftSide>
         <SiteID href="/">
           <NavFireIcon />
@@ -106,77 +126,107 @@ function MainNav() {
       ) : null}
       {user.current ? (
         <Mobile>
-          <Dialog.Root modal={false}>
-            <DialogTrigger asChild>
+          <RadixDialog.Root modal={false}>
+            <RadixDialogTrigger asChild>
               <MenuButton />
-            </DialogTrigger>
-            <Dialog.Portal>
-              <DialogContent
+            </RadixDialogTrigger>
+            <RadixDialog.Portal>
+              <RadixDialogContent
                 onInteractOutside={(e) => e.preventDefault()}
                 onOpenAutoFocus={(e) => e.preventDefault()}
                 onCloseAutoFocus={(e) => e.preventDefault()}
               >
-                <Dialog.Title>
+                <RadixDialog.Title>
                   <VisuallyHidden>Navigation</VisuallyHidden>
-                </Dialog.Title>
-                <DialogMenu>
-                  <DialogItem to="/dashboard/reports">Reports</DialogItem>
-                  <DialogItem to="/dashboard/roster">Roster</DialogItem>
-                  <DialogItem to="/dashboard/groups">Groups</DialogItem>
-                </DialogMenu>
-              </DialogContent>
-            </Dialog.Portal>
-          </Dialog.Root>
+                </RadixDialog.Title>
+                <RadixDialogMenu>
+                  <RadixDialogItem to="/dashboard/reports">
+                    Reports
+                  </RadixDialogItem>
+                  <RadixDialogItem to="/dashboard/roster">
+                    Roster
+                  </RadixDialogItem>
+                  <RadixDialogItem to="/dashboard/groups">
+                    Groups
+                  </RadixDialogItem>
+                </RadixDialogMenu>
+              </RadixDialogContent>
+            </RadixDialog.Portal>
+          </RadixDialog.Root>
         </Mobile>
       ) : null}
       <RightSide>
         {user.current ? (
-          <Popover.Root>
-            <Popover.Trigger asChild>
+          <RadixPopover.Root>
+            <RadixPopover.Trigger asChild>
               <DropDown>
                 {user.current.displayName}
                 <FiChevronDown />
               </DropDown>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <PopoverContent>
-                <PopoverArrow />
-                <PopoverList>
-                  <PopoverItem>
-                    <PopoverAction
+            </RadixPopover.Trigger>
+            <RadixPopover.Portal>
+              <RadixPopoverContent>
+                <RadixPopoverArrow />
+                <RadixPopoverList>
+                  <RadixPopoverItem>
+                    <RadixPopoverAction
                       as="a"
                       href="mailto:support@commandability.app?"
                     >
                       <FiHelpCircle />
                       <Spacer axis="horizontal" size={8} />
                       Contact us
-                    </PopoverAction>
-                  </PopoverItem>
-                  <PopoverItem>
-                    <PopoverAction to="/dashboard/settings">
+                    </RadixPopoverAction>
+                  </RadixPopoverItem>
+                  <RadixPopoverItem>
+                    <RadixPopoverAction to="/dashboard/settings">
                       <FiSettings />
                       <Spacer axis="horizontal" size={8} />
                       Settings
-                    </PopoverAction>
-                  </PopoverItem>
-                </PopoverList>
-                <PopoverSeparator />
-                <PopoverList>
-                  <PopoverItem>
-                    <PopoverAction as={UnstyledButton}>
+                    </RadixPopoverAction>
+                  </RadixPopoverItem>
+                </RadixPopoverList>
+                <RadixPopoverSeparator />
+                <RadixPopoverList>
+                  <RadixPopoverItem>
+                    <RadixPopoverAction
+                      as={UnstyledButton}
+                      onClick={handleSignOut}
+                    >
                       <FiLogOut />
                       <Spacer axis="horizontal" size={8} />
                       Sign out
-                    </PopoverAction>
-                  </PopoverItem>
-                </PopoverList>
-              </PopoverContent>
-            </Popover.Portal>
-          </Popover.Root>
+                    </RadixPopoverAction>
+                  </RadixPopoverItem>
+                </RadixPopoverList>
+              </RadixPopoverContent>
+            </RadixPopover.Portal>
+          </RadixPopover.Root>
         ) : (
           <AccountOptions>
-            <Option>Create an account</Option>
-            <Option>Sign in</Option>
+            <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
+              <DialogTrigger asChild>
+                <Option>Create an account</Option>
+              </DialogTrigger>
+              <DialogContent title="Create an account">
+                <AccountDialogContent
+                  defaultContent={accountContentType.NEW_USER}
+                />
+              </DialogContent>
+            </Dialog>
+            <Dialog
+              open={currentAccountOpen}
+              onOpenChange={setCurrentAccountOpen}
+            >
+              <DialogTrigger asChild>
+                <Option>Sign in</Option>
+              </DialogTrigger>
+              <DialogContent title="Sign in">
+                <AccountDialogContent
+                  defaultContent={accountContentType.CURRENT_USER}
+                />
+              </DialogContent>
+            </Dialog>
           </AccountOptions>
         )}
       </RightSide>
@@ -187,7 +237,8 @@ function MainNav() {
 const Nav = styled.nav`
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   height: 72px;
   display: flex;
   z-index: 999999;
@@ -321,7 +372,7 @@ const filler = keyframes`
   }
 `;
 
-const DialogContent = styled(Dialog.Content)`
+const RadixDialogContent = styled(RadixDialog.Content)`
   display: none;
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -363,7 +414,7 @@ const slideOut = keyframes`
   }
 `;
 
-const DialogMenu = styled.div`
+const RadixDialogMenu = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -385,7 +436,7 @@ const DialogMenu = styled.div`
   }
 `;
 
-const DialogItem = styled(NavLink)`
+const RadixDialogItem = styled(NavLink)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
@@ -406,7 +457,7 @@ const DialogItem = styled(NavLink)`
   }
 `;
 
-const DialogTrigger = styled(Dialog.Trigger)`
+const RadixDialogTrigger = styled(RadixDialog.Trigger)`
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
@@ -424,7 +475,7 @@ const RightSide = styled.div`
   }
 `;
 
-const PopoverContent = styled(Popover.Content)`
+const RadixPopoverContent = styled(RadixPopover.Content)`
   width: 160px;
   background-color: var(--color-gray-9);
   border-radius: 8px;
@@ -440,18 +491,18 @@ const PopoverContent = styled(Popover.Content)`
   }
 `;
 
-const PopoverArrow = styled(Popover.Arrow)`
+const RadixPopoverArrow = styled(RadixPopover.Arrow)`
   fill: var(--color-gray-9);
   position: relative;
   right: calc(160px / 2 - 16px);
 `;
 
-const PopoverList = styled.ul`
+const RadixPopoverList = styled.ul`
   list-style: none;
   padding: 4px 0px;
 `;
 
-const PopoverItem = styled.li`
+const RadixPopoverItem = styled.li`
   width: 100%;
   padding: 0px 16px;
   color: var(--color-gray-1);
@@ -466,7 +517,7 @@ const PopoverItem = styled.li`
   }
 `;
 
-const PopoverAction = styled(Link)`
+const RadixPopoverAction = styled(Link)`
   display: flex;
   width: 100%;
   text-decoration: none;
@@ -479,7 +530,7 @@ const PopoverAction = styled(Link)`
   }
 `;
 
-const PopoverSeparator = styled(Separator.Root)`
+const RadixPopoverSeparator = styled(Separator.Root)`
   height: 1px;
   width: "100%";
   background-color: var(--color-gray-6);
