@@ -2,7 +2,15 @@ import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixToast from "@radix-ui/react-toast";
 
-export const ToastProvider = RadixToast.Provider;
+const DEFAULT_TOAST_DURATION = 3000;
+
+export function ToastProvider({ children, ...props }) {
+  return (
+    <RadixToast.Provider duration={DEFAULT_TOAST_DURATION} {...props}>
+      {children}
+    </RadixToast.Provider>
+  );
+}
 export const ToastViewport = RadixToast.Viewport;
 
 export function Toast({ title, content, children, ...props }) {

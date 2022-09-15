@@ -7,7 +7,11 @@ import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 import { Toast, ToastProvider, ToastViewport } from "components/toast";
-import firebaseErrors from "utils/firebase-errors";
+
+const unknownToastState = {
+  title: "Unknown error",
+  message: "An unknown error has occurred",
+};
 
 export const accountContentType = {
   NEW_USER: "NEW_USER",
@@ -17,10 +21,10 @@ export const accountContentType = {
 
 const ANIMATION_DURATION = 300;
 
-const isDisplayName = /^([a-zA-Z0-9]){4,16}$/;
+const isDisplayName = /^([a-zA-Z0-9]){3,16}$/;
 
-const errors = {
-  displayName: "Must be alphanumeric and contain between 4 and 16 characters",
+const inputErrors = {
+  displayName: "Must be alphanumeric and contain between 3 and 16 characters",
   email: "Must be a valid email",
   password: "Must contain at least 16 characters",
 };
@@ -33,7 +37,7 @@ const passwordRequirements = {
   minSymbols: 0,
 };
 
-function AccountDialogContent({ defaultContent, setOpen }) {
+function AccountDialogContent({ defaultContent }) {
   const {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -93,12 +97,18 @@ function AccountDialogContent({ defaultContent, setOpen }) {
           password
         );
         await updateProfile(userCredentials.user, { displayName: displayName });
-        setOpen(false);
-      } catch (err) {
-        setToastState(firebaseErrors(err));
-        setToastOpen(true);
-        setLoading(false);
+      } catch (error) {
+        if (error.code === "auth/email-already-in-use") {
+          setToastState({
+            title: "Email already in use",
+            message:
+              "There is already an account associated with this email address",
+          });
+        } else {
+          setToastState(unknownToastState);
+        }
       }
+      setLoading(false);
     }
   }
 
@@ -110,14 +120,21 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       setLoading(true);
       try {
         await signInWithEmailAndPassword(email, password);
-        setOpen(false);
-        // Help password managers understand a form has been submitted
-        // History.pushState();
-      } catch (err) {
-        setToastState(firebaseErrors(err));
+      } catch (error) {
+        if (
+          error.code === "auth/user-not-found" ||
+          error.code === "auth/wrong-password"
+        ) {
+          setToastState({
+            title: "Login failed",
+            message: "Invalid email or password",
+          });
+        } else {
+          setToastState(unknownToastState);
+        }
         setToastOpen(true);
-        setLoading(false);
       }
+      setLoading(false);
     }
   }
 
@@ -126,15 +143,26 @@ function AccountDialogContent({ defaultContent, setOpen }) {
     if (!isEmail(email)) {
       setEmailError(true);
     } else {
+      const recoverAccountToastState = {
+        title: "Password reset email sent",
+        message:
+          "If an account exists, you will receive a password reset email",
+      };
+
       setLoading(true);
       try {
         await sendPasswordResetEmail(email);
-        setOpen(false);
-      } catch (err) {
-        setToastState(firebaseErrors(err));
+        setToastState(recoverAccountToastState);
         setToastOpen(true);
-        setLoading(false);
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          setToastState(recoverAccountToastState);
+        } else {
+          setToastState(unknownToastState);
+        }
+        setToastOpen(true);
       }
+      setLoading(false);
     }
   }
 
@@ -179,7 +207,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 value={displayName}
               />
               <InputError>
-                {displayNameError ? errors.displayName : null}
+                {displayNameError ? inputErrors.displayName : null}
               </InputError>
             </InputGroup>
             <InputGroup>
@@ -198,7 +226,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 }}
                 value={email}
               />
-              <InputError>{emailError ? errors.email : null}</InputError>
+              <InputError>{emailError ? inputErrors.email : null}</InputError>
             </InputGroup>
             <InputGroup>
               <Label htmlFor="new-password">Password</Label>
@@ -216,7 +244,9 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 }}
                 value={password}
               />
-              <InputError>{passwordError ? errors.password : null}</InputError>
+              <InputError>
+                {passwordError ? inputErrors.password : null}
+              </InputError>
             </InputGroup>
           </FormInputs>
           <SubmitButton type="submit" onClick={onCreateAccountSubmit}>
@@ -249,7 +279,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 }}
                 value={email}
               />
-              <InputError>{emailError ? errors.email : null}</InputError>
+              <InputError>{emailError ? inputErrors.email : null}</InputError>
             </InputGroup>
             <InputGroup>
               <Label htmlFor="current-password">Password</Label>
@@ -305,7 +335,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
                 }}
                 value={email}
               />
-              <InputError>{emailError ? errors.email : null}</InputError>
+              <InputError>{emailError ? inputErrors.email : null}</InputError>
             </InputGroup>
           </FormInputs>
           <SubmitButton type="submit" onClick={onRecoverAccountSubmit}>
@@ -330,7 +360,7 @@ function AccountDialogContent({ defaultContent, setOpen }) {
       >
         {renderedContent}
       </ContentSwitch>
-      <ToastProvider duration={3000}>
+      <ToastProvider>
         <Toast
           open={toastOpen}
           onOpenChange={setToastOpen}
