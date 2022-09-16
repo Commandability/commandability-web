@@ -294,6 +294,7 @@ function LandingNav({
         </SiteID>
       </LeftSide>
       <Desktop
+        role="list"
         style={{
           "--color": `${
             scrolled ? "var(--color-gray-4)" : "var(--color-gray-8)"
@@ -309,65 +310,69 @@ function LandingNav({
           "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
         }}
       >
-        <Tab
-          ref={homeTabRef}
-          targetId={hashIds.header}
-          inView={state.activeTargetId === hashIds.header ? true : false}
-          onClick={() =>
-            dispatch({
-              type: "path-update",
-              payload: {
-                origin: "onclick",
-              },
-            })
-          }
-        >
-          Home
+        <Tab ref={homeTabRef}>
+          <TabLink
+            targetId={hashIds.header}
+            inView={state.activeTargetId === hashIds.header ? true : false}
+            onClick={() =>
+              dispatch({
+                type: "path-update",
+                payload: {
+                  origin: "onclick",
+                },
+              })
+            }
+          >
+            Home
+          </TabLink>
         </Tab>
-        <Tab
-          ref={featuresTabRef}
-          targetId={hashIds.features}
-          inView={state.activeTargetId === hashIds.features ? true : false}
-          onClick={() =>
-            dispatch({
-              type: "path-update",
-              payload: {
-                origin: "onclick",
-              },
-            })
-          }
-        >
-          Features
+        <Tab ref={featuresTabRef}>
+          <TabLink
+            targetId={hashIds.features}
+            inView={state.activeTargetId === hashIds.features ? true : false}
+            onClick={() =>
+              dispatch({
+                type: "path-update",
+                payload: {
+                  origin: "onclick",
+                },
+              })
+            }
+          >
+            Features
+          </TabLink>
         </Tab>
-        <Tab
-          ref={howItWorksTabRef}
-          targetId={hashIds.howItWorks}
-          inView={state.activeTargetId === hashIds.howItWorks ? true : false}
-          onClick={() =>
-            dispatch({
-              type: "path-update",
-              payload: {
-                origin: "onclick",
-              },
-            })
-          }
-        >
-          How it works
+        <Tab ref={howItWorksTabRef}>
+          <TabLink
+            targetId={hashIds.howItWorks}
+            inView={state.activeTargetId === hashIds.howItWorks ? true : false}
+            onClick={() =>
+              dispatch({
+                type: "path-update",
+                payload: {
+                  origin: "onclick",
+                },
+              })
+            }
+          >
+            How it works
+          </TabLink>
         </Tab>
-        <Tab
-          ref={contactTabRef}
-          targetId={hashIds.footer}
-          inView={state.activeTargetId === hashIds.footer ? true : false}
-          onClick={() =>
-            dispatch({
-              type: "path-update",
-              payload: {
-                origin: "onclick",
-              },
-            })
-          }
-        >
-          Contact
+        <Tab ref={contactTabRef}>
+          <TabLink
+            targetId={hashIds.footer}
+            inView={state.activeTargetId === hashIds.footer ? true : false}
+            onClick={() =>
+              dispatch({
+                type: "path-update",
+                payload: {
+                  origin: "onclick",
+                },
+              })
+            }
+          >
+            Contact
+          </TabLink>
         </Tab>
       </Desktop>
       <Mobile>
@@ -376,11 +381,7 @@ function LandingNav({
             <MenuButton />
           </Trigger>
           <RadixDialog.Portal>
-            <Content
-              onInteractOutside={(e) => e.preventDefault()}
-              onOpenAutoFocus={(e) => e.preventDefault()}
-              onCloseAutoFocus={(e) => e.preventDefault()}
-            >
+            <Content onInteractOutside={(e) => e.preventDefault()}>
               <RadixDialog.Title>
                 <VisuallyHidden>Navigation</VisuallyHidden>
               </RadixDialog.Title>
@@ -580,12 +581,13 @@ const NavFireIcon = styled(UnstyledFireIcon)`
   }
 `;
 
-const Desktop = styled.div`
+const Desktop = styled.ul`
   flex: 2;
   display: flex;
   max-width: 640px;
   justify-content: space-between;
   align-self: stretch;
+  list-style: none;
 
   &::after {
     content: "";
@@ -607,12 +609,15 @@ const Desktop = styled.div`
   }
 `;
 
-const Tab = styled(SmoothScrollTo)`
-  text-transform: uppercase;
+const Tab = styled.li`
   padding: 0px 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const TabLink = styled(SmoothScrollTo)`
+  text-transform: uppercase;
   letter-spacing: 0.05em;
   text-decoration: none;
   color: var(--color);

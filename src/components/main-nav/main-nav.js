@@ -93,6 +93,7 @@ function MainNav() {
       </LeftSide>
       {user.current ? (
         <Desktop
+          role="list"
           style={{
             "--transition": transition
               ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
@@ -101,26 +102,23 @@ function MainNav() {
             "--tab-left": `${activeTabRect?.left}px`,
           }}
         >
-          <Tab
-            ref={reportsTabRef}
-            to="/dashboard/reports"
-            onClick={() => setTransition(true)}
-          >
-            Reports
+          <Tab ref={reportsTabRef}>
+            <TabLink
+              to="/dashboard/reports"
+              onClick={() => setTransition(true)}
+            >
+              Reports
+            </TabLink>
           </Tab>
-          <Tab
-            ref={rosterTabRef}
-            to="/dashboard/roster"
-            onClick={() => setTransition(true)}
-          >
-            Roster
+          <Tab ref={rosterTabRef}>
+            <TabLink to="/dashboard/roster" onClick={() => setTransition(true)}>
+              Roster
+            </TabLink>
           </Tab>
-          <Tab
-            ref={groupsTabRef}
-            to="/dashboard/groups"
-            onClick={() => setTransition(true)}
-          >
-            Groups
+          <Tab ref={groupsTabRef}>
+            <TabLink to="/dashboard/groups" onClick={() => setTransition(true)}>
+              Groups
+            </TabLink>
           </Tab>
         </Desktop>
       ) : null}
@@ -131,11 +129,7 @@ function MainNav() {
               <MenuButton />
             </RadixDialogTrigger>
             <RadixDialog.Portal>
-              <RadixDialogContent
-                onInteractOutside={(e) => e.preventDefault()}
-                onOpenAutoFocus={(e) => e.preventDefault()}
-                onCloseAutoFocus={(e) => e.preventDefault()}
-              >
+              <RadixDialogContent onInteractOutside={(e) => e.preventDefault()}>
                 <RadixDialog.Title>
                   <VisuallyHidden>Navigation</VisuallyHidden>
                 </RadixDialog.Title>
@@ -300,12 +294,13 @@ const NavFireIcon = styled(UnstyledFireIcon)`
   }
 `;
 
-const Desktop = styled.div`
+const Desktop = styled.ul`
   flex: 2;
   display: flex;
   max-width: 512px;
   justify-content: space-between;
   align-self: stretch;
+  list-style: none;
 
   &::after {
     content: "";
@@ -327,12 +322,15 @@ const Desktop = styled.div`
   }
 `;
 
-const Tab = styled(NavLink)`
-  text-transform: uppercase;
+const Tab = styled.li`
   padding: 0px 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+`;
+
+const TabLink = styled(NavLink)`
+  text-transform: uppercase;
   letter-spacing: 0.05em;
   text-decoration: none;
   color: var(--color-gray-4);
