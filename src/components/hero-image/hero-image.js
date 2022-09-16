@@ -6,6 +6,7 @@ import { BREAKPOINTS, COLORS } from "constants.js";
 function HeroImage({ children }) {
   return (
     <Picture>
+      {/* Images generated with https://responsivebreakpoints.com/ */}
       <source
         type="image/webp"
         media="(max-width: 767px)"

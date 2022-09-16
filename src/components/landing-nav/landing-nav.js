@@ -39,7 +39,7 @@ function LandingNav({
   const [contactTabRef, contactTabRect] = useRect();
 
   const rectsById = {
-    [hashIds.header]: homeTabRect,
+    [hashIds.hero]: homeTabRect,
     [hashIds.features]: featuresTabRect,
     [hashIds.howItWorks]: howItWorksTabRect,
     [hashIds.footer]: contactTabRect,
@@ -138,7 +138,7 @@ function LandingNav({
         dispatch({
           type: "initial-state",
           payload: {
-            initialId: hashIds.header,
+            initialId: hashIds.hero,
           },
         });
       }
@@ -155,7 +155,7 @@ function LandingNav({
           type: "path-update",
           payload: {
             origin: "effect",
-            hashId: hash.replace("#", "") || hashIds.header,
+            hashId: hash.replace("#", "") || hashIds.hero,
           },
         });
       }
@@ -171,7 +171,7 @@ function LandingNav({
         type: "scroll-update",
         payload: {
           elementInView: headerInView,
-          elementId: hashIds.header,
+          elementId: hashIds.hero,
           adjacentSiblingId: hashIds.features,
         },
       });
@@ -312,8 +312,8 @@ function LandingNav({
       >
         <Tab ref={homeTabRef}>
           <TabLink
-            targetId={hashIds.header}
-            inView={state.activeTargetId === hashIds.header ? true : false}
+            targetId={hashIds.hero}
+            inView={state.activeTargetId === hashIds.hero ? true : false}
             onClick={() =>
               dispatch({
                 type: "path-update",
@@ -387,10 +387,8 @@ function LandingNav({
               </RadixDialog.Title>
               <Menu>
                 <Item
-                  targetId={hashIds.header}
-                  inView={
-                    state.activeTargetId === hashIds.header ? true : false
-                  }
+                  targetId={hashIds.hero}
+                  inView={state.activeTargetId === hashIds.hero ? true : false}
                   onClick={() =>
                     dispatch({
                       type: "path-update",
@@ -512,7 +510,7 @@ const Nav = styled.nav`
   right: 0;
   height: 72px;
   display: flex;
-  z-index: 999999;
+  z-index: 1;
   align-items: center;
   font-size: ${18 / 16}rem;
   padding: 0px 24px;

@@ -15,6 +15,7 @@ import Pill from "components/pill";
 import Spacer from "components/spacer";
 import LandingNav from "components/landing-nav";
 import VisuallyHidden from "components/visually-hidden";
+import Skip from "components/skip";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import AccountDialogContent, {
@@ -27,7 +28,7 @@ import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.s
 import { BREAKPOINTS, QUERIES } from "constants.js";
 
 const hashIds = {
-  header: "home",
+  hero: "home",
   features: "features",
   howItWorks: "how-it-works",
   footer: "contact",
@@ -48,12 +49,12 @@ function Home() {
 
   const featuresScrollRef = React.useRef();
 
-  const headerFragmentRef = useFragment(hashIds.header);
+  const headerFragmentRef = useFragment(hashIds.hero);
   const featuresFragmentRef = useFragment(hashIds.features);
   const howItWorksFragmentRef = useFragment(hashIds.howItWorks);
   const footerFragmentRef = useFragment(hashIds.footer);
 
-  const headerRef = useMergeRefs(headerInViewRef, headerFragmentRef);
+  const heroRef = useMergeRefs(headerInViewRef, headerFragmentRef);
   const featuresRef = useMergeRefs(
     featuresInViewRef,
     featuresFragmentRef,
@@ -69,196 +70,202 @@ function Home() {
   const [newAccountOpen, setNewAccountOpen] = React.useState(false);
 
   return (
-    <Main>
-      <LandingNav
-        hashIds={hashIds}
-        headerInView={headerInView}
-        featuresInView={featuresInView}
-        howItWorksInView={howItWorksInView}
-        footerInView={footerInView}
-      />
-      <HeroImage>
-        <Header id={hashIds.header} ref={headerRef}>
-          <Heading>Keep your department safe and accountable</Heading>
-          <Subheading>
-            Manage your department’s personnel and automatically generate
-            incident reports for safety and accountability, all from your
-            tablet.
-          </Subheading>
-          <HeaderPills>
-            <Pill
-              onClick={() => {}}
-              targetRef={featuresScrollRef}
-              theme="light"
-              angle
-            >
-              Learn more
-            </Pill>
-            {user.current ? (
-              <Pill to="/dashboard/reports" theme="dark" angle>
-                Go to dashboard
+    <Wrapper>
+      <header>
+        <Skip href={`#${hashIds.hero}`} />
+        <LandingNav
+          hashIds={hashIds}
+          headerInView={headerInView}
+          featuresInView={featuresInView}
+          howItWorksInView={howItWorksInView}
+          footerInView={footerInView}
+        />
+      </header>
+      <Main>
+        <HeroImage>
+          <Hero id={hashIds.hero} ref={heroRef}>
+            <Heading>Keep your department safe and accountable</Heading>
+            <Subheading>
+              Manage your department’s personnel and automatically generate
+              incident reports for safety and accountability, all from your
+              tablet.
+            </Subheading>
+            <HeaderPills>
+              <Pill
+                onClick={() => {}}
+                targetRef={featuresScrollRef}
+                theme="light"
+                angle
+              >
+                Learn more
               </Pill>
-            ) : (
-              <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
-                <DialogTrigger asChild>
-                  <Pill theme="dark" angle>
-                    Get started
-                  </Pill>
-                </DialogTrigger>
-                <DialogContent title="Get started">
-                  <AccountDialogContent
-                    defaultContent={accountContentType.NEW_USER}
-                    setOpen={setNewAccountOpen}
-                  />
-                </DialogContent>
-              </Dialog>
-            )}
-          </HeaderPills>
-        </Header>
-        <DownloadsWrapper>
-          <Download href="https://play.google.com/store/apps/details?id=com.commandability&hl=en_US&gl=US">
-            Download for Android
-          </Download>
-          <Download href="https://apps.apple.com/us/app/commandability/id1579180681">
-            Download for iOS
-          </Download>
-        </DownloadsWrapper>
-        <ScrollDown targetRef={featuresScrollRef}>
-          <ScrollDownContents>
-            <FiChevronDown />
-            <VisuallyHidden>Scroll down</VisuallyHidden>
-          </ScrollDownContents>
-        </ScrollDown>
-      </HeroImage>
-      <FeaturesWrapper id={hashIds.features} ref={featuresRef}>
-        <Feature>
-          <ManageIcon />
-          <FeatureContent>
-            <FeatureHeader style={{ "--color": "var(--color-yellow-1)" }}>
-              Manage
-            </FeatureHeader>
-            <FeatureText>
-              Use the Commandability app’s interactive interface to move
-              personnel between on-site groups and track the location of all
-              personnel throughout an incident. Monitor the time personnel are
-              exposed to high risk areas using group alerts.
-            </FeatureText>
-          </FeatureContent>
-        </Feature>
-        <Feature>
-          <FeatureContent>
-            <FeatureHeader style={{ "--color": "var(--color-yellow-2)" }}>
-              Customize
-            </FeatureHeader>
-            <FeatureText>
-              Use the Commandability website to configure your department’s
-              preferred groups and alert times, as well as to upload your
-              department’s roster for use during incidents.
-            </FeatureText>
-          </FeatureContent>
-          <CustomizeIcon />
-        </Feature>
-        <Feature>
-          <ReviewIcon />
-          <FeatureContent>
-            <FeatureHeader style={{ "--color": "var(--color-yellow-3)" }}>
-              Review
-            </FeatureHeader>
-            <FeatureText>
-              View auto-generated reports of all in-app events on the
-              Commandability website. Reports include timestamped entries of
-              personnel movements, group changes, and overdue alerts, as well as
-              additional notes about each incident.
-            </FeatureText>
-          </FeatureContent>
-        </Feature>
-      </FeaturesWrapper>
-      <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
-        <StepOne
-          subheader="Step 1"
-          header="Setup an account"
-          backgroundColor="var(--color-red-3)"
-        >
-          <UnorderedList>
-            <IconItem icon={FiCheckSquare}>
-              Create an account on the Commandability website homepage
-            </IconItem>
-            <IconItem icon={FiCheckSquare}>
-              Add or import personnel on the website roster page
-            </IconItem>
-            <IconItem icon={FiCheckSquare}>
-              Configure group names and alerts on the website groups page
-            </IconItem>
-          </UnorderedList>
-        </StepOne>
-        <StepTwo
-          subheader="Step 2"
-          header="Take control of incidents"
-          backgroundColor="var(--color-red-2)"
-        >
-          <UnorderedList>
-            <IconItem icon={FiCheckSquare}>
-              Download the Commandability app on your tablet device
-            </IconItem>
-            <IconItem icon={FiCheckSquare}>
-              Sign in and update to load your department’s data, then start an
-              incident
-            </IconItem>
-            <IconItem icon={FiCheckSquare}>
-              Customize your groups to match the incident, and begin managing
-              on-site personnel in real time
-            </IconItem>
-          </UnorderedList>
-        </StepTwo>
-        <StepThree
-          subheader="Step 3"
-          header="Stay accountable"
-          backgroundColor="var(--color-red-1)"
-        >
-          <UnorderedList>
-            <IconItem icon={FiCheckSquare}>
-              After the incident, enter the incident location and any additional
-              notes
-            </IconItem>
-            <IconItem icon={FiCheckSquare}>
-              Upload the report to your Commandability account
-            </IconItem>
-            <IconItem icon={FiCheckSquare}>
-              Review all uploaded reports on the Commandability website
-            </IconItem>
-          </UnorderedList>
-        </StepThree>
-      </HowItWorks>
-      <FooterImage>
-        <Footer id={hashIds.footer} ref={footerRef}>
-          <Contact>
-            <QuestionText>Have questions?</QuestionText>
-            <MessageText>Send us a message</MessageText>
-            <Spacer size={32} axis="vertical" />
-            <Pill
-              theme="light"
-              angle
-              href={"mailto:support@commandability.app?"}
-            >
-              Contact us
-            </Pill>
-          </Contact>
-          <Legal>
-            <Copyright>
-              <FooterFireIcon />
-              Copyright © {new Date().getFullYear()} Commandability
-            </Copyright>
-            <Policies>
-              <Policy to="/privacy-policy">Privacy Policy</Policy>
-            </Policies>
-          </Legal>
-        </Footer>
-      </FooterImage>
-    </Main>
+              {user.current ? (
+                <Pill to="/dashboard/reports" theme="dark" angle>
+                  Go to dashboard
+                </Pill>
+              ) : (
+                <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
+                  <DialogTrigger asChild>
+                    <Pill theme="dark" angle>
+                      Get started
+                    </Pill>
+                  </DialogTrigger>
+                  <DialogContent title="Get started">
+                    <AccountDialogContent
+                      defaultContent={accountContentType.NEW_USER}
+                      setOpen={setNewAccountOpen}
+                    />
+                  </DialogContent>
+                </Dialog>
+              )}
+            </HeaderPills>
+            <DownloadsWrapper>
+              <Download href="https://play.google.com/store/apps/details?id=com.commandability&hl=en_US&gl=US">
+                Download for Android
+              </Download>
+              <Download href="https://apps.apple.com/us/app/commandability/id1579180681">
+                Download for iOS
+              </Download>
+            </DownloadsWrapper>
+            <ScrollDown targetRef={featuresScrollRef}>
+              <ScrollDownContents>
+                <FiChevronDown />
+                <VisuallyHidden>Scroll down</VisuallyHidden>
+              </ScrollDownContents>
+            </ScrollDown>
+          </Hero>
+        </HeroImage>
+        <FeaturesWrapper id={hashIds.features} ref={featuresRef}>
+          <Feature>
+            <ManageIcon />
+            <FeatureContent>
+              <FeatureHeader style={{ "--color": "var(--color-yellow-1)" }}>
+                Manage
+              </FeatureHeader>
+              <FeatureText>
+                Use the Commandability app’s interactive interface to move
+                personnel between on-site groups and track the location of all
+                personnel throughout an incident. Monitor the time personnel are
+                exposed to high risk areas using group alerts.
+              </FeatureText>
+            </FeatureContent>
+          </Feature>
+          <Feature>
+            <FeatureContent>
+              <FeatureHeader style={{ "--color": "var(--color-yellow-2)" }}>
+                Customize
+              </FeatureHeader>
+              <FeatureText>
+                Use the Commandability website to configure your department’s
+                preferred groups and alert times, as well as to upload your
+                department’s roster for use during incidents.
+              </FeatureText>
+            </FeatureContent>
+            <CustomizeIcon />
+          </Feature>
+          <Feature>
+            <ReviewIcon />
+            <FeatureContent>
+              <FeatureHeader style={{ "--color": "var(--color-yellow-3)" }}>
+                Review
+              </FeatureHeader>
+              <FeatureText>
+                View auto-generated reports of all in-app events on the
+                Commandability website. Reports include timestamped entries of
+                personnel movements, group changes, and overdue alerts, as well
+                as additional notes about each incident.
+              </FeatureText>
+            </FeatureContent>
+          </Feature>
+        </FeaturesWrapper>
+        <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
+          <StepOne
+            subheader="Step 1"
+            header="Setup an account"
+            backgroundColor="var(--color-red-3)"
+          >
+            <UnorderedList>
+              <IconItem icon={FiCheckSquare}>
+                Create an account on the Commandability website homepage
+              </IconItem>
+              <IconItem icon={FiCheckSquare}>
+                Add or import personnel on the website roster page
+              </IconItem>
+              <IconItem icon={FiCheckSquare}>
+                Configure group names and alerts on the website groups page
+              </IconItem>
+            </UnorderedList>
+          </StepOne>
+          <StepTwo
+            subheader="Step 2"
+            header="Take control of incidents"
+            backgroundColor="var(--color-red-2)"
+          >
+            <UnorderedList>
+              <IconItem icon={FiCheckSquare}>
+                Download the Commandability app on your tablet device
+              </IconItem>
+              <IconItem icon={FiCheckSquare}>
+                Sign in and update to load your department’s data, then start an
+                incident
+              </IconItem>
+              <IconItem icon={FiCheckSquare}>
+                Customize your groups to match the incident, and begin managing
+                on-site personnel in real time
+              </IconItem>
+            </UnorderedList>
+          </StepTwo>
+          <StepThree
+            subheader="Step 3"
+            header="Stay accountable"
+            backgroundColor="var(--color-red-1)"
+          >
+            <UnorderedList>
+              <IconItem icon={FiCheckSquare}>
+                After the incident, enter the incident location and any
+                additional notes
+              </IconItem>
+              <IconItem icon={FiCheckSquare}>
+                Upload the report to your Commandability account
+              </IconItem>
+              <IconItem icon={FiCheckSquare}>
+                Review all uploaded reports on the Commandability website
+              </IconItem>
+            </UnorderedList>
+          </StepThree>
+        </HowItWorks>
+        <FooterImage>
+          <Footer id={hashIds.footer} ref={footerRef}>
+            <Contact>
+              <QuestionText>Have questions?</QuestionText>
+              <MessageText>Send us a message</MessageText>
+              <Spacer size={32} axis="vertical" />
+              <Pill
+                theme="light"
+                angle
+                href={"mailto:support@commandability.app?"}
+              >
+                Contact us
+              </Pill>
+            </Contact>
+            <Legal>
+              <Copyright>
+                <FooterFireIcon />
+                Copyright © {new Date().getFullYear()} Commandability
+              </Copyright>
+              <Policies>
+                <Policy to="/privacy-policy">Privacy Policy</Policy>
+              </Policies>
+            </Legal>
+          </Footer>
+        </FooterImage>
+      </Main>
+    </Wrapper>
   );
 }
 
-const Main = styled.main`
+const Wrapper = styled.div`
+  isolation: isolate;
   height: 100%;
 
   @media (min-height: ${BREAKPOINTS.laptop}px) {
@@ -266,7 +273,11 @@ const Main = styled.main`
   }
 `;
 
-const Header = styled.header`
+const Main = styled.main`
+  height: 100%;
+`;
+
+const Hero = styled.section`
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -275,8 +286,6 @@ const Header = styled.header`
   gap: 48px;
   padding-left: clamp(24px, 8vw, 160px);
   padding-right: 24px;
-  width: clamp(280px, 100%, 1800px);
-  max-width: 100%;
 
   @media (orientation: landscape) and (max-height: 600px) {
     gap: 24px;

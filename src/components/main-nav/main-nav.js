@@ -235,7 +235,7 @@ const Nav = styled.nav`
   right: 0;
   height: 72px;
   display: flex;
-  z-index: 999999;
+  z-index: 1;
   align-items: center;
   font-size: ${18 / 16}rem;
   padding: 0px 24px;
