@@ -17,7 +17,7 @@ export const DialogContent = React.forwardRef(
           {...props}
           ref={forwardedRef}
           style={{
-            "--content-padding": `${header ? "24px" : "36px 24px"}`,
+            "--padding-top": `${header ? "24px" : "48px"}`,
           }}
         >
           {header ? (
@@ -71,7 +71,8 @@ const RadixDialogOverlay = styled(RadixDialog.Overlay)`
 
 const RadixDialogContent = styled(RadixDialog.Content)`
   position: relative;
-  padding: var(--content-padding);
+  padding: 24px;
+  padding-top: var(--padding-top);
   border-radius: 8px;
   background-color: var(--color-gray-10);
   display: flex;
