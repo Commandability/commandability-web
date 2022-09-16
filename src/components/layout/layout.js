@@ -3,12 +3,16 @@ import styled from "styled-components";
 import { Outlet } from "react-router-dom";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 
+import Skip from "components/skip";
 import MainNav from "components/main-nav";
 
 function Layout() {
   return (
-    <Main>
-      <MainNav />
+    <Wrapper>
+      <header>
+        <Skip href={"#main"} />
+        <MainNav />
+      </header>
       <Background
         /* 
           zeroRightClassName makes sure any fixed position elements have their right position modified
@@ -17,14 +21,14 @@ function Layout() {
         */
         className={zeroRightClassName}
       />
-      <Wrapper>
+      <Main id="main">
         <Outlet />
-      </Wrapper>
-    </Main>
+      </Main>
+    </Wrapper>
   );
 }
 
-const Main = styled.main`
+const Wrapper = styled.div`
   height: 100%;
 `;
 
@@ -51,7 +55,7 @@ const Background = styled.div`
     );
 `;
 
-const Wrapper = styled.div`
+const Main = styled.main`
   position: relative;
   top: 72px;
   width: 100%;

@@ -301,6 +301,7 @@ const Desktop = styled.ul`
   justify-content: space-between;
   align-self: stretch;
   list-style: none;
+  padding-left: 0;
 
   &::after {
     content: "";
