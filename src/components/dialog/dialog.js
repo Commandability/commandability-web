@@ -17,7 +17,8 @@ export const DialogContent = React.forwardRef(
           {...props}
           ref={forwardedRef}
           style={{
-            "--padding-top": `${header ? "24px" : "48px"}`,
+            // Account for extra space above and below 16px close icon in 24px container to space everything 24px apart
+            "--padding-top": `${header ? "24px" : `${24 - 8 * 2 + 24 * 2}px`}`,
           }}
         >
           {header ? (
@@ -103,11 +104,12 @@ const RadixDialogDescription = styled(RadixDialog.Description)`
 
 const CloseButton = styled(UnstyledButton)`
   position: absolute;
-  top: 16px;
-  right: 16px;
-  border-radius: 100%;
+  // The icon is 16px but its width and height are 24px for the hover circle size, so remove 8px to align with 24px padding
+  top: calc(24px - 8px);
+  right: calc(24px - 8px);
   width: 24px;
   height: 24px;
+  border-radius: 100%;
   display: grid;
   place-content: center;
   color: var(--color-yellow-2);
