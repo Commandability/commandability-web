@@ -2,11 +2,13 @@ import * as React from "react";
 import styled from "styled-components";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import VisuallyHidden from "components/visually-hidden";
 
 const unknownToastState = {
   title: "Unknown error",
@@ -54,6 +56,8 @@ function AccountDialogContent({ defaultContent }) {
 
   const [password, setPassword] = React.useState("");
   const [passwordError, setPasswordError] = React.useState(false);
+
+  const [visiblePassword, setVisiblePassword] = React.useState(false);
 
   const [toastState, setToastState] = React.useState({
     title: "",
@@ -193,7 +197,7 @@ function AccountDialogContent({ defaultContent }) {
       setDisplayNameError(false);
       setEmailError(false);
       setPasswordError(false);
-
+      setVisiblePassword(false);
       // Reset content halfway through the animation when the content has opacity: 0
     }, ANIMATION_DURATION / 2);
   }
@@ -245,20 +249,31 @@ function AccountDialogContent({ defaultContent }) {
             </InputGroup>
             <InputGroup>
               <Label htmlFor="new-password">Password</Label>
-              <Input
-                id="new-password"
-                type="password"
-                autoComplete="new-password"
-                required
-                placeholder="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  isStrongPassword(e.target.value, passwordRequirements)
-                    ? setPasswordError(false)
-                    : setPasswordError(true);
-                }}
-                value={password}
-              />
+              <InputWrapper>
+                <Input
+                  id="new-password"
+                  type={visiblePassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  required
+                  placeholder="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    isStrongPassword(e.target.value, passwordRequirements)
+                      ? setPasswordError(false)
+                      : setPasswordError(true);
+                  }}
+                  value={password}
+                />
+                <TogglePasswordButton
+                  type="button"
+                  onClick={() => {
+                    setVisiblePassword(!visiblePassword);
+                  }}
+                >
+                  <VisuallyHidden>Toggle password visibility</VisuallyHidden>
+                  {visiblePassword ? <FiEyeOff /> : <FiEye />}
+                </TogglePasswordButton>
+              </InputWrapper>
               <InputError>
                 {passwordError ? inputErrors.password : null}
               </InputError>
@@ -298,18 +313,29 @@ function AccountDialogContent({ defaultContent }) {
             </InputGroup>
             <InputGroup>
               <Label htmlFor="current-password">Password</Label>
-              <Input
-                id="current-password"
-                type="password"
-                autoComplete="current-password"
-                required
-                placeholder="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setPasswordError(false);
-                }}
-                value={password}
-              />
+              <InputWrapper>
+                <Input
+                  id="current-password"
+                  type={visiblePassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  required
+                  placeholder="password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setPasswordError(false);
+                  }}
+                  value={password}
+                />
+                <TogglePasswordButton
+                  type="button"
+                  onClick={() => {
+                    setVisiblePassword(!visiblePassword);
+                  }}
+                >
+                  <VisuallyHidden>Toggle password visibility</VisuallyHidden>
+                  {visiblePassword ? <FiEyeOff /> : <FiEye />}
+                </TogglePasswordButton>
+              </InputWrapper>
             </InputGroup>
             <TextButton
               type="button"
@@ -447,6 +473,7 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
+  flex: 1;
   padding: 8px 12px;
   border: solid 1px var(--color-gray-5);
   border-radius: 8px;
@@ -459,6 +486,39 @@ const Input = styled.input`
     outline: solid 2px var(--color-yellow-3);
     border-color: var(--color-yellow-3);
   }
+`;
+
+const TogglePasswordButton = styled(UnstyledButton)`
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  padding: 4px;
+
+  & > svg {
+    stroke: var(--color-gray-2);
+  }
+
+  ${Input}:focus-visible + & {
+    & > svg {
+      stroke: var(--color-yellow-3);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-radius: 100%;
+      background-color: var(--color-gray-9);
+
+      ${Input}:focus-visible + & {
+        background-color: var(--color-yellow-9);
+      }
+    }
+  }
+`;
+
+const InputWrapper = styled.div`
+  display: flex;
+  position: relative;
 `;
 
 const TextButton = styled(UnstyledButton)`
