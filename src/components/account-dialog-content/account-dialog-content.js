@@ -19,6 +19,7 @@ export const accountContentType = {
   FORGOT_PASSWORD: "FORGOT_PASSWORD",
 };
 
+const MINIMUM_LOADING_TIME = 400;
 const ANIMATION_DURATION = 300;
 
 const isDisplayName = /^([a-zA-Z0-9]){3,16}$/;
@@ -97,6 +98,8 @@ function AccountDialogContent({ defaultContent }) {
           password
         );
         await updateProfile(userCredentials.user, { displayName: displayName });
+        window.location.assign("/");
+        setTimeout(() => setLoading(false), MINIMUM_LOADING_TIME);
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
           setToastState({
@@ -107,8 +110,11 @@ function AccountDialogContent({ defaultContent }) {
         } else {
           setToastState(unknownToastState);
         }
+        setTimeout(() => {
+          setLoading(false);
+          setToastOpen(true);
+        }, MINIMUM_LOADING_TIME);
       }
-      setLoading(false);
     }
   }
 
@@ -120,6 +126,8 @@ function AccountDialogContent({ defaultContent }) {
       setLoading(true);
       try {
         await signInWithEmailAndPassword(email, password);
+        window.location.assign("/");
+        setTimeout(() => setLoading(false), MINIMUM_LOADING_TIME);
       } catch (error) {
         if (
           error.code === "auth/user-not-found" ||
@@ -132,9 +140,11 @@ function AccountDialogContent({ defaultContent }) {
         } else {
           setToastState(unknownToastState);
         }
-        setToastOpen(true);
+        setTimeout(() => {
+          setLoading(false);
+          setToastOpen(true);
+        }, MINIMUM_LOADING_TIME);
       }
-      setLoading(false);
     }
   }
 
@@ -153,16 +163,21 @@ function AccountDialogContent({ defaultContent }) {
       try {
         await sendPasswordResetEmail(email);
         setToastState(recoverAccountToastState);
-        setToastOpen(true);
+        setTimeout(() => {
+          setLoading(false);
+          setToastOpen(true);
+        }, MINIMUM_LOADING_TIME);
       } catch (error) {
         if (error.code === "auth/user-not-found") {
           setToastState(recoverAccountToastState);
         } else {
           setToastState(unknownToastState);
         }
-        setToastOpen(true);
+        setTimeout(() => {
+          setLoading(false);
+          setToastOpen(true);
+        }, MINIMUM_LOADING_TIME);
       }
-      setLoading(false);
     }
   }
 

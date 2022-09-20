@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import * as RadixPopover from "@radix-ui/react-popover";
 import * as Separator from "@radix-ui/react-separator";
@@ -28,7 +28,6 @@ import { QUERIES } from "constants.js";
 const TAB_TRANSITION_DURATION = 400;
 
 function MainNav() {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { user, signOut } = useAuth();
 
@@ -73,7 +72,11 @@ function MainNav() {
 
   function handleSignOut() {
     signOut();
-    if (/\/dashboard\//.test(pathname)) navigate("/");
+    if (/\/dashboard\//.test(pathname)) {
+      window.location.assign("/");
+    } else {
+      window.location.assign(window.location);
+    }
   }
 
   return (

@@ -263,6 +263,11 @@ function LandingNav({
     }
   }, [y, initialLoad, renderTimeout]);
 
+  function handleSignOut() {
+    signOut();
+    window.location.assign("/");
+  }
+
   return (
     <Nav
       /* 
@@ -488,7 +493,7 @@ function LandingNav({
             </Dialog>
           )}
           {user.current ? (
-            <Option onClick={() => signOut()}>Sign out</Option>
+            <Option onClick={handleSignOut}>Sign out</Option>
           ) : (
             <Dialog
               open={currentAccountOpen}
