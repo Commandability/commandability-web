@@ -19,8 +19,9 @@ import AccountDialogContent, {
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { QUERIES } from "constants.js";
 
-const NAV_TRANSITION_DURATION = 400;
+const NAV_TRANSITION_DURATION = 800;
 const TAB_TRANSITION_DURATION = 400;
+const RENDER_TIMEOUT = 100;
 
 function LandingNav({
   hashIds,
@@ -47,7 +48,6 @@ function LandingNav({
 
   const { y, status } = useScroll();
   const [tabTransition, setTabTransition] = React.useState("inactive");
-  const [scrolled, setScrolled] = React.useState(false);
 
   const [state, dispatch] = React.useReducer(activeReducer, {
     activeTargetId: "",
@@ -56,6 +56,9 @@ function LandingNav({
 
   const [currentAccountOpen, setCurrentAccountOpen] = React.useState(false);
   const [newAccountOpen, setNewAccountOpen] = React.useState(false);
+
+  const [renderTimeout, setRenderTimeout] = React.useState(true);
+  const [scrolled, setScrolled] = React.useState(!initialLoad);
 
   function activeReducer(state, action) {
     switch (action.type) {
@@ -130,6 +133,7 @@ function LandingNav({
     }
   }
 
+  // Run after all other dispatch triggers due to scroll restore
   React.useEffect(() => {
     const effect = async () => {
       await document.fonts.ready;
@@ -239,25 +243,28 @@ function LandingNav({
     return () => clearTimeout(transitionTimeoutID);
   }, [status, tabTransition]);
 
+  // Identify timeout duration on mount but before first paint
   React.useLayoutEffect(() => {
-    if (initialLoad) {
-      setScrolled(false);
-    } else {
-      setScrolled(true);
-    }
-  }, [initialLoad]);
+    let renderTimeoutID = setTimeout(() => {
+      setRenderTimeout(false);
+    }, RENDER_TIMEOUT);
+
+    return () => clearTimeout(renderTimeoutID);
+  }, []);
 
   React.useEffect(() => {
+    // Prevent scrolled state from triggering nav transition during scroll restore
+    if (renderTimeout) return;
+
     if (y) {
       setScrolled(true);
     } else {
       setScrolled(false);
     }
-  }, [y]);
+  }, [y, initialLoad, renderTimeout]);
 
   return (
     <Nav
-      data-nav-transition={scrolled ? "false" : "true"}
       /* 
         zeroRightClassName makes sure any fixed position elements have their right position modified
         to match the original right position before the scroll bar is removed
@@ -304,8 +311,8 @@ function LandingNav({
           }`,
           "--tab-transition":
             tabTransition === "active"
-              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms, background-color ${TAB_TRANSITION_DURATION}ms`
-              : "none",
+              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms, background-color ${NAV_TRANSITION_DURATION}ms`
+              : `background-color ${NAV_TRANSITION_DURATION}ms`,
           "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
           "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
         }}
@@ -520,9 +527,7 @@ const Nav = styled.nav`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: background-color;
-    &[data-nav-transition="true"] {
-      transition: background-color ${NAV_TRANSITION_DURATION}ms;
-    }
+    transition: background-color ${NAV_TRANSITION_DURATION}ms;
   }
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -546,9 +551,7 @@ const SiteID = styled.a`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
-    ${Nav}[data-nav-transition="true"] & {
-      transition: color ${NAV_TRANSITION_DURATION}ms;
-    }
+    transition: color ${NAV_TRANSITION_DURATION}ms;
   }
 
   @media ${QUERIES.tabletAndSmaller} {
@@ -563,9 +566,7 @@ const NavFireIcon = styled(UnstyledFireIcon)`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: fill;
-    ${Nav}[data-nav-transition="true"] & {
-      transition: fill ${NAV_TRANSITION_DURATION}ms;
-    }
+    transition: fill ${NAV_TRANSITION_DURATION}ms;
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -623,10 +624,8 @@ const TabLink = styled(SmoothScrollTo)`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color, border-bottom;
-    ${Nav}[data-nav-transition="true"] & {
-      transition: color ${NAV_TRANSITION_DURATION}ms,
-        border-bottom ${NAV_TRANSITION_DURATION}ms;
-    }
+    transition: color ${NAV_TRANSITION_DURATION}ms,
+      border-bottom ${NAV_TRANSITION_DURATION}ms;
   }
 
   &.active {
@@ -773,9 +772,7 @@ const Option = styled(UnstyledButton)`
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
-    ${Nav}[data-nav-transition="true"] & {
-      transition: color ${NAV_TRANSITION_DURATION}ms;
-    }
+    transition: color ${NAV_TRANSITION_DURATION}ms;
   }
 
   @media (hover: hover) and (pointer: fine) {

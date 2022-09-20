@@ -2,7 +2,7 @@ import * as React from "react";
 
 function useScroll() {
   const [scroll, setScroll] = React.useState({
-    y: 0,
+    y: window.scrollY,
     status: "idle",
   });
 
