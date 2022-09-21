@@ -58,6 +58,7 @@ function AccountDialogContent({ defaultContent }) {
   const [passwordError, setPasswordError] = React.useState(false);
 
   const [visiblePassword, setVisiblePassword] = React.useState(false);
+  const passwordInputRef = React.useRef();
 
   const [toastState, setToastState] = React.useState({
     title: "",
@@ -202,6 +203,11 @@ function AccountDialogContent({ defaultContent }) {
     }, ANIMATION_DURATION / 2);
   }
 
+  function handleTogglePassword() {
+    setVisiblePassword((isVisible) => !isVisible);
+    passwordInputRef.current.focus();
+  }
+
   let renderedContent;
   if (loading) {
     renderedContent = <FireLoader />;
@@ -251,6 +257,7 @@ function AccountDialogContent({ defaultContent }) {
               <Label htmlFor="new-password">Password</Label>
               <InputWrapper>
                 <Input
+                  ref={passwordInputRef}
                   id="new-password"
                   type={visiblePassword ? "text" : "password"}
                   autoComplete="new-password"
@@ -266,9 +273,7 @@ function AccountDialogContent({ defaultContent }) {
                 />
                 <TogglePasswordButton
                   type="button"
-                  onClick={() => {
-                    setVisiblePassword(!visiblePassword);
-                  }}
+                  onClick={handleTogglePassword}
                 >
                   <VisuallyHidden>Toggle password visibility</VisuallyHidden>
                   {visiblePassword ? <FiEyeOff /> : <FiEye />}
@@ -315,6 +320,7 @@ function AccountDialogContent({ defaultContent }) {
               <Label htmlFor="current-password">Password</Label>
               <InputWrapper>
                 <Input
+                  ref={passwordInputRef}
                   id="current-password"
                   type={visiblePassword ? "text" : "password"}
                   autoComplete="current-password"
@@ -328,9 +334,7 @@ function AccountDialogContent({ defaultContent }) {
                 />
                 <TogglePasswordButton
                   type="button"
-                  onClick={() => {
-                    setVisiblePassword(!visiblePassword);
-                  }}
+                  onClick={handleTogglePassword}
                 >
                   <VisuallyHidden>Toggle password visibility</VisuallyHidden>
                   {visiblePassword ? <FiEyeOff /> : <FiEye />}
