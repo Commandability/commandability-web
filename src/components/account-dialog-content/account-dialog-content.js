@@ -384,7 +384,7 @@ function AccountDialogContent({ defaultContent }) {
             </InputGroup>
           </FormInputs>
           <SubmitButton type="submit" onClick={onRecoverAccountSubmit}>
-            Reset password
+            Request password reset
           </SubmitButton>
         </AccountForm>
         <TextButton
