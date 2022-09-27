@@ -49,25 +49,22 @@ function FirestoreUserProvider({ children }) {
     },
   };
 
-  if (firestoreUser.status === "pending") {
-    return (
-      <FirestoreUserContext.Provider value={value}>
-        {children}
-      </FirestoreUserContext.Provider>
-    );
-  }
-
   if (firestoreUser.status === "rejected") {
     throw new Error(firestoreUser.error);
   }
 
-  if (firestoreUser.status === "resolved") {
+  if (
+    firestoreUser.status === "pending" ||
+    firestoreUser.status === "resolved"
+  ) {
     return (
       <FirestoreUserContext.Provider value={value}>
         {children}
       </FirestoreUserContext.Provider>
     );
   }
+
+  throw new Error(`Unhandled authentication status: ${user.status}`);
 }
 
 function useFirestoreUser() {
