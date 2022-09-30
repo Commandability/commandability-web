@@ -284,26 +284,28 @@ function LandingNav({
       }}
     >
       <LeftSide>
-        <SiteID
-          href="/"
-          style={{
-            "--color": `${
-              scrolled ? "var(--color-gray-1)" : "var(--color-white)"
-            }`,
-          }}
-        >
-          <NavFireIcon
+        <h1>
+          <SiteID
+            href="/"
             style={{
-              "--fill": `${
-                scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
-              }`,
-              "--fill-active": `${
-                scrolled ? "var(--color-yellow-4)" : "var(--color-white)"
+              "--color": `${
+                scrolled ? "var(--color-gray-1)" : "var(--color-white)"
               }`,
             }}
-          />
-          Commandability
-        </SiteID>
+          >
+            <NavFireIcon
+              style={{
+                "--fill": `${
+                  scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
+                }`,
+                "--fill-active": `${
+                  scrolled ? "var(--color-yellow-4)" : "var(--color-white)"
+                }`,
+              }}
+            />
+            Commandability
+          </SiteID>
+        </h1>
       </LeftSide>
       <Desktop
         role="list"
@@ -550,9 +552,11 @@ const LeftSide = styled.div`
 const SiteID = styled.a`
   display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: ${18 / 16}rem;
+  font-weight: normal;
   text-decoration: none;
   color: var(--color);
-  gap: 8px;
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;

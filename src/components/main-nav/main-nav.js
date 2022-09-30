@@ -89,10 +89,12 @@ function MainNav() {
       className={zeroRightClassName}
     >
       <LeftSide>
-        <SiteID href="/">
-          <NavFireIcon />
-          Commandability
-        </SiteID>
+        <h1>
+          <SiteID href="/">
+            <NavFireIcon />
+            Commandability
+          </SiteID>
+        </h1>
       </LeftSide>
       {user.current ? (
         <Desktop
@@ -266,9 +268,11 @@ const LeftSide = styled.div`
 const SiteID = styled.a`
   display: flex;
   align-items: center;
+  gap: 8px;
+  font-size: ${18 / 16}rem;
+  font-weight: normal;
   text-decoration: none;
   color: var(--color-gray-1);
-  gap: 8px;
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: color;
