@@ -180,21 +180,38 @@ function Roster() {
             </DialogContent>
           </Dialog>
         </Top>
-        <ListHeader>
-          <Left>
-            <Checkbox
-              label="Select all"
-              checked={checkedAll}
-              onCheckedChange={(checked) => setCheckedAll(checked)}
-            />
-            <Name>Name</Name>
-            <span>Shift</span>
-          </Left>
-          <span>Badge</span>
-        </ListHeader>
+        {!checkedAll ? (
+          <ListHeader>
+            <Group>
+              <Checkbox
+                label="Select all"
+                checked={checkedAll}
+                onCheckedChange={(checked) => setCheckedAll(checked)}
+              />
+              <Name>Name</Name>
+              <span>Shift</span>
+            </Group>
+            <span>Badge</span>
+          </ListHeader>
+        ) : (
+          <ListHeader>
+            <Group>
+              <Checkbox
+                label="Select all"
+                checked={checkedAll}
+                onCheckedChange={(checked) => setCheckedAll(checked)}
+              />
+              <Button type="text">Delete</Button>
+            </Group>
+          </ListHeader>
+        )}
         <List>
           {firestoreUser.data.personnel.map((person) => (
-            <RosterItem key={person.badge} person={person} />
+            <RosterItem
+              key={person.badge}
+              checkedAll={checkedAll}
+              person={person}
+            />
           ))}
         </List>
         <Bottom>
@@ -396,7 +413,7 @@ const ListHeader = styled.div`
   color: var(--color-gray-2);
 `;
 
-const Left = styled.div`
+const Group = styled.div`
   display: flex;
   gap: 32px;
 `;

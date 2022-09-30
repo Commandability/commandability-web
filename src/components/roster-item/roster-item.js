@@ -3,12 +3,20 @@ import styled from "styled-components";
 
 import Checkbox from "components/checkbox";
 
-function RosterItem({ person, ...props }) {
+function RosterItem({ checkedAll, person, ...props }) {
   const [checked, setChecked] = React.useState(false);
+
+  React.useEffect(() => {
+    if (checkedAll) {
+      setChecked(true);
+    } else {
+      setChecked(false);
+    }
+  }, [checkedAll]);
 
   return (
     <Wrapper data-checked={checked ? "true" : "false"} {...props}>
-      <Left>
+      <Group>
         <Checkbox
           label="Select"
           checked={checked}
@@ -19,7 +27,7 @@ function RosterItem({ person, ...props }) {
           <span>{person.lastName}</span>
         </Name>
         {person.shift}
-      </Left>
+      </Group>
       {person.badge}
     </Wrapper>
   );
@@ -47,7 +55,7 @@ const Wrapper = styled.li`
   }
 `;
 
-const Left = styled.div`
+const Group = styled.div`
   display: flex;
   gap: 32px;
 `;
