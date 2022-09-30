@@ -36,6 +36,7 @@ const GlobalStyles = createGlobalStyle`
   body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-y: scroll;
   }
   /*
     6. Improve media defaults

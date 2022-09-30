@@ -12,6 +12,8 @@ import {
 import * as Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 
+import RosterItem from "components/roster-item";
+import { useFirestoreUser } from "context/firestore-user-context";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import {
   AlertDialog,
@@ -32,6 +34,7 @@ const selectValues = {
 };
 
 function Roster() {
+  const { firestoreUser } = useFirestoreUser();
   const [selectSort, setSelectSort] = React.useState(selectValues.newest);
   const [checkedAll, setCheckedAll] = React.useState(false);
 
@@ -178,13 +181,22 @@ function Roster() {
           </Dialog>
         </Top>
         <ListHeader>
-          <Checkbox
-            label="Select all"
-            checked={checkedAll}
-            onCheckedChange={(checked) => setCheckedAll(checked)}
-          />
+          <Left>
+            <Checkbox
+              label="Select all"
+              checked={checkedAll}
+              onCheckedChange={(checked) => setCheckedAll(checked)}
+            />
+            <Name>Name</Name>
+            <span>Shift</span>
+          </Left>
+          <span>Badge</span>
         </ListHeader>
-        <List></List>
+        <List>
+          {firestoreUser.data.personnel.map((person) => (
+            <RosterItem key={person.badge} person={person} />
+          ))}
+        </List>
         <Bottom>
           <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
             <DialogTrigger asChild>
@@ -339,16 +351,16 @@ const DialogScrollContainer = styled.div`
   overflow-y: auto;
   padding: 16px 0px;
 
-  scrollbar-color: var(--color-gray-5) var(--color-white);
+  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
   scrollbar-width: thin;
 
   ::-webkit-scrollbar {
     width: 10px;
-    background-color: var(--color-white);
+    background-color: var(--color-gray-10);
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 999999px;
-    border: 2px solid var(--color-white);
+    border: 2px solid var(--color-gray-10);
     background-color: var(--color-gray-5);
   }
   ::-webkit-scrollbar-track {
@@ -379,12 +391,42 @@ const DialogActions = styled.div`
 
 const ListHeader = styled.div`
   display: flex;
-  padding: 8px 48px;
+  justify-content: space-between;
+  padding: 16px 48px;
+  color: var(--color-gray-2);
 `;
 
-const List = styled.div`
+const Left = styled.div`
+  display: flex;
+  gap: 32px;
+`;
+
+const Name = styled.span`
+  width: 256px;
+`;
+
+const List = styled.ul`
   flex: 1;
   width: 100%;
+  list-style: none;
+  padding-left: 0;
+
+  overflow-y: scroll;
+  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--color-gray-10);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    border: 2px solid var(--color-gray-10);
+    background-color: var(--color-gray-5);
+  }
+  ::-webkit-scrollbar-track {
+    margin: 2px 0px;
+  }
 `;
 
 const Bottom = styled.div`
