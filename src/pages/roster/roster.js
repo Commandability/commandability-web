@@ -37,6 +37,7 @@ function Roster() {
   const { firestoreUser } = useFirestoreUser();
   const [selectSort, setSelectSort] = React.useState(selectValues.newest);
   const [checkedAll, setCheckedAll] = React.useState(false);
+  const [checkedItems, setCheckedItems] = React.useState([]);
 
   const [addPersonOpen, setAddPersonOpen] = React.useState(false);
   const [firstName, setFirstName] = React.useState("");
@@ -180,36 +181,31 @@ function Roster() {
             </DialogContent>
           </Dialog>
         </Top>
-        {!checkedAll ? (
-          <ListHeader>
-            <Group>
-              <Checkbox
-                label="Select all"
-                checked={checkedAll}
-                onCheckedChange={(checked) => setCheckedAll(checked)}
-              />
+        <ListHeader>
+          <Group>
+            <Checkbox
+              label="Select all"
+              checked={checkedAll.status}
+              onCheckedChange={(checked) =>
+                setCheckedAll({ status: checked, origin: "header" })
+              }
+            />
+            {checkedItems.length === 0 ? (
               <Name>Name</Name>
-              <span>Shift</span>
-            </Group>
-            <span>Badge</span>
-          </ListHeader>
-        ) : (
-          <ListHeader>
-            <Group>
-              <Checkbox
-                label="Select all"
-                checked={checkedAll}
-                onCheckedChange={(checked) => setCheckedAll(checked)}
-              />
+            ) : (
               <Button type="text">Delete</Button>
-            </Group>
-          </ListHeader>
-        )}
+            )}
+            {checkedItems.length === 0 ? <span>Shift</span> : null}
+          </Group>
+          {checkedItems.length === 0 ? <span>Badge</span> : null}
+        </ListHeader>
         <List>
           {firestoreUser.data.personnel.map((person) => (
             <RosterItem
               key={person.badge}
+              setCheckedItems={setCheckedItems}
               checkedAll={checkedAll}
+              setCheckedAll={setCheckedAll}
               person={person}
             />
           ))}
