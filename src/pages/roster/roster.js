@@ -116,7 +116,7 @@ function Roster() {
         addPersonnel(personnelList);
         setImportStatus({
           title: "Import successful",
-          description: "All CSV files were successfully imported.",
+          description: "All personnel were successfully imported.",
         });
       }
     } catch (error) {
@@ -154,6 +154,7 @@ function Roster() {
               </Button>
             </DialogTrigger>
             <DialogContent
+              header
               title="Add person"
               description="Add a new person to the roster here."
             >
@@ -162,24 +163,28 @@ function Roster() {
                   <TextInput
                     id="first-name-input"
                     label="First Name"
+                    placeholder="First"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                   />
                   <TextInput
                     id="last-name-input"
                     label="Last Name"
+                    placeholder="Last"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                   />
                   <TextInput
                     id="shift-input"
                     label="Shift"
+                    placeholder="One"
                     value={shift}
                     onChange={(e) => setShift(e.target.value)}
                   />
                   <TextInput
                     id="badge-input"
                     label="Badge"
+                    placeholder="000"
                     value={badge}
                     onChange={(e) => setBadge(e.target.value)}
                   />
