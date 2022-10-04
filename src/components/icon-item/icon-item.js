@@ -5,7 +5,7 @@ function IconItem({ icon, children, ...props }) {
   return (
     <Wrapper {...props}>
       {icon ? icon() : null}
-      <span>{children}</span>
+      <Contents>{children}</Contents>
     </Wrapper>
   );
 }
@@ -22,6 +22,12 @@ const Wrapper = styled.li`
     position: relative;
     top: 0.25rem;
   }
+`;
+
+const Contents = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 export default IconItem;

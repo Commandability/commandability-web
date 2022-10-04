@@ -8,6 +8,7 @@ const TextInput = ({
   label,
   value,
   onChange,
+  error,
   ...props
 }) => {
   if (!id) {
@@ -15,20 +16,29 @@ const TextInput = ({
   }
 
   return (
-    <Wrapper className={className}>
-      <label htmlFor={id}>{label}</label>
-      <Input
-        type={type ? type : "text"}
-        id={id}
-        value={value}
-        onChange={onChange}
-        {...props}
-      />
+    <Wrapper>
+      <InputGroup className={className}>
+        <label htmlFor={id}>{label}</label>
+        <Input
+          type={type ? type : "text"}
+          id={id}
+          value={value}
+          onChange={onChange}
+          {...props}
+        />
+      </InputGroup>
+      <InputError>{error}</InputError>
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+
+const InputGroup = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: baseline;
@@ -52,6 +62,15 @@ const Input = styled.input`
     outline: 2px solid var(--color-yellow-3);
     border-color: var(--color-yellow-3);
   }
+`;
+
+const InputError = styled.div`
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  height: 16px;
+  color: var(--color-red-3);
+  font-size: ${14 / 16}rem;
 `;
 
 export default TextInput;

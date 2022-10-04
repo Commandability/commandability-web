@@ -11,9 +11,10 @@ import {
 } from "react-icons/fi";
 import * as Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
+import { arrayUnion } from "firebase/firestore";
 
-import RosterItem from "components/roster-item";
 import { useFirestoreUser } from "context/firestore-user-context";
+import { Toast, ToastProvider, ToastViewport } from "components/toast";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import {
   AlertDialog,
@@ -21,6 +22,7 @@ import {
   AlertDialogContent,
 } from "components/alert-dialog";
 import { Select, SelectItem } from "components/select";
+import RosterItem from "components/roster-item";
 import IconItem from "components/icon-item";
 import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
@@ -46,8 +48,13 @@ function sortByBadge(firstPerson, secondPerson) {
   return parseInt(firstPerson.badge) - parseInt(secondPerson.badge);
 }
 
+const unknownToastState = {
+  title: "Unknown error",
+  message: "Try again later or contact support.",
+};
+
 function Roster() {
-  const { firestoreUser } = useFirestoreUser();
+  const { firestoreUser, updateFirestoreUserDoc } = useFirestoreUser();
   const [selectSort, setSelectSort] = React.useState(selectValues.firstName);
 
   let sortFunction = sortByFirstName;
@@ -63,21 +70,51 @@ function Roster() {
   const [shift, setShift] = React.useState("");
   const [badge, setBadge] = React.useState("");
 
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    message: "",
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
+
   const [importCSVOpen, setImportCSVOpen] = React.useState(false);
   const [importAlertDialogOpen, setImportAlertDialogOpen] =
     React.useState(false);
   const [importStatus, setImportStatus] = React.useState(null);
 
+  function resetAddPersonInputs() {
+    setFirstName("");
+    setLastName("");
+    setShift("");
+    setBadge("");
+  }
+
   function onImportAlertDialogActionClick() {
     setImportStatus(null);
   }
 
-  function addPersonnel(personnelList) {}
+  async function addPersonnel(personnelList) {
+    await updateFirestoreUserDoc({ personnel: arrayUnion(...personnelList) });
+  }
 
-  function addPersonSubmit(e) {
+  async function addPersonSubmit(e) {
     e.preventDefault();
-    addPersonnel();
+
+    if (!firstName || !lastName) return;
+
     setAddPersonOpen(false);
+    resetAddPersonInputs();
+
+    try {
+      await addPersonnel([{ firstName, lastName, shift, badge }]);
+      setToastState({
+        title: "Person added successfully",
+        message: "The person has been added to the roster",
+      });
+    } catch (error) {
+      setToastState(unknownToastState);
+    }
+
+    setToastOpen(true);
   }
 
   async function importCSVOnClick() {
@@ -113,7 +150,7 @@ function Roster() {
           description: "Resolve all formatting issues in the CSV file.",
         });
       } else {
-        addPersonnel(personnelList);
+        addPersonnel(personnelList.data);
         setImportStatus({
           title: "Import successful",
           description: "All personnel were successfully imported.",
@@ -162,29 +199,27 @@ function Roster() {
                 <DialogInputs>
                   <TextInput
                     id="first-name-input"
-                    label="First Name"
-                    placeholder="First"
+                    label="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
+                    error={firstName ? "" : "Please enter a first name"}
                   />
                   <TextInput
                     id="last-name-input"
-                    label="Last Name"
-                    placeholder="Last"
+                    label="Last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
+                    error={lastName ? "" : "Please enter a last name"}
                   />
                   <TextInput
                     id="shift-input"
                     label="Shift"
-                    placeholder="One"
                     value={shift}
                     onChange={(e) => setShift(e.target.value)}
                   />
                   <TextInput
                     id="badge-input"
                     label="Badge"
-                    placeholder="000"
                     value={badge}
                     onChange={(e) => setBadge(e.target.value)}
                   />
@@ -253,8 +288,8 @@ function Roster() {
                   </IconItem>
                   <IconItem icon={FiCheckSquare}>
                     The first line in the file should be a comma-separated
-                    header with columns labeled:{" "}
-                    <Highlight>LAST_NAME,FIRST_NAME,SHIFT,BADGE</Highlight>
+                    header with columns labeled:
+                    <CodeBlock>lastName,firstName,shift,badge</CodeBlock>
                   </IconItem>
                   <IconItem icon={FiCheckSquare}>
                     All other lines should contain comma-separated personnel
@@ -312,6 +347,15 @@ function Roster() {
           </Button>
         </Bottom>
       </Content>
+      <ToastProvider>
+        <Toast
+          open={toastOpen}
+          onOpenChange={setToastOpen}
+          title={toastState.title}
+          content={toastState.message}
+        />
+        <ToastViewport />
+      </ToastProvider>
     </Wrapper>
   );
 }
@@ -415,7 +459,8 @@ const UnorderedList = styled.ul`
   padding: 0 32px;
 `;
 
-const Highlight = styled.span`
+const CodeBlock = styled.div`
+  padding-left: 16px;
   color: var(--color-yellow-2);
 `;
 

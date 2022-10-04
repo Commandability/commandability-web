@@ -11,7 +11,15 @@ export function ToastProvider({ children, ...props }) {
     </RadixToast.Provider>
   );
 }
-export const ToastViewport = RadixToast.Viewport;
+
+export const ToastViewport = styled(RadixToast.Viewport)`
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  list-style: none;
+  padding: 24px;
+`;
 
 export function Toast({ title, content, children, ...props }) {
   return (

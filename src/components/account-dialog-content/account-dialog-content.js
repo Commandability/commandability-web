@@ -12,7 +12,7 @@ import VisuallyHidden from "components/visually-hidden";
 
 const unknownToastState = {
   title: "Unknown error",
-  message: "An unknown error has occurred",
+  message: "Try again later or contact support.",
 };
 
 export const accountContentType = {
@@ -412,7 +412,7 @@ function AccountDialogContent({ defaultContent }) {
           title={toastState.title}
           content={toastState.message}
         />
-        <ToastErrorViewport />
+        <ToastViewport />
       </ToastProvider>
     </>
   );
@@ -538,8 +538,9 @@ const TextButton = styled(UnstyledButton)`
 `;
 
 const InputError = styled.div`
-  position: flex;
   align-self: flex-end;
+  display: flex;
+  align-items: center;
   height: 16px;
   color: var(--color-red-3);
   font-size: ${14 / 16}rem;
@@ -566,15 +567,6 @@ const SubmitButton = styled(UnstyledButton)`
     will-change: background-color;
     transition: background-color ${ANIMATION_DURATION}ms;
   }
-`;
-
-const ToastErrorViewport = styled(ToastViewport)`
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  list-style: none;
-  padding: 24px;
 `;
 
 export default AccountDialogContent;
