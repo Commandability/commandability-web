@@ -1,5 +1,5 @@
 import * as React from "react";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { doc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
 
 import { useAuth } from "./auth-context";
 import { db } from "firebase.js";
@@ -42,10 +42,15 @@ function FirestoreUserProvider({ children }) {
     return () => unsubscribe();
   }, [user]);
 
+  const userRef = doc(db, "users", user.current.uid);
+
   const value = {
     firestoreUser,
-    updateFirestoreUserData: async (...args) => {
-      await setDoc(doc(db, "users", user.current.uid), ...args);
+    setFirestoreUserDoc: async (...args) => {
+      await setDoc(userRef, ...args);
+    },
+    updateFirestoreUserDoc: async (...args) => {
+      await updateDoc(userRef, ...args);
     },
   };
 
