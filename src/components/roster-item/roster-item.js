@@ -54,8 +54,7 @@ function RosterItem({
           }}
         />
         <Name>
-          <span>{person.firstName}</span>
-          <span>{person.lastName}</span>
+          {person.firstName} {person.lastName}
         </Name>
         {person.shift}
       </Group>
@@ -93,8 +92,6 @@ const Group = styled.div`
 
 const Name = styled.div`
   width: 256px;
-  display: flex;
-  gap: 16px;
 `;
 
 export default RosterItem;

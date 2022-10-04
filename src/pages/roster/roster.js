@@ -29,13 +29,31 @@ import SearchInput from "components/search-input";
 import { QUERIES } from "constants.js";
 
 const selectValues = {
-  alphabetical: "alphabetical",
-  badgeNumber: "badge number",
+  firstName: "first name",
+  lastName: "last name",
+  badge: "badge",
 };
+
+function sortByFirstName(firstPerson, secondPerson) {
+  return firstPerson.firstName.localeCompare(secondPerson.firstName);
+}
+
+function sortByLastName(firstPerson, secondPerson) {
+  return firstPerson.lastName.localeCompare(secondPerson.lastName);
+}
+
+function sortByBadge(firstPerson, secondPerson) {
+  return parseInt(firstPerson.badge) - parseInt(secondPerson.badge);
+}
 
 function Roster() {
   const { firestoreUser } = useFirestoreUser();
-  const [selectSort, setSelectSort] = React.useState(selectValues.newest);
+  const [selectSort, setSelectSort] = React.useState(selectValues.firstName);
+
+  let sortFunction = sortByFirstName;
+  if (selectSort === selectValues.lastName) sortFunction = sortByLastName;
+  if (selectSort === selectValues.badge) sortFunction = sortByBadge;
+
   const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedItems, setCheckedItems] = React.useState([]);
 
@@ -122,20 +140,17 @@ function Roster() {
           <RosterSelect
             select={selectSort}
             onValueChange={(select) => setSelectSort(select)}
-            defaultValue={selectValues.alphabetical}
+            defaultValue={selectValues.firstName}
             label="Sort"
           >
-            <SelectItem value={selectValues.alphabetical}>
-              Alphabetical (a-z)
-            </SelectItem>
-            <SelectItem value={selectValues.badgeNumber}>
-              Badge Number
-            </SelectItem>
+            <SelectItem value={selectValues.firstName}>First name</SelectItem>
+            <SelectItem value={selectValues.lastName}>Last name</SelectItem>
+            <SelectItem value={selectValues.badge}>Badge</SelectItem>
           </RosterSelect>
           <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
             <DialogTrigger asChild>
               <Button theme="light" icon={FiUserPlus}>
-                Add Person
+                Add person
               </Button>
             </DialogTrigger>
             <DialogContent
@@ -200,15 +215,19 @@ function Roster() {
           {checkedItems.length === 0 ? <span>Badge</span> : null}
         </ListHeader>
         <List>
-          {firestoreUser.data.personnel.map((person) => (
-            <RosterItem
-              key={person.badge}
-              setCheckedItems={setCheckedItems}
-              checkedAll={checkedAll}
-              setCheckedAll={setCheckedAll}
-              person={person}
-            />
-          ))}
+          {[...firestoreUser.data.personnel]
+            .sort((firstPerson, secondPerson) =>
+              sortFunction(firstPerson, secondPerson)
+            )
+            .map((person) => (
+              <RosterItem
+                key={person.badge}
+                setCheckedItems={setCheckedItems}
+                checkedAll={checkedAll}
+                setCheckedAll={setCheckedAll}
+                person={person}
+              />
+            ))}
         </List>
         <Bottom>
           <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>

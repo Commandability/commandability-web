@@ -62,6 +62,7 @@ const SelectContent = styled(RadixSelect.Content)`
   color: inherit;
   border-radius: 8px;
   box-shadow: var(--box-shadow);
+  cursor: pointer;
 `;
 
 const SelectViewport = styled(RadixSelect.Viewport)`
