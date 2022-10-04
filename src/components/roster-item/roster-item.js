@@ -12,22 +12,21 @@ function RosterItem({
 }) {
   const [checked, setChecked] = React.useState(false);
 
-  const { badge } = person;
   const { status, origin } = checkedAll;
 
   React.useEffect(() => {
     // Check item when checkedAll is checked
     if (status) {
       setChecked(true);
-      setCheckedItems((checkedItems) => [...checkedItems, badge]);
+      setCheckedItems((checkedItems) => [...checkedItems, person]);
       // Uncheck item when checkedAll is unchecked, but not when a single person has been unchecked
     } else if (origin !== "list") {
       setChecked(false);
       setCheckedItems((checkedItems) =>
-        checkedItems.filter((item) => item !== badge)
+        checkedItems.filter((item) => item !== person)
       );
     }
-  }, [status, origin, setCheckedItems, badge]);
+  }, [status, origin, setCheckedItems, person]);
 
   return (
     <Wrapper data-checked={checked ? "true" : "false"} {...props}>
@@ -39,13 +38,10 @@ function RosterItem({
             setChecked(checked);
 
             if (checked) {
-              setCheckedItems((checkedItems) => [
-                ...checkedItems,
-                person.badge,
-              ]);
+              setCheckedItems((checkedItems) => [...checkedItems, person]);
             } else {
               setCheckedItems((checkedItems) =>
-                checkedItems.filter((item) => item !== person.badge)
+                checkedItems.filter((item) => item !== person)
               );
 
               // Disable checked all when a single person has been unchecked

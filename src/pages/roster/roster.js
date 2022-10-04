@@ -2,22 +2,25 @@ import * as React from "react";
 import styled from "styled-components";
 import {
   FiUserPlus,
-  FiUpload,
   FiCheckSquare,
   FiArrowRight,
   FiAlertTriangle,
+  FiX,
   FiCheck,
+  FiUpload,
   FiDownload,
 } from "react-icons/fi";
 import * as Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
-import { arrayUnion } from "firebase/firestore";
+import { arrayUnion, arrayRemove } from "firebase/firestore";
 
 import { useFirestoreUser } from "context/firestore-user-context";
 import { Toast, ToastProvider, ToastViewport } from "components/toast";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import {
   AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogCancel,
   AlertDialogAction,
   AlertDialogContent,
 } from "components/alert-dialog";
@@ -45,7 +48,7 @@ function sortByLastName(firstPerson, secondPerson) {
 }
 
 function sortByBadge(firstPerson, secondPerson) {
-  return parseInt(firstPerson.badge) - parseInt(secondPerson.badge);
+  return firstPerson.badge.localeCompare(secondPerson.badge);
 }
 
 const unknownToastState = {
@@ -61,6 +64,7 @@ function Roster() {
   if (selectSort === selectValues.lastName) sortFunction = sortByLastName;
   if (selectSort === selectValues.badge) sortFunction = sortByBadge;
 
+  const [removePersonnelOpen, setRemovePersonnelOpen] = React.useState(false);
   const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedItems, setCheckedItems] = React.useState([]);
 
@@ -88,18 +92,14 @@ function Roster() {
     setBadge("");
   }
 
-  function onImportAlertDialogActionClick() {
-    setImportStatus(null);
-  }
-
   async function addPersonnel(personnelList) {
     await updateFirestoreUserDoc({ personnel: arrayUnion(...personnelList) });
   }
 
-  async function addPersonSubmit(e) {
+  async function onAddPersonSubmit(e) {
     e.preventDefault();
 
-    if (!firstName || !lastName) return;
+    if (!firstName || !lastName || !badge) return;
 
     setAddPersonOpen(false);
     resetAddPersonInputs();
@@ -108,7 +108,7 @@ function Roster() {
       await addPersonnel([{ firstName, lastName, shift, badge }]);
       setToastState({
         title: "Person added successfully",
-        message: "The person has been added to the roster",
+        message: "The person has been added to the roster.",
       });
     } catch (error) {
       setToastState(unknownToastState);
@@ -167,6 +167,26 @@ function Roster() {
     setImportAlertDialogOpen(true);
   }
 
+  async function removePersonnel(personnelList) {
+    await updateFirestoreUserDoc({ personnel: arrayRemove(...personnelList) });
+  }
+
+  async function onRemovePersonnelAction() {
+    setRemovePersonnelOpen(false);
+
+    try {
+      await removePersonnel(checkedItems);
+      setToastState({
+        title: "Personnel deleted successfully",
+        message: "The selected personnel have been removed the roster.",
+      });
+    } catch (error) {
+      setToastState(unknownToastState);
+    }
+
+    setToastOpen(true);
+  }
+
   async function parseCSVAndExport(personnelList) {}
 
   return (
@@ -195,7 +215,7 @@ function Roster() {
               title="Add person"
               description="Add a new person to the roster here."
             >
-              <DialogForm onSubmit={addPersonSubmit}>
+              <DialogForm onSubmit={onAddPersonSubmit}>
                 <DialogInputs>
                   <TextInput
                     id="first-name-input"
@@ -222,11 +242,12 @@ function Roster() {
                     label="Badge"
                     value={badge}
                     onChange={(e) => setBadge(e.target.value)}
+                    error={badge ? "" : "Please enter a badge"}
                   />
                 </DialogInputs>
                 <Button
                   type="submit"
-                  onClick={addPersonSubmit}
+                  onClick={onAddPersonSubmit}
                   theme="light"
                   icon={FiUserPlus}
                 >
@@ -248,7 +269,36 @@ function Roster() {
             {checkedItems.length === 0 ? (
               <Name>Name</Name>
             ) : (
-              <Button type="text">Delete</Button>
+              <AlertDialog
+                open={removePersonnelOpen}
+                onOpenChange={setRemovePersonnelOpen}
+              >
+                <AlertDialogTrigger asChild>
+                  <Button type="text">Delete</Button>
+                </AlertDialogTrigger>
+                <RemoveAlertDialogContent
+                  header
+                  title="Are you absolutely sure?"
+                  description="This action cannot be undone. This will permanently delete the selected personnel from your account."
+                >
+                  <AlertOptions>
+                    <AlertDialogCancel asChild>
+                      <Button icon={FiX} theme="light">
+                        Cancel
+                      </Button>
+                    </AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button
+                        onClick={onRemovePersonnelAction}
+                        icon={FiCheck}
+                        theme="light"
+                      >
+                        Yes, delete personnel
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertOptions>
+                </RemoveAlertDialogContent>
+              </AlertDialog>
             )}
             {checkedItems.length === 0 ? <span>Shift</span> : null}
           </Group>
@@ -312,7 +362,7 @@ function Roster() {
             open={importAlertDialogOpen}
             onOpenChange={setImportAlertDialogOpen}
           >
-            <AlertDialogContent
+            <ImportAlertDialogContent
               header
               title={importStatus?.title}
               description={importStatus?.description}
@@ -332,7 +382,7 @@ function Roster() {
               <DialogActions>
                 <AlertDialogAction asChild>
                   <Button
-                    onClick={onImportAlertDialogActionClick}
+                    onClick={() => setImportStatus(null)}
                     icon={FiCheck}
                     theme="light"
                   >
@@ -340,7 +390,7 @@ function Roster() {
                   </Button>
                 </AlertDialogAction>
               </DialogActions>
-            </AlertDialogContent>
+            </ImportAlertDialogContent>
           </AlertDialog>
           <Button onClick={parseCSVAndExport} theme="light" icon={FiDownload}>
             Export CSV
@@ -509,6 +559,21 @@ const List = styled.ul`
   ::-webkit-scrollbar-track {
     margin: 2px 0px;
   }
+`;
+
+const RemoveAlertDialogContent = styled(AlertDialogContent)`
+  width: 512px;
+`;
+
+const ImportAlertDialogContent = styled(AlertDialogContent)`
+  min-width: 384px;
+  max-width: 640px;
+`;
+
+const AlertOptions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
 `;
 
 const Bottom = styled.div`
