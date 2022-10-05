@@ -107,8 +107,8 @@ function Roster() {
     setBadge("");
   }
 
-  async function addPersonnel(personnelList) {
-    await updateFirestoreUserDoc({ personnel: arrayUnion(...personnelList) });
+  async function addPersonnel(personnel) {
+    await updateFirestoreUserDoc({ personnel: arrayUnion(...personnel) });
   }
 
   async function onAddPersonSubmit(e) {
@@ -120,11 +120,23 @@ function Roster() {
     resetAddPersonInputs();
 
     try {
-      await addPersonnel([{ firstName, lastName, shift, badge }]);
-      setToastState({
-        title: "Person added successfully",
-        message: "The person has been added to the roster.",
-      });
+      // Check if the person and firebase contain any personnel with duplicate badges
+      const mergeDuplicates = firestoreUser.data.personnel.some(
+        (person) => person.badge === badge
+      );
+      if (mergeDuplicates) {
+        setToastState({
+          title: "Failed to add person",
+          message:
+            "Make sure there are no other personnel in the roster with the same badge.",
+        });
+      } else {
+        await addPersonnel([{ firstName, lastName, shift, badge }]);
+        setToastState({
+          title: "Person added successfully",
+          message: "The person has been added to the roster.",
+        });
+      }
     } catch (error) {
       setToastState(unknownToastState);
     }
@@ -150,14 +162,14 @@ function Roster() {
 
       const file = await fileHandles[0].getFile();
       const contents = await file.text();
-      const personnelList = await Papa.parse(contents, {
+      const personnel = await Papa.parse(contents, {
         header: true,
         skipEmptyLines: true,
       });
 
-      if (personnelList.errors?.length) {
+      if (personnel.errors?.length) {
         setImportStatus({
-          parseErrors: personnelList.errors.map((error) => ({
+          parseErrors: personnel.errors.map((error) => ({
             ...error,
             id: uuidv4(),
           })),
@@ -165,11 +177,29 @@ function Roster() {
           description: "Resolve all formatting issues in the CSV file.",
         });
       } else {
-        addPersonnel(personnelList.data);
-        setImportStatus({
-          title: "Import successful",
-          description: "All personnel were successfully imported.",
-        });
+        // Check if the imported file contains any personnel with duplicate badges
+        const importDuplicates =
+          new Set(personnel.data.map((person) => person.badge)).size <
+          personnel.data.length;
+        // Check if the imported file and firebase contain any personnel with duplicate badges
+        const mergeDuplicates = personnel.data.some((importedPerson) =>
+          firestoreUser.data.personnel.some(
+            (firebasePerson) => firebasePerson.badge === importedPerson.badge
+          )
+        );
+        if (importDuplicates || mergeDuplicates) {
+          setImportStatus({
+            title: "Import failed",
+            description:
+              "Resolve all badge conflicts in both the CSV file and roster.",
+          });
+        } else {
+          addPersonnel(personnel.data);
+          setImportStatus({
+            title: "Import successful",
+            description: "All personnel were successfully imported.",
+          });
+        }
       }
     } catch (error) {
       if (error.name === "AbortError") return;
@@ -182,8 +212,8 @@ function Roster() {
     setImportAlertDialogOpen(true);
   }
 
-  async function removePersonnel(personnelList) {
-    await updateFirestoreUserDoc({ personnel: arrayRemove(...personnelList) });
+  async function removePersonnel(personnel) {
+    await updateFirestoreUserDoc({ personnel: arrayRemove(...personnel) });
   }
 
   async function onRemovePersonnelAction() {
@@ -202,7 +232,7 @@ function Roster() {
     setToastOpen(true);
   }
 
-  async function parseCSVAndExport(personnelList) {}
+  async function parseCSVAndExport(personnel) {}
 
   return (
     <Wrapper>
