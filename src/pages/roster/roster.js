@@ -66,10 +66,10 @@ function Roster() {
     const formattedQuery = query.toLowerCase();
 
     return (
-      formattedQuery === person.firstName.toLowerCase() ||
-      formattedQuery === person.lastName.toLowerCase() ||
-      formattedQuery === person.shift.toLowerCase() ||
-      formattedQuery === person.badge.toLowerCase()
+      person.firstName.toLowerCase().startsWith(formattedQuery) ||
+      person.lastName.toLowerCase().startsWith(formattedQuery) ||
+      person.shift.toLowerCase().startsWith(formattedQuery) ||
+      person.badge.toLowerCase().startsWith(formattedQuery)
     );
   }
 
@@ -307,7 +307,7 @@ function Roster() {
             </DialogContent>
           </Dialog>
         </Top>
-        <ListHeader>
+        <ListHeader aria-live="polite" aria-atomic="true">
           <Group>
             <Checkbox
               label="Select all"
@@ -354,7 +354,7 @@ function Roster() {
           </Group>
           {checkedItems.length === 0 ? <span>Badge</span> : null}
         </ListHeader>
-        <List>
+        <List aria-live="polite" aria-atomic="true">
           {[...firestoreUser.data.personnel]
             .filter((person) => personFilter(person))
             .sort((firstPerson, secondPerson) =>
