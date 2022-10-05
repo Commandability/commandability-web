@@ -58,6 +58,21 @@ const unknownToastState = {
 
 function Roster() {
   const { firestoreUser, updateFirestoreUserDoc } = useFirestoreUser();
+
+  const [query, setQuery] = React.useState("");
+  function personFilter(person) {
+    if (!query) return true;
+
+    const formattedQuery = query.toLowerCase();
+
+    return (
+      formattedQuery === person.firstName.toLowerCase() ||
+      formattedQuery === person.lastName.toLowerCase() ||
+      formattedQuery === person.shift.toLowerCase() ||
+      formattedQuery === person.badge.toLowerCase()
+    );
+  }
+
   const [selectSort, setSelectSort] = React.useState(selectValues.firstName);
 
   let sortFunction = sortByFirstName;
@@ -193,7 +208,12 @@ function Roster() {
     <Wrapper>
       <Content>
         <Top>
-          <RosterSearch id="roster-search" placeholder="name, badge, shift" />
+          <RosterSearch
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            id="roster-search"
+            placeholder="name, badge, shift"
+          />
           <RosterSelect
             select={selectSort}
             onValueChange={(select) => setSelectSort(select)}
@@ -306,6 +326,7 @@ function Roster() {
         </ListHeader>
         <List>
           {[...firestoreUser.data.personnel]
+            .filter((person) => personFilter(person))
             .sort((firstPerson, secondPerson) =>
               sortFunction(firstPerson, secondPerson)
             )

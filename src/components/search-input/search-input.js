@@ -1,43 +1,24 @@
 import React from "react";
 import styled from "styled-components";
-import { FiSearch } from "react-icons/fi";
+import { FiSearch as UnstyledFiSearch } from "react-icons/fi";
 
-import UnstyledButton from "components/unstyled-button";
-import VisuallyHidden from "components/visually-hidden";
-
-const SearchInput = ({ id, className, onSubmit, ...props }) => {
-  const [query, setQuery] = React.useState("");
-
+const SearchInput = ({ id, className, ...props }) => {
   if (!id) {
     throw new Error("SearchInput must have an id");
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (onSubmit) onSubmit(query);
-  }
-
   return (
-    <Wrapper role="search" onSubmit={handleSubmit} className={className}>
+    <Wrapper role="search" className={className}>
       <Label htmlFor={id}>Search</Label>
       <InputWrapper>
-        <TextInput
-          type="text"
-          id={id}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          {...props}
-        />
-        <SearchButton type="submit">
-          <VisuallyHidden>Search</VisuallyHidden>
-          <FiSearch />
-        </SearchButton>
+        <TextInput type="text" id={id} {...props} />
+        <StyledFiSearch />
       </InputWrapper>
     </Wrapper>
   );
 };
 
-const Wrapper = styled.form`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -74,29 +55,14 @@ const TextInput = styled.input`
   }
 `;
 
-const SearchButton = styled(UnstyledButton)`
+const StyledFiSearch = styled(UnstyledFiSearch)`
   position: absolute;
-  left: 8px;
-  padding: 4px;
-
-  & > svg {
-    stroke: var(--color-gray-2);
-  }
+  left: 12px;
+  stroke: var(--color-gray-2);
 
   ${TextInput}:focus-visible + & {
-    & > svg {
+    & {
       stroke: var(--color-yellow-3);
-    }
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      border-radius: 100%;
-      background-color: var(--color-gray-9);
-
-      ${TextInput}:focus-visible + & {
-        background-color: var(--color-yellow-9);
-      }
     }
   }
 `;
