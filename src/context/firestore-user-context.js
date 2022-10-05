@@ -15,10 +15,14 @@ function FirestoreUserProvider({ children }) {
   });
   const { user } = useAuth();
 
+  let userRef;
+  if (user.current) userRef = doc(db, "users", user.current?.uid);
+
   React.useEffect(() => {
     if (!user.current) return;
+
     const unsubscribe = onSnapshot(
-      doc(db, "users", user.current.uid),
+      userRef,
       { includeMetadataChanges: true },
       (doc) => {
         if (!doc.hasPendingWrites) {
@@ -40,9 +44,7 @@ function FirestoreUserProvider({ children }) {
       }
     );
     return () => unsubscribe();
-  }, [user]);
-
-  const userRef = doc(db, "users", user.current.uid);
+  }, [user, userRef]);
 
   const value = {
     firestoreUser,
