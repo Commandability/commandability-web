@@ -1,6 +1,8 @@
-import Spacer from "components/spacer";
 import * as React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+
+import Spacer from "components/spacer";
 
 const THEMES = {
   light: {
@@ -21,17 +23,39 @@ const THEMES = {
 
 const Button = React.forwardRef(
   (
-    { theme = "light", type = "solid", icon, children, style, ...props },
+    {
+      theme = "light",
+      type = "solid",
+      icon,
+      to,
+      href,
+      children,
+      style,
+      ...props
+    },
     forwardedRef
   ) => {
     const themeStyles = THEMES[theme];
 
+    function selectTag() {
+      if (to) {
+        return Link;
+      } else if (href) {
+        return "a";
+      } else {
+        return "button";
+      }
+    }
+
     if (type === "text") {
       return (
         <TextButton
-          {...props}
+          as={selectTag()}
           ref={forwardedRef}
           style={{ ...themeStyles, ...style }}
+          to={to}
+          href={href}
+          {...props}
         >
           {children}
         </TextButton>
@@ -39,9 +63,12 @@ const Button = React.forwardRef(
     } else {
       return (
         <SolidButton
-          {...props}
+          as={selectTag()}
           ref={forwardedRef}
           style={{ ...themeStyles, ...style }}
+          to={to}
+          href={href}
+          {...props}
         >
           {icon ? icon() : null}
           {icon ? <Spacer size={8} axis="horizontal" /> : null}
@@ -52,20 +79,18 @@ const Button = React.forwardRef(
   }
 );
 
-const ButtonBase = styled.button`
+const TextButton = styled.button`
   display: flex;
   align-items: center;
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   letter-spacing: 0.05em;
-`;
-
-const TextButton = styled(ButtonBase)`
   padding: 0;
   background-color: transparent;
   font-weight: bold;
   text-transform: uppercase;
+  text-decoration: none;
   color: var(--color);
 
   &:focus {
@@ -83,12 +108,19 @@ const TextButton = styled(ButtonBase)`
   }
 `;
 
-const SolidButton = styled(ButtonBase)`
+const SolidButton = styled.button`
+  display: flex;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: 0.05em;
   padding: 8px 16px;
   border-radius: 8px;
   background-color: var(--background-color);
   font-weight: bold;
   text-transform: uppercase;
+  text-decoration: none;
   color: var(--color);
 
   & > svg {

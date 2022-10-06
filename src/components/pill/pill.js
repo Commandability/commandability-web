@@ -35,6 +35,16 @@ const Pill = React.forwardRef(
       });
     }
 
+    function selectTag() {
+      if (to) {
+        return Link;
+      } else if (href) {
+        return "a";
+      } else {
+        return "button";
+      }
+    }
+
     return (
       <PillBase
         {...props}
@@ -46,15 +56,7 @@ const Pill = React.forwardRef(
           onClick && onClick(event);
         }}
         href={href}
-        as={(() => {
-          if (to) {
-            return Link;
-          } else if (href) {
-            return "a";
-          } else {
-            return "button";
-          }
-        })()}
+        as={selectTag()}
       >
         <Text>{children}</Text>
         <Spacer size={8} axis="horizontal" />

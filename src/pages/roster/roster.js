@@ -100,6 +100,8 @@ function Roster() {
     React.useState(false);
   const [importStatus, setImportStatus] = React.useState(null);
 
+  const [downloadLink, setDownloadLink] = React.useState();
+
   function resetAddPersonInputs() {
     setFirstName("");
     setLastName("");
@@ -137,6 +139,27 @@ function Roster() {
           message: "The person has been added to the roster.",
         });
       }
+    } catch (error) {
+      setToastState(unknownToastState);
+    }
+
+    setToastOpen(true);
+  }
+
+  async function removePersonnel(personnel) {
+    await updateFirestoreUserDoc({ personnel: arrayRemove(...personnel) });
+  }
+
+  async function onRemovePersonnelAction() {
+    setRemovePersonnelOpen(false);
+
+    try {
+      await removePersonnel(checkedItems);
+      setCheckedItems([]);
+      setToastState({
+        title: "Personnel deleted successfully",
+        message: "The selected personnel have been removed the roster.",
+      });
     } catch (error) {
       setToastState(unknownToastState);
     }
@@ -212,27 +235,25 @@ function Roster() {
     setImportAlertDialogOpen(true);
   }
 
-  async function removePersonnel(personnel) {
-    await updateFirestoreUserDoc({ personnel: arrayRemove(...personnel) });
-  }
-
-  async function onRemovePersonnelAction() {
-    setRemovePersonnelOpen(false);
-
-    try {
-      await removePersonnel(checkedItems);
-      setToastState({
-        title: "Personnel deleted successfully",
-        message: "The selected personnel have been removed the roster.",
+  React.useEffect(() => {
+    const effect = async () => {
+      const personnelCSV = await Papa.unparse(
+        {
+          fields: ["firstName", "lastName", "shift", "badge"],
+          data: firestoreUser.data.personnel,
+        },
+        {
+          header: true,
+          skipEmptyLines: true,
+        }
+      );
+      const data = new Blob([personnelCSV], {
+        type: "text/csv",
       });
-    } catch (error) {
-      setToastState(unknownToastState);
-    }
-
-    setToastOpen(true);
-  }
-
-  async function parseCSVAndExport(personnel) {}
+      setDownloadLink(window.URL.createObjectURL(data));
+    };
+    effect();
+  }, [firestoreUser.data.personnel]);
 
   return (
     <Wrapper>
@@ -390,7 +411,7 @@ function Roster() {
                   <IconItem icon={FiCheckSquare}>
                     The first line in the file should be a comma-separated
                     header with columns labeled:
-                    <CodeBlock>lastName,firstName,shift,badge</CodeBlock>
+                    <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
                   </IconItem>
                   <IconItem icon={FiCheckSquare}>
                     All other lines should contain comma-separated personnel
@@ -443,7 +464,12 @@ function Roster() {
               </DialogActions>
             </ImportAlertDialogContent>
           </AlertDialog>
-          <Button onClick={parseCSVAndExport} theme="light" icon={FiDownload}>
+          <Button
+            theme="light"
+            icon={FiDownload}
+            download="personnel.csv"
+            href={downloadLink}
+          >
             Export CSV
           </Button>
         </Bottom>
