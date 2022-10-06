@@ -167,23 +167,24 @@ function Roster() {
     setToastOpen(true);
   }
 
+  const openCSVFile = async () => {
+    return new Promise((resolve) => {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = "text/csv";
+      input.addEventListener("change", () => {
+        resolve(input.files[0]);
+      });
+      input.click();
+    });
+  };
+
   async function importCSVOnClick() {
     setImportCSVOpen(false);
 
     try {
-      const options = {
-        types: [
-          {
-            description: "CSV Files",
-            accept: {
-              "text/csv": [".csv"],
-            },
-          },
-        ],
-      };
-      const fileHandles = await window.showOpenFilePicker(options);
+      const file = await openCSVFile();
 
-      const file = await fileHandles[0].getFile();
       const contents = await file.text();
       const personnel = await Papa.parse(contents, {
         header: true,
