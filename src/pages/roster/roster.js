@@ -196,8 +196,9 @@ function Roster() {
             ...error,
             id: uuidv4(),
           })),
-          title: "Import failed",
-          description: "Resolve all formatting issues in the CSV file.",
+          title: "Failed to import personnel",
+          description:
+            "No personnel were imported. Resolve all formatting issues in the CSV file.",
         });
       } else {
         // Check if the imported file contains any personnel with duplicate badges
@@ -212,22 +213,23 @@ function Roster() {
         );
         if (importDuplicates || mergeDuplicates) {
           setImportStatus({
-            title: "Import failed",
+            title: "Failed to import personnel",
             description:
-              "Resolve all badge conflicts in both the CSV file and roster.",
+              "No personnel were imported. Resolve all badge conflicts in both the CSV file and roster.",
           });
         } else {
           addPersonnel(personnel.data);
           setImportStatus({
-            title: "Import successful",
-            description: "All personnel were successfully imported.",
+            title: "Personnel imported successfully",
+            description:
+              "All personnel were successfully imported to the roster.",
           });
         }
       }
     } catch (error) {
       if (error.name === "AbortError") return;
       setImportStatus({
-        title: "Import failed",
+        title: "Failed to import personnel",
         description: "Try again later or contact support.",
       });
     }
