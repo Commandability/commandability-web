@@ -71,12 +71,12 @@ function MainNav() {
   }, [transition]);
 
   function handleSignOut() {
-    signOut();
     if (/\/dashboard\//.test(pathname)) {
       window.location.assign("/");
     } else {
       window.location.assign(window.location);
     }
+    signOut();
   }
 
   return (

@@ -125,10 +125,10 @@ function AccountDialogContent({ defaultContent }) {
           email,
           password
         );
+        window.location.assign("/");
         await updateProfile(userCredentials.user, { displayName: displayName });
         await setFirestoreUserDoc(userCredentials.user.uid, defaultConfig);
-        window.location.assign("/");
-        setTimeout(() => setLoading(false), MINIMUM_LOADING_TIME);
+        setLoading(false);
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
           setToastState({

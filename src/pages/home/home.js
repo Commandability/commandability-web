@@ -113,7 +113,6 @@ function Home() {
                   <DialogContent title="Get started">
                     <AccountDialogContent
                       defaultContent={accountContentType.NEW_USER}
-                      setOpen={setNewAccountOpen}
                     />
                   </DialogContent>
                 </Dialog>

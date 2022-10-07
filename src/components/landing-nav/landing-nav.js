@@ -264,8 +264,8 @@ function LandingNav({
   }, [y, initialLoad, renderTimeout]);
 
   function handleSignOut() {
-    signOut();
     window.location.assign("/");
+    signOut();
   }
 
   return (
