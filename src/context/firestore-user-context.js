@@ -1,5 +1,11 @@
 import * as React from "react";
-import { doc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+  writeBatch,
+} from "firebase/firestore";
 
 import { useAuth } from "./auth-context";
 import { db } from "firebase.js";
@@ -13,13 +19,23 @@ function FirestoreUserProvider({ children }) {
     data: null,
     error: null,
   });
+  const [userRef, setUserRef] = React.useState(null);
   const { user } = useAuth();
 
   React.useEffect(() => {
-    if (!user.current) return;
+    if (!user.current) {
+      setUserRef(null);
+      return;
+    }
+
+    setUserRef(doc(db, "users", user.current?.uid));
+  }, [user]);
+
+  React.useEffect(() => {
+    if (!userRef) return;
 
     const unsubscribe = onSnapshot(
-      doc(db, "users", user.current?.uid),
+      userRef,
       { includeMetadataChanges: true },
       (doc) => {
         if (!doc.hasPendingWrites) {
@@ -41,16 +57,15 @@ function FirestoreUserProvider({ children }) {
       }
     );
     return () => unsubscribe();
-  }, [user]);
+  }, [userRef]);
 
   const value = {
     firestoreUser,
-    setFirestoreUserDoc: async (...args) => {
-      await setDoc(doc(db, "users", user.current?.uid), ...args);
-    },
-    updateFirestoreUserDoc: async (...args) => {
-      await updateDoc(doc(db, "users", user.current?.uid), ...args);
-    },
+    userRef,
+    setFirestoreUserDoc: async (...args) => await setDoc(userRef, ...args),
+    updateFirestoreUserDoc: async (...args) =>
+      await updateDoc(userRef, ...args),
+    writeBatch: () => writeBatch(db),
   };
 
   if (firestoreUser.status === "rejected") {
