@@ -319,12 +319,7 @@ function Roster() {
                     error={badge ? "" : "Please enter a badge"}
                   />
                 </DialogInputs>
-                <Button
-                  type="submit"
-                  onClick={onAddPersonSubmit}
-                  theme="light"
-                  icon={FiUserPlus}
-                >
+                <Button type="submit" theme="light" icon={FiUserPlus}>
                   Add Person
                 </Button>
               </DialogForm>
@@ -387,10 +382,12 @@ function Roster() {
             .map((person) => (
               <RosterItem
                 key={person.badge}
-                setCheckedItems={setCheckedItems}
+                person={person}
                 checkedAll={checkedAll}
                 setCheckedAll={setCheckedAll}
-                person={person}
+                setCheckedItems={setCheckedItems}
+                setToastOpen={setToastOpen}
+                setToastState={setToastState}
               />
             ))}
         </List>
