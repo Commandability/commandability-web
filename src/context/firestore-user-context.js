@@ -62,7 +62,8 @@ function FirestoreUserProvider({ children }) {
   const value = {
     firestoreUser,
     userRef,
-    setFirestoreUserDoc: async (...args) => await setDoc(userRef, ...args),
+    setFirestoreUserDoc: async (uid, ...args) =>
+      await setDoc(doc(db, "users", uid), ...args),
     updateFirestoreUserDoc: async (...args) =>
       await updateDoc(userRef, ...args),
     writeBatch: () => writeBatch(db),

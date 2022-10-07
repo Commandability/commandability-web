@@ -5,6 +5,7 @@ import isStrongPassword from "validator/lib/isStrongPassword";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
+import { useFirestoreUser } from "context/firestore-user-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 import {
@@ -40,6 +41,27 @@ const passwordRequirements = {
   minSymbols: 0,
 };
 
+const defaultConfig = {
+  account: {
+    expirationTimestamp: 4102444800000,
+  },
+  groups: {
+    GROUP_1: {
+      alert: 20,
+      isVisible: true,
+    },
+    GROUP_2: {
+      alert: 20,
+      isVisible: true,
+    },
+    GROUP_6: {
+      isVisible: true,
+      name: "Rehab",
+    },
+  },
+  personnel: [],
+};
+
 function AccountDialogContent({ defaultContent }) {
   const {
     createUserWithEmailAndPassword,
@@ -47,6 +69,7 @@ function AccountDialogContent({ defaultContent }) {
     sendPasswordResetEmail,
     updateProfile,
   } = useAuth();
+  const { setFirestoreUserDoc } = useFirestoreUser();
 
   const [displayName, setDisplayName] = React.useState("");
   const [displayNameError, setDisplayNameError] = React.useState(false);
@@ -103,6 +126,7 @@ function AccountDialogContent({ defaultContent }) {
           password
         );
         await updateProfile(userCredentials.user, { displayName: displayName });
+        await setFirestoreUserDoc(userCredentials.user.uid, defaultConfig);
         window.location.assign("/");
         setTimeout(() => setLoading(false), MINIMUM_LOADING_TIME);
       } catch (error) {

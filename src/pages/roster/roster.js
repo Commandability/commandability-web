@@ -152,6 +152,7 @@ function Roster() {
 
   async function onRemovePersonnelAction() {
     setRemovePersonnelOpen(false);
+    setCheckedAll(false);
 
     try {
       await removePersonnel(checkedItems);
