@@ -4,6 +4,11 @@ import * as RadixToast from "@radix-ui/react-toast";
 
 const DEFAULT_TOAST_DURATION = 3000;
 
+export const unknownToastState = {
+  title: "Unknown error",
+  message: "Try again later or contact support.",
+};
+
 export function ToastProvider({ children, ...props }) {
   return (
     <RadixToast.Provider duration={DEFAULT_TOAST_DURATION} {...props}>

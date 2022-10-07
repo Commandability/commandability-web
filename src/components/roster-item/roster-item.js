@@ -4,6 +4,7 @@ import { FiEdit } from "react-icons/fi";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
 import { useFirestoreUser } from "context/firestore-user-context";
+import { unknownToastState } from "components/toast";
 import Checkbox from "components/checkbox";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import TextInput from "components/text-input";
@@ -29,11 +30,6 @@ function RosterItem({
   const [lastName, setLastName] = React.useState(person.lastName);
   const [shift, setShift] = React.useState(person.shift);
   const [badge, setBadge] = React.useState(person.badge);
-
-  const unknownToastState = {
-    title: "Unknown error",
-    message: "Try again later or contact support.",
-  };
 
   function resetEditPersonInputs() {
     setFirstName(person.firstName);

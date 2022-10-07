@@ -15,7 +15,12 @@ import { v4 as uuidv4 } from "uuid";
 import { arrayUnion, arrayRemove } from "firebase/firestore";
 
 import { useFirestoreUser } from "context/firestore-user-context";
-import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import {
+  Toast,
+  ToastProvider,
+  ToastViewport,
+  unknownToastState,
+} from "components/toast";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import {
   AlertDialog,
@@ -50,11 +55,6 @@ function sortByLastName(firstPerson, secondPerson) {
 function sortByBadge(firstPerson, secondPerson) {
   return firstPerson.badge.localeCompare(secondPerson.badge);
 }
-
-const unknownToastState = {
-  title: "Unknown error",
-  message: "Try again later or contact support.",
-};
 
 function Roster() {
   const { firestoreUser, updateFirestoreUserDoc } = useFirestoreUser();

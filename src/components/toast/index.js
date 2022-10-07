@@ -1,1 +1,6 @@
-export { Toast, ToastProvider, ToastViewport } from "./toast";
+export {
+  Toast,
+  ToastProvider,
+  ToastViewport,
+  unknownToastState,
+} from "./toast";

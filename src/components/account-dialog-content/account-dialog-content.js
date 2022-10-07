@@ -7,13 +7,13 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
-import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import {
+  Toast,
+  ToastProvider,
+  ToastViewport,
+  unknownToastState,
+} from "components/toast";
 import VisuallyHidden from "components/visually-hidden";
-
-const unknownToastState = {
-  title: "Unknown error",
-  message: "Try again later or contact support.",
-};
 
 export const accountContentType = {
   NEW_USER: "NEW_USER",
