@@ -6,6 +6,7 @@ import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import { useAuth } from "context/auth-context";
 import { useInitialLoad } from "context/initial-load-context";
+import { Toast, ToastProvider, ToastViewport } from "components/toast";
 import useRect from "hooks/use-rect";
 import useScroll from "hooks/use-scroll";
 import UnstyledButton from "components/unstyled-button";
@@ -59,6 +60,12 @@ function LandingNav({
 
   const [renderTimeout, setRenderTimeout] = React.useState(true);
   const [scrolled, setScrolled] = React.useState(!initialLoad);
+
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    message: "",
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
 
   function activeReducer(state, action) {
     switch (action.type) {
@@ -487,9 +494,11 @@ function LandingNav({
               <DialogTrigger asChild>
                 <Option>Create an account</Option>
               </DialogTrigger>
-              <DialogContent title="Create an account">
+              <DialogContent title="Create an account" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
+                  setToastOpen={setToastOpen}
+                  setToastState={setToastState}
                 />
               </DialogContent>
             </Dialog>
@@ -504,15 +513,30 @@ function LandingNav({
               <DialogTrigger asChild>
                 <Option>Sign in</Option>
               </DialogTrigger>
-              <DialogContent title="Sign in">
+              <DialogContent title="Sign in" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
+                  setToastOpen={setToastOpen}
+                  setToastState={setToastState}
                 />
               </DialogContent>
             </Dialog>
           )}
         </AccountOptions>
       </RightSide>
+      <ToastProvider>
+        <Toast
+          open={toastOpen}
+          onOpenChange={setToastOpen}
+          title={toastState.title}
+          content={toastState.message}
+          style={{
+            // Reset box shadow after nav conditional
+            "--box-shadow": "2px 4px 8px hsl(0 0% 0% / 50%)",
+          }}
+        />
+        <ToastViewport />
+      </ToastProvider>
     </Nav>
   );
 }

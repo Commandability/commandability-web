@@ -19,7 +19,7 @@ export function ToastProvider({ children, ...props }) {
 
 export const ToastViewport = styled(RadixToast.Viewport)`
   position: fixed;
-  bottom: 64px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
   list-style: none;

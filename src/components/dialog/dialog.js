@@ -10,8 +10,11 @@ export const Dialog = RadixDialog.Root;
 export const DialogTrigger = RadixDialog.Trigger;
 
 export const DialogContent = React.forwardRef(
-  ({ header, title, description, children, ...props }, forwardedRef) => (
-    <RadixDialog.Portal>
+  (
+    { header, title, description, portal = true, children, ...props },
+    forwardedRef
+  ) => {
+    const component = (
       <RadixDialogOverlay>
         <RadixDialogContent
           {...props}
@@ -45,8 +48,12 @@ export const DialogContent = React.forwardRef(
           </RadixDialog.Close>
         </RadixDialogContent>
       </RadixDialogOverlay>
-    </RadixDialog.Portal>
-  )
+    );
+
+    if (portal) return <RadixDialog.Portal>{component}</RadixDialog.Portal>;
+
+    return component;
+  }
 );
 
 const fadeIn = keyframes`
@@ -80,6 +87,7 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   flex-direction: column;
   gap: 32px;
   color: var(--color-gray-2);
+  // z-index: 2147483647;
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;

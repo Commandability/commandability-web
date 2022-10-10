@@ -8,12 +8,7 @@ import { useAuth } from "context/auth-context";
 import { useFirestoreUser } from "context/firestore-user-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
-import {
-  Toast,
-  ToastProvider,
-  ToastViewport,
-  unknownToastState,
-} from "components/toast";
+import { unknownToastState } from "components/toast";
 import VisuallyHidden from "components/visually-hidden";
 
 export const accountContentType = {
@@ -62,7 +57,7 @@ const defaultConfig = {
   personnel: [],
 };
 
-function AccountDialogContent({ defaultContent }) {
+function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
   const {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -82,12 +77,6 @@ function AccountDialogContent({ defaultContent }) {
 
   const [visiblePassword, setVisiblePassword] = React.useState(false);
   const passwordInputRef = React.useRef();
-
-  const [toastState, setToastState] = React.useState({
-    title: "",
-    message: "",
-  });
-  const [toastOpen, setToastOpen] = React.useState(false);
 
   const [content, setContent] = React.useState(defaultContent);
   const [isAnimating, setIsAnimating] = React.useState(false);
@@ -149,8 +138,9 @@ function AccountDialogContent({ defaultContent }) {
 
   async function onSignInSubmit(event) {
     event.preventDefault();
-    if (!isEmail(email)) {
-      setEmailError(true);
+    const emailValid = isEmail(email);
+    if (!emailValid || !password) {
+      if (!emailValid) setEmailError(true);
     } else {
       setLoading(true);
       try {
@@ -429,15 +419,6 @@ function AccountDialogContent({ defaultContent }) {
       >
         {renderedContent}
       </ContentSwitch>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-        />
-        <ToastViewport />
-      </ToastProvider>
     </>
   );
 }

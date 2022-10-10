@@ -13,6 +13,7 @@ import {
 } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
+import { Toast, ToastProvider, ToastViewport } from "components/toast";
 import useRect from "hooks/use-rect";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
@@ -40,6 +41,12 @@ function MainNav() {
 
   const [currentAccountOpen, setCurrentAccountOpen] = React.useState(false);
   const [newAccountOpen, setNewAccountOpen] = React.useState(false);
+
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    message: "",
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
 
   React.useLayoutEffect(() => {
     const effect = async () => {
@@ -207,9 +214,11 @@ function MainNav() {
               <DialogTrigger asChild>
                 <Option>Create an account</Option>
               </DialogTrigger>
-              <DialogContent title="Create an account">
+              <DialogContent title="Create an account" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
+                  setToastOpen={setToastOpen}
+                  setToastState={setToastState}
                 />
               </DialogContent>
             </Dialog>
@@ -220,15 +229,26 @@ function MainNav() {
               <DialogTrigger asChild>
                 <Option>Sign in</Option>
               </DialogTrigger>
-              <DialogContent title="Sign in">
+              <DialogContent title="Sign in" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
+                  setToastOpen={setToastOpen}
+                  setToastState={setToastState}
                 />
               </DialogContent>
             </Dialog>
           </AccountOptions>
         )}
       </RightSide>
+      <ToastProvider>
+        <Toast
+          open={toastOpen}
+          onOpenChange={setToastOpen}
+          title={toastState.title}
+          content={toastState.message}
+        />
+        <ToastViewport />
+      </ToastProvider>
     </Nav>
   );
 }

@@ -5,6 +5,7 @@ import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
 import { useAuth } from "context/auth-context";
+import { Toast, ToastProvider, ToastViewport } from "components/toast";
 import useMergeRefs from "hooks/use-merge-refs";
 import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
@@ -69,6 +70,12 @@ function Home() {
   const { user } = useAuth();
   const [newAccountOpen, setNewAccountOpen] = React.useState(false);
 
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    message: "",
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
+
   return (
     <Wrapper>
       <header>
@@ -110,9 +117,11 @@ function Home() {
                       Get started
                     </Pill>
                   </DialogTrigger>
-                  <DialogContent title="Get started">
+                  <DialogContent title="Get started" portal={false}>
                     <AccountDialogContent
                       defaultContent={accountContentType.NEW_USER}
+                      setToastOpen={setToastOpen}
+                      setToastState={setToastState}
                     />
                   </DialogContent>
                 </Dialog>
@@ -259,12 +268,20 @@ function Home() {
           </Footer>
         </FooterImage>
       </Main>
+      <ToastProvider>
+        <Toast
+          open={toastOpen}
+          onOpenChange={setToastOpen}
+          title={toastState.title}
+          content={toastState.message}
+        />
+        <ToastViewport />
+      </ToastProvider>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  isolation: isolate;
   height: 100%;
 
   @media (min-height: ${BREAKPOINTS.laptop}px) {
