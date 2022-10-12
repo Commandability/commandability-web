@@ -1,20 +1,26 @@
 import * as React from "react";
-import { useLocation } from "react-router-dom";
 
 const InitialLoadContext = React.createContext();
 InitialLoadContext.displayName = "InitialLoadContext";
 
 function InitialLoadProvider({ children }) {
-  const { pathname, hash } = useLocation();
-  const [initialPath] = React.useState(pathname);
-  const [initialHash] = React.useState(hash);
+  const [initialLocation] = React.useState(document.location.href);
+
   const [initialLoad, setInitialLoad] = React.useState(true);
 
   React.useEffect(() => {
-    if (initialPath !== pathname || initialHash !== hash) {
-      setInitialLoad(false);
-    }
-  }, [initialPath, pathname, initialHash, hash]);
+    const observer = new MutationObserver(() => {
+      if (initialLocation !== document.location.href) {
+        setInitialLoad(false);
+      }
+    });
+
+    observer.observe(document.getElementById("root"), {
+      childList: true,
+    });
+
+    return () => observer.disconnect();
+  }, [initialLocation]);
 
   return (
     <InitialLoadContext.Provider value={initialLoad}>
