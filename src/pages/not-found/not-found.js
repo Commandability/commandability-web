@@ -1,11 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
 
+import Layout from "components/layout";
+
 function NotFound() {
-  return <Wrapper>404: Not Found</Wrapper>;
+  return (
+    <Layout>
+      <Text>404: Not Found</Text>
+    </Layout>
+  );
 }
 
-const Wrapper = styled.div`
+const Text = styled.div`
   color: var(--color-white);
 `;
 

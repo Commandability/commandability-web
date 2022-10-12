@@ -1,12 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Outlet } from "react-router-dom";
+import { Outlet, ScrollRestoration } from "react-router-dom";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import Skip from "components/skip";
 import MainNav from "components/main-nav";
 
-function Layout() {
+function Layout({ type, children }) {
   return (
     <Wrapper>
       <header>
@@ -21,9 +21,8 @@ function Layout() {
         */
         className={zeroRightClassName}
       />
-      <Main id="main">
-        <Outlet />
-      </Main>
+      <Main id="main">{type === "outlet" ? <Outlet /> : children}</Main>
+      <ScrollRestoration />
     </Wrapper>
   );
 }

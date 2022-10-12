@@ -1,18 +1,15 @@
 import * as React from "react";
-import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./auth-context";
-import { InitialLoadProvider } from "./initial-load-context";
 import { FirestoreUserProvider } from "./firestore-user-context";
+import { InitialLoadProvider } from "./initial-load-context";
 
 function AppProviders({ children }) {
   return (
-    <BrowserRouter>
+    <InitialLoadProvider>
       <AuthProvider>
-        <FirestoreUserProvider>
-          <InitialLoadProvider>{children}</InitialLoadProvider>
-        </FirestoreUserProvider>
+        <FirestoreUserProvider>{children}</FirestoreUserProvider>
       </AuthProvider>
-    </BrowserRouter>
+    </InitialLoadProvider>
   );
 }
 

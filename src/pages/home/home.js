@@ -1,10 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
 import { useAuth } from "context/auth-context";
+import { useInitialLoad } from "context/initial-load-context";
 import { Toast, ToastProvider, ToastViewport } from "components/toast";
 import useMergeRefs from "hooks/use-merge-refs";
 import useFragment from "hooks/use-fragment";
@@ -75,6 +76,16 @@ function Home() {
     message: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
+
+  const { pathname } = useLocation();
+  const initialLoad = useInitialLoad();
+
+  // React router's ScrollRestoration breaks smooth scrolling
+  React.useEffect(() => {
+    if (!initialLoad) {
+      window.scrollTo(0, 0);
+    }
+  }, [initialLoad, pathname]);
 
   return (
     <Wrapper>

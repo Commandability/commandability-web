@@ -1,5 +1,10 @@
 import * as React from "react";
-import { Routes, Route } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  Route,
+} from "react-router-dom";
 
 import Layout from "components/layout";
 import Report from "components/report";
@@ -13,28 +18,35 @@ import Settings from "pages/settings";
 import NotFound from "pages/not-found";
 import PrivacyPolicy from "pages/privacy-policy";
 
-function AuthenticatedApp() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="dashboard" element={<Layout />}>
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/" element={<Home />} errorElement={<NotFound />} />
+      <Route
+        path="dashboard"
+        element={<Layout type="outlet" />}
+        errorElement={<NotFound />}
+      >
         <Route path="reports" element={<Reports />}>
           <Route path=":reportId" element={<Report />} />
         </Route>
         <Route path="roster" element={<Roster />}>
-          <Route path=":personId" element={<Person />} />
+          <Route path=":badge" element={<Person />} />
         </Route>
         <Route path="groups" element={<Groups />}>
           <Route path=":groupId" element={<Group />} />
         </Route>
         <Route path="settings" element={<Settings />} />
       </Route>
-      <Route path="*" element={<Layout />}>
-        <Route path="*" element={<NotFound />} />
+      <Route element={<Layout type="outlet" />} errorElement={<NotFound />}>
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
       </Route>
-    </Routes>
-  );
+    </>
+  )
+);
+
+function AuthenticatedApp() {
+  return <RouterProvider router={router} />;
 }
 
 export default AuthenticatedApp;
