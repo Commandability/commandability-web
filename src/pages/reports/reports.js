@@ -23,7 +23,6 @@ import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
 import TextInput from "components/text-input";
-import { QUERIES } from "constants.js";
 
 const selectValues = {
   newest: "newest",
@@ -44,108 +43,86 @@ function Reports() {
 
   return (
     <Wrapper>
-      <Content>
-        <Top>
-          <ReportsSelect
-            select={select}
-            onValueChange={(select) => setSelect(select)}
-            defaultValue={selectValues.newest}
-            label="Sort"
+      <Top>
+        <ReportsSelect
+          select={select}
+          onValueChange={(select) => setSelect(select)}
+          defaultValue={selectValues.newest}
+          label="Sort"
+        >
+          <SelectItem value={selectValues.newest}>Newest first</SelectItem>
+          <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
+        </ReportsSelect>
+        <Button theme="light" icon={FiSliders}>
+          Filter
+        </Button>
+      </Top>
+      <ListHeader>
+        <Checkbox
+          label="Select all"
+          checked={checked}
+          onCheckedChange={(checked) => setChecked(checked)}
+        />
+      </ListHeader>
+      <List></List>
+      <Bottom>
+        <Button theme="light" icon={FiDownload}>
+          Export all
+        </Button>
+        <AlertDialog open={openAlertDialog} onOpenChange={setAlertDialogOpen}>
+          <AlertDialogTrigger asChild>
+            <Button theme="light" icon={FiTrash2}>
+              Delete All
+            </Button>
+          </AlertDialogTrigger>
+          <DeleteAllAlertDialogContent
+            header
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete all reports from your account."
           >
-            <SelectItem value={selectValues.newest}>Newest first</SelectItem>
-            <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
-          </ReportsSelect>
-          <Button theme="light" icon={FiSliders}>
-            Filter
-          </Button>
-        </Top>
-        <ListHeader>
-          <Checkbox
-            label="Select all"
-            checked={checked}
-            onCheckedChange={(checked) => setChecked(checked)}
-          />
-        </ListHeader>
-        <List></List>
-        <Bottom>
-          <Button theme="light" icon={FiDownload}>
-            Export all
-          </Button>
-          <AlertDialog open={openAlertDialog} onOpenChange={setAlertDialogOpen}>
-            <AlertDialogTrigger asChild>
-              <Button theme="light" icon={FiTrash2}>
-                Delete All
-              </Button>
-            </AlertDialogTrigger>
-            <DeleteAllAlertDialogContent
-              header
-              title="Are you absolutely sure?"
-              description="This action cannot be undone. This will permanently delete all reports from your account."
-            >
-              <TextInput
-                type="password"
-                id="password-input"
-                label="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Options>
-                <AlertDialogCancel asChild>
-                  <Button icon={FiX} theme="light">
-                    Cancel
-                  </Button>
-                </AlertDialogCancel>
-                <AlertDialogAction asChild>
-                  <Button
-                    onClick={onAlertDialogAction}
-                    icon={FiCheck}
-                    theme="light"
-                  >
-                    Yes, Delete All Reports
-                  </Button>
-                </AlertDialogAction>
-              </Options>
-            </DeleteAllAlertDialogContent>
-          </AlertDialog>
-          <UnstyledButton>
-            <VisuallyHidden>Page left</VisuallyHidden>
-            <FiChevronLeft />
-          </UnstyledButton>
-          <UnstyledButton>
-            <VisuallyHidden>Page right</VisuallyHidden>
-            <FiChevronRight />
-          </UnstyledButton>
-        </Bottom>
-      </Content>
+            <TextInput
+              type="password"
+              id="password-input"
+              label="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Options>
+              <AlertDialogCancel asChild>
+                <Button icon={FiX} theme="light">
+                  Cancel
+                </Button>
+              </AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <Button
+                  onClick={onAlertDialogAction}
+                  icon={FiCheck}
+                  theme="light"
+                >
+                  Yes, Delete All Reports
+                </Button>
+              </AlertDialogAction>
+            </Options>
+          </DeleteAllAlertDialogContent>
+        </AlertDialog>
+        <UnstyledButton>
+          <VisuallyHidden>Page left</VisuallyHidden>
+          <FiChevronLeft />
+        </UnstyledButton>
+        <UnstyledButton>
+          <VisuallyHidden>Page right</VisuallyHidden>
+          <FiChevronRight />
+        </UnstyledButton>
+      </Bottom>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 32px 16px;
-
-  @media ${QUERIES.phoneAndSmaller} {
-    padding: 0;
-  }
-`;
-
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 1200px;
-  background-color: var(--color-gray-10);
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
-
-  @media ${QUERIES.phoneAndSmaller} {
-    padding: 0px 8px;
-    border-radius: 0;
-  }
 `;
 
 const Top = styled.div`

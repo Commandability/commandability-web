@@ -36,7 +36,6 @@ import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
 import Button from "components/button";
 import SearchInput from "components/search-input";
-import { QUERIES } from "constants.js";
 
 const selectValues = {
   firstName: "first name",
@@ -261,220 +260,218 @@ function Roster() {
 
   return (
     <Wrapper>
-      <Content>
-        <Top>
-          <RosterSearch
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            id="roster-search"
-            placeholder="name, badge, shift"
+      <Top>
+        <RosterSearch
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          id="roster-search"
+          placeholder="name, badge, shift"
+        />
+        <RosterSelect
+          select={selectSort}
+          onValueChange={(select) => setSelectSort(select)}
+          defaultValue={selectValues.firstName}
+          label="Sort"
+        >
+          <SelectItem value={selectValues.firstName}>First name</SelectItem>
+          <SelectItem value={selectValues.lastName}>Last name</SelectItem>
+          <SelectItem value={selectValues.badge}>Badge</SelectItem>
+        </RosterSelect>
+        <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
+          <DialogTrigger asChild>
+            <Button theme="light" icon={FiUserPlus}>
+              Add person
+            </Button>
+          </DialogTrigger>
+          <DialogContent
+            header
+            title="Add person"
+            description="Add a new person to the roster here."
+          >
+            <DialogForm onSubmit={onAddPersonSubmit}>
+              <DialogInputs>
+                <TextInput
+                  id="first-name-input"
+                  label="First name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  error={firstName ? "" : "Please enter a first name"}
+                />
+                <TextInput
+                  id="last-name-input"
+                  label="Last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  error={lastName ? "" : "Please enter a last name"}
+                />
+                <TextInput
+                  id="shift-input"
+                  label="Shift"
+                  value={shift}
+                  onChange={(e) => setShift(e.target.value)}
+                />
+                <TextInput
+                  id="badge-input"
+                  label="Badge"
+                  value={badge}
+                  onChange={(e) => setBadge(e.target.value)}
+                  error={badge ? "" : "Please enter a badge"}
+                />
+              </DialogInputs>
+              <Button type="submit" theme="light" icon={FiUserPlus}>
+                Add Person
+              </Button>
+            </DialogForm>
+          </DialogContent>
+        </Dialog>
+      </Top>
+      <ListHeader aria-live="polite" aria-atomic="true">
+        <Group>
+          <Checkbox
+            label="Select all"
+            checked={checkedAll.status}
+            onCheckedChange={(checked) =>
+              setCheckedAll({ status: checked, origin: "header" })
+            }
           />
-          <RosterSelect
-            select={selectSort}
-            onValueChange={(select) => setSelectSort(select)}
-            defaultValue={selectValues.firstName}
-            label="Sort"
-          >
-            <SelectItem value={selectValues.firstName}>First name</SelectItem>
-            <SelectItem value={selectValues.lastName}>Last name</SelectItem>
-            <SelectItem value={selectValues.badge}>Badge</SelectItem>
-          </RosterSelect>
-          <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
-            <DialogTrigger asChild>
-              <Button theme="light" icon={FiUserPlus}>
-                Add person
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              header
-              title="Add person"
-              description="Add a new person to the roster here."
+          {checkedItems.length === 0 ? (
+            <Name>Name</Name>
+          ) : (
+            <AlertDialog
+              open={removePersonnelOpen}
+              onOpenChange={setRemovePersonnelOpen}
             >
-              <DialogForm onSubmit={onAddPersonSubmit}>
-                <DialogInputs>
-                  <TextInput
-                    id="first-name-input"
-                    label="First name"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                    error={firstName ? "" : "Please enter a first name"}
-                  />
-                  <TextInput
-                    id="last-name-input"
-                    label="Last name"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                    error={lastName ? "" : "Please enter a last name"}
-                  />
-                  <TextInput
-                    id="shift-input"
-                    label="Shift"
-                    value={shift}
-                    onChange={(e) => setShift(e.target.value)}
-                  />
-                  <TextInput
-                    id="badge-input"
-                    label="Badge"
-                    value={badge}
-                    onChange={(e) => setBadge(e.target.value)}
-                    error={badge ? "" : "Please enter a badge"}
-                  />
-                </DialogInputs>
-                <Button type="submit" theme="light" icon={FiUserPlus}>
-                  Add Person
-                </Button>
-              </DialogForm>
-            </DialogContent>
-          </Dialog>
-        </Top>
-        <ListHeader aria-live="polite" aria-atomic="true">
-          <Group>
-            <Checkbox
-              label="Select all"
-              checked={checkedAll.status}
-              onCheckedChange={(checked) =>
-                setCheckedAll({ status: checked, origin: "header" })
-              }
-            />
-            {checkedItems.length === 0 ? (
-              <Name>Name</Name>
-            ) : (
-              <AlertDialog
-                open={removePersonnelOpen}
-                onOpenChange={setRemovePersonnelOpen}
+              <AlertDialogTrigger asChild>
+                <Button type="text">Delete</Button>
+              </AlertDialogTrigger>
+              <RemoveAlertDialogContent
+                header
+                title="Are you absolutely sure?"
+                description="This action cannot be undone. This will permanently delete the selected personnel from your account."
               >
-                <AlertDialogTrigger asChild>
-                  <Button type="text">Delete</Button>
-                </AlertDialogTrigger>
-                <RemoveAlertDialogContent
-                  header
-                  title="Are you absolutely sure?"
-                  description="This action cannot be undone. This will permanently delete the selected personnel from your account."
-                >
-                  <AlertOptions>
-                    <AlertDialogCancel asChild>
-                      <Button icon={FiX} theme="light">
-                        Cancel
-                      </Button>
-                    </AlertDialogCancel>
-                    <AlertDialogAction asChild>
-                      <Button
-                        onClick={onRemovePersonnelAction}
-                        icon={FiCheck}
-                        theme="light"
-                      >
-                        Yes, delete personnel
-                      </Button>
-                    </AlertDialogAction>
-                  </AlertOptions>
-                </RemoveAlertDialogContent>
-              </AlertDialog>
-            )}
-            {checkedItems.length === 0 ? <span>Shift</span> : null}
-          </Group>
-          {checkedItems.length === 0 ? <span>Badge</span> : null}
-        </ListHeader>
-        <List aria-live="polite" aria-atomic="true">
-          {[...firestoreUser.data.personnel]
-            .filter((person) => personFilter(person))
-            .sort((firstPerson, secondPerson) =>
-              sortFunction(firstPerson, secondPerson)
-            )
-            .map((person) => (
-              <RosterItem
-                key={person.badge}
-                person={person}
-                checkedAll={checkedAll}
-                setCheckedAll={setCheckedAll}
-                setCheckedItems={setCheckedItems}
-                setToastOpen={setToastOpen}
-                setToastState={setToastState}
-              />
-            ))}
-        </List>
-        <Bottom>
-          <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
-            <DialogTrigger asChild>
-              <Button theme="light" icon={FiUpload}>
-                Import CSV
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              header
-              title="Import CSV"
-              description="Add personnel from a file here."
-            >
-              <DialogContainer>
-                <UnorderedList>
-                  <IconItem icon={FiCheckSquare}>
-                    The file should be a Comma Separated Value (CSV) file
-                  </IconItem>
-                  <IconItem icon={FiCheckSquare}>
-                    The first line in the file should be a comma-separated
-                    header with columns labeled:
-                    <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
-                  </IconItem>
-                  <IconItem icon={FiCheckSquare}>
-                    All other lines should contain comma-separated personnel
-                    data corresponding to the columns in the header
-                  </IconItem>
-                </UnorderedList>
-                <DialogActions>
-                  <Button
-                    onClick={importCSVOnClick}
-                    theme="light"
-                    icon={FiArrowRight}
-                  >
-                    Continue
-                  </Button>
-                </DialogActions>
-              </DialogContainer>
-            </DialogContent>
-          </Dialog>
-          <AlertDialog
-            open={importAlertDialogOpen}
-            onOpenChange={setImportAlertDialogOpen}
+                <AlertOptions>
+                  <AlertDialogCancel asChild>
+                    <Button icon={FiX} theme="light">
+                      Cancel
+                    </Button>
+                  </AlertDialogCancel>
+                  <AlertDialogAction asChild>
+                    <Button
+                      onClick={onRemovePersonnelAction}
+                      icon={FiCheck}
+                      theme="light"
+                    >
+                      Yes, delete personnel
+                    </Button>
+                  </AlertDialogAction>
+                </AlertOptions>
+              </RemoveAlertDialogContent>
+            </AlertDialog>
+          )}
+          {checkedItems.length === 0 ? <span>Shift</span> : null}
+        </Group>
+        {checkedItems.length === 0 ? <span>Badge</span> : null}
+      </ListHeader>
+      <List aria-live="polite" aria-atomic="true">
+        {[...firestoreUser.data.personnel]
+          .filter((person) => personFilter(person))
+          .sort((firstPerson, secondPerson) =>
+            sortFunction(firstPerson, secondPerson)
+          )
+          .map((person) => (
+            <RosterItem
+              key={person.badge}
+              person={person}
+              checkedAll={checkedAll}
+              setCheckedAll={setCheckedAll}
+              setCheckedItems={setCheckedItems}
+              setToastOpen={setToastOpen}
+              setToastState={setToastState}
+            />
+          ))}
+      </List>
+      <Bottom>
+        <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
+          <DialogTrigger asChild>
+            <Button theme="light" icon={FiUpload}>
+              Import CSV
+            </Button>
+          </DialogTrigger>
+          <DialogContent
+            header
+            title="Import CSV"
+            description="Add personnel from a file here."
           >
-            <ImportAlertDialogContent
-              header
-              title={importStatus?.title}
-              description={importStatus?.description}
-            >
-              {importStatus?.parseErrors?.length ? (
-                <DialogScrollContainer>
-                  <UnorderedList>
-                    {importStatus.parseErrors.map((error) => (
-                      <IconItem
-                        key={error.id}
-                        icon={FiAlertTriangle}
-                      >{`Row ${error.row} - ${error.message}`}</IconItem>
-                    ))}
-                  </UnorderedList>
-                </DialogScrollContainer>
-              ) : null}
+            <DialogContainer>
+              <UnorderedList>
+                <IconItem icon={FiCheckSquare}>
+                  The file should be a Comma Separated Value (CSV) file
+                </IconItem>
+                <IconItem icon={FiCheckSquare}>
+                  The first line in the file should be a comma-separated header
+                  with columns labeled:
+                  <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
+                </IconItem>
+                <IconItem icon={FiCheckSquare}>
+                  All other lines should contain comma-separated personnel data
+                  corresponding to the columns in the header
+                </IconItem>
+              </UnorderedList>
               <DialogActions>
-                <AlertDialogAction asChild>
-                  <Button
-                    onClick={() => setImportStatus(null)}
-                    icon={FiCheck}
-                    theme="light"
-                  >
-                    Ok
-                  </Button>
-                </AlertDialogAction>
+                <Button
+                  onClick={importCSVOnClick}
+                  theme="light"
+                  icon={FiArrowRight}
+                >
+                  Continue
+                </Button>
               </DialogActions>
-            </ImportAlertDialogContent>
-          </AlertDialog>
-          <Button
-            theme="light"
-            icon={FiDownload}
-            download="personnel.csv"
-            href={downloadLink}
+            </DialogContainer>
+          </DialogContent>
+        </Dialog>
+        <AlertDialog
+          open={importAlertDialogOpen}
+          onOpenChange={setImportAlertDialogOpen}
+        >
+          <ImportAlertDialogContent
+            header
+            title={importStatus?.title}
+            description={importStatus?.description}
           >
-            Export CSV
-          </Button>
-        </Bottom>
-      </Content>
+            {importStatus?.parseErrors?.length ? (
+              <DialogScrollContainer>
+                <UnorderedList>
+                  {importStatus.parseErrors.map((error) => (
+                    <IconItem
+                      key={error.id}
+                      icon={FiAlertTriangle}
+                    >{`Row ${error.row} - ${error.message}`}</IconItem>
+                  ))}
+                </UnorderedList>
+              </DialogScrollContainer>
+            ) : null}
+            <DialogActions>
+              <AlertDialogAction asChild>
+                <Button
+                  onClick={() => setImportStatus(null)}
+                  icon={FiCheck}
+                  theme="light"
+                >
+                  Ok
+                </Button>
+              </AlertDialogAction>
+            </DialogActions>
+          </ImportAlertDialogContent>
+        </AlertDialog>
+        <Button
+          theme="light"
+          icon={FiDownload}
+          download="personnel.csv"
+          href={downloadLink}
+        >
+          Export CSV
+        </Button>
+      </Bottom>
       <ToastProvider>
         <Toast
           open={toastOpen}
@@ -489,30 +486,10 @@ function Roster() {
 }
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 32px 16px;
-
-  @media ${QUERIES.phoneAndSmaller} {
-    padding: 0;
-  }
-`;
-
-const Content = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 1200px;
-  background-color: var(--color-gray-10);
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
-
-  @media ${QUERIES.phoneAndSmaller} {
-    padding: 0px 8px;
-    border-radius: 0;
-  }
 `;
 
 const Top = styled.div`

@@ -6,17 +6,21 @@ import {
   Route,
 } from "react-router-dom";
 
-import Layout from "components/layout";
-import Report from "components/report";
-import Person from "components/person";
-import Group from "components/group";
 import Home from "pages/home";
-import Reports from "pages/reports";
-import Roster from "pages/roster";
-import Groups from "pages/groups";
 import Settings from "pages/settings";
 import NotFound from "pages/not-found";
 import PrivacyPolicy from "pages/privacy-policy";
+
+import Layout from "components/layout";
+import DashboardContainer from "components/dashboard-container";
+
+import Reports from "pages/reports";
+import Roster from "pages/roster";
+import Groups from "pages/groups";
+
+import Report from "pages/report";
+import Person from "pages/person";
+import Group from "pages/group";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,13 +31,16 @@ const router = createBrowserRouter(
         element={<Layout type="outlet" />}
         errorElement={<NotFound />}
       >
-        <Route path="reports" element={<Reports />}>
+        <Route path="reports" element={<DashboardContainer />}>
+          <Route index element={<Reports />} />
           <Route path=":reportId" element={<Report />} />
         </Route>
-        <Route path="roster" element={<Roster />}>
+        <Route path="roster" element={<DashboardContainer />}>
+          <Route index element={<Roster />} />
           <Route path=":badge" element={<Person />} />
         </Route>
-        <Route path="groups" element={<Groups />}>
+        <Route path="groups" element={<DashboardContainer />}>
+          <Route index element={<Groups />} />
           <Route path=":groupId" element={<Group />} />
         </Route>
         <Route path="settings" element={<Settings />} />
