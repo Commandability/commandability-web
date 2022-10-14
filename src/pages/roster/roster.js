@@ -385,8 +385,6 @@ function Roster() {
               checkedAll={checkedAll}
               setCheckedAll={setCheckedAll}
               setCheckedItems={setCheckedItems}
-              setToastOpen={setToastOpen}
-              setToastState={setToastState}
             />
           ))}
       </List>
