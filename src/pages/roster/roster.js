@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {
   FiUserPlus,
   FiCheckSquare,
+  FiTrash2,
   FiArrowRight,
   FiAlertTriangle,
   FiX,
@@ -342,7 +343,9 @@ function Roster() {
               onOpenChange={setRemovePersonnelOpen}
             >
               <AlertDialogTrigger asChild>
-                <Button type="text">Delete</Button>
+                <Button variant="text" icon={FiTrash2}>
+                  Delete personnel
+                </Button>
               </AlertDialogTrigger>
               <RemoveAlertDialogContent
                 header
@@ -359,7 +362,7 @@ function Roster() {
                     <Button
                       onClick={onRemovePersonnelAction}
                       icon={FiCheck}
-                      theme="light"
+                      theme="dark"
                     >
                       Yes, delete personnel
                     </Button>

@@ -25,7 +25,7 @@ const Button = React.forwardRef(
   (
     {
       theme = "light",
-      type = "solid",
+      variant = "solid",
       icon,
       to,
       href,
@@ -47,81 +47,43 @@ const Button = React.forwardRef(
       }
     }
 
-    if (type === "text") {
-      return (
-        <TextButton
-          as={selectTag()}
-          ref={forwardedRef}
-          style={{ ...themeStyles, ...style }}
-          to={to}
-          href={href}
-          {...props}
-        >
-          {children}
-        </TextButton>
-      );
-    } else {
-      return (
-        <SolidButton
-          as={selectTag()}
-          ref={forwardedRef}
-          style={{ ...themeStyles, ...style }}
-          to={to}
-          href={href}
-          {...props}
-        >
-          {icon ? icon() : null}
-          {icon ? <Spacer size={8} axis="horizontal" /> : null}
-          <Text>{children}</Text>
-        </SolidButton>
-      );
-    }
+    return (
+      <ButtonWrapper
+        as={selectTag()}
+        ref={forwardedRef}
+        style={{
+          ...themeStyles,
+          ...style,
+        }}
+        to={to}
+        href={href}
+        theme={theme}
+        variant={variant}
+        {...props}
+      >
+        {icon ? icon() : null}
+        {icon ? <Spacer size={8} axis="horizontal" /> : null}
+        <Text>{children}</Text>
+      </ButtonWrapper>
+    );
   }
 );
 
-const TextButton = styled.button`
+const ButtonWrapper = styled.button`
   display: flex;
   align-items: center;
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   letter-spacing: 0.05em;
-  padding: 0;
-  background-color: transparent;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--color);
-
-  &:focus {
-    outline-offset: 2px;
-  }
-
-  &:active {
-    color: var(--hover-color);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--hover-color);
-    }
-  }
-`;
-
-const SolidButton = styled.button`
-  display: flex;
-  align-items: center;
-  border: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  letter-spacing: 0.05em;
-  padding: 8px 16px;
-  border-radius: 8px;
-  background-color: var(--background-color);
-  font-weight: bold;
-  text-transform: uppercase;
-  text-decoration: none;
-  color: var(--color);
+  background-color: ${(props) =>
+    props.variant === "solid" ? "var(--background-color)" : "transparent"};
+  padding: ${(props) => (props.variant === "solid" ? "8px 16px" : "0px")};
+  border-radius: ${(props) => (props.variant === "solid" ? "8px" : "0px")};
 
   & > svg {
     stroke-width: 0.175rem;
@@ -132,12 +94,22 @@ const SolidButton = styled.button`
   }
 
   &:active {
-    background-color: var(--hover-background-color);
+    color: ${(props) =>
+      props.variant === "solid" ? "var(--color);" : "var(--hover-color);"};
+    background-color: ${(props) =>
+      props.variant === "solid"
+        ? "var(--hover-background-color);"
+        : "transparent"};
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--hover-background-color);
+      color: ${(props) =>
+        props.variant === "solid" ? "var(--color);" : "var(--hover-color);"};
+      background-color: ${(props) =>
+        props.variant === "solid"
+          ? "var(--hover-background-color);"
+          : "transparent"};
     }
   }
 `;
