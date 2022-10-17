@@ -87,7 +87,6 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   flex-direction: column;
   gap: 32px;
   color: var(--color-gray-2);
-  // z-index: 2147483647;
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;

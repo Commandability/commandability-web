@@ -31,44 +31,46 @@ function RosterItem({
 
   return (
     <Wrapper data-checked={checked ? "true" : "false"} {...props}>
-      <Group>
-        <Checkbox
-          label="Select"
-          checked={checked}
-          onCheckedChange={(checked) => {
-            setChecked(checked);
+      <PositionedCheckbox
+        label="Select"
+        checked={checked}
+        onCheckedChange={(checked) => {
+          setChecked(checked);
 
-            if (checked) {
-              setCheckedItems((checkedItems) => [...checkedItems, person]);
-            } else {
-              setCheckedItems((checkedItems) =>
-                checkedItems.filter((item) => item !== person)
-              );
+          if (checked) {
+            setCheckedItems((checkedItems) => [...checkedItems, person]);
+          } else {
+            setCheckedItems((checkedItems) =>
+              checkedItems.filter((item) => item !== person)
+            );
 
-              // Disable checked all when a single person has been unchecked
-              setCheckedAll({ status: false, origin: "list" });
-            }
-          }}
-        />
-        <Name to={`/dashboard/roster/${person.badge}`}>
-          {person.firstName} {person.lastName}
-        </Name>
-        {person.shift}
-      </Group>
-      {person.badge}
+            // Disable checked all when a single person has been unchecked
+            setCheckedAll({ status: false, origin: "list" });
+          }
+        }}
+      />
+      <Contents>
+        <Group>
+          <Name to={`/dashboard/roster/${person.badge}`}>
+            {person.firstName} {person.lastName}
+          </Name>
+          <span>{person.shift}</span>
+        </Group>
+        <span>{person.badge}</span>
+      </Contents>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.li`
   display: flex;
-  justify-content: space-between;
   padding: 16px 48px;
   border-bottom: 1px solid var(--color-gray-9);
   background-color: var(--color-white);
   color: var(--color-gray-3);
   // Prevent height: 1px and position: absolute in VisuallyHidden in CheckBox
   // from stacking outside root html element and causing vertical overflow
+  // Also add name pseudo-element containing position
   position: relative;
 
   &[data-checked="true"] {
@@ -82,6 +84,20 @@ const Wrapper = styled.li`
   }
 `;
 
+const PositionedCheckbox = styled(Checkbox)`
+  // Move checkbox out of flow and place above after pseudo-element
+  position: absolute;
+  z-index: 1;
+`;
+
+const Contents = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  // Account for width of absolutely positioned checkbox and gap
+  padding-left: calc(24px + 32px);
+`;
+
 const Group = styled.div`
   display: flex;
   gap: 32px;
@@ -91,6 +107,12 @@ const Name = styled(Link)`
   width: 256px;
   text-decoration: none;
   color: var(--color-gray-3);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
 `;
 
 export default RosterItem;
