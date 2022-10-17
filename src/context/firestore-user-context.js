@@ -84,7 +84,7 @@ function FirestoreUserProvider({ children }) {
     );
   }
 
-  throw new Error(`Unhandled authentication status: ${user.status}`);
+  throw new Error(`Unhandled firestore status: ${user.status}`);
 }
 
 function useFirestoreUser() {
