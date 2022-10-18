@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
+import { list } from "firebase/storage";
 import {
-  FiSliders,
   FiTrash2,
   FiX,
   FiCheck,
@@ -10,6 +10,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
+import { useStorageUser } from "context/storage-user-context";
 import { Select, SelectItem } from "components/select";
 import {
   AlertDialog,
@@ -29,7 +30,11 @@ const selectValues = {
   oldest: "oldest",
 };
 
+const maxResults = 20;
+
 function Reports() {
+  const { storageUser, ref } = useStorageUser();
+
   const [select, setSelect] = React.useState(selectValues.newest);
   const [checked, setChecked] = React.useState(false);
 
@@ -39,6 +44,13 @@ function Reports() {
   function onAlertDialogAction(e) {
     e.preventDefault();
     setAlertDialogOpen(false);
+  }
+
+  async function getReportPage(nextPageToken) {
+    return await list(ref(`${storageUser.path}/reports`), {
+      maxResults,
+      nextPageToken,
+    });
   }
 
   return (
@@ -53,9 +65,6 @@ function Reports() {
           <SelectItem value={selectValues.newest}>Newest first</SelectItem>
           <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
         </ReportsSelect>
-        <Button theme="light" icon={FiSliders}>
-          Filter
-        </Button>
       </Top>
       <ListHeader>
         <Checkbox
@@ -97,7 +106,7 @@ function Reports() {
                 <Button
                   onClick={onAlertDialogAction}
                   icon={FiCheck}
-                  theme="light"
+                  theme="dark"
                 >
                   Yes, Delete All Reports
                 </Button>

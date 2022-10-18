@@ -10,30 +10,31 @@ StorageUserContext.displayName = "StorageUserContext";
 function StorageUserProvider({ children }) {
   const [storageUser, setStorageUser] = React.useState({
     status: "pending",
-    userRef: null,
+    path: "",
     error: null,
   });
   const { user } = useAuth();
 
   React.useEffect(() => {
     if (!user.current) {
-      setStorageUser({ status: "pending", userRef: null, error: null });
+      setStorageUser({ status: "pending", path: "", error: null });
       return;
     }
 
     try {
       setStorageUser({
         status: "resolved",
-        userRef: ref(storage, `users/${user.current?.uid}`),
+        path: `users/${user.current?.uid}`,
         error: null,
       });
     } catch (error) {
-      setStorageUser({ status: "pending", userRef: null, error });
+      setStorageUser({ status: "pending", path: "", error });
     }
   }, [user]);
 
   const value = {
     storageUser,
+    ref: (...args) => ref(storage, ...args),
   };
 
   return (
