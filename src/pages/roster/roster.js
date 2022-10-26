@@ -31,12 +31,12 @@ import {
   AlertDialogContent,
 } from "components/alert-dialog";
 import { Select, SelectItem } from "components/select";
-import RosterItem from "components/roster-item";
 import IconItem from "components/icon-item";
 import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
 import Button from "components/button";
 import SearchInput from "components/search-input";
+import RosterItem from "components/roster-item";
 
 const selectValues = {
   firstName: "first name",

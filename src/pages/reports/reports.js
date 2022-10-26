@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { list } from "firebase/storage";
+import { collection, getDocs } from "firebase/firestore";
 import {
   FiTrash2,
   FiX,
@@ -10,7 +10,13 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
-import { useStorageUser } from "context/storage-user-context";
+import { useFirestoreUser } from "context/firestore-user-context";
+import {
+  Toast,
+  ToastProvider,
+  ToastViewport,
+  unknownToastState,
+} from "components/toast";
 import { Select, SelectItem } from "components/select";
 import {
   AlertDialog,
@@ -23,35 +29,60 @@ import Checkbox from "components/checkbox";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
-import TextInput from "components/text-input";
+import ReportItem from "components/report-item";
 
 const selectValues = {
   newest: "newest",
   oldest: "oldest",
 };
 
-const maxResults = 20;
-
 function Reports() {
-  const { storageUser, ref } = useStorageUser();
+  const { userRef } = useFirestoreUser();
 
   const [select, setSelect] = React.useState(selectValues.newest);
-  const [checked, setChecked] = React.useState(false);
 
-  const [openAlertDialog, setAlertDialogOpen] = React.useState(false);
-  const [password, setPassword] = React.useState("");
+  const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
+  const [checkedAll, setCheckedAll] = React.useState(false);
+  const [checkedItems, setCheckedItems] = React.useState([]);
 
-  function onAlertDialogAction(e) {
-    e.preventDefault();
-    setAlertDialogOpen(false);
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    message: "",
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
+
+  const [reports, setReports] = React.useState();
+
+  async function removeReports(checkedItems) {}
+
+  async function onRemoveReportsAction() {
+    setRemoveReportsOpen(false);
+    setCheckedAll(false);
+
+    try {
+      await removeReports(checkedItems);
+      setCheckedItems([]);
+      setToastState({
+        title: "Reports deleted successfully",
+        message: "The selected reports have been removed the list.",
+      });
+    } catch (error) {
+      setToastState(unknownToastState);
+    }
+
+    setToastOpen(true);
   }
 
-  async function getReportPage(nextPageToken) {
-    return await list(ref(`${storageUser.path}/reports`), {
-      maxResults,
-      nextPageToken,
-    });
-  }
+  React.useEffect(() => {
+    const effect = async () => {
+      await getDocs(collection(userRef, "reports")).then(
+        async (querySnapshot) => {
+          setReports(querySnapshot.docs);
+        }
+      );
+    };
+    effect();
+  }, [userRef]);
 
   return (
     <Wrapper>
@@ -66,54 +97,77 @@ function Reports() {
           <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
         </ReportsSelect>
       </Top>
-      <ListHeader>
-        <Checkbox
-          label="Select all"
-          checked={checked}
-          onCheckedChange={(checked) => setChecked(checked)}
-        />
+      <ListHeader aria-live="polite" aria-atomic="true">
+        <Group>
+          <Checkbox
+            label="Select all"
+            checked={checkedAll.status}
+            onCheckedChange={(checked) =>
+              setCheckedAll({ status: checked, origin: "header" })
+            }
+          />
+          {checkedItems.length === 0 ? (
+            <Location>Location</Location>
+          ) : (
+            <AlertDialog
+              open={removeReportsOpen}
+              onOpenChange={setRemoveReportsOpen}
+            >
+              <AlertDialogTrigger asChild>
+                <Button variant="text" icon={FiTrash2}>
+                  Delete reports
+                </Button>
+              </AlertDialogTrigger>
+              <RemoveAlertDialogContent
+                header
+                title="Are you absolutely sure?"
+                description="This action cannot be undone. This will permanently delete the selected reports from your account."
+              >
+                <AlertOptions>
+                  <AlertDialogCancel asChild>
+                    <Button icon={FiX} theme="light">
+                      Cancel
+                    </Button>
+                  </AlertDialogCancel>
+                  <AlertDialogAction asChild>
+                    <Button
+                      onClick={onRemoveReportsAction}
+                      icon={FiCheck}
+                      theme="dark"
+                    >
+                      Yes, delete reports
+                    </Button>
+                  </AlertDialogAction>
+                </AlertOptions>
+              </RemoveAlertDialogContent>
+            </AlertDialog>
+          )}
+        </Group>
+        {checkedItems.length === 0 ? <span>Timestamp</span> : null}
       </ListHeader>
-      <List></List>
+      <List aria-live="polite" aria-atomic="true">
+        {reports?.map((report) => {
+          const { location, startTimestamp } = report.data();
+          return (
+            <ReportItem
+              key={report.id}
+              reportId={report.id}
+              location={location}
+              startTimestamp={startTimestamp}
+              checkedAll={checkedAll}
+              setCheckedAll={setCheckedAll}
+              setCheckedItems={setCheckedItems}
+            />
+          );
+        })}
+      </List>
       <Bottom>
         <Button theme="light" icon={FiDownload}>
           Export all
         </Button>
-        <AlertDialog open={openAlertDialog} onOpenChange={setAlertDialogOpen}>
-          <AlertDialogTrigger asChild>
-            <Button theme="light" icon={FiTrash2}>
-              Delete All
-            </Button>
-          </AlertDialogTrigger>
-          <DeleteAllAlertDialogContent
-            header
-            title="Are you absolutely sure?"
-            description="This action cannot be undone. This will permanently delete all reports from your account."
-          >
-            <TextInput
-              type="password"
-              id="password-input"
-              label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Options>
-              <AlertDialogCancel asChild>
-                <Button icon={FiX} theme="light">
-                  Cancel
-                </Button>
-              </AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <Button
-                  onClick={onAlertDialogAction}
-                  icon={FiCheck}
-                  theme="dark"
-                >
-                  Yes, Delete All Reports
-                </Button>
-              </AlertDialogAction>
-            </Options>
-          </DeleteAllAlertDialogContent>
-        </AlertDialog>
+        <Button theme="light" icon={FiTrash2}>
+          Delete All
+        </Button>
         <UnstyledButton>
           <VisuallyHidden>Page left</VisuallyHidden>
           <FiChevronLeft />
@@ -123,6 +177,15 @@ function Reports() {
           <FiChevronRight />
         </UnstyledButton>
       </Bottom>
+      <ToastProvider>
+        <Toast
+          open={toastOpen}
+          onOpenChange={setToastOpen}
+          title={toastState.title}
+          content={toastState.message}
+        />
+        <ToastViewport />
+      </ToastProvider>
     </Wrapper>
   );
 }
@@ -148,12 +211,52 @@ const ReportsSelect = styled(Select)`
 
 const ListHeader = styled.div`
   display: flex;
-  padding: 8px 48px;
+  justify-content: space-between;
+  padding: 16px 48px;
+  color: var(--color-gray-2);
 `;
 
-const List = styled.div`
+const Group = styled.div`
+  display: flex;
+  gap: 32px;
+`;
+
+const Location = styled.span`
+  width: 256px;
+`;
+
+const RemoveAlertDialogContent = styled(AlertDialogContent)`
+  width: 512px;
+`;
+
+const AlertOptions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+`;
+
+const List = styled.ul`
   flex: 1;
   width: 100%;
+  list-style: none;
+  padding-left: 0;
+
+  overflow-y: scroll;
+  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--color-gray-10);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    border: 2px solid var(--color-gray-10);
+    background-color: var(--color-gray-5);
+  }
+  ::-webkit-scrollbar-track {
+    margin: 2px 0px;
+  }
 `;
 
 const Bottom = styled.div`
@@ -164,16 +267,6 @@ const Bottom = styled.div`
   align-items: center;
   gap: 24px;
   padding: 0 48px;
-`;
-
-const DeleteAllAlertDialogContent = styled(AlertDialogContent)`
-  width: 512px;
-`;
-
-const Options = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
 `;
 
 export default Reports;
