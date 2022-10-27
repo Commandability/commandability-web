@@ -18,7 +18,7 @@ import Reports from "pages/reports";
 import Roster from "pages/roster";
 import Groups from "pages/groups";
 
-import Report from "pages/report";
+import Report, { reportLoader } from "pages/report";
 import Person from "pages/person";
 import Group from "pages/group";
 
@@ -33,7 +33,7 @@ const router = createBrowserRouter(
       >
         <Route path="reports" element={<DashboardContainer />}>
           <Route index element={<Reports />} />
-          <Route path=":reportId" element={<Report />} />
+          <Route path=":reportId" element={<Report />} loader={reportLoader} />
         </Route>
         <Route path="roster" element={<DashboardContainer />}>
           <Route index element={<Roster />} />

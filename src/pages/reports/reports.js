@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import { useNavigation } from "react-router-dom";
 import { collection, getDocs } from "firebase/firestore";
 import {
   FiTrash2,
@@ -37,6 +38,8 @@ const selectValues = {
 };
 
 function Reports() {
+  const navigation = useNavigation();
+
   const { userRef } = useFirestoreUser();
 
   const [select, setSelect] = React.useState(selectValues.newest);
@@ -86,6 +89,7 @@ function Reports() {
 
   return (
     <Wrapper>
+      {navigation.state === "loading" ? <Loading /> : null}
       <Top>
         <ReportsSelect
           select={select}
@@ -195,6 +199,17 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+`;
+
+const Loading = styled.div`
+  position: absolute;
+  inset: 0;
+  opacity: 0.25;
+  transition: opacity 200ms;
+  transition-delay: 200ms;
+  background-color: var(--color-gray-3);
+  z-index: 2147483647;
 `;
 
 const Top = styled.div`

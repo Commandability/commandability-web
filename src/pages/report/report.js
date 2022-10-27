@@ -1,23 +1,23 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import { FiChevronLeft } from "react-icons/fi";
-import { getBlob } from "firebase/storage";
+import { getAuth } from "firebase/auth";
+import { ref, getBlob } from "firebase/storage";
 
-import { useStorageUser } from "context/storage-user-context";
+import { storage } from "firebase.js";
 import VisuallyHidden from "components/visually-hidden";
 
+export async function reportLoader({ params }) {
+  const { currentUser } = getAuth();
+  const result = await getBlob(
+    ref(storage, `users/${currentUser?.uid}/reports/${params.reportId}`)
+  );
+  return await result.text();
+}
+
 function Report() {
-  const { reportId } = useParams();
-  const { storageUser, ref } = useStorageUser();
-
-  const [report, setReport] = React.useState();
-
-  React.useEffect(() => {
-    getBlob(ref(`${storageUser?.path}/reports/${reportId}`)).then((result) =>
-      result.text().then((result) => setReport(result))
-    );
-  }, [ref, reportId, storageUser?.path]);
+  const report = useLoaderData();
 
   return (
     <Wrapper>
