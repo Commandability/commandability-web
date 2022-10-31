@@ -95,12 +95,17 @@ const SelectItemWrapper = styled(RadixSelect.Item)`
   align-items: center;
 
   &[data-highlighted] {
-    background-color: var(--color-yellow-3);
-    color: var(--color-white);
+    background-color: var(--color-yellow-2);
+    color: var(--color-yellow-9);
   }
 `;
 
 const SelectItemIndicator = styled(RadixSelect.ItemIndicator)`
   position: absolute;
   left: 8px;
+  color: var(--color-yellow-2);
+
+  ${SelectItemWrapper}[data-highlighted] & {
+    color: var(--color-yellow-9);
+  }
 `;
