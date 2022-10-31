@@ -118,7 +118,7 @@ function Reports() {
               onOpenChange={setRemoveReportsOpen}
             >
               <AlertDialogTrigger asChild>
-                <Button variant="text" icon={FiTrash2}>
+                <Button variant="tertiary" icon={FiTrash2}>
                   Delete reports
                 </Button>
               </AlertDialogTrigger>
@@ -129,16 +129,12 @@ function Reports() {
               >
                 <AlertOptions>
                   <AlertDialogCancel asChild>
-                    <Button icon={FiX} theme="light">
+                    <Button icon={FiX} variant="secondary">
                       Cancel
                     </Button>
                   </AlertDialogCancel>
                   <AlertDialogAction asChild>
-                    <Button
-                      onClick={onRemoveReportsAction}
-                      icon={FiCheck}
-                      theme="dark"
-                    >
+                    <Button onClick={onRemoveReportsAction} icon={FiCheck}>
                       Yes, delete reports
                     </Button>
                   </AlertDialogAction>
@@ -166,12 +162,8 @@ function Reports() {
         })}
       </List>
       <Bottom>
-        <Button theme="light" icon={FiDownload}>
-          Export all
-        </Button>
-        <Button theme="light" icon={FiTrash2}>
-          Delete All
-        </Button>
+        <Button icon={FiDownload}>Export all</Button>
+        <Button icon={FiTrash2}>Delete All</Button>
         <UnstyledButton>
           <VisuallyHidden>Page left</VisuallyHidden>
           <FiChevronLeft />

@@ -14,7 +14,7 @@ const THEMES = {
   },
   dark: {
     "--background-color": "var(--color-yellow-2)",
-    "--hover-background-color": "var(--color-yellow-3)",
+    "--hover-background-color": "var(--color-yellow-1)",
     "--color": "var(--color-yellow-9)",
     "--selection-color": "var(--color-yellow-3)",
     "--selection-background": "var(--color-yellow-10)",

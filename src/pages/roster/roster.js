@@ -280,9 +280,7 @@ function Roster() {
         </RosterSelect>
         <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
           <DialogTrigger asChild>
-            <Button theme="light" icon={FiUserPlus}>
-              Add person
-            </Button>
+            <Button icon={FiUserPlus}>Add person</Button>
           </DialogTrigger>
           <DialogContent
             header
@@ -319,7 +317,7 @@ function Roster() {
                   error={badge ? "" : "Please enter a badge"}
                 />
               </DialogInputs>
-              <Button type="submit" theme="light" icon={FiUserPlus}>
+              <Button type="submit" icon={FiUserPlus}>
                 Add Person
               </Button>
             </DialogForm>
@@ -343,7 +341,7 @@ function Roster() {
               onOpenChange={setRemovePersonnelOpen}
             >
               <AlertDialogTrigger asChild>
-                <Button variant="text" icon={FiTrash2}>
+                <Button variant="tertiary" icon={FiTrash2}>
                   Delete personnel
                 </Button>
               </AlertDialogTrigger>
@@ -354,16 +352,12 @@ function Roster() {
               >
                 <AlertOptions>
                   <AlertDialogCancel asChild>
-                    <Button icon={FiX} theme="light">
+                    <Button icon={FiX} variant="secondary">
                       Cancel
                     </Button>
                   </AlertDialogCancel>
                   <AlertDialogAction asChild>
-                    <Button
-                      onClick={onRemovePersonnelAction}
-                      icon={FiCheck}
-                      theme="dark"
-                    >
+                    <Button onClick={onRemovePersonnelAction} icon={FiCheck}>
                       Yes, delete personnel
                     </Button>
                   </AlertDialogAction>
@@ -394,9 +388,7 @@ function Roster() {
       <Bottom>
         <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
           <DialogTrigger asChild>
-            <Button theme="light" icon={FiUpload}>
-              Import CSV
-            </Button>
+            <Button icon={FiUpload}>Import CSV</Button>
           </DialogTrigger>
           <DialogContent
             header
@@ -419,11 +411,7 @@ function Roster() {
                 </IconItem>
               </UnorderedList>
               <DialogActions>
-                <Button
-                  onClick={importCSVOnClick}
-                  theme="light"
-                  icon={FiArrowRight}
-                >
+                <Button onClick={importCSVOnClick} icon={FiArrowRight}>
                   Continue
                 </Button>
               </DialogActions>
@@ -453,23 +441,14 @@ function Roster() {
             ) : null}
             <DialogActions>
               <AlertDialogAction asChild>
-                <Button
-                  onClick={() => setImportStatus(null)}
-                  icon={FiCheck}
-                  theme="light"
-                >
+                <Button onClick={() => setImportStatus(null)} icon={FiCheck}>
                   Ok
                 </Button>
               </AlertDialogAction>
             </DialogActions>
           </ImportAlertDialogContent>
         </AlertDialog>
-        <Button
-          theme="light"
-          icon={FiDownload}
-          download="personnel.csv"
-          href={downloadLink}
-        >
+        <Button icon={FiDownload} download="personnel.csv" href={downloadLink}>
           Export CSV
         </Button>
       </Bottom>

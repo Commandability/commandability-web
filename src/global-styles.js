@@ -112,8 +112,8 @@ const GlobalStyles = createGlobalStyle`
     --color-cyan-9: hsl(${COLORS.cyan[9]});
     --color-cyan-10: hsl(${COLORS.cyan[10]});
 
-    --selection-color: hsl(${COLORS.yellow[10]});
-    --selection-background: hsl(${COLORS.yellow[3]});
+    --selection-color: hsl(${COLORS.yellow[9]});
+    --selection-background: hsl(${COLORS.yellow[2]});
 
     --box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
 

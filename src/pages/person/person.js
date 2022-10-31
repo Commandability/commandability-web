@@ -108,7 +108,7 @@ function Person() {
         }}
       >
         <DialogTrigger asChild>
-          <EditButton type="submit" theme="light" icon={FiEdit}>
+          <EditButton type="submit" icon={FiEdit}>
             Edit Person
           </EditButton>
         </DialogTrigger>
@@ -147,7 +147,7 @@ function Person() {
                 error={badge ? "" : "Please enter a badge"}
               />
             </DialogInputs>
-            <Button type="submit" theme="light" icon={FiEdit}>
+            <Button type="submit" icon={FiEdit}>
               Edit Person
             </Button>
           </DialogForm>
