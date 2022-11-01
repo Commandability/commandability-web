@@ -1,5 +1,8 @@
 import * as React from "react";
+import { doc } from "firebase/firestore";
 
+import { db } from "firebase.js";
+import { FirestoreProvider } from "context/firestore-context";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 
@@ -18,13 +21,26 @@ const UnauthenticatedApp = React.lazy(() => {
   ]).then(([moduleExports]) => moduleExports);
 });
 
+const snapshotOptions = { includeMetadataChanges: true };
+
 function App() {
   const { user } = useAuth();
 
   return (
-    <React.Suspense fallback={<FireLoader />}>
-      {user.current ? <AuthenticatedApp /> : <UnauthenticatedApp />}
-    </React.Suspense>
+    <FirestoreProvider
+      db={db}
+      refData={[
+        {
+          id: "user",
+          ref: user.current ? doc(db, "users", user.current.uid) : null,
+          snapshotOptions: { ...snapshotOptions },
+        },
+      ]}
+    >
+      <React.Suspense fallback={<FireLoader />}>
+        {user.current ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+      </React.Suspense>
+    </FirestoreProvider>
   );
 }
 

@@ -13,9 +13,9 @@ import {
 } from "react-icons/fi";
 import * as Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
-import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
-import { useFirestoreUser } from "context/firestore-user-context";
+import { useFirestore } from "context/firestore-context";
 import {
   Toast,
   ToastProvider,
@@ -57,7 +57,9 @@ function sortByBadge(firstPerson, secondPerson) {
 }
 
 function Roster() {
-  const { firestoreUser, updateFirestoreUserDoc } = useFirestoreUser();
+  const {
+    firestore: { user },
+  } = useFirestore();
 
   const [query, setQuery] = React.useState("");
   function personFilter(person) {
@@ -110,7 +112,9 @@ function Roster() {
   }
 
   async function addPersonnel(personnel) {
-    await updateFirestoreUserDoc({ personnel: arrayUnion(...personnel) });
+    await updateDoc(user.ref, {
+      personnel: arrayUnion(...personnel),
+    });
   }
 
   async function onAddPersonSubmit(e) {
@@ -123,7 +127,7 @@ function Roster() {
 
     try {
       // Check if the person and firebase contain any personnel with duplicate badges
-      const mergeDuplicates = firestoreUser.data.personnel.some(
+      const mergeDuplicates = user.data.personnel.some(
         (person) => person.badge === badge
       );
       if (mergeDuplicates) {
@@ -147,7 +151,9 @@ function Roster() {
   }
 
   async function removePersonnel(personnel) {
-    await updateFirestoreUserDoc({ personnel: arrayRemove(...personnel) });
+    await updateDoc(user.ref, {
+      personnel: arrayRemove(...personnel),
+    });
   }
 
   async function onRemovePersonnelAction() {
@@ -209,7 +215,7 @@ function Roster() {
           personnel.data.length;
         // Check if the imported file and firebase contain any personnel with duplicate badges
         const mergeDuplicates = personnel.data.some((importedPerson) =>
-          firestoreUser.data.personnel.some(
+          user.data.personnel.some(
             (firebasePerson) => firebasePerson.badge === importedPerson.badge
           )
         );
@@ -244,7 +250,7 @@ function Roster() {
       const personnelCSV = await Papa.unparse(
         {
           fields: ["firstName", "lastName", "shift", "badge"],
-          data: firestoreUser.data.personnel,
+          data: user.data?.personnel,
         },
         {
           header: true,
@@ -257,7 +263,7 @@ function Roster() {
       setDownloadLink(window.URL.createObjectURL(data));
     };
     effect();
-  }, [firestoreUser.data.personnel]);
+  }, [user]);
 
   return (
     <Wrapper>
@@ -370,20 +376,22 @@ function Roster() {
         {checkedItems.length === 0 ? <span>Badge</span> : null}
       </ListHeader>
       <List aria-live="polite" aria-atomic="true">
-        {[...firestoreUser.data.personnel]
-          .filter((person) => personFilter(person))
-          .sort((firstPerson, secondPerson) =>
-            sortFunction(firstPerson, secondPerson)
-          )
-          .map((person) => (
-            <RosterItem
-              key={person.badge}
-              person={person}
-              checkedAll={checkedAll}
-              setCheckedAll={setCheckedAll}
-              setCheckedItems={setCheckedItems}
-            />
-          ))}
+        {user.data
+          ? [...user.data.personnel]
+              .filter((person) => personFilter(person))
+              .sort((firstPerson, secondPerson) =>
+                sortFunction(firstPerson, secondPerson)
+              )
+              .map((person) => (
+                <RosterItem
+                  key={person.badge}
+                  person={person}
+                  checkedAll={checkedAll}
+                  setCheckedAll={setCheckedAll}
+                  setCheckedItems={setCheckedItems}
+                />
+              ))
+          : null}
       </List>
       <Bottom>
         <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>

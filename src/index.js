@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import AppProviders from "context/app-providers";
+import { InitialLoadProvider } from "context/initial-load-context";
+import { AuthProvider } from "context/auth-context";
 
 import App from "app";
 import GlobalStyles from "global-styles.js";
@@ -10,9 +11,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <GlobalStyles />
-    <AppProviders>
-      <App />
-    </AppProviders>
+    <InitialLoadProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </InitialLoadProvider>
   </React.StrictMode>
 );
 

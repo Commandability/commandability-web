@@ -1,11 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
+import { doc, setDoc } from "firebase/firestore";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
+import { db } from "firebase.js";
 import { useAuth } from "context/auth-context";
-import { useFirestoreUser } from "context/firestore-user-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
 import { unknownToastState } from "components/toast";
@@ -64,7 +65,6 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
     sendPasswordResetEmail,
     updateProfile,
   } = useAuth();
-  const { setFirestoreUserDoc } = useFirestoreUser();
 
   const [displayName, setDisplayName] = React.useState("");
   const [displayNameError, setDisplayNameError] = React.useState(false);
@@ -116,7 +116,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         );
         window.location.assign("/");
         await updateProfile(userCredentials.user, { displayName: displayName });
-        await setFirestoreUserDoc(userCredentials.user.uid, defaultConfig);
+        await setDoc(doc(db, "users", userCredentials.user.uid), defaultConfig);
         setLoading(false);
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {

@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
-import { arrayUnion, arrayRemove } from "firebase/firestore";
+import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
 import { FiChevronLeft, FiEdit } from "react-icons/fi";
 
-import { useFirestoreUser } from "context/firestore-user-context";
+import { useFirestore } from "context/firestore-context";
 import {
   Toast,
   ToastProvider,
@@ -18,9 +18,9 @@ import VisuallyHidden from "components/visually-hidden";
 
 function Person() {
   const { badge: paramBadge } = useParams();
-  const { userRef, firestoreUser, writeBatch } = useFirestoreUser();
+  const { db, firestore } = useFirestore();
 
-  const person = firestoreUser.data.personnel.find(
+  const person = firestore.user.data.personnel.find(
     (person) => person.badge === paramBadge
   );
 
@@ -44,9 +44,9 @@ function Person() {
   }
 
   async function editPerson(firstName, lastName, shift, badge) {
-    const batch = writeBatch();
-    batch.update(userRef, { personnel: arrayRemove(person) });
-    batch.update(userRef, {
+    const batch = writeBatch(db);
+    batch.update(firestore.user.ref, { personnel: arrayRemove(person) });
+    batch.update(firestore.user.ref, {
       personnel: arrayUnion({ firstName, lastName, shift, badge }),
     });
     await batch.commit();
@@ -64,7 +64,7 @@ function Person() {
       // Check if the person and firebase contain any personnel with duplicate badges
       let mergeDuplicates = false;
       if (person.badge !== badge) {
-        mergeDuplicates = firestoreUser.data.personnel.some(
+        mergeDuplicates = firestore.user.data.personnel.some(
           (person) => person.badge === badge
         );
       }
@@ -191,8 +191,6 @@ const Back = styled(Link)`
   position: absolute;
   top: 32px;
   left: calc(32px - 6px);
-  display: grid;
-  place-content: center;
   text-decoration: none;
   color: var(--color-yellow-3);
   font-size: ${48 / 16}rem;
