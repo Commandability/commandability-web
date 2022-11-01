@@ -72,7 +72,6 @@ function FirestoreProvider({ db, refData, snapshotOptions, children }) {
               error,
             },
           }));
-          throw new Error(error);
         }
       );
     });
