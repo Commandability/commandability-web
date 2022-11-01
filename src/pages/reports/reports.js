@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import { useNavigation } from "react-router-dom";
-import { collection, getDocs } from "firebase/firestore";
 import {
   FiTrash2,
   FiX,
@@ -11,7 +10,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
-import { useFirestoreUser } from "context/firestore-user-context";
+import { useFirestore } from "context/firestore-context";
 import {
   Toast,
   ToastProvider,
@@ -40,7 +39,9 @@ const selectValues = {
 function Reports() {
   const navigation = useNavigation();
 
-  const { userRef } = useFirestoreUser();
+  const {
+    firestore: { reports },
+  } = useFirestore();
 
   const [select, setSelect] = React.useState(selectValues.newest);
 
@@ -53,8 +54,6 @@ function Reports() {
     message: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
-
-  const [reports, setReports] = React.useState();
 
   async function removeReports(checkedItems) {}
 
@@ -75,17 +74,6 @@ function Reports() {
 
     setToastOpen(true);
   }
-
-  React.useEffect(() => {
-    const effect = async () => {
-      await getDocs(collection(userRef, "reports")).then(
-        async (querySnapshot) => {
-          setReports(querySnapshot.docs);
-        }
-      );
-    };
-    effect();
-  }, [userRef]);
 
   return (
     <Wrapper>
@@ -146,20 +134,23 @@ function Reports() {
         {checkedItems.length === 0 ? <span>Timestamp</span> : null}
       </ListHeader>
       <List aria-live="polite" aria-atomic="true">
-        {reports?.map((report) => {
-          const { location, startTimestamp } = report.data();
-          return (
-            <ReportItem
-              key={report.id}
-              reportId={report.id}
-              location={location}
-              startTimestamp={startTimestamp}
-              checkedAll={checkedAll}
-              setCheckedAll={setCheckedAll}
-              setCheckedItems={setCheckedItems}
-            />
-          );
-        })}
+        {/* Ensure data has loaded */}
+        {reports.data
+          ? [...reports.data].map((report) => {
+              const { location, startTimestamp } = report.data();
+              return (
+                <ReportItem
+                  key={report.id}
+                  reportId={report.id}
+                  location={location}
+                  startTimestamp={startTimestamp}
+                  checkedAll={checkedAll}
+                  setCheckedAll={setCheckedAll}
+                  setCheckedItems={setCheckedItems}
+                />
+              );
+            })
+          : null}
       </List>
       <Bottom>
         <Button icon={FiDownload}>Export all</Button>

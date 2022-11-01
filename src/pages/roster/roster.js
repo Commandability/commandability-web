@@ -376,6 +376,7 @@ function Roster() {
         {checkedItems.length === 0 ? <span>Badge</span> : null}
       </ListHeader>
       <List aria-live="polite" aria-atomic="true">
+        {/* Ensure data has loaded */}
         {user.data
           ? [...user.data.personnel]
               .filter((person) => personFilter(person))

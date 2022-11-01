@@ -1,5 +1,5 @@
 import * as React from "react";
-import { doc } from "firebase/firestore";
+import { doc, collection } from "firebase/firestore";
 
 import { db } from "firebase.js";
 import { FirestoreProvider } from "context/firestore-context";
@@ -27,6 +27,7 @@ function App() {
   const { user } = useAuth();
 
   return (
+    // Load firestore data as soon as a user is available
     <FirestoreProvider
       db={db}
       refData={[
@@ -34,6 +35,10 @@ function App() {
           id: "user",
           ref: user.current ? doc(db, "users", user.current.uid) : null,
           snapshotOptions: { ...snapshotOptions },
+        },
+        {
+          id: "reports",
+          ref: collection(db, "users", user.current.uid, "reports"),
         },
       ]}
     >

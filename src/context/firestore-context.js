@@ -27,14 +27,25 @@ function FirestoreProvider({ db, refData, snapshotOptions, children }) {
       return onSnapshot(
         refDatum.ref,
         { ...refDatum.snapshotOptions },
-        (doc) => {
-          if (!doc.metadata.hasPendingWrites) {
+        (snapshot) => {
+          let data;
+          if (refDatum.ref.type === "document") {
+            data = snapshot.data();
+          } else if (refDatum.ref.type === "collection") {
+            data = snapshot.docs;
+          } else {
+            throw new Error(
+              "Unexpected ref type. Please pass either a document or a collection."
+            );
+          }
+
+          if (!snapshot.metadata.hasPendingWrites) {
             setFirestore((prevFirestore) => ({
               ...prevFirestore,
               [refDatum.id]: {
                 ...prevFirestore[refDatum.id],
                 status: "resolved",
-                data: doc.data(),
+                data,
                 error: null,
               },
             }));
@@ -43,8 +54,9 @@ function FirestoreProvider({ db, refData, snapshotOptions, children }) {
               ...prevFirestore,
               [refDatum.id]: {
                 ...prevFirestore[refDatum.id],
-                status: "resolved",
-                data: doc.data(),
+                // Should be pending because changes are local only
+                status: "pending",
+                data,
                 error: null,
               },
             }));
