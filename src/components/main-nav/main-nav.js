@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { signOut } from "firebase/auth";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import * as RadixPopover from "@radix-ui/react-popover";
 import * as Separator from "@radix-ui/react-separator";
@@ -30,7 +31,7 @@ const TAB_TRANSITION_DURATION = 400;
 
 function MainNav() {
   const { pathname } = useLocation();
-  const { user, signOut } = useAuth();
+  const { auth, user } = useAuth();
 
   const [reportsTabRef, reportsTabRect] = useRect();
   const [rosterTabRef, rosterTabRect] = useRect();
@@ -83,7 +84,7 @@ function MainNav() {
     } else {
       window.location.assign(window.location);
     }
-    signOut();
+    signOut(auth);
   }
 
   return (

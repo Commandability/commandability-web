@@ -1,5 +1,11 @@
 import * as React from "react";
 import styled from "styled-components";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  updateProfile,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
@@ -59,12 +65,7 @@ const defaultConfig = {
 };
 
 function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
-  const {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    sendPasswordResetEmail,
-    updateProfile,
-  } = useAuth();
+  const { auth, setUser } = useAuth();
 
   const [displayName, setDisplayName] = React.useState("");
   const [displayNameError, setDisplayNameError] = React.useState(false);
@@ -111,11 +112,13 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
       setLoading(true);
       try {
         const userCredentials = await createUserWithEmailAndPassword(
+          auth,
           email,
           password
         );
         window.location.assign("/");
         await updateProfile(userCredentials.user, { displayName: displayName });
+        setUser((prevUser) => ({ ...prevUser, current: userCredentials.user }));
         await setDoc(doc(db, "users", userCredentials.user.uid), defaultConfig);
         setLoading(false);
       } catch (error) {
@@ -144,7 +147,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
     } else {
       setLoading(true);
       try {
-        await signInWithEmailAndPassword(email, password);
+        await signInWithEmailAndPassword(auth, email, password);
         window.location.assign("/");
         setTimeout(() => setLoading(false), MINIMUM_LOADING_TIME);
       } catch (error) {
@@ -180,7 +183,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
 
       setLoading(true);
       try {
-        await sendPasswordResetEmail(email);
+        await sendPasswordResetEmail(auth, email);
         setToastState(recoverAccountToastState);
         setTimeout(() => {
           setLoading(false);

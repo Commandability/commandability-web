@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import { Link, useLocation } from "react-router-dom";
+import { signOut } from "firebase/auth";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 
@@ -32,7 +33,7 @@ function LandingNav({
   footerInView,
 }) {
   const { hash } = useLocation();
-  const { user, signOut } = useAuth();
+  const { auth, user } = useAuth();
   const initialLoad = useInitialLoad();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -272,7 +273,7 @@ function LandingNav({
 
   function handleSignOut() {
     window.location.assign("/");
-    signOut();
+    signOut(auth);
   }
 
   return (

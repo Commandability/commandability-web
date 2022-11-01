@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  sendPasswordResetEmail,
-  updateProfile,
-  signOut,
-} from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 import { auth } from "firebase.js";
 import FireLoader from "components/fire-loader";
@@ -35,18 +28,9 @@ function AuthProvider({ children }) {
   }, []);
 
   const value = {
+    auth,
     user,
-    createUserWithEmailAndPassword: async (...args) =>
-      await createUserWithEmailAndPassword(auth, ...args),
-    signInWithEmailAndPassword: async (...args) =>
-      await signInWithEmailAndPassword(auth, ...args),
-    sendPasswordResetEmail: async (...args) =>
-      await sendPasswordResetEmail(auth, ...args),
-    updateProfile: async (user, ...args) => {
-      await updateProfile(user, ...args);
-      setUser((prevUser) => ({ ...prevUser, current: user }));
-    },
-    signOut: () => signOut(auth),
+    setUser,
   };
 
   if (user.status === "pending") {
