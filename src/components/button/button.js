@@ -29,6 +29,12 @@ const THEMES = {
   },
 };
 
+const VARIANTS = {
+  primary: "primary",
+  secondary: "secondary",
+  tertiary: "tertiary",
+};
+
 const Button = React.forwardRef(
   (
     {
@@ -43,6 +49,10 @@ const Button = React.forwardRef(
     },
     forwardedRef
   ) => {
+    if (!THEMES[theme]) throw new Error(`Unknown theme provided to Button.`);
+    if (!VARIANTS[variant])
+      throw new Error(`Unknown variant provided to Button.`);
+
     const themeStyles = THEMES[theme];
 
     function selectTag() {
@@ -89,8 +99,8 @@ const ButtonWrapper = styled.button`
 
   color: ${(props) => {
     switch (props.variant) {
-      case "secondary":
-      case "tertiary":
+      case VARIANTS.secondary:
+      case VARIANTS.tertiary:
         return "var(--color-alternate)";
       default:
         return "var(--color)";
@@ -98,8 +108,8 @@ const ButtonWrapper = styled.button`
   }};
   background-color: ${(props) => {
     switch (props.variant) {
-      case "secondary":
-      case "tertiary":
+      case VARIANTS.secondary:
+      case VARIANTS.tertiary:
         return "transparent";
       default:
         return "var(--background-color)";
@@ -107,9 +117,9 @@ const ButtonWrapper = styled.button`
   }};
   padding: ${(props) => {
     switch (props.variant) {
-      case "secondary":
+      case VARIANTS.secondary:
         return "calc(8px - 2px) calc(16px - 2px)";
-      case "tertiary":
+      case VARIANTS.tertiary:
         return "0px";
       default:
         return "8px 16px";
@@ -117,7 +127,7 @@ const ButtonWrapper = styled.button`
   }};
   border: ${(props) => {
     switch (props.variant) {
-      case "secondary":
+      case VARIANTS.secondary:
         return "2px solid var(--border-color)";
       default:
         return "none";
@@ -125,7 +135,7 @@ const ButtonWrapper = styled.button`
   }};
   border-radius: ${(props) => {
     switch (props.variant) {
-      case "tertiary":
+      case VARIANTS.tertiary:
         return "0px";
       default:
         return "8px";
@@ -142,8 +152,8 @@ const ButtonWrapper = styled.button`
 
   --selection-color: ${(props) => {
     switch (props.variant) {
-      case "secondary":
-      case "tertiary":
+      case VARIANTS.secondary:
+      case VARIANTS.tertiary:
         return "var(--color);";
       default:
         return "var(--color-alternate);";
@@ -151,8 +161,8 @@ const ButtonWrapper = styled.button`
   }};
   --selection-background: ${(props) => {
     switch (props.variant) {
-      case "secondary":
-      case "tertiary":
+      case VARIANTS.secondary:
+      case VARIANTS.tertiary:
         return "var(--color-alternate);";
       default:
         return "var(--color);";
@@ -162,8 +172,8 @@ const ButtonWrapper = styled.button`
   &:active {
     color: ${(props) => {
       switch (props.variant) {
-        case "secondary":
-        case "tertiary":
+        case VARIANTS.secondary:
+        case VARIANTS.tertiary:
           return "var(--hover-color-alternate);";
         default:
           return "var(--color);";
@@ -171,7 +181,7 @@ const ButtonWrapper = styled.button`
     }};
     border-color: ${(props) => {
       switch (props.variant) {
-        case "secondary":
+        case VARIANTS.secondary:
           return "var(--hover-border-color);";
         default:
           return "transparent";
@@ -179,8 +189,8 @@ const ButtonWrapper = styled.button`
     }};
     background-color: ${(props) => {
       switch (props.variant) {
-        case "secondary":
-        case "tertiary":
+        case VARIANTS.secondary:
+        case VARIANTS.tertiary:
           return "transparent";
         default:
           return "var(--hover-background-color);";
@@ -192,8 +202,8 @@ const ButtonWrapper = styled.button`
     &:hover {
       color: ${(props) => {
         switch (props.variant) {
-          case "secondary":
-          case "tertiary":
+          case VARIANTS.secondary:
+          case VARIANTS.tertiary:
             return "var(--hover-color-alternate);";
           default:
             return "var(--color);";
@@ -201,7 +211,7 @@ const ButtonWrapper = styled.button`
       }};
       border-color: ${(props) => {
         switch (props.variant) {
-          case "secondary":
+          case VARIANTS.secondary:
             return "var(--hover-border-color);";
           default:
             return "transparent";
@@ -209,8 +219,8 @@ const ButtonWrapper = styled.button`
       }};
       background-color: ${(props) => {
         switch (props.variant) {
-          case "secondary":
-          case "tertiary":
+          case VARIANTS.secondary:
+          case VARIANTS.tertiary:
             return "transparent";
           default:
             return "var(--hover-background-color);";
