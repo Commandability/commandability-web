@@ -38,7 +38,9 @@ function App() {
         },
         {
           id: "reports",
-          ref: collection(db, "users", user.current.uid, "reports"),
+          ref: user.current
+            ? collection(db, "users", user.current.uid, "reports")
+            : null,
         },
       ]}
     >
