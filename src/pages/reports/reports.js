@@ -1,5 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
+import { doc, writeBatch } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
 import { useNavigation } from "react-router-dom";
 import {
   FiTrash2,
@@ -10,7 +12,9 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
+import { storage } from "firebase.js";
 import { useFirestore } from "context/firestore-context";
+import { getAuth } from "firebase/auth";
 import {
   Toast,
   ToastProvider,
@@ -38,8 +42,9 @@ const selectValues = {
 
 function Reports() {
   const navigation = useNavigation();
-
+  const { currentUser } = getAuth();
   const {
+    db,
     firestore: { reports },
   } = useFirestore();
 
@@ -55,7 +60,20 @@ function Reports() {
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
-  async function removeReports(checkedItems) {}
+  async function removeReports(checkedItems) {
+    // Remove firestore metadata
+    const batch = writeBatch(db);
+    checkedItems.forEach((item) => {
+      batch.delete(doc(reports.ref, item));
+    });
+    await batch.commit();
+
+    // Remove files from storage
+    for (const item of checkedItems) {
+      const itemRef = ref(storage, `users/${currentUser?.uid}/reports/${item}`);
+      await deleteObject(itemRef);
+    }
+  }
 
   async function onRemoveReportsAction() {
     setRemoveReportsOpen(false);
