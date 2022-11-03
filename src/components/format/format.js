@@ -65,7 +65,7 @@ const Wrapper = styled.div`
   }
 
   a {
-    color: var(--color-yellow-3);
+    color: var(--color-yellow-2);
     text-decoration: none;
 
     &:hover {
