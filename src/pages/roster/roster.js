@@ -16,7 +16,7 @@ import * as Papa from "papaparse";
 import { v4 as uuidv4 } from "uuid";
 import { updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
-import { useFirestore } from "context/firestore-context";
+import { useSnapshots } from "context/snapshot-context";
 import {
   Toast,
   ToastProvider,
@@ -59,8 +59,8 @@ function sortByBadge(firstPerson, secondPerson) {
 
 function Roster() {
   const {
-    firestore: { user },
-  } = useFirestore();
+    snapshots: { user },
+  } = useSnapshots();
 
   const [query, setQuery] = React.useState("");
   function personFilter(person) {

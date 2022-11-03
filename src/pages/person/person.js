@@ -4,7 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
 import { FiChevronLeft, FiEdit, FiSave } from "react-icons/fi";
 
-import { useFirestore } from "context/firestore-context";
+import { useSnapshots } from "context/snapshot-context";
 import {
   Toast,
   ToastProvider,
@@ -18,9 +18,9 @@ import VisuallyHidden from "components/visually-hidden";
 
 function Person() {
   const { badge: paramBadge } = useParams();
-  const { db, firestore } = useFirestore();
+  const { db, snapshots } = useSnapshots();
 
-  const person = firestore.user.data.personnel.find(
+  const person = snapshots.user.data.personnel.find(
     (person) => person.badge === paramBadge
   );
 
@@ -45,8 +45,8 @@ function Person() {
 
   async function editPerson(firstName, lastName, shift, badge) {
     const batch = writeBatch(db);
-    batch.update(firestore.user.ref, { personnel: arrayRemove(person) });
-    batch.update(firestore.user.ref, {
+    batch.update(snapshots.user.ref, { personnel: arrayRemove(person) });
+    batch.update(snapshots.user.ref, {
       personnel: arrayUnion({ firstName, lastName, shift, badge }),
     });
     await batch.commit();
@@ -64,7 +64,7 @@ function Person() {
       // Check if the person and firebase contain any personnel with duplicate badges
       let mergeDuplicates = false;
       if (person.badge !== badge) {
-        mergeDuplicates = firestore.user.data.personnel.some(
+        mergeDuplicates = snapshots.user.data.personnel.some(
           (person) => person.badge === badge
         );
       }
