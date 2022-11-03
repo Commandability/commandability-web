@@ -10,7 +10,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
-import { useNavigation, useLoaderData } from "react-router-dom";
+import { defer, useLoaderData, Await, useNavigation } from "react-router-dom";
 import {
   FiTrash2,
   FiX,
@@ -56,13 +56,15 @@ export const REPORTS_CONFIGURATION = {
 export async function reportsLoader() {
   const { currentUser } = getAuth();
 
-  return await getDocs(
-    query(
-      collection(db, "users", currentUser.uid, "reports"),
-      limit(REPORTS_CONFIGURATION.reportsPerPage),
-      orderBy(REPORTS_CONFIGURATION.fields.startTimestamp)
-    )
-  );
+  return defer({
+    reports: getDocs(
+      query(
+        collection(db, "users", currentUser.uid, "reports"),
+        limit(REPORTS_CONFIGURATION.reportsPerPage),
+        orderBy(REPORTS_CONFIGURATION.fields.startTimestamp)
+      )
+    ),
+  });
 }
 
 const selectValues = {
@@ -72,7 +74,7 @@ const selectValues = {
 
 function Reports() {
   const { user } = useAuth();
-  const reports = useLoaderData();
+  const data = useLoaderData();
   const navigation = useNavigation();
 
   const userId = user.current?.uid;
@@ -181,23 +183,34 @@ function Reports() {
         </Group>
         {checkedItems.length === 0 ? <span>Timestamp</span> : null}
       </ListHeader>
-      <List aria-live="polite" aria-atomic="true">
-        {/* Ensure data has loaded */}
-        {[...reports.docs].map((report) => {
-          const { location, startTimestamp } = report.data();
-          return (
-            <ReportItem
-              key={report.id}
-              reportId={report.id}
-              location={location}
-              startTimestamp={startTimestamp}
-              checkedAll={checkedAll}
-              setCheckedAll={setCheckedAll}
-              setCheckedItems={setCheckedItems}
-            />
-          );
-        })}
-      </List>
+      <ListContainer>
+        <React.Suspense fallback={<Loading />}>
+          <Await
+            resolve={data.reports}
+            errorElement={<p>Error loading reports</p>}
+          >
+            {(reports) => (
+              <List aria-live="polite" aria-atomic="true">
+                {/* Ensure data has loaded */}
+                {[...reports.docs].map((report) => {
+                  const { location, startTimestamp } = report.data();
+                  return (
+                    <ReportItem
+                      key={report.id}
+                      reportId={report.id}
+                      location={location}
+                      startTimestamp={startTimestamp}
+                      checkedAll={checkedAll}
+                      setCheckedAll={setCheckedAll}
+                      setCheckedItems={setCheckedItems}
+                    />
+                  );
+                })}
+              </List>
+            )}
+          </Await>
+        </React.Suspense>
+      </ListContainer>
       <Bottom>
         <Button icon={FiDownload}>Export all</Button>
         <Button icon={FiTrash2}>Delete All</Button>
@@ -234,7 +247,7 @@ const Wrapper = styled.div`
 const Loading = styled.div`
   position: absolute;
   inset: 0;
-  opacity: 0.25;
+  opacity: 0.1;
   transition: opacity 200ms;
   transition-delay: 200ms;
   background-color: var(--color-gray-3);
@@ -279,12 +292,9 @@ const AlertOptions = styled.div`
   gap: 16px;
 `;
 
-const List = styled.ul`
+const ListContainer = styled.div`
+  position: relative;
   flex: 1;
-  width: 100%;
-  list-style: none;
-  padding-left: 0;
-
   overflow-y: scroll;
   scrollbar-color: var(--color-gray-5) var(--color-gray-10);
   scrollbar-width: thin;
@@ -301,6 +311,12 @@ const List = styled.ul`
   ::-webkit-scrollbar-track {
     margin: 2px 0px;
   }
+`;
+
+const List = styled.ul`
+  flex: 1;
+  list-style: none;
+  padding-left: 0;
 `;
 
 const Bottom = styled.div`

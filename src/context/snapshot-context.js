@@ -44,7 +44,7 @@ function SnapshotProvider({
             data = snapshot.docs;
           } else {
             throw new Error(
-              "Unexpected ref type. Please pass either a document or a collection."
+              "Unexpected ref type. Please pass either a document, a collection, or a query."
             );
           }
 
