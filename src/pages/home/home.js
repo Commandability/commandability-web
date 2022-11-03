@@ -124,9 +124,9 @@ function Home() {
               ) : (
                 <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
                   <DialogTrigger asChild>
-                    <Pill theme="dark" angle>
+                    <DesktopPill theme="dark" angle>
                       Get started
-                    </Pill>
+                    </DesktopPill>
                   </DialogTrigger>
                   <DialogContent title="Get started" portal={false}>
                     <AccountDialogContent
@@ -347,6 +347,12 @@ const HeaderPills = styled.div`
   display: flex;
   gap: 32px;
   flex-wrap: wrap;
+`;
+
+const DesktopPill = styled(Pill)`
+  @media ${QUERIES.tabletAndSmaller} {
+    display: none;
+  }
 `;
 
 const DownloadsWrapper = styled.div`
