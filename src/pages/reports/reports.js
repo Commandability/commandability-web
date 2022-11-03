@@ -1,8 +1,16 @@
 import * as React from "react";
 import styled from "styled-components";
-import { doc, writeBatch } from "firebase/firestore";
+import {
+  doc,
+  writeBatch,
+  collection,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+} from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
-import { useNavigation } from "react-router-dom";
+import { useNavigation, useLoaderData } from "react-router-dom";
 import {
   FiTrash2,
   FiX,
@@ -13,8 +21,7 @@ import {
 } from "react-icons/fi";
 
 import { storage } from "firebase.js";
-import { useFirestore } from "context/firestore-context";
-import { getAuth } from "firebase/auth";
+import { useAuth } from "context/auth-context";
 import {
   Toast,
   ToastProvider,
@@ -35,18 +42,42 @@ import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
 import ReportItem from "components/report-item";
 
+import { db } from "firebase.js";
+import { getAuth } from "firebase/auth";
+
+export const REPORTS_CONFIGURATION = {
+  reportsPerPage: 20,
+  fields: {
+    startTimestamp: "startTimestamp",
+    location: "location",
+  },
+};
+
+export async function reportsLoader() {
+  const { currentUser } = getAuth();
+
+  return await getDocs(
+    query(
+      collection(db, "users", currentUser.uid, "reports"),
+      limit(REPORTS_CONFIGURATION.reportsPerPage),
+      orderBy(REPORTS_CONFIGURATION.fields.startTimestamp)
+    )
+  );
+}
+
 const selectValues = {
   newest: "newest",
   oldest: "oldest",
 };
 
 function Reports() {
+  const { user } = useAuth();
+  const reports = useLoaderData();
   const navigation = useNavigation();
-  const { currentUser } = getAuth();
-  const {
-    db,
-    firestore: { reports },
-  } = useFirestore();
+
+  const userId = user.current?.uid;
+
+  const reportsRef = collection(db, "users", userId, "reports");
 
   const [select, setSelect] = React.useState(selectValues.newest);
 
@@ -64,13 +95,12 @@ function Reports() {
     // Remove firestore metadata
     const batch = writeBatch(db);
     checkedItems.forEach((item) => {
-      batch.delete(doc(reports.ref, item));
+      batch.delete(doc(reportsRef, item));
     });
     await batch.commit();
-
     // Remove files from storage
     for (const item of checkedItems) {
-      const itemRef = ref(storage, `users/${currentUser?.uid}/reports/${item}`);
+      const itemRef = ref(storage, `users/${userId}/reports/${item}`);
       await deleteObject(itemRef);
     }
   }
@@ -153,22 +183,20 @@ function Reports() {
       </ListHeader>
       <List aria-live="polite" aria-atomic="true">
         {/* Ensure data has loaded */}
-        {reports.data
-          ? [...reports.data].map((report) => {
-              const { location, startTimestamp } = report.data();
-              return (
-                <ReportItem
-                  key={report.id}
-                  reportId={report.id}
-                  location={location}
-                  startTimestamp={startTimestamp}
-                  checkedAll={checkedAll}
-                  setCheckedAll={setCheckedAll}
-                  setCheckedItems={setCheckedItems}
-                />
-              );
-            })
-          : null}
+        {[...reports.docs].map((report) => {
+          const { location, startTimestamp } = report.data();
+          return (
+            <ReportItem
+              key={report.id}
+              reportId={report.id}
+              location={location}
+              startTimestamp={startTimestamp}
+              checkedAll={checkedAll}
+              setCheckedAll={setCheckedAll}
+              setCheckedItems={setCheckedItems}
+            />
+          );
+        })}
       </List>
       <Bottom>
         <Button icon={FiDownload}>Export all</Button>

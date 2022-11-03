@@ -14,7 +14,7 @@ import PrivacyPolicy from "pages/privacy-policy";
 import Layout from "components/layout";
 import DashboardContainer from "components/dashboard-container";
 
-import Reports from "pages/reports";
+import Reports, { reportsLoader } from "pages/reports";
 import Roster from "pages/roster";
 import Groups from "pages/groups";
 
@@ -32,7 +32,7 @@ const router = createBrowserRouter(
         errorElement={<NotFound />}
       >
         <Route path="reports" element={<DashboardContainer />}>
-          <Route index element={<Reports />} />
+          <Route index element={<Reports />} loader={reportsLoader} />
           <Route path=":reportId" element={<Report />} loader={reportLoader} />
         </Route>
         <Route path="roster" element={<DashboardContainer />}>
