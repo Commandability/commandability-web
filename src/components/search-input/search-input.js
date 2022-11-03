@@ -1,18 +1,33 @@
 import React from "react";
 import styled from "styled-components";
 import { FiSearch as UnstyledFiSearch } from "react-icons/fi";
+import { Form } from "react-router-dom";
 
-const SearchInput = ({ id, className, ...props }) => {
+import VisuallyHidden from "components/visually-hidden";
+import UnstyledButton from "components/unstyled-button";
+
+const SearchInput = ({ id, className, variant, ...props }) => {
   if (!id) {
     throw new Error("SearchInput must have an id");
   }
 
   return (
-    <Wrapper role="search" className={className}>
+    <Wrapper
+      role="search"
+      className={className}
+      as={variant === "form" ? Form : null}
+    >
       <Label htmlFor={id}>Search</Label>
       <InputWrapper>
         <TextInput type="text" id={id} {...props} />
-        <StyledFiSearch />
+        {variant === "form" ? (
+          <SearchButton type="submit">
+            <VisuallyHidden>Search</VisuallyHidden>
+            <UnstyledFiSearch />
+          </SearchButton>
+        ) : (
+          <StyledFiSearch />
+        )}
       </InputWrapper>
     </Wrapper>
   );
@@ -63,6 +78,29 @@ const StyledFiSearch = styled(UnstyledFiSearch)`
   ${TextInput}:focus-visible + & {
     & {
       stroke: var(--color-yellow-3);
+    }
+  }
+`;
+
+const SearchButton = styled(UnstyledButton)`
+  position: absolute;
+  left: 8px;
+  padding: 4px;
+  & > svg {
+    stroke: var(--color-gray-2);
+  }
+  ${TextInput}:focus-visible + & {
+    & > svg {
+      stroke: var(--color-yellow-3);
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-radius: 100%;
+      background-color: var(--color-gray-9);
+      ${TextInput}:focus-visible + & {
+        background-color: var(--color-yellow-9);
+      }
     }
   }
 `;
