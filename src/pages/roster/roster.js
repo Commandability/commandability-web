@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import {
   FiUserPlus,
+  FiSave,
   FiCheckSquare,
   FiTrash2,
   FiArrowRight,
@@ -323,8 +324,8 @@ function Roster() {
                   error={badge ? "" : "Please enter a badge"}
                 />
               </DialogInputs>
-              <Button type="submit" icon={FiUserPlus}>
-                Add Person
+              <Button type="submit" icon={FiSave}>
+                Save person
               </Button>
             </DialogForm>
           </DialogContent>

@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
 import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
-import { FiChevronLeft, FiEdit } from "react-icons/fi";
+import { FiChevronLeft, FiEdit, FiSave } from "react-icons/fi";
 
 import { useFirestore } from "context/firestore-context";
 import {
@@ -147,8 +147,8 @@ function Person() {
                 error={badge ? "" : "Please enter a badge"}
               />
             </DialogInputs>
-            <Button type="submit" icon={FiEdit}>
-              Edit Person
+            <Button type="submit" icon={FiSave}>
+              Save person
             </Button>
           </DialogForm>
         </DialogContent>
