@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { FiSearch as UnstyledFiSearch } from "react-icons/fi";
-import { Form } from "react-router-dom";
 
 import VisuallyHidden from "components/visually-hidden";
 import UnstyledButton from "components/unstyled-button";
@@ -12,15 +11,11 @@ const SearchInput = ({ id, className, variant, ...props }) => {
   }
 
   return (
-    <Wrapper
-      role="search"
-      className={className}
-      as={variant === "form" ? Form : null}
-    >
+    <Wrapper className={className}>
       <Label htmlFor={id}>Search</Label>
       <InputWrapper>
         <TextInput type="text" id={id} {...props} />
-        {variant === "form" ? (
+        {variant === "button" ? (
           <SearchButton type="submit">
             <VisuallyHidden>Search</VisuallyHidden>
             <UnstyledFiSearch />

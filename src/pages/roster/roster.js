@@ -274,6 +274,7 @@ function Roster() {
           onChange={(e) => setQuery(e.target.value)}
           id="roster-search"
           placeholder="name, badge, shift"
+          role="search"
         />
         <RosterSelect
           select={selectSort}

@@ -8,9 +8,17 @@ import {
   orderBy,
   limit,
   getDocs,
+  where,
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
-import { defer, useLoaderData, Await, useNavigation } from "react-router-dom";
+import {
+  defer,
+  useLoaderData,
+  Await,
+  useNavigation,
+  useSubmit,
+  Form,
+} from "react-router-dom";
 import {
   FiTrash2,
   FiX,
@@ -37,6 +45,7 @@ import {
   AlertDialogContent,
 } from "components/alert-dialog";
 import Checkbox from "components/checkbox";
+import SearchInput from "components/search-input";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
@@ -46,42 +55,63 @@ import { db } from "firebase.js";
 import { getAuth } from "firebase/auth";
 
 export const REPORTS_CONFIGURATION = {
-  reportsPerPage: 20,
+  reportsPerPage: 200,
   fields: {
     startTimestamp: "startTimestamp",
     location: "location",
   },
 };
 
-export async function reportsLoader() {
-  const { currentUser } = getAuth();
-
-  return defer({
-    reports: getDocs(
-      query(
-        collection(db, "users", currentUser.uid, "reports"),
-        limit(REPORTS_CONFIGURATION.reportsPerPage),
-        orderBy(REPORTS_CONFIGURATION.fields.startTimestamp)
-      )
-    ),
-  });
-}
-
 const selectValues = {
   newest: "newest",
   oldest: "oldest",
 };
 
+export async function reportsLoader({ request }) {
+  const { currentUser } = getAuth();
+
+  const url = new URL(request.url);
+  const q = url.searchParams.get("q");
+  const s = url.searchParams.get("s");
+
+  if (q) {
+    return defer({
+      reports: getDocs(
+        query(
+          collection(db, "users", currentUser.uid, "reports"),
+          limit(REPORTS_CONFIGURATION.reportsPerPage),
+          orderBy(REPORTS_CONFIGURATION.fields.location),
+          where(REPORTS_CONFIGURATION.fields.location, ">=", q),
+          where(REPORTS_CONFIGURATION.fields.location, "<=", q + "\uf8ff"),
+          orderBy(REPORTS_CONFIGURATION.fields.startTimestamp)
+        )
+      ),
+    });
+  } else {
+    return defer({
+      reports: getDocs(
+        query(
+          collection(db, "users", currentUser.uid, "reports"),
+          limit(REPORTS_CONFIGURATION.reportsPerPage),
+          orderBy(
+            REPORTS_CONFIGURATION.fields.startTimestamp,
+            s === selectValues.oldest ? undefined : "desc"
+          )
+        )
+      ),
+    });
+  }
+}
+
 function Reports() {
   const { user } = useAuth();
   const data = useLoaderData();
   const navigation = useNavigation();
+  const submit = useSubmit();
 
   const userId = user.current?.uid;
 
   const reportsRef = collection(db, "users", userId, "reports");
-
-  const [select, setSelect] = React.useState(selectValues.newest);
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
   const [checkedAll, setCheckedAll] = React.useState(false);
@@ -129,15 +159,30 @@ function Reports() {
     <Wrapper>
       {navigation.state === "loading" ? <Loading /> : null}
       <Top>
-        <ReportsSelect
-          select={select}
-          onValueChange={(select) => setSelect(select)}
-          defaultValue={selectValues.newest}
-          label="Sort"
+        <Form role="search">
+          <ReportsSearch
+            id="q"
+            name="q"
+            placeholder="location"
+            variant="button"
+          />
+        </Form>
+        <Form
+          id="select-form"
+          onChange={(event) => {
+            submit(event.currentTarget);
+          }}
         >
-          <SelectItem value={selectValues.newest}>Newest first</SelectItem>
-          <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
-        </ReportsSelect>
+          <ReportsSelect
+            id="s"
+            name="s"
+            defaultValue={selectValues.newest}
+            label="Sort"
+          >
+            <SelectItem value={selectValues.newest}>Newest first</SelectItem>
+            <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
+          </ReportsSelect>
+        </Form>
       </Top>
       <ListHeader aria-live="polite" aria-atomic="true">
         <Group>
@@ -260,6 +305,10 @@ const Top = styled.div`
   align-items: flex-end;
   gap: 24px;
   padding: 32px 48px;
+`;
+
+const ReportsSearch = styled(SearchInput)`
+  width: 256px;
 `;
 
 const ReportsSelect = styled(Select)`
