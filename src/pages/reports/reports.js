@@ -83,7 +83,10 @@ export async function reportsLoader({ request }) {
           orderBy(REPORTS_CONFIGURATION.fields.location),
           where(REPORTS_CONFIGURATION.fields.location, ">=", q),
           where(REPORTS_CONFIGURATION.fields.location, "<=", q + "\uf8ff"),
-          orderBy(REPORTS_CONFIGURATION.fields.startTimestamp)
+          orderBy(
+            REPORTS_CONFIGURATION.fields.startTimestamp,
+            s === selectValues.oldest ? undefined : "desc"
+          )
         )
       ),
     });
@@ -159,20 +162,14 @@ function Reports() {
     <Wrapper>
       {navigation.state === "loading" ? <Loading /> : null}
       <Top>
-        <Form role="search">
-          <ReportsSearch
-            id="q"
-            name="q"
-            placeholder="location"
-            variant="button"
-          />
-        </Form>
-        <Form
-          id="select-form"
+        <SearchForm
+          id="search-form"
+          role="search"
           onChange={(event) => {
             submit(event.currentTarget);
           }}
         >
+          <ReportsSearch id="q" name="q" placeholder="location" />
           <ReportsSelect
             id="s"
             name="s"
@@ -182,7 +179,7 @@ function Reports() {
             <SelectItem value={selectValues.newest}>Newest first</SelectItem>
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
-        </Form>
+        </SearchForm>
       </Top>
       <ListHeader aria-live="polite" aria-atomic="true">
         <Group>
@@ -300,11 +297,13 @@ const Loading = styled.div`
 `;
 
 const Top = styled.div`
-  width: 100%;
+  padding: 32px 48px;
+`;
+
+const SearchForm = styled(Form)`
   display: flex;
   align-items: flex-end;
   gap: 24px;
-  padding: 32px 48px;
 `;
 
 const ReportsSearch = styled(SearchInput)`
