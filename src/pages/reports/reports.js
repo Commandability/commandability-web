@@ -49,13 +49,13 @@ import SearchInput from "components/search-input";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
-import ReportItem from "components/report-item";
+import ReportItem, { FallbackItem } from "components/report-item";
 
 import { db } from "firebase.js";
 import { getAuth } from "firebase/auth";
 
 export const REPORTS_CONFIGURATION = {
-  reportsPerPage: 200,
+  reportsPerPage: 20,
   fields: {
     startTimestamp: "startTimestamp",
     location: "location",
@@ -81,8 +81,12 @@ export async function reportsLoader({ request }) {
           collection(db, "users", currentUser.uid, "reports"),
           limit(REPORTS_CONFIGURATION.reportsPerPage),
           orderBy(REPORTS_CONFIGURATION.fields.location),
-          where(REPORTS_CONFIGURATION.fields.location, ">=", q),
-          where(REPORTS_CONFIGURATION.fields.location, "<=", q + "\uf8ff"),
+          where(REPORTS_CONFIGURATION.fields.location, ">=", q.toLowerCase()),
+          where(
+            REPORTS_CONFIGURATION.fields.location,
+            "<=",
+            q.toLowerCase() + "\uf8ff"
+          ),
           orderBy(
             REPORTS_CONFIGURATION.fields.startTimestamp,
             s === selectValues.oldest ? undefined : "desc"
@@ -158,6 +162,19 @@ function Reports() {
     setToastOpen(true);
   }
 
+  const fallbackList = (
+    <>
+      <VisuallyHidden>Loading reports</VisuallyHidden>
+      <List>
+        {Array(REPORTS_CONFIGURATION.reportsPerPage)
+          .fill(null)
+          .map((_, index) => (
+            <FallbackItem key={index} />
+          ))}
+      </List>
+    </>
+  );
+
   return (
     <Wrapper>
       {navigation.state === "loading" ? <Loading /> : null}
@@ -226,7 +243,7 @@ function Reports() {
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
-        <React.Suspense fallback={<Loading />}>
+        <React.Suspense fallback={fallbackList}>
           <Await
             resolve={data.reports}
             errorElement={<p>Error loading reports</p>}

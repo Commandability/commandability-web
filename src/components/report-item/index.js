@@ -1,1 +1,1 @@
-export { default } from "./report-item";
+export { default, FallbackItem } from "./report-item";

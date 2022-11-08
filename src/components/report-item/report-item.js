@@ -4,6 +4,18 @@ import { Link } from "react-router-dom";
 
 import Checkbox from "components/checkbox";
 
+export function FallbackItem() {
+  return (
+    <FallbackWrapper>
+      <FallbackCheckbox />
+      <FallbackContents>
+        <FallbackText />
+        <FallbackText />
+      </FallbackContents>
+    </FallbackWrapper>
+  );
+}
+
 function ReportItem({
   setCheckedItems,
   checkedAll,
@@ -119,6 +131,37 @@ const Location = styled(Link)`
     position: absolute;
     inset: 0;
   }
+`;
+
+const FallbackWrapper = styled.li`
+  display: flex;
+  padding: 16px 48px;
+  border-bottom: 1px solid var(--color-gray-9);
+  background-color: var(--color-white);
+  color: var(--color-gray-3);
+`;
+
+const FallbackCheckbox = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background-color: var(--color-gray-9);
+  z-index: 1;
+`;
+
+const FallbackContents = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 32px;
+  align-items: center;
+`;
+
+const FallbackText = styled.div`
+  width: 144px;
+  height: 1rem;
+  border-radius: 8px;
+  background-color: var(--color-gray-9);
 `;
 
 export default ReportItem;
