@@ -181,51 +181,51 @@ function Reports() {
           </ReportsSelect>
         </SearchForm>
       </Top>
-      <ListHeader aria-live="polite" aria-atomic="true">
-        <Group>
-          <Checkbox
-            label="Select all"
-            checked={checkedAll.status}
-            onCheckedChange={(checked) =>
-              setCheckedAll({ status: checked, origin: "header" })
-            }
-          />
-          {checkedItems.length === 0 ? (
-            <Location>Location</Location>
-          ) : (
-            <AlertDialog
-              open={removeReportsOpen}
-              onOpenChange={setRemoveReportsOpen}
-            >
-              <AlertDialogTrigger asChild>
-                <Button variant="tertiary" icon={FiTrash2}>
-                  Delete reports
-                </Button>
-              </AlertDialogTrigger>
-              <RemoveAlertDialogContent
-                header
-                title="Are you absolutely sure?"
-                description="This action cannot be undone. This will permanently delete the selected reports from your account."
+      <ListArea>
+        <ListHeader aria-live="polite" aria-atomic="true">
+          <Group>
+            <Checkbox
+              label="Select all"
+              checked={checkedAll.status}
+              onCheckedChange={(checked) =>
+                setCheckedAll({ status: checked, origin: "header" })
+              }
+            />
+            {checkedItems.length === 0 ? (
+              <Location>Location</Location>
+            ) : (
+              <AlertDialog
+                open={removeReportsOpen}
+                onOpenChange={setRemoveReportsOpen}
               >
-                <AlertOptions>
-                  <AlertDialogCancel asChild>
-                    <Button icon={FiX} variant="secondary">
-                      Cancel
-                    </Button>
-                  </AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <Button onClick={onRemoveReportsAction} icon={FiCheck}>
-                      Yes, delete reports
-                    </Button>
-                  </AlertDialogAction>
-                </AlertOptions>
-              </RemoveAlertDialogContent>
-            </AlertDialog>
-          )}
-        </Group>
-        {checkedItems.length === 0 ? <span>Timestamp</span> : null}
-      </ListHeader>
-      <ListContainer>
+                <AlertDialogTrigger asChild>
+                  <Button variant="tertiary" icon={FiTrash2}>
+                    Delete reports
+                  </Button>
+                </AlertDialogTrigger>
+                <RemoveAlertDialogContent
+                  header
+                  title="Are you absolutely sure?"
+                  description="This action cannot be undone. This will permanently delete the selected reports from your account."
+                >
+                  <AlertOptions>
+                    <AlertDialogCancel asChild>
+                      <Button icon={FiX} variant="secondary">
+                        Cancel
+                      </Button>
+                    </AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button onClick={onRemoveReportsAction} icon={FiCheck}>
+                        Yes, delete reports
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertOptions>
+                </RemoveAlertDialogContent>
+              </AlertDialog>
+            )}
+          </Group>
+          {checkedItems.length === 0 ? <span>Timestamp</span> : null}
+        </ListHeader>
         <React.Suspense fallback={<Loading />}>
           <Await
             resolve={data.reports}
@@ -252,7 +252,7 @@ function Reports() {
             )}
           </Await>
         </React.Suspense>
-      </ListContainer>
+      </ListArea>
       <Bottom>
         <Button icon={FiDownload}>Export all</Button>
         <Button icon={FiTrash2}>Delete All</Button>
@@ -315,10 +315,15 @@ const ReportsSelect = styled(Select)`
 `;
 
 const ListHeader = styled.div`
+  width: 100%;
   display: flex;
   justify-content: space-between;
   padding: 16px 48px;
+  background-color: var(--color-gray-10);
   color: var(--color-gray-2);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 `;
 
 const Group = styled.div`
@@ -340,9 +345,9 @@ const AlertOptions = styled.div`
   gap: 16px;
 `;
 
-const ListContainer = styled.div`
-  position: relative;
+const ListArea = styled.div`
   flex: 1;
+
   overflow-y: scroll;
   scrollbar-color: var(--color-gray-5) var(--color-gray-10);
   scrollbar-width: thin;
@@ -362,14 +367,14 @@ const ListContainer = styled.div`
 `;
 
 const List = styled.ul`
-  flex: 1;
   list-style: none;
   padding-left: 0;
+  isolation: isolate;
 `;
 
 const Bottom = styled.div`
   width: 100%;
-  height: 100px;
+  min-height: 100px;
   display: flex;
   justify-content: flex-end;
   align-items: center;

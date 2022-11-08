@@ -332,70 +332,72 @@ function Roster() {
           </DialogContent>
         </Dialog>
       </Top>
-      <ListHeader aria-live="polite" aria-atomic="true">
-        <Group>
-          <Checkbox
-            label="Select all"
-            checked={checkedAll.status}
-            onCheckedChange={(checked) =>
-              setCheckedAll({ status: checked, origin: "header" })
-            }
-          />
-          {checkedItems.length === 0 ? (
-            <Name>Name</Name>
-          ) : (
-            <AlertDialog
-              open={removePersonnelOpen}
-              onOpenChange={setRemovePersonnelOpen}
-            >
-              <AlertDialogTrigger asChild>
-                <Button variant="tertiary" icon={FiTrash2}>
-                  Delete personnel
-                </Button>
-              </AlertDialogTrigger>
-              <RemoveAlertDialogContent
-                header
-                title="Are you absolutely sure?"
-                description="This action cannot be undone. This will permanently delete the selected personnel from your account."
+      <ListArea>
+        <ListHeader aria-live="polite" aria-atomic="true">
+          <Group>
+            <Checkbox
+              label="Select all"
+              checked={checkedAll.status}
+              onCheckedChange={(checked) =>
+                setCheckedAll({ status: checked, origin: "header" })
+              }
+            />
+            {checkedItems.length === 0 ? (
+              <Name>Name</Name>
+            ) : (
+              <AlertDialog
+                open={removePersonnelOpen}
+                onOpenChange={setRemovePersonnelOpen}
               >
-                <AlertOptions>
-                  <AlertDialogCancel asChild>
-                    <Button icon={FiX} variant="secondary">
-                      Cancel
-                    </Button>
-                  </AlertDialogCancel>
-                  <AlertDialogAction asChild>
-                    <Button onClick={onRemovePersonnelAction} icon={FiCheck}>
-                      Yes, delete personnel
-                    </Button>
-                  </AlertDialogAction>
-                </AlertOptions>
-              </RemoveAlertDialogContent>
-            </AlertDialog>
-          )}
-          {checkedItems.length === 0 ? <span>Shift</span> : null}
-        </Group>
-        {checkedItems.length === 0 ? <span>Badge</span> : null}
-      </ListHeader>
-      <List aria-live="polite" aria-atomic="true">
-        {/* Ensure data has loaded */}
-        {user.data
-          ? [...user.data.personnel]
-              .filter((person) => personFilter(person))
-              .sort((firstPerson, secondPerson) =>
-                sortFunction(firstPerson, secondPerson)
-              )
-              .map((person) => (
-                <RosterItem
-                  key={person.badge}
-                  person={person}
-                  checkedAll={checkedAll}
-                  setCheckedAll={setCheckedAll}
-                  setCheckedItems={setCheckedItems}
-                />
-              ))
-          : null}
-      </List>
+                <AlertDialogTrigger asChild>
+                  <Button variant="tertiary" icon={FiTrash2}>
+                    Delete personnel
+                  </Button>
+                </AlertDialogTrigger>
+                <RemoveAlertDialogContent
+                  header
+                  title="Are you absolutely sure?"
+                  description="This action cannot be undone. This will permanently delete the selected personnel from your account."
+                >
+                  <AlertOptions>
+                    <AlertDialogCancel asChild>
+                      <Button icon={FiX} variant="secondary">
+                        Cancel
+                      </Button>
+                    </AlertDialogCancel>
+                    <AlertDialogAction asChild>
+                      <Button onClick={onRemovePersonnelAction} icon={FiCheck}>
+                        Yes, delete personnel
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertOptions>
+                </RemoveAlertDialogContent>
+              </AlertDialog>
+            )}
+            {checkedItems.length === 0 ? <span>Shift</span> : null}
+          </Group>
+          {checkedItems.length === 0 ? <span>Badge</span> : null}
+        </ListHeader>
+        <List aria-live="polite" aria-atomic="true">
+          {/* Ensure data has loaded */}
+          {user.data
+            ? [...user.data.personnel]
+                .filter((person) => personFilter(person))
+                .sort((firstPerson, secondPerson) =>
+                  sortFunction(firstPerson, secondPerson)
+                )
+                .map((person) => (
+                  <RosterItem
+                    key={person.badge}
+                    person={person}
+                    checkedAll={checkedAll}
+                    setCheckedAll={setCheckedAll}
+                    setCheckedItems={setCheckedItems}
+                  />
+                ))
+            : null}
+        </List>
+      </ListArea>
       <Bottom>
         <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
           <DialogTrigger asChild>
@@ -567,27 +569,8 @@ const DialogActions = styled.div`
   gap: 16px;
 `;
 
-const ListHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 48px;
-  color: var(--color-gray-2);
-`;
-
-const Group = styled.div`
-  display: flex;
-  gap: 32px;
-`;
-
-const Name = styled.span`
-  width: 256px;
-`;
-
-const List = styled.ul`
+const ListArea = styled.div`
   flex: 1;
-  width: 100%;
-  list-style: none;
-  padding-left: 0;
 
   overflow-y: scroll;
   scrollbar-color: var(--color-gray-5) var(--color-gray-10);
@@ -607,6 +590,33 @@ const List = styled.ul`
   }
 `;
 
+const ListHeader = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 48px;
+  background-color: var(--color-gray-10);
+  color: var(--color-gray-2);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+`;
+
+const Group = styled.div`
+  display: flex;
+  gap: 32px;
+`;
+
+const Name = styled.span`
+  width: 256px;
+`;
+
+const List = styled.ul`
+  list-style: none;
+  padding-left: 0;
+  isolation: isolate;
+`;
+
 const RemoveAlertDialogContent = styled(AlertDialogContent)`
   width: 512px;
 `;
@@ -624,7 +634,7 @@ const AlertOptions = styled.div`
 
 const Bottom = styled.div`
   width: 100%;
-  height: 100px;
+  min-height: 100px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
