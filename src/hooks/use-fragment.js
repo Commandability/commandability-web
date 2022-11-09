@@ -3,21 +3,29 @@ import { useLocation } from "react-router-dom";
 
 import usePrefersReducedMotion from "hooks/use-prefers-reduced-motion";
 
-function useFragment(nodeId) {
+/**
+ * Smooth scroll to a dom node on mount if the url hash matches the node id
+ * @param {Object} options - scrollIntoView options
+ * @returns {React.useCallback} A react callback ref
+ */
+function useFragment(options = {}) {
   const [initialized, setInitialized] = React.useState(false);
   const { hash } = useLocation();
   const prefersReducedMotion = usePrefersReducedMotion();
 
   return React.useCallback(
     (node) => {
-      if (!initialized && node && hash.replace("#", "") === nodeId) {
+      const { behavior = "auto" } = options;
+
+      if (!initialized && node && hash.replace("#", "") === node?.id) {
         node.scrollIntoView({
-          behavior: prefersReducedMotion ? "auto" : "smooth",
+          ...options,
+          behavior: prefersReducedMotion ? "auto" : behavior,
         });
         setInitialized(true);
       }
     },
-    [initialized, hash, nodeId, prefersReducedMotion]
+    [initialized, hash, prefersReducedMotion, options]
   );
 }
 

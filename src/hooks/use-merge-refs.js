@@ -1,5 +1,10 @@
 import * as React from "react";
 
+/**
+ * Merge all refs passed to the function into a callback ref
+ * @param  {...Object} refs - A react ref
+ * @returns {React.useCallback} A react callback ref
+ */
 function useMergeRefs(...refs) {
   const targetRef = React.useRef();
 

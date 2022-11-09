@@ -50,23 +50,16 @@ function Home() {
   });
 
   const featuresScrollRef = React.useRef();
+  const fragmentRef = useFragment({ behavior: "smooth" });
 
-  const headerFragmentRef = useFragment(hashIds.hero);
-  const featuresFragmentRef = useFragment(hashIds.features);
-  const howItWorksFragmentRef = useFragment(hashIds.howItWorks);
-  const footerFragmentRef = useFragment(hashIds.footer);
-
-  const heroRef = useMergeRefs(headerInViewRef, headerFragmentRef);
+  const heroRef = useMergeRefs(headerInViewRef, fragmentRef);
   const featuresRef = useMergeRefs(
     featuresInViewRef,
-    featuresFragmentRef,
+    fragmentRef,
     featuresScrollRef
   );
-  const howItWorksRef = useMergeRefs(
-    howItWorksInViewRef,
-    howItWorksFragmentRef
-  );
-  const footerRef = useMergeRefs(footerInViewRef, footerFragmentRef);
+  const howItWorksRef = useMergeRefs(howItWorksInViewRef, fragmentRef);
+  const footerRef = useMergeRefs(footerInViewRef, fragmentRef);
 
   const { user } = useAuth();
   const [newAccountOpen, setNewAccountOpen] = React.useState(false);

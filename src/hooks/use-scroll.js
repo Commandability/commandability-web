@@ -1,5 +1,16 @@
 import * as React from "react";
 
+/**
+ * A number, or a string containing a number.
+ * @typedef {Object} Scroll
+ * @property {number} y - The y scroll position
+ * @property {string} status - The scroll status, either "scrolling-down", "scrolling-up", or "idle"
+ */
+
+/**
+ * Track the scroll position and status
+ * @returns {Scroll} The last render's window.scrollY position and the current scroll status
+ */
 function useScroll() {
   const [scroll, setScroll] = React.useState({
     y: window.scrollY,
