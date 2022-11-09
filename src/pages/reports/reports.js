@@ -76,6 +76,7 @@ export async function reportsLoader({ request }) {
 
   if (q) {
     return defer({
+      q,
       reports: getDocs(
         query(
           collection(db, "users", currentUser.uid, "reports"),
@@ -96,6 +97,7 @@ export async function reportsLoader({ request }) {
     });
   } else {
     return defer({
+      q,
       reports: getDocs(
         query(
           collection(db, "users", currentUser.uid, "reports"),
@@ -112,7 +114,7 @@ export async function reportsLoader({ request }) {
 
 function Reports() {
   const { user } = useAuth();
-  const data = useLoaderData();
+  const { q, reports } = useLoaderData();
   const navigation = useNavigation();
   const submit = useSubmit();
 
@@ -129,6 +131,10 @@ function Reports() {
     message: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    document.getElementById("q").value = q;
+  }, [q]);
 
   async function removeReports(checkedItems) {
     // Remove firestore metadata
@@ -186,7 +192,12 @@ function Reports() {
             submit(event.currentTarget);
           }}
         >
-          <ReportsSearch id="q" name="q" placeholder="location" />
+          <ReportsSearch
+            id="q"
+            name="q"
+            defaultValue={q}
+            placeholder="location"
+          />
           <ReportsSelect
             id="s"
             name="s"
@@ -244,10 +255,7 @@ function Reports() {
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
         <React.Suspense fallback={fallbackList}>
-          <Await
-            resolve={data.reports}
-            errorElement={<p>Error loading reports</p>}
-          >
+          <Await resolve={reports} errorElement={<p>Error loading reports</p>}>
             {(reports) => (
               <List aria-live="polite" aria-atomic="true">
                 {/* Ensure data has loaded */}
