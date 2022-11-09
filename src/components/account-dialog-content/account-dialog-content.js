@@ -290,6 +290,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                 />
                 <TogglePasswordButton
                   type="button"
+                  aria-pressed={visiblePassword ? "true" : "false"}
                   onClick={handleTogglePassword}
                 >
                   <VisuallyHidden>Toggle password visibility</VisuallyHidden>
@@ -351,6 +352,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                 />
                 <TogglePasswordButton
                   type="button"
+                  aria-pressed={visiblePassword ? "true" : "false"}
                   onClick={handleTogglePassword}
                 >
                   <VisuallyHidden>Toggle password visibility</VisuallyHidden>
