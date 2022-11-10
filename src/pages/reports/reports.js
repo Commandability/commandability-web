@@ -28,6 +28,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
+import { debounce } from "utils.js";
 import { storage } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import {
@@ -66,6 +67,8 @@ const selectValues = {
   newest: "newest",
   oldest: "oldest",
 };
+
+const SEARCH_DEBOUNCE = 250;
 
 export async function reportsLoader({ request }) {
   const { currentUser } = getAuth();
@@ -119,6 +122,9 @@ function Reports() {
   const submit = useSubmit();
 
   const userId = user.current?.uid;
+  const searching =
+    navigation.location &&
+    new URLSearchParams(navigation.location.search).has("q");
 
   const reportsRef = collection(db, "users", userId, "reports");
 
@@ -168,6 +174,18 @@ function Reports() {
     setToastOpen(true);
   }
 
+  const handleSearchChange = React.useMemo(
+    () =>
+      debounce((currentTarget) => {
+        const isFirstSearch = q === null;
+
+        submit(currentTarget, {
+          replace: !isFirstSearch,
+        });
+      }, SEARCH_DEBOUNCE),
+    [q, submit]
+  );
+
   const fallbackList = (
     <>
       <VisuallyHidden>Loading reports</VisuallyHidden>
@@ -183,13 +201,12 @@ function Reports() {
 
   return (
     <Wrapper>
-      {navigation.state === "loading" ? <Loading /> : null}
       <Top>
         <SearchForm
           id="search-form"
           role="search"
           onChange={(event) => {
-            submit(event.currentTarget);
+            handleSearchChange(event.currentTarget);
           }}
         >
           <ReportsSearch
@@ -254,29 +271,36 @@ function Reports() {
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
-        <React.Suspense fallback={fallbackList}>
-          <Await resolve={reports} errorElement={<p>Error loading reports</p>}>
-            {(reports) => (
-              <List aria-live="polite" aria-atomic="true">
-                {/* Ensure data has loaded */}
-                {[...reports.docs].map((report) => {
-                  const { location, startTimestamp } = report.data();
-                  return (
-                    <ReportItem
-                      key={report.id}
-                      reportId={report.id}
-                      location={location}
-                      startTimestamp={startTimestamp}
-                      checkedAll={checkedAll}
-                      setCheckedAll={setCheckedAll}
-                      setCheckedItems={setCheckedItems}
-                    />
-                  );
-                })}
-              </List>
-            )}
-          </Await>
-        </React.Suspense>
+        {searching ? (
+          fallbackList
+        ) : (
+          <React.Suspense fallback={fallbackList}>
+            <Await
+              resolve={reports}
+              errorElement={<p>Error loading reports</p>}
+            >
+              {(reports) => (
+                <List aria-live="polite" aria-atomic="true">
+                  {/* Ensure data has loaded */}
+                  {[...reports.docs].map((report) => {
+                    const { location, startTimestamp } = report.data();
+                    return (
+                      <ReportItem
+                        key={report.id}
+                        reportId={report.id}
+                        location={location}
+                        startTimestamp={startTimestamp}
+                        checkedAll={checkedAll}
+                        setCheckedAll={setCheckedAll}
+                        setCheckedItems={setCheckedItems}
+                      />
+                    );
+                  })}
+                </List>
+              )}
+            </Await>
+          </React.Suspense>
+        )}
       </ListArea>
       <Bottom>
         <Button icon={FiDownload}>Export all</Button>
@@ -309,16 +333,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-`;
-
-const Loading = styled.div`
-  position: absolute;
-  inset: 0;
-  opacity: 0.1;
-  transition: opacity 200ms;
-  transition-delay: 200ms;
-  background-color: var(--color-gray-3);
-  z-index: 2147483647;
 `;
 
 const Top = styled.div`

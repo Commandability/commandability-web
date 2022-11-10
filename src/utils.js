@@ -13,3 +13,23 @@ export function getRandomInt(min, max) {
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min);
 }
+
+/**
+ * A debounced callback
+ * @callback debouncedCallback
+ */
+
+/**
+ * Delay the execution of a function such that it runs once after it has not been called for a specified wait time
+ * @param {debouncedCallback} callback - The debounced callback
+ * @param {number} wait - The wait time in milliseconds
+ */
+export function debounce(callback, wait) {
+  let timeoutId = null;
+  return (...args) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback.apply(null, args);
+    }, wait);
+  };
+}
