@@ -2,6 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+import { getRandomInt } from "utils.js";
 import Checkbox from "components/checkbox";
 
 export function FallbackItem() {
@@ -9,8 +10,10 @@ export function FallbackItem() {
     <FallbackWrapper>
       <FallbackCheckbox />
       <FallbackContents>
-        <FallbackText />
-        <FallbackText />
+        <FallbackText
+          style={{ "--text-length": `${getRandomInt(64, 256)}px` }}
+        />
+        <FallbackText style={{ "--text-length": "144px" }} />
       </FallbackContents>
     </FallbackWrapper>
   );
@@ -158,7 +161,7 @@ const FallbackContents = styled.div`
 `;
 
 const FallbackText = styled.div`
-  width: 144px;
+  width: var(--text-length);
   height: 1rem;
   border-radius: 8px;
   background-color: var(--color-gray-9);
