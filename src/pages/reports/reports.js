@@ -261,7 +261,7 @@ function Reports() {
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
-        {searching ? (
+        {searching || fetcher.state !== "idle" ? (
           fallbackList
         ) : (
           <React.Suspense fallback={fallbackList}>

@@ -6,13 +6,13 @@ import { getRandomInt } from "utils.js";
 import Checkbox from "components/checkbox";
 
 export function FallbackItem() {
+  // Only generate one random length per mount as opposed to on every render
+  const [textLength] = React.useState(getRandomInt(64, 256));
   return (
     <FallbackWrapper>
       <FallbackCheckbox />
       <FallbackContents>
-        <FallbackText
-          style={{ "--text-length": `${getRandomInt(64, 256)}px` }}
-        />
+        <FallbackText style={{ "--text-length": `${textLength}px` }} />
         <FallbackText style={{ "--text-length": "144px" }} />
       </FallbackContents>
     </FallbackWrapper>
