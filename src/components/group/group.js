@@ -5,45 +5,38 @@ import { FiPlus } from "react-icons/fi";
 import Spacer from "components/spacer";
 import UnstyledButton from "components/unstyled-button";
 
-export const groupContentType = {
-  ACTIVE_GROUP: "ACTIVE_GROUP",
-  INACTIVE_GROUP: "INACTIVE_GROUP",
-};
-
-function Group({ defaultContent, groupName, alertTime }) {
-  const [content, setContent] = React.useState(defaultContent);
-
-  let alertText;
-  if (alertTime === "0") {
-    alertText = "No alerts";
-    alertTime = "";
+function Group({ groupData }) {
+  let active;
+  let alertTime = 0;
+  if (groupData === null) {
+    active = false;
   } else {
-    alertText = "Minutes";
+    active = groupData.isVisible;
+    alertTime = groupData.alert;
   }
-
   let groupContent;
-  if (content === groupContentType.ACTIVE_GROUP) {
+  if (active === true) {
     groupContent = (
       <Content>
-        <Heading>{groupName}</Heading>
+        <Heading>{groupData.name}</Heading>
         <AlertWrapper>
-          <AlertTime>{alertTime}</AlertTime>
-          <AlertText>{alertText}</AlertText>
+          <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
+          <AlertText>{alertTime === 0 ? "No alerts" : "Minutes"}</AlertText>
         </AlertWrapper>
         <EditGroupButton
           type="button"
           onClick={() => {
-            setContent(groupContentType.INACTIVE_GROUP);
+            console.log("Edit Group");
           }}
         />
       </Content>
     );
-  } else if (content === groupContentType.INACTIVE_GROUP) {
+  } else if (active === false) {
     groupContent = (
       <AddGroupButton
         type="button"
         onClick={() => {
-          setContent(groupContentType.ACTIVE_GROUP);
+          console.log("Add Group");
         }}
       >
         <Text>Add group</Text>

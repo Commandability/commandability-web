@@ -2,10 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import * as Tabs from "@radix-ui/react-tabs";
 
+import { useFirestoreUser } from "context/firestore-user-context";
 import Group from "components/group";
-import { groupContentType } from "components/group";
 
 function Groups() {
+  const { firestoreUser } = useFirestoreUser();
   const generatePageLocations = () => {
     const numberOfPages = 6;
     const groupsPerPage = 6;
@@ -30,44 +31,59 @@ function Groups() {
     return pageLocations;
   };
 
+  console.log(firestoreUser.data.groups);
+
+  let userGroupData = firestoreUser.data.groups;
+
   let groupArray = generatePageLocations();
   let groupPage = [];
-  console.log(groupArray);
   for (let pageNum in groupArray) {
     groupPage.push(
       <TabsContent value={pageNum}>
         <GroupWrapper>
           <Group
-            defaultContent={groupContentType.ACTIVE_GROUP}
-            groupName={groupArray[pageNum].locationIds[0]}
-            alertTime="15"
+            groupData={
+              userGroupData[groupArray[pageNum].locationIds[0]]
+                ? userGroupData[groupArray[pageNum].locationIds[0]]
+                : null
+            }
           />
           <Group
-            defaultContent={groupContentType.ACTIVE_GROUP}
-            groupName={groupArray[pageNum].locationIds[1]}
-            alertTime="20"
+            groupData={
+              userGroupData[groupArray[pageNum].locationIds[1]]
+                ? userGroupData[groupArray[pageNum].locationIds[1]]
+                : null
+            }
           />
           <Group
-            defaultContent={groupContentType.INACTIVE_GROUP}
-            groupName={groupArray[pageNum].locationIds[2]}
-            alertTime="0"
+            groupData={
+              userGroupData[groupArray[pageNum].locationIds[2]]
+                ? userGroupData[groupArray[pageNum].locationIds[2]]
+                : null
+            }
           />
         </GroupWrapper>
         <GroupWrapper>
           <Group
-            defaultContent={groupContentType.INACTIVE_GROUP}
-            groupName={groupArray[pageNum].locationIds[3]}
-            alertTime="0"
+            groupData={
+              userGroupData[groupArray[pageNum].locationIds[3]]
+                ? userGroupData[groupArray[pageNum].locationIds[3]]
+                : null
+            }
           />
           <Group
-            defaultContent={groupContentType.INACTIVE_GROUP}
-            groupName={groupArray[pageNum].locationIds[4]}
-            alertTime="0"
+            groupData={
+              userGroupData[groupArray[pageNum].locationIds[4]]
+                ? userGroupData[groupArray[pageNum].locationIds[4]]
+                : null
+            }
           />
           <Group
-            defaultContent={groupContentType.ACTIVE_GROUP}
-            groupName={groupArray[pageNum].locationIds[5]}
-            alertTime="0"
+            groupData={
+              userGroupData[groupArray[pageNum].locationIds[5]]
+                ? userGroupData[groupArray[pageNum].locationIds[5]]
+                : null
+            }
           />
         </GroupWrapper>
       </TabsContent>
@@ -105,16 +121,10 @@ function Groups() {
 const Wrapper = styled(Tabs.Root)`
   display: flex;
   justify-content: center;
-  padding: 32px;
 `;
 
 const Content = styled.div`
-  width: 1200px;
-  height: fit-content;
-  background-color: var(--color-gray-10);
-  border-radius: 8px;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
   padding-top: 64px;
   padding-bottom: 32px;
 `;

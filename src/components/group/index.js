@@ -1,1 +1,1 @@
-export { default, groupContentType } from "./group";
+export { default } from "./group";

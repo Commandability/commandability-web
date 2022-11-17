@@ -3,6 +3,7 @@ import { collection, doc } from "firebase/firestore";
 
 import { db } from "firebase-config";
 import { SnapshotProvider } from "@context/snapshot-context";
+import { FirestoreUserProvider } from "@context/firestore-user-context";
 import { useAuth } from "@context/auth-context";
 import FireLoader from "@components/fire-loader";
 
@@ -43,9 +44,11 @@ function App() {
         },
       ]}
     >
-      <React.Suspense fallback={<FireLoader />}>
-        {user.current ? <AuthenticatedApp /> : <UnauthenticatedApp />}
-      </React.Suspense>
+      <FirestoreUserProvider>
+        <React.Suspense fallback={<FireLoader />}>
+          {user.current ? <AuthenticatedApp /> : <UnauthenticatedApp />}
+        </React.Suspense>
+      </FirestoreUserProvider>
     </SnapshotProvider>
   );
 }
