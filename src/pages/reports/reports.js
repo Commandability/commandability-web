@@ -40,7 +40,7 @@ import {
 } from "components/alert-dialog";
 import Checkbox from "components/checkbox";
 import SearchInput from "components/search-input";
-import UnstyledButton from "components/unstyled-button";
+import IconButton from "components/icon-button";
 import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
 import ReportItem, { FallbackItem } from "components/report-item";
@@ -144,6 +144,10 @@ function Reports() {
 
   const isAnyItemChecked = !!checkedItems.length;
 
+  const reportsStart = 0;
+  const reportsEnd = 0;
+  const totalReports = 0;
+
   React.useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
@@ -210,6 +214,19 @@ function Reports() {
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
         </SearchForm>
+        <Pagination>
+          {`${reportsStart} - ${reportsEnd} of ${totalReports}`}
+          <Arrows>
+            <IconButton>
+              <VisuallyHidden>Page left</VisuallyHidden>
+              <FiChevronLeft />
+            </IconButton>
+            <IconButton>
+              <VisuallyHidden>Page right</VisuallyHidden>
+              <FiChevronRight />
+            </IconButton>
+          </Arrows>
+        </Pagination>
       </Top>
       <ListArea>
         <ListHeader aria-live="polite" aria-atomic="true">
@@ -296,14 +313,6 @@ function Reports() {
       <Bottom>
         <Button icon={FiDownload}>Export all</Button>
         <Button icon={FiTrash2}>Delete All</Button>
-        <UnstyledButton>
-          <VisuallyHidden>Page left</VisuallyHidden>
-          <FiChevronLeft />
-        </UnstyledButton>
-        <UnstyledButton>
-          <VisuallyHidden>Page right</VisuallyHidden>
-          <FiChevronRight />
-        </UnstyledButton>
       </Bottom>
     </Wrapper>
   );
@@ -319,6 +328,8 @@ const Wrapper = styled.div`
 
 const Top = styled.div`
   padding: 32px 48px;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const SearchForm = styled(Form)`
@@ -333,6 +344,21 @@ const ReportsSearch = styled(SearchInput)`
 
 const ReportsSelect = styled(Select)`
   width: 160px;
+`;
+
+const Pagination = styled.div`
+  // Align to baseline of search form
+  position: relative;
+  top: 0.8rem;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+  color: var(--color-gray-4);
+`;
+
+const Arrows = styled.div`
+  display: flex;
+  gap: 8px;
 `;
 
 const ListHeader = styled.div`
