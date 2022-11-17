@@ -6,7 +6,7 @@ import { SnapshotProvider } from "context/snapshot-context";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 
-const MINIMUM_LOADING_TIME = 400;
+const MINIMUM_LOADING_TIME = 200;
 
 const AuthenticatedApp = React.lazy(() => {
   return Promise.all([
