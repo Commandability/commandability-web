@@ -14,11 +14,14 @@ import PrivacyPolicy from "pages/privacy-policy";
 import Layout from "components/layout";
 import DashboardContainer from "components/dashboard-container";
 
-import Reports, { reportsLoader } from "pages/reports";
+import Reports, {
+  loader as reportsLoader,
+  action as reportsAction,
+} from "pages/reports";
 import Roster from "pages/roster";
 import Groups from "pages/groups";
 
-import Report, { reportLoader } from "pages/report";
+import Report, { loader as reportLoader } from "pages/report";
 import Person from "pages/person";
 import Group from "pages/group";
 
@@ -32,7 +35,12 @@ const router = createBrowserRouter(
         errorElement={<NotFound />}
       >
         <Route path="reports" element={<DashboardContainer />}>
-          <Route index element={<Reports />} loader={reportsLoader} />
+          <Route
+            index
+            element={<Reports />}
+            loader={reportsLoader}
+            action={reportsAction}
+          />
           <Route path=":reportId" element={<Report />} loader={reportLoader} />
         </Route>
         <Route path="roster" element={<DashboardContainer />}>

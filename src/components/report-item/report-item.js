@@ -20,12 +20,13 @@ export function FallbackItem() {
 }
 
 function ReportItem({
-  setCheckedItems,
-  checkedAll,
-  setCheckedAll,
   reportId,
   location,
   startTimestamp,
+  checkedAll,
+  setCheckedAll,
+  setCheckedItems,
+  isAnyItemChecked,
   ...props
 }) {
   const { status, origin } = checkedAll;
@@ -38,13 +39,18 @@ function ReportItem({
       setChecked(true);
       setCheckedItems((checkedItems) => [...checkedItems, reportId]);
       // Uncheck item when checkedAll is unchecked, but not when a single person has been unchecked
-    } else if (origin !== "list") {
+    } else if (origin !== "list-item") {
       setChecked(false);
       setCheckedItems((checkedItems) =>
         checkedItems.filter((item) => item !== reportId)
       );
     }
   }, [status, origin, setCheckedItems, reportId]);
+
+  // Ensure the item is unchecked even if a delete is unsuccessful
+  React.useEffect(() => {
+    if (!isAnyItemChecked) setChecked(false);
+  }, [isAnyItemChecked]);
 
   return (
     <Wrapper data-checked={checked ? "true" : "false"} {...props}>
@@ -62,7 +68,7 @@ function ReportItem({
             );
 
             // Disable checked all when a single person has been unchecked
-            setCheckedAll({ status: false, origin: "list" });
+            setCheckedAll({ status: false, origin: "list-item" });
           }
         }}
       />

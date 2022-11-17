@@ -17,6 +17,7 @@ import {
   Await,
   useNavigation,
   useSubmit,
+  useFetcher,
   Form,
 } from "react-router-dom";
 import {
@@ -30,19 +31,11 @@ import {
 
 import { debounce } from "utils.js";
 import { storage } from "firebase.js";
-import { useAuth } from "context/auth-context";
-import {
-  Toast,
-  ToastProvider,
-  ToastViewport,
-  unknownToastState,
-} from "components/toast";
 import { Select, SelectItem } from "components/select";
 import {
   AlertDialog,
   AlertDialogTrigger,
   AlertDialogCancel,
-  AlertDialogAction,
   AlertDialogContent,
 } from "components/alert-dialog";
 import Checkbox from "components/checkbox";
@@ -70,7 +63,7 @@ const selectValues = {
 
 const SEARCH_DEBOUNCE = 250;
 
-export async function reportsLoader({ request }) {
+export async function loader({ request }) {
   const { currentUser } = getAuth();
 
   const url = new URL(request.url);
@@ -115,63 +108,50 @@ export async function reportsLoader({ request }) {
   }
 }
 
+export async function action({ request }) {
+  let formData = await request.formData();
+  const checkedItems = JSON.parse(formData.get("checked-items"));
+
+  const { currentUser } = getAuth();
+  const reportsRef = collection(db, "users", currentUser.uid, "reports");
+
+  // Remove firestore metadata
+  const batch = writeBatch(db);
+  checkedItems.forEach((item) => {
+    batch.delete(doc(reportsRef, item));
+  });
+  await batch.commit();
+  // Remove files from storage
+  for (const item of checkedItems) {
+    const itemRef = ref(storage, `users/${currentUser.uid}/reports/${item}`);
+    await deleteObject(itemRef);
+  }
+}
+
 function Reports() {
-  const { user } = useAuth();
   const { q, reports } = useLoaderData();
   const navigation = useNavigation();
   const submit = useSubmit();
+  const fetcher = useFetcher();
 
-  const userId = user.current?.uid;
   const searching =
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
-
-  const reportsRef = collection(db, "users", userId, "reports");
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
   const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedItems, setCheckedItems] = React.useState([]);
 
-  const [toastState, setToastState] = React.useState({
-    title: "",
-    message: "",
-  });
-  const [toastOpen, setToastOpen] = React.useState(false);
+  const isAnyItemChecked = !!checkedItems.length;
 
   React.useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
 
-  async function removeReports(checkedItems) {
-    // Remove firestore metadata
-    const batch = writeBatch(db);
-    checkedItems.forEach((item) => {
-      batch.delete(doc(reportsRef, item));
-    });
-    await batch.commit();
-    // Remove files from storage
-    for (const item of checkedItems) {
-      const itemRef = ref(storage, `users/${userId}/reports/${item}`);
-      await deleteObject(itemRef);
-    }
-  }
-
-  async function onRemoveReportsAction() {
+  async function onRemoveReports(event) {
     setRemoveReportsOpen(false);
     setCheckedAll(false);
-
-    try {
-      await removeReports(checkedItems);
-      setCheckedItems([]);
-      setToastState({
-        title: "Reports deleted successfully",
-        message: "The selected reports have been removed the list.",
-      });
-    } catch (error) {
-      setToastState(unknownToastState);
-    }
-
-    setToastOpen(true);
+    setCheckedItems([]);
   }
 
   const handleSearchChange = React.useMemo(
@@ -185,6 +165,11 @@ function Reports() {
       }, SEARCH_DEBOUNCE),
     [q, submit]
   );
+
+  // Ensure checkedAll is unchecked even if a delete is unsuccessful
+  React.useEffect(() => {
+    if (!isAnyItemChecked) setCheckedAll({ status: false, origin: "form" });
+  }, [isAnyItemChecked]);
 
   const fallbackList = (
     <>
@@ -259,11 +244,16 @@ function Reports() {
                         Cancel
                       </Button>
                     </AlertDialogCancel>
-                    <AlertDialogAction asChild>
-                      <Button onClick={onRemoveReportsAction} icon={FiCheck}>
+                    <fetcher.Form method="post" onSubmit={onRemoveReports}>
+                      <Button
+                        type="submit"
+                        name="checked-items"
+                        value={JSON.stringify(checkedItems)}
+                        icon={FiCheck}
+                      >
                         Yes, delete reports
                       </Button>
-                    </AlertDialogAction>
+                    </fetcher.Form>
                   </AlertOptions>
                 </RemoveAlertDialogContent>
               </AlertDialog>
@@ -293,6 +283,7 @@ function Reports() {
                         checkedAll={checkedAll}
                         setCheckedAll={setCheckedAll}
                         setCheckedItems={setCheckedItems}
+                        isAnyItemChecked={isAnyItemChecked}
                       />
                     );
                   })}
@@ -314,15 +305,6 @@ function Reports() {
           <FiChevronRight />
         </UnstyledButton>
       </Bottom>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-        />
-        <ToastViewport />
-      </ToastProvider>
     </Wrapper>
   );
 }

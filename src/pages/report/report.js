@@ -8,7 +8,7 @@ import { ref, getBlob } from "firebase/storage";
 import { storage } from "firebase.js";
 import VisuallyHidden from "components/visually-hidden";
 
-export async function reportLoader({ params }) {
+export async function loader({ params }) {
   const { currentUser } = getAuth();
   const result = await getBlob(
     ref(storage, `users/${currentUser?.uid}/reports/${params.reportId}`)

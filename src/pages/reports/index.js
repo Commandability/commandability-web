@@ -1,1 +1,1 @@
-export { default, reportsLoader } from "./reports";
+export { default, loader, action } from "./reports";
