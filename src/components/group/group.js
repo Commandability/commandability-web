@@ -1,11 +1,15 @@
 import * as React from "react";
 import styled from "styled-components";
 import { FiPlus } from "react-icons/fi";
+import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 
 import Spacer from "components/spacer";
 import UnstyledButton from "components/unstyled-button";
+import EditGroupDialogContent from "components/edit-group-dialog-content";
 
 function Group({ groupData }) {
+  const [editGroupOpen, setEditGroupOpen] = React.useState(false);
+
   let active;
   let alertTime = 0;
   if (groupData === null) {
@@ -23,12 +27,14 @@ function Group({ groupData }) {
           <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
           <AlertText>{alertTime === 0 ? "No alerts" : "Minutes"}</AlertText>
         </AlertWrapper>
-        <EditGroupButton
-          type="button"
-          onClick={() => {
-            console.log("Edit Group");
-          }}
-        />
+        <Dialog open={editGroupOpen} onOpenChange={setEditGroupOpen}>
+          <DialogTrigger asChild>
+            <EditGroupButton type="button" />
+          </DialogTrigger>
+          <DialogContent title="Edit Group">
+            <EditGroupDialogContent />
+          </DialogContent>
+        </Dialog>
       </Content>
     );
   } else if (active === false) {
