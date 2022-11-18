@@ -61,7 +61,7 @@ const selectValues = {
   oldest: "oldest",
 };
 
-const SEARCH_DEBOUNCE = 250;
+const SEARCH_DEBOUNCE = 400;
 
 export async function loader({ request }) {
   const { currentUser } = getAuth();
@@ -109,22 +109,24 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
-  let formData = await request.formData();
-  const checkedItems = JSON.parse(formData.get("checked-items"));
+  const formData = await request.formData();
+  if (formData.has("checked-items")) {
+    const checkedItems = JSON.parse(formData.get("checked-items"));
 
-  const { currentUser } = getAuth();
-  const reportsRef = collection(db, "users", currentUser.uid, "reports");
+    const { currentUser } = getAuth();
+    const reportsRef = collection(db, "users", currentUser.uid, "reports");
 
-  // Remove firestore metadata
-  const batch = writeBatch(db);
-  checkedItems.forEach((item) => {
-    batch.delete(doc(reportsRef, item));
-  });
-  await batch.commit();
-  // Remove files from storage
-  for (const item of checkedItems) {
-    const itemRef = ref(storage, `users/${currentUser.uid}/reports/${item}`);
-    await deleteObject(itemRef);
+    // Remove firestore metadata
+    const batch = writeBatch(db);
+    checkedItems.forEach((item) => {
+      batch.delete(doc(reportsRef, item));
+    });
+    await batch.commit();
+    // Remove files from storage
+    for (const item of checkedItems) {
+      const itemRef = ref(storage, `users/${currentUser.uid}/reports/${item}`);
+      await deleteObject(itemRef);
+    }
   }
 }
 
