@@ -197,7 +197,15 @@ function Reports() {
           id="search-form"
           role="search"
           onChange={(event) => {
-            handleSearchChange(event.currentTarget);
+            if (event.target.name === "q") {
+              handleSearchChange(event.currentTarget);
+            } else {
+              const isFirstSearch = q === null;
+
+              submit(event.currentTarget, {
+                replace: !isFirstSearch,
+              });
+            }
           }}
         >
           <ReportsSearch
