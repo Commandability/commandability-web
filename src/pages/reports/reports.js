@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import { getAuth } from "firebase/auth";
 import {
   doc,
   writeBatch,
@@ -7,8 +8,12 @@ import {
   query,
   orderBy,
   limit,
+  startAfter,
+  endBefore,
   getDocs,
   where,
+  Timestamp,
+  limitToLast,
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import {
@@ -29,6 +34,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
+import { db } from "firebase.js";
 import { debounce } from "utils.js";
 import { storage } from "firebase.js";
 import { Select, SelectItem } from "components/select";
@@ -45,30 +51,56 @@ import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
 import ReportItem, { FallbackItem } from "components/report-item";
 
-import { db } from "firebase.js";
-import { getAuth } from "firebase/auth";
-
 export const REPORTS_CONFIGURATION = {
-  reportsPerPage: 20,
+  reportsPerPage: 5,
   fields: {
     startTimestamp: "startTimestamp",
     location: "location",
   },
 };
-
 const selectValues = {
   newest: "newest",
   oldest: "oldest",
 };
-
 const SEARCH_DEBOUNCE = 400;
+const STORAGE_ID = "@commandability/reports";
 
 export async function loader({ request }) {
   const { currentUser } = getAuth();
 
+  const { reportsPerPage, fields } = REPORTS_CONFIGURATION;
+
   const url = new URL(request.url);
   const q = url.searchParams.get("q");
   const s = url.searchParams.get("s");
+  const p = url.searchParams.get("p");
+
+  const first = window.sessionStorage.getItem(`${STORAGE_ID}/first`);
+  const last = window.sessionStorage.getItem(`${STORAGE_ID}/last`);
+
+  // Create a new Timestamp from the serialized one because
+  // JSON.stringify does not serialize prototypes, which are necessary for firebase query cursors
+  let position = [limit(reportsPerPage)];
+  if (p === "next" && last) {
+    const deserializedLast = JSON.parse(last);
+    position = [
+      limit(reportsPerPage),
+      startAfter(
+        new Timestamp(deserializedLast.seconds, deserializedLast.nanoseconds)
+      ),
+    ];
+  } else if (p === "prev" && first) {
+    const deserializedFirst = JSON.parse(first);
+    position = [
+      limitToLast(reportsPerPage),
+      endBefore(
+        new Timestamp(deserializedFirst.seconds, deserializedFirst.nanoseconds)
+      ),
+    ];
+  }
+
+  window.sessionStorage.removeItem(`${STORAGE_ID}/first`);
+  window.sessionStorage.removeItem(`${STORAGE_ID}/last`);
 
   if (q) {
     return defer({
@@ -76,18 +108,14 @@ export async function loader({ request }) {
       reports: getDocs(
         query(
           collection(db, "users", currentUser.uid, "reports"),
-          limit(REPORTS_CONFIGURATION.reportsPerPage),
-          orderBy(REPORTS_CONFIGURATION.fields.location),
-          where(REPORTS_CONFIGURATION.fields.location, ">=", q.toLowerCase()),
-          where(
-            REPORTS_CONFIGURATION.fields.location,
-            "<=",
-            q.toLowerCase() + "\uf8ff"
-          ),
+          orderBy(fields.location),
+          where(fields.location, ">=", q.toLowerCase()),
+          where(fields.location, "<=", q.toLowerCase() + "\uf8ff"),
           orderBy(
-            REPORTS_CONFIGURATION.fields.startTimestamp,
+            fields.startTimestamp,
             s === selectValues.oldest ? undefined : "desc"
-          )
+          ),
+          limit(reportsPerPage)
         )
       ),
     });
@@ -97,11 +125,11 @@ export async function loader({ request }) {
       reports: getDocs(
         query(
           collection(db, "users", currentUser.uid, "reports"),
-          limit(REPORTS_CONFIGURATION.reportsPerPage),
           orderBy(
-            REPORTS_CONFIGURATION.fields.startTimestamp,
+            fields.startTimestamp,
             s === selectValues.oldest ? undefined : "desc"
-          )
+          ),
+          ...position
         )
       ),
     });
@@ -146,15 +174,18 @@ function Reports() {
 
   const isAnyItemChecked = !!checkedItems.length;
 
-  const reportsStart = 0;
-  const reportsEnd = 0;
-  const totalReports = 0;
-
   React.useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
 
-  async function onRemoveReports(event) {
+  React.useEffect(() => {
+    return () => {
+      window.sessionStorage.removeItem("first");
+      window.sessionStorage.removeItem("last");
+    };
+  }, []);
+
+  async function onRemoveReports() {
     setRemoveReportsOpen(false);
     setCheckedAll(false);
     setCheckedItems([]);
@@ -224,19 +255,36 @@ function Reports() {
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
         </SearchForm>
-        <Pagination>
-          {`${reportsStart} - ${reportsEnd} of ${totalReports}`}
-          <Arrows>
-            <IconButton>
-              <VisuallyHidden>Page left</VisuallyHidden>
-              <FiChevronLeft />
-            </IconButton>
-            <IconButton>
-              <VisuallyHidden>Page right</VisuallyHidden>
-              <FiChevronRight />
-            </IconButton>
-          </Arrows>
-        </Pagination>
+        <React.Suspense>
+          <Await resolve={reports}>
+            {(reports) => {
+              const first = JSON.stringify(
+                reports.docs[0].data().startTimestamp.toJSON()
+              );
+              const last = JSON.stringify(
+                reports.docs[reports.docs.length - 1]
+                  .data()
+                  .startTimestamp.toJSON()
+              );
+              window.sessionStorage.setItem(`${STORAGE_ID}/first`, first);
+              window.sessionStorage.setItem(`${STORAGE_ID}/last`, last);
+              return (
+                <Pagination>
+                  <PaginationForm id="pagination-form">
+                    <IconButton type="submit" name="p" value={"prev"}>
+                      <VisuallyHidden>Previous page</VisuallyHidden>
+                      <FiChevronLeft />
+                    </IconButton>
+                    <IconButton type="submit" name="p" value={"next"}>
+                      <VisuallyHidden>Next page</VisuallyHidden>
+                      <FiChevronRight />
+                    </IconButton>
+                  </PaginationForm>
+                </Pagination>
+              );
+            }}
+          </Await>
+        </React.Suspense>
       </Top>
       <ListArea>
         <ListHeader aria-live="polite" aria-atomic="true">
@@ -366,7 +414,7 @@ const Pagination = styled.div`
   color: var(--color-gray-4);
 `;
 
-const Arrows = styled.div`
+const PaginationForm = styled(Form)`
   display: flex;
   gap: 8px;
 `;
