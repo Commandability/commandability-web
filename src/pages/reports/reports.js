@@ -14,6 +14,7 @@ import {
   where,
   Timestamp,
   limitToLast,
+  getCountFromServer,
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import {
@@ -63,7 +64,6 @@ const selectValues = {
   oldest: "oldest",
 };
 const SEARCH_DEBOUNCE = 400;
-const STORAGE_ID = "@commandability/reports";
 
 export async function loader({ request }) {
   const { currentUser } = getAuth();
@@ -74,33 +74,34 @@ export async function loader({ request }) {
   const q = url.searchParams.get("q");
   const s = url.searchParams.get("s");
   const p = url.searchParams.get("p");
-
-  const first = window.sessionStorage.getItem(`${STORAGE_ID}/first`);
-  const last = window.sessionStorage.getItem(`${STORAGE_ID}/last`);
+  const f = url.searchParams.get("f");
+  const l = url.searchParams.get("l");
 
   // Create a new Timestamp from the serialized one because
   // JSON.stringify does not serialize prototypes, which are necessary for firebase query cursors
-  let position = [limit(reportsPerPage)];
-  if (p === "next" && last) {
-    const deserializedLast = JSON.parse(last);
-    position = [
+  let rangeQueryParams = [limit(reportsPerPage)];
+  if (p === "next" && f && l) {
+    rangeQueryParams = [
       limit(reportsPerPage),
-      startAfter(
-        new Timestamp(deserializedLast.seconds, deserializedLast.nanoseconds)
-      ),
+      startAfter(new Timestamp(parseInt(l), 0)),
     ];
-  } else if (p === "prev" && first) {
-    const deserializedFirst = JSON.parse(first);
-    position = [
+  } else if (p === "prev" && f && l) {
+    rangeQueryParams = [
       limitToLast(reportsPerPage),
-      endBefore(
-        new Timestamp(deserializedFirst.seconds, deserializedFirst.nanoseconds)
-      ),
+      endBefore(new Timestamp(parseInt(f), 0)),
     ];
   }
 
-  window.sessionStorage.removeItem(`${STORAGE_ID}/first`);
-  window.sessionStorage.removeItem(`${STORAGE_ID}/last`);
+  let prevDocsQueryParams = [];
+  if (f) prevDocsQueryParams = [endBefore(new Timestamp(parseInt(f), 0))];
+
+  const reportsQueryParams = [
+    collection(db, "users", currentUser.uid, "reports"),
+    orderBy(
+      fields.startTimestamp,
+      s === selectValues.oldest ? undefined : "desc"
+    ),
+  ];
 
   if (q) {
     return defer({
@@ -122,15 +123,10 @@ export async function loader({ request }) {
   } else {
     return defer({
       q,
-      reports: getDocs(
-        query(
-          collection(db, "users", currentUser.uid, "reports"),
-          orderBy(
-            fields.startTimestamp,
-            s === selectValues.oldest ? undefined : "desc"
-          ),
-          ...position
-        )
+      p,
+      reportsDocs: getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
+      prevReportsCount: getCountFromServer(
+        query(...reportsQueryParams, ...prevDocsQueryParams)
       ),
     });
   }
@@ -159,7 +155,7 @@ export async function action({ request }) {
 }
 
 function Reports() {
-  const { q, reports } = useLoaderData();
+  const { q, p, reportsDocs, prevReportsCount } = useLoaderData();
   const navigation = useNavigation();
   const submit = useSubmit();
   const fetcher = useFetcher();
@@ -167,6 +163,8 @@ function Reports() {
   const searching =
     navigation.location &&
     new URLSearchParams(navigation.location.search).has("q");
+
+  const { reportsPerPage } = REPORTS_CONFIGURATION;
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
   const [checkedAll, setCheckedAll] = React.useState(false);
@@ -177,13 +175,6 @@ function Reports() {
   React.useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
-
-  React.useEffect(() => {
-    return () => {
-      window.sessionStorage.removeItem("first");
-      window.sessionStorage.removeItem("last");
-    };
-  }, []);
 
   async function onRemoveReports() {
     setRemoveReportsOpen(false);
@@ -212,7 +203,7 @@ function Reports() {
     <>
       <VisuallyHidden>Loading reports</VisuallyHidden>
       <List>
-        {Array(REPORTS_CONFIGURATION.reportsPerPage)
+        {Array(reportsPerPage)
           .fill(null)
           .map((_, index) => (
             <FallbackItem key={index} />
@@ -256,20 +247,24 @@ function Reports() {
           </ReportsSelect>
         </SearchForm>
         <React.Suspense>
-          <Await resolve={reports}>
-            {(reports) => {
-              const first = JSON.stringify(
-                reports.docs[0].data().startTimestamp.toJSON()
-              );
-              const last = JSON.stringify(
-                reports.docs[reports.docs.length - 1]
-                  .data()
-                  .startTimestamp.toJSON()
-              );
-              window.sessionStorage.setItem(`${STORAGE_ID}/first`, first);
-              window.sessionStorage.setItem(`${STORAGE_ID}/last`, last);
+          <Await resolve={reportsDocs}>
+            {(reportsDocs) => {
               return (
                 <Pagination>
+                  <Await resolve={prevReportsCount}>
+                    {(prevReportsCount) => {
+                      let displayCount = prevReportsCount.data().count;
+                      // If the displayed reports are a page forward from the previous first displayed report
+                      if (p === "next") displayCount += reportsPerPage;
+                      // If the displayed reports are a page backward from the previous first displayed report
+                      if (p === "prev") displayCount -= reportsPerPage;
+                      return (
+                        <div>
+                          {displayCount} - {displayCount + reportsPerPage}
+                        </div>
+                      );
+                    }}
+                  </Await>
                   <PaginationForm id="pagination-form">
                     <IconButton type="submit" name="p" value={"prev"}>
                       <VisuallyHidden>Previous page</VisuallyHidden>
@@ -279,6 +274,21 @@ function Reports() {
                       <VisuallyHidden>Next page</VisuallyHidden>
                       <FiChevronRight />
                     </IconButton>
+                    <input
+                      type="hidden"
+                      name="f"
+                      // The first displayed report's timestamp's seconds
+                      value={reportsDocs.docs[0].data().startTimestamp.seconds}
+                    />
+                    <input
+                      type="hidden"
+                      name="l"
+                      // The last displayed report's timestamp's seconds
+                      value={
+                        reportsDocs.docs[reportsDocs.docs.length - 1].data()
+                          .startTimestamp.seconds
+                      }
+                    />
                   </PaginationForm>
                 </Pagination>
               );
@@ -341,13 +351,13 @@ function Reports() {
         ) : (
           <React.Suspense fallback={fallbackList}>
             <Await
-              resolve={reports}
+              resolve={reportsDocs}
               errorElement={<p>Error loading reports</p>}
             >
-              {(reports) => (
+              {(reportsDocs) => (
                 <List aria-live="polite" aria-atomic="true">
                   {/* Ensure data has loaded */}
-                  {[...reports.docs].map((report) => {
+                  {[...reportsDocs.docs].map((report) => {
                     const { location, startTimestamp } = report.data();
                     return (
                       <ReportItem
