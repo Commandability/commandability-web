@@ -124,10 +124,12 @@ export async function loader({ request }) {
     return defer({
       q,
       p,
-      reportsDocs: getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
-      prevReportsCount: getCountFromServer(
-        query(...reportsQueryParams, ...prevDocsQueryParams)
-      ),
+      reportsData: Promise.all([
+        getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
+        getCountFromServer(
+          query(...reportsQueryParams, ...prevDocsQueryParams)
+        ),
+      ]),
     });
   }
 }
@@ -155,7 +157,7 @@ export async function action({ request }) {
 }
 
 function Reports() {
-  const { q, p, reportsDocs, prevReportsCount } = useLoaderData();
+  const { q, p, reportsData } = useLoaderData();
   const navigation = useNavigation();
   const submit = useSubmit();
   const fetcher = useFetcher();
@@ -247,30 +249,36 @@ function Reports() {
           </ReportsSelect>
         </SearchForm>
         <React.Suspense>
-          <Await resolve={reportsDocs}>
-            {(reportsDocs) => {
+          <Await resolve={reportsData}>
+            {(reportsData) => {
+              const [reportsDocs, prevReportsCount] = reportsData;
+
+              let displayCount = prevReportsCount.data().count;
+              // If the displayed reports are a page forward from the previous first displayed report
+              if (p === "next") displayCount += reportsPerPage;
+              // If the displayed reports are a page backward from the previous first displayed report
+              else if (p === "prev") displayCount -= reportsPerPage;
+              else displayCount = 0;
+
               return (
                 <Pagination>
-                  <Await resolve={prevReportsCount}>
-                    {(prevReportsCount) => {
-                      let displayCount = prevReportsCount.data().count;
-                      // If the displayed reports are a page forward from the previous first displayed report
-                      if (p === "next") displayCount += reportsPerPage;
-                      // If the displayed reports are a page backward from the previous first displayed report
-                      if (p === "prev") displayCount -= reportsPerPage;
-                      return (
-                        <div>
-                          {displayCount} - {displayCount + reportsPerPage}
-                        </div>
-                      );
-                    }}
-                  </Await>
+                  {displayCount} - {displayCount + reportsPerPage}
                   <PaginationForm id="pagination-form">
-                    <IconButton type="submit" name="p" value={"prev"}>
+                    <IconButton
+                      type="submit"
+                      name="p"
+                      value={"prev"}
+                      disabled={displayCount === 0}
+                    >
                       <VisuallyHidden>Previous page</VisuallyHidden>
                       <FiChevronLeft />
                     </IconButton>
-                    <IconButton type="submit" name="p" value={"next"}>
+                    <IconButton
+                      type="submit"
+                      name="p"
+                      value={"next"}
+                      disabled={reportsDocs.docs.length < reportsPerPage}
+                    >
                       <VisuallyHidden>Next page</VisuallyHidden>
                       <FiChevronRight />
                     </IconButton>
@@ -351,29 +359,32 @@ function Reports() {
         ) : (
           <React.Suspense fallback={fallbackList}>
             <Await
-              resolve={reportsDocs}
+              resolve={reportsData}
               errorElement={<p>Error loading reports</p>}
             >
-              {(reportsDocs) => (
-                <List aria-live="polite" aria-atomic="true">
-                  {/* Ensure data has loaded */}
-                  {[...reportsDocs.docs].map((report) => {
-                    const { location, startTimestamp } = report.data();
-                    return (
-                      <ReportItem
-                        key={report.id}
-                        reportId={report.id}
-                        location={location}
-                        startTimestamp={startTimestamp}
-                        checkedAll={checkedAll}
-                        setCheckedAll={setCheckedAll}
-                        setCheckedItems={setCheckedItems}
-                        isAnyItemChecked={isAnyItemChecked}
-                      />
-                    );
-                  })}
-                </List>
-              )}
+              {(reportsData) => {
+                const [reportsDocs] = reportsData;
+                return (
+                  <List aria-live="polite" aria-atomic="true">
+                    {/* Ensure data has loaded */}
+                    {[...reportsDocs.docs].map((report) => {
+                      const { location, startTimestamp } = report.data();
+                      return (
+                        <ReportItem
+                          key={report.id}
+                          reportId={report.id}
+                          location={location}
+                          startTimestamp={startTimestamp}
+                          checkedAll={checkedAll}
+                          setCheckedAll={setCheckedAll}
+                          setCheckedItems={setCheckedItems}
+                          isAnyItemChecked={isAnyItemChecked}
+                        />
+                      );
+                    })}
+                  </List>
+                );
+              }}
             </Await>
           </React.Suspense>
         )}
