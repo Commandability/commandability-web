@@ -95,32 +95,36 @@ export async function loader({ request }) {
   let prevDocsQueryParams = [];
   if (f) prevDocsQueryParams = [endBefore(new Timestamp(parseInt(f), 0))];
 
-  const reportsQueryParams = [
-    collection(db, "users", currentUser.uid, "reports"),
-    orderBy(
-      fields.startTimestamp,
-      s === selectValues.oldest ? undefined : "desc"
-    ),
-  ];
-
   if (q) {
+    const filteredReportsQueryParams = [
+      collection(db, "users", currentUser.uid, "reports"),
+      orderBy(fields.location),
+      where(fields.location, ">=", q.toLowerCase()),
+      where(fields.location, "<=", q.toLowerCase() + "\uf8ff"),
+      orderBy(
+        fields.startTimestamp,
+        s === selectValues.oldest ? undefined : "desc"
+      ),
+    ];
+
     return defer({
       q,
-      reports: getDocs(
-        query(
-          collection(db, "users", currentUser.uid, "reports"),
-          orderBy(fields.location),
-          where(fields.location, ">=", q.toLowerCase()),
-          where(fields.location, "<=", q.toLowerCase() + "\uf8ff"),
-          orderBy(
-            fields.startTimestamp,
-            s === selectValues.oldest ? undefined : "desc"
-          ),
-          limit(reportsPerPage)
-        )
-      ),
+      reportsData: Promise.all([
+        getDocs(query(...filteredReportsQueryParams, ...rangeQueryParams)),
+        getCountFromServer(
+          query(...filteredReportsQueryParams, ...prevDocsQueryParams)
+        ),
+      ]),
     });
   } else {
+    const reportsQueryParams = [
+      collection(db, "users", currentUser.uid, "reports"),
+      orderBy(
+        fields.startTimestamp,
+        s === selectValues.oldest ? undefined : "desc"
+      ),
+    ];
+
     return defer({
       q,
       p,
@@ -216,22 +220,21 @@ function Reports() {
 
   return (
     <Wrapper>
-      <Top>
-        <SearchForm
-          id="search-form"
-          role="search"
-          onChange={(event) => {
-            if (event.target.name === "q") {
-              handleSearchChange(event.currentTarget);
-            } else {
-              const isFirstSearch = q === null;
+      <ReportsForm
+        id="reports-form"
+        onChange={(event) => {
+          if (event.target.name === "q") {
+            handleSearchChange(event.currentTarget);
+          } else {
+            const isFirstSearch = q === null;
 
-              submit(event.currentTarget, {
-                replace: !isFirstSearch,
-              });
-            }
-          }}
-        >
+            submit(event.currentTarget, {
+              replace: !isFirstSearch,
+            });
+          }
+        }}
+      >
+        <Filter>
           <ReportsSearch
             id="q"
             name="q"
@@ -247,7 +250,7 @@ function Reports() {
             <SelectItem value={selectValues.newest}>Newest first</SelectItem>
             <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
-        </SearchForm>
+        </Filter>
         <React.Suspense>
           <Await resolve={reportsData}>
             {(reportsData) => {
@@ -262,8 +265,8 @@ function Reports() {
 
               return (
                 <Pagination>
-                  {displayCount} - {displayCount + reportsPerPage}
-                  <PaginationForm id="pagination-form">
+                  {displayCount} - {displayCount + reportsDocs.docs.length}
+                  <PaginationButtons>
                     <IconButton
                       type="submit"
                       name="p"
@@ -297,13 +300,13 @@ function Reports() {
                           .startTimestamp.seconds
                       }
                     />
-                  </PaginationForm>
+                  </PaginationButtons>
                 </Pagination>
               );
             }}
           </Await>
         </React.Suspense>
-      </Top>
+      </ReportsForm>
       <ListArea>
         <ListHeader aria-live="polite" aria-atomic="true">
           <Group>
@@ -405,13 +408,13 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Top = styled.div`
+const ReportsForm = styled(Form)`
   padding: 32px 48px;
   display: flex;
   justify-content: space-between;
 `;
 
-const SearchForm = styled(Form)`
+const Filter = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 24px;
@@ -435,7 +438,7 @@ const Pagination = styled.div`
   color: var(--color-gray-4);
 `;
 
-const PaginationForm = styled(Form)`
+const PaginationButtons = styled.div`
   display: flex;
   gap: 8px;
 `;
