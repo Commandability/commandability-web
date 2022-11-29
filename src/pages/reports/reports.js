@@ -53,13 +53,13 @@ import Button from "components/button";
 import ReportItem, { FallbackItem } from "components/report-item";
 
 export const REPORTS_CONFIGURATION = {
-  reportsPerPage: 5,
+  reportsPerPage: 20,
   fields: {
     startTimestamp: "startTimestamp",
     location: "location",
   },
 };
-const selectValues = {
+const SELECT_VALUES = {
   newest: "newest",
   oldest: "oldest",
 };
@@ -103,7 +103,7 @@ export async function loader({ request }) {
       where(fields.location, "<=", q.toLowerCase() + "\uf8ff"),
       orderBy(
         fields.startTimestamp,
-        s === selectValues.oldest ? undefined : "desc"
+        s === SELECT_VALUES.oldest ? undefined : "desc"
       ),
     ];
 
@@ -121,7 +121,7 @@ export async function loader({ request }) {
       collection(db, "users", currentUser.uid, "reports"),
       orderBy(
         fields.startTimestamp,
-        s === selectValues.oldest ? undefined : "desc"
+        s === SELECT_VALUES.oldest ? undefined : "desc"
       ),
     ];
 
@@ -133,6 +133,7 @@ export async function loader({ request }) {
         getCountFromServer(
           query(...reportsQueryParams, ...prevDocsQueryParams)
         ),
+        getCountFromServer(query(...reportsQueryParams)),
       ]),
     });
   }
@@ -165,10 +166,6 @@ function Reports() {
   const navigation = useNavigation();
   const submit = useSubmit();
   const fetcher = useFetcher();
-
-  const searching =
-    navigation.location &&
-    new URLSearchParams(navigation.location.search).has("q");
 
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
@@ -244,34 +241,39 @@ function Reports() {
           <ReportsSelect
             id="s"
             name="s"
-            defaultValue={selectValues.newest}
+            defaultValue={SELECT_VALUES.newest}
             label="Sort"
           >
-            <SelectItem value={selectValues.newest}>Newest first</SelectItem>
-            <SelectItem value={selectValues.oldest}>Oldest first</SelectItem>
+            <SelectItem value={SELECT_VALUES.newest}>Newest first</SelectItem>
+            <SelectItem value={SELECT_VALUES.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
         </Filter>
         <React.Suspense>
           <Await resolve={reportsData}>
             {(reportsData) => {
-              const [reportsDocs, prevReportsCount] = reportsData;
+              const [reportsDocs, prevReportsAggregate, allReportsAggregate] =
+                reportsData;
 
-              let displayCount = prevReportsCount.data().count;
+              let prevReportsCount = prevReportsAggregate?.data().count;
               // If the displayed reports are a page forward from the previous first displayed report
-              if (p === "next") displayCount += reportsPerPage;
+              if (p === "next") prevReportsCount += reportsPerPage;
               // If the displayed reports are a page backward from the previous first displayed report
-              else if (p === "prev") displayCount -= reportsPerPage;
-              else displayCount = 0;
+              else if (p === "prev") prevReportsCount -= reportsPerPage;
+              else prevReportsCount = 0;
+
+              const allReportsCount = allReportsAggregate?.data().count;
 
               return (
                 <Pagination>
-                  {displayCount} - {displayCount + reportsDocs.docs.length}
+                  {`${prevReportsCount} - ${
+                    prevReportsCount + reportsDocs.docs.length
+                  } of ${allReportsCount}`}
                   <PaginationButtons>
                     <IconButton
                       type="submit"
                       name="p"
                       value={"prev"}
-                      disabled={displayCount === 0}
+                      disabled={prevReportsCount === 0}
                     >
                       <VisuallyHidden>Previous page</VisuallyHidden>
                       <FiChevronLeft />
@@ -289,14 +291,14 @@ function Reports() {
                       type="hidden"
                       name="f"
                       // The first displayed report's timestamp's seconds
-                      value={reportsDocs.docs[0].data().startTimestamp.seconds}
+                      value={reportsDocs.docs[0]?.data().startTimestamp.seconds}
                     />
                     <input
                       type="hidden"
                       name="l"
                       // The last displayed report's timestamp's seconds
                       value={
-                        reportsDocs.docs[reportsDocs.docs.length - 1].data()
+                        reportsDocs.docs[reportsDocs.docs.length - 1]?.data()
                           .startTimestamp.seconds
                       }
                     />
@@ -357,7 +359,7 @@ function Reports() {
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
-        {searching || fetcher.state !== "idle" ? (
+        {navigation.location || fetcher.state !== "idle" ? (
           fallbackList
         ) : (
           <React.Suspense fallback={fallbackList}>
