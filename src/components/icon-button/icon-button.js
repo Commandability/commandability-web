@@ -6,10 +6,12 @@ import UnstyledButton from "components/unstyled-button";
 const THEMES = {
   light: {
     "--color": "var(--color-yellow-9)",
+    "--color-disabled": "var(--color-gray-4)",
     "--background-color": "var(--color-yellow-2)",
   },
   dark: {
     "--color": "var(--color-yellow-2)",
+    "--color-disabled": "var(--color-gray-6)",
     "--background-color": "var(--color-yellow-9)",
   },
 };
@@ -48,6 +50,10 @@ const Wrapper = styled(UnstyledButton)`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       background-color: var(--background-color);
+
+      &:disabled {
+        background-color: transparent;
+      }
     }
   }
 
@@ -57,6 +63,10 @@ const Wrapper = styled(UnstyledButton)`
 
   &:focus {
     outline-offset: 2px;
+  }
+
+  &:disabled {
+    color: var(--color-disabled);
   }
 `;
 
