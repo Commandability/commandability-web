@@ -7,12 +7,12 @@ const THEMES = {
   light: {
     "--color": "var(--color-yellow-9)",
     "--color-disabled": "var(--color-gray-4)",
-    "--background-color": "var(--color-yellow-2)",
+    "--color-hover": "var(--color-yellow-10)",
   },
   dark: {
     "--color": "var(--color-yellow-2)",
     "--color-disabled": "var(--color-gray-6)",
-    "--background-color": "var(--color-yellow-9)",
+    "--color-hover": "var(--color-yellow-1)",
   },
 };
 
@@ -38,7 +38,6 @@ const Wrapper = styled(UnstyledButton)`
   display: grid;
   place-content: center;
   padding: 8px;
-  border-radius: 100%;
   color: var(--color);
 
   & > svg {
@@ -49,11 +48,7 @@ const Wrapper = styled(UnstyledButton)`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--background-color);
-
-      &:disabled {
-        background-color: transparent;
-      }
+      color: var(--color-hover);
     }
   }
 
