@@ -76,6 +76,7 @@ export async function loader({ request }) {
   const p = url.searchParams.get("p");
   const f = url.searchParams.get("f");
   const l = url.searchParams.get("l");
+  const urlSearchParams = { q, s, p, f, l };
 
   // Create a new Timestamp from the serialized one because
   // JSON.stringify does not serialize prototypes, which are necessary for firebase query cursors
@@ -108,7 +109,7 @@ export async function loader({ request }) {
     ];
 
     return defer({
-      q,
+      ...urlSearchParams,
       reportsData: Promise.all([
         getDocs(query(...filteredReportsQueryParams, ...rangeQueryParams)),
         getCountFromServer(
@@ -127,8 +128,7 @@ export async function loader({ request }) {
     ];
 
     return defer({
-      q,
-      p,
+      ...urlSearchParams,
       reportsData: Promise.all([
         getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
         getCountFromServer(
@@ -163,7 +163,7 @@ export async function action({ request }) {
 }
 
 function Reports() {
-  const { q, p, reportsData } = useLoaderData();
+  const { q, s, p, reportsData } = useLoaderData();
   const navigation = useNavigation();
   const submit = useSubmit();
   const fetcher = useFetcher();
@@ -176,9 +176,16 @@ function Reports() {
 
   const isAnyItemChecked = !!checkedItems.length;
 
+  // Synchronize input value with URL Search Params
+  // Browser navigation changes the URL, but not element values
   React.useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
+
+  // Ensure checkedAll is unchecked even if a delete is unsuccessful
+  React.useEffect(() => {
+    if (!isAnyItemChecked) setCheckedAll({ status: false, origin: "form" });
+  }, [isAnyItemChecked]);
 
   async function onRemoveReports() {
     setRemoveReportsOpen(false);
@@ -197,11 +204,6 @@ function Reports() {
       }, SEARCH_DEBOUNCE),
     [q, submit]
   );
-
-  // Ensure checkedAll is unchecked even if a delete is unsuccessful
-  React.useEffect(() => {
-    if (!isAnyItemChecked) setCheckedAll({ status: false, origin: "form" });
-  }, [isAnyItemChecked]);
 
   const fallbackList = (
     <>
@@ -224,6 +226,7 @@ function Reports() {
           if (event.target.name === "q") {
             handleSearchChange(event.currentTarget);
           } else {
+            // Don't add new search to the history stack unless it's the first one
             const isFirstSearch = q === null;
 
             submit(event.currentTarget, {
@@ -244,6 +247,9 @@ function Reports() {
             name="s"
             defaultValue={SELECT_VALUES.newest}
             label="Sort"
+            // Clicking reports in the layout component causes the loader to be called but does not remount the reports page
+            // Change the key to remount the select component when the URL has no s query param to synchronize its state with the URL
+            key={!!s}
           >
             <SelectItem value={SELECT_VALUES.newest}>Newest first</SelectItem>
             <SelectItem value={SELECT_VALUES.oldest}>Oldest first</SelectItem>
