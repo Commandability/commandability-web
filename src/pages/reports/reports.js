@@ -168,6 +168,9 @@ function Reports() {
   const submit = useSubmit();
   const fetcher = useFetcher();
 
+  const [key, setKey] = React.useState(true);
+  const [prevS, setPrevS] = React.useState(s);
+
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
@@ -176,11 +179,16 @@ function Reports() {
 
   const isAnyItemChecked = !!checkedItems.length;
 
-  // Synchronize input value with URL Search Params
+  // Synchronize input values with URL search params
   // Browser navigation changes the URL, but not element values
   React.useEffect(() => {
     document.getElementById("q").value = q;
   }, [q]);
+  React.useEffect(() => {
+    // If s changes from SELECT_VALUES.oldest to undefined, remount
+    if (!s && prevS === SELECT_VALUES.oldest) setKey((prevKey) => !prevKey);
+    if (prevS !== SELECT_VALUES.oldest) setPrevS(s);
+  }, [s, prevS, setKey, setPrevS]);
 
   // Ensure checkedAll is unchecked even if a delete is unsuccessful
   React.useEffect(() => {
@@ -249,7 +257,7 @@ function Reports() {
             label="Sort"
             // Clicking reports in the layout component causes the loader to be called but does not remount the reports page
             // Change the key to remount the select component when the URL has no s query param to synchronize its state with the URL
-            key={!!s}
+            key={key}
           >
             <SelectItem value={SELECT_VALUES.newest}>Newest first</SelectItem>
             <SelectItem value={SELECT_VALUES.oldest}>Oldest first</SelectItem>
