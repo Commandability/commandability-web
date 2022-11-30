@@ -266,7 +266,7 @@ const Nav = styled.nav`
   font-size: ${18 / 16}rem;
   padding: 0px 24px;
   background-color: var(--color-white);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--nav-box-shadow);
   -webkit-tap-highlight-color: transparent;
 
   @media (prefers-reduced-motion: no-preference) {

@@ -288,7 +288,7 @@ function LandingNav({
         "--background-color": `${
           scrolled ? "var(--color-white)" : "transparent"
         }`,
-        "--box-shadow": `${scrolled ? "inherit" : "none"}`,
+        "--nav-box-shadow": `${scrolled ? "inherit" : "none"}`,
       }}
     >
       <LeftSide>
@@ -533,7 +533,7 @@ function LandingNav({
           content={toastState.message}
           style={{
             // Reset box shadow after nav conditional
-            "--box-shadow": "2px 4px 8px hsl(0 0% 0% / 50%)",
+            "--nav-box-shadow": "0px 8px 8px -8px hsl(0 0% 0% / 50%)",
           }}
         />
         <ToastViewport />
@@ -554,7 +554,7 @@ const Nav = styled.nav`
   font-size: ${18 / 16}rem;
   padding: 0px 24px;
   background-color: var(--background-color);
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--nav-box-shadow);
   -webkit-tap-highlight-color: transparent;
 
   @media (prefers-reduced-motion: no-preference) {
