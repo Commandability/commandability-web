@@ -114,6 +114,7 @@ export async function loader({ request }) {
         getCountFromServer(
           query(...filteredReportsQueryParams, ...prevDocsQueryParams)
         ),
+        getCountFromServer(query(...filteredReportsQueryParams)),
       ]),
     });
   } else {
