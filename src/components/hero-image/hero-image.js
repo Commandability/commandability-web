@@ -1,9 +1,8 @@
-import * as React from "react";
 import styled from "styled-components";
 
 import { BREAKPOINTS, COLORS } from "constants.js";
 
-function HeroImage({ children }) {
+function HeroImage({ blur, children }) {
   return (
     <Picture>
       {/* Images generated with https://responsivebreakpoints.com/ */}
@@ -56,6 +55,7 @@ function HeroImage({ children }) {
         alt=""
       />
       <Gradient />
+      {blur ? <Blur /> : null}
       <Content>{children}</Content>
     </Picture>
   );
@@ -90,6 +90,12 @@ const Gradient = styled.div`
     hsl(${COLORS.red[1]} / 0.1) 60%,
     hsl(0 0% 0% / 0.45) 75%
   );
+`;
+
+const Blur = styled.div`
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(16px);
 `;
 
 const Content = styled.div`
