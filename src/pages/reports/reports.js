@@ -36,7 +36,7 @@ import {
 } from "react-icons/fi";
 
 import { db } from "firebase.js";
-import { debounce } from "utils.js";
+import { debounce } from "utils";
 import { storage } from "firebase.js";
 import { Select, SelectItem } from "components/select";
 import {

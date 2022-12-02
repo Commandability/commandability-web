@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { getRandomInt } from "utils.js";
+import { getRandomInt } from "utils";
 import Checkbox from "components/checkbox";
 
 export function FallbackItem() {
