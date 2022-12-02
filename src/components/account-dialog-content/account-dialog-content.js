@@ -227,7 +227,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
 
   let renderedContent;
   if (loading) {
-    renderedContent = <FireLoader />;
+    renderedContent = <PositionedFireLoader />;
   } else if (content === accountContentType.NEW_USER) {
     renderedContent = (
       <Content>
@@ -427,6 +427,12 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
     </>
   );
 }
+
+// Center the loader
+const PositionedFireLoader = styled(FireLoader)`
+  position: absolute;
+  inset: 0;
+`;
 
 const ContentSwitch = styled.div`
   height: 512px;

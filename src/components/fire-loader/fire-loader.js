@@ -3,9 +3,9 @@ import styled, { keyframes } from "styled-components";
 
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 
-function FireLoader() {
+function FireLoader({ ...props }) {
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       <FireIconLoader />
     </Wrapper>
   );
@@ -16,7 +16,6 @@ const Wrapper = styled.div`
   place-items: center;
   width: 100%;
   height: 100%;
-  background-color: var(--color-gray-10);
 `;
 
 const yellowFillShift = keyframes`

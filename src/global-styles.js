@@ -27,6 +27,7 @@ const GlobalStyles = createGlobalStyle`
   */
   html, body {
     height: 100%;
+    background-color: var(--color-gray-8);
   }
   /*
     Typographic tweaks!

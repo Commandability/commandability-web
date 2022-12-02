@@ -79,6 +79,7 @@ const RadixDialogOverlay = styled(RadixDialog.Overlay)`
 
 const RadixDialogContent = styled(RadixDialog.Content)`
   position: relative;
+  right: calc(var(--scrollbar-width) / 2);
   padding: 24px;
   padding-top: var(--padding-top);
   border-radius: 8px;

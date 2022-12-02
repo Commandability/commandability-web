@@ -26,6 +26,14 @@ const snapshotOptions = { includeMetadataChanges: true };
 function App() {
   const { user } = useAuth();
 
+  const scrollbarWidth =
+    window.innerWidth - document.documentElement.clientWidth;
+
+  document.documentElement.style.setProperty(
+    "--scrollbar-width",
+    scrollbarWidth + "px"
+  );
+
   return (
     // Load firestore data as soon as a user is available
     <SnapshotProvider
