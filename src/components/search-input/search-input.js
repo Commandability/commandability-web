@@ -71,9 +71,7 @@ const StyledFiSearch = styled(UnstyledFiSearch)`
   stroke: var(--color-gray-2);
 
   ${TextInput}:focus-visible + & {
-    & {
-      stroke: var(--color-yellow-3);
-    }
+    stroke: var(--color-yellow-3);
   }
 `;
 

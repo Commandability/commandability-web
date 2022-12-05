@@ -16,7 +16,7 @@ const THEMES = {
   },
 };
 
-function IconButton({ theme = "dark", icon, children, style, ...props }) {
+function IconButton({ theme = "dark", children, style, ...props }) {
   if (!THEMES[theme]) throw new Error(`Unknown theme provided to Button.`);
 
   const themeStyles = THEMES[theme];
