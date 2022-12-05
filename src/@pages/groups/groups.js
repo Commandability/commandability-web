@@ -2,11 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import * as Tabs from "@radix-ui/react-tabs";
 
-import { useFirestoreUser } from "context/firestore-user-context";
+import { useSnapshots } from "context/snapshot-context";
 import Group from "components/group";
 
 function Groups() {
-  const { firestoreUser } = useFirestoreUser();
+  const { snapshots } = useSnapshots();
   const generatePageLocations = () => {
     const numberOfPages = 6;
     const groupsPerPage = 6;
@@ -31,9 +31,7 @@ function Groups() {
     return pageLocations;
   };
 
-  console.log(firestoreUser.data.groups);
-
-  let userGroupData = firestoreUser.data.groups;
+  let userGroupData = snapshots.user.data.groups;
 
   let groupArray = generatePageLocations();
   let groupPage = [];
@@ -47,6 +45,8 @@ function Groups() {
                 ? userGroupData[groupArray[pageNum].locationIds[0]]
                 : null
             }
+            groupId={groupArray[pageNum].locationIds[0]}
+            userGroupData={userGroupData}
           />
           <Group
             groupData={
@@ -54,6 +54,8 @@ function Groups() {
                 ? userGroupData[groupArray[pageNum].locationIds[1]]
                 : null
             }
+            groupId={groupArray[pageNum].locationIds[1]}
+            userGroupData={userGroupData}
           />
           <Group
             groupData={
@@ -61,6 +63,8 @@ function Groups() {
                 ? userGroupData[groupArray[pageNum].locationIds[2]]
                 : null
             }
+            groupId={groupArray[pageNum].locationIds[2]}
+            userGroupData={userGroupData}
           />
         </GroupWrapper>
         <GroupWrapper>
@@ -70,6 +74,8 @@ function Groups() {
                 ? userGroupData[groupArray[pageNum].locationIds[3]]
                 : null
             }
+            groupId={groupArray[pageNum].locationIds[3]}
+            userGroupData={userGroupData}
           />
           <Group
             groupData={
@@ -77,6 +83,8 @@ function Groups() {
                 ? userGroupData[groupArray[pageNum].locationIds[4]]
                 : null
             }
+            groupId={groupArray[pageNum].locationIds[4]}
+            userGroupData={userGroupData}
           />
           <Group
             groupData={
@@ -84,6 +92,8 @@ function Groups() {
                 ? userGroupData[groupArray[pageNum].locationIds[5]]
                 : null
             }
+            groupId={groupArray[pageNum].locationIds[5]}
+            userGroupData={userGroupData}
           />
         </GroupWrapper>
       </TabsContent>
@@ -105,7 +115,7 @@ function Groups() {
           />
           <PageNumber value="PAGE_1">Page 1</PageNumber>
           <PageNumber value="PAGE_2">Page 2</PageNumber>
-          <PageNumber value="PAGE_ 3">Page 3</PageNumber>
+          <PageNumber value="PAGE_3">Page 3</PageNumber>
           <PageNumber value="PAGE_4">Page 4</PageNumber>
           <PageNumber value="PAGE_5">Page 5</PageNumber>
           <PageNumber value="PAGE_6">Page 6</PageNumber>
@@ -119,11 +129,14 @@ function Groups() {
 }
 
 const Wrapper = styled(Tabs.Root)`
-  display: flex;
-  justify-content: center;
+  height: 100%;
 `;
 
 const Content = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   width: 100%;
   padding-top: 64px;
   padding-bottom: 32px;
@@ -131,6 +144,7 @@ const Content = styled.div`
 
 const TabsContent = styled(Tabs.Content)`
   display: flex;
+  height: 100%;
   flex-direction: column;
   gap: 64px;
 `;

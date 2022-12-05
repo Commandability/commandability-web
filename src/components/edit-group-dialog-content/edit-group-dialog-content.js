@@ -1,8 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
+import { updateDoc } from "firebase/firestore";
 
 import UnstyledButton from "components/unstyled-button";
 import { Select, SelectItem } from "components/select";
+import { useSnapshots } from "context/snapshot-context";
 
 const ANIMATION_DURATION = 300;
 
@@ -16,14 +18,45 @@ const selectValues = {
   thirty: "30",
 };
 
-function EditGroupDialogContent({}) {
-  const [groupName, setGroupName] = React.useState();
-  const [alertTime, setAlertTime] = React.useState();
+function EditGroupDialogContent({
+  groupData,
+  groupId,
+  userGroupData,
+  closeDialog,
+}) {
+  const { snapshots } = useSnapshots();
+  const [groupName, setGroupName] = React.useState(groupData.name);
+  const [alertTime, setAlertTime] = React.useState(groupData.alert);
+  let defaultAlert = selectValues.zero;
+  if (groupData.alert !== 0) {
+    defaultAlert = groupData.alert.toString();
+  }
+
+  console.log(groupData.name);
+
+  async function handleSubmitChanges(event) {
+    event.preventDefault();
+    let alertSubmit = 0;
+    if (alertTime !== "No alert") {
+      alertSubmit = parseInt(alertTime, 10);
+    }
+    await updateDoc(snapshots.user.ref, {
+      groups: {
+        ...userGroupData,
+        [groupId]: {
+          alert: alertSubmit,
+          isVisible: true,
+          name: groupName,
+        },
+      },
+    });
+    closeDialog();
+  }
 
   return (
     <Container>
       <Content>
-        <AccountForm>
+        <AccountForm onSubmit={handleSubmitChanges}>
           <FormInputs>
             <InputGroup>
               <Label htmlFor="group-name">Group name</Label>
@@ -31,7 +64,7 @@ function EditGroupDialogContent({}) {
                 id="group-name"
                 type="text"
                 required
-                placeholder="Firetruck One"
+                placeholder={groupData.name}
                 onChange={(e) => {
                   setGroupName(e.target.value);
                 }}
@@ -40,20 +73,22 @@ function EditGroupDialogContent({}) {
             </InputGroup>
             <InputGroup>
               <Label htmlFor="alert-time">Alert time</Label>
-              <Select
-                select={alertTime}
-                onValueChange={(alertTime) => setAlertTime(alertTime)}
-                defaultValue={selectValues.zero}
-                aria-label="Alert time selector"
-              >
-                <SelectItem value={selectValues.zero}>No alert</SelectItem>
-                <SelectItem value={selectValues.five}>5</SelectItem>
-                <SelectItem value={selectValues.ten}>10</SelectItem>
-                <SelectItem value={selectValues.fifteen}>15</SelectItem>
-                <SelectItem value={selectValues.twenty}>20</SelectItem>
-                <SelectItem value={selectValues.twentyFive}>25</SelectItem>
-                <SelectItem value={selectValues.thirty}>30</SelectItem>
-              </Select>
+              <div style={{ width: "280px" }}>
+                <Select
+                  select={alertTime}
+                  onValueChange={(alertTime) => setAlertTime(alertTime)}
+                  defaultValue={defaultAlert}
+                  aria-label="Alert time selector"
+                >
+                  <SelectItem value={selectValues.zero}>No alert</SelectItem>
+                  <SelectItem value={selectValues.five}>5</SelectItem>
+                  <SelectItem value={selectValues.ten}>10</SelectItem>
+                  <SelectItem value={selectValues.fifteen}>15</SelectItem>
+                  <SelectItem value={selectValues.twenty}>20</SelectItem>
+                  <SelectItem value={selectValues.twentyFive}>25</SelectItem>
+                  <SelectItem value={selectValues.thirty}>30</SelectItem>
+                </Select>
+              </div>
             </InputGroup>
           </FormInputs>
           <SubmitButton type="submit">Save Changes</SubmitButton>
@@ -64,8 +99,7 @@ function EditGroupDialogContent({}) {
 }
 
 const Container = styled.div`
-  height: 256px;
-  width: 384px;
+  width: 448px;
   display: flex;
   flex-direction: column;
   background-color: var(--color-gray-10);
@@ -89,25 +123,27 @@ const AccountForm = styled.form`
 const FormInputs = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+  margin-bottom: 24px;
 `;
 
 const InputGroup = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 16px;
+  color: var(--color-yellow-2);
 `;
 
 const Label = styled.label`
-  text-transform: uppercase;
   color: var(--color-yellow-2);
 `;
 
 const Input = styled.input`
-  flex: 1;
   padding: 8px 12px;
   border: solid 1px var(--color-gray-5);
   border-radius: 8px;
+  width: 280px;
 
   &::placeholder {
     color: var(--color-gray-5);
