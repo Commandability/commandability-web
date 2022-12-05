@@ -3,8 +3,7 @@ import styled, { keyframes } from "styled-components";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import * as RadixDialog from "@radix-ui/react-dialog";
-import * as RadixPopover from "@radix-ui/react-popover";
-import * as Separator from "@radix-ui/react-separator";
+import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 import {
   FiChevronDown,
@@ -164,51 +163,51 @@ function MainNav() {
       ) : null}
       <RightSide>
         {user.current ? (
-          <RadixPopover.Root>
-            <RadixPopover.Trigger asChild>
-              <DropDown>
+          <RadixDropdownMenu.Root>
+            <RadixDropdownMenu.Trigger asChild>
+              <DropdownMenuButton>
                 {user.current.displayName}
                 <FiChevronDown />
-              </DropDown>
-            </RadixPopover.Trigger>
-            <RadixPopover.Portal>
-              <RadixPopoverContent>
-                <RadixPopoverArrow />
-                <RadixPopoverList>
-                  <RadixPopoverItem>
-                    <RadixPopoverAction
+              </DropdownMenuButton>
+            </RadixDropdownMenu.Trigger>
+            <RadixDropdownMenu.Portal>
+              <RadixDropdownMenuContent>
+                <RadixDropdownMenuArrow />
+                <RadixDropdownMenuGroup>
+                  <RadixDropdownMenuItem asChild>
+                    <DropdownMenuAction
                       as="a"
                       href="mailto:support@commandability.app?"
                     >
                       <FiHelpCircle />
                       <Spacer axis="horizontal" size={8} />
                       Contact us
-                    </RadixPopoverAction>
-                  </RadixPopoverItem>
-                  <RadixPopoverItem>
-                    <RadixPopoverAction to="/dashboard/settings">
+                    </DropdownMenuAction>
+                  </RadixDropdownMenuItem>
+                  <RadixDropdownMenuItem asChild>
+                    <DropdownMenuAction to="/dashboard/settings">
                       <FiSettings />
                       <Spacer axis="horizontal" size={8} />
                       Settings
-                    </RadixPopoverAction>
-                  </RadixPopoverItem>
-                </RadixPopoverList>
-                <RadixPopoverSeparator />
-                <RadixPopoverList>
-                  <RadixPopoverItem>
-                    <RadixPopoverAction
+                    </DropdownMenuAction>
+                  </RadixDropdownMenuItem>
+                </RadixDropdownMenuGroup>
+                <RadixDropdownMenuSeparator />
+                <RadixDropdownMenuGroup>
+                  <RadixDropdownMenuItem asChild>
+                    <DropdownMenuAction
                       as={UnstyledButton}
                       onClick={handleSignOut}
                     >
                       <FiLogOut />
                       <Spacer axis="horizontal" size={8} />
                       Sign out
-                    </RadixPopoverAction>
-                  </RadixPopoverItem>
-                </RadixPopoverList>
-              </RadixPopoverContent>
-            </RadixPopover.Portal>
-          </RadixPopover.Root>
+                    </DropdownMenuAction>
+                  </RadixDropdownMenuItem>
+                </RadixDropdownMenuGroup>
+              </RadixDropdownMenuContent>
+            </RadixDropdownMenu.Portal>
+          </RadixDropdownMenu.Root>
         ) : (
           <AccountOptions>
             <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
@@ -502,7 +501,7 @@ const RightSide = styled.div`
   }
 `;
 
-const RadixPopoverContent = styled(RadixPopover.Content)`
+const RadixDropdownMenuContent = styled(RadixDropdownMenu.Content)`
   width: 160px;
   background-color: var(--color-gray-9);
   border-radius: 8px;
@@ -518,18 +517,17 @@ const RadixPopoverContent = styled(RadixPopover.Content)`
   }
 `;
 
-const RadixPopoverArrow = styled(RadixPopover.Arrow)`
+const RadixDropdownMenuArrow = styled(RadixDropdownMenu.Arrow)`
   fill: var(--color-gray-9);
   position: relative;
   right: calc(160px / 2 - 16px);
 `;
 
-const RadixPopoverList = styled.ul`
-  list-style: none;
+const RadixDropdownMenuGroup = styled(RadixDropdownMenu.Group)`
   padding: 4px 0px;
 `;
 
-const RadixPopoverItem = styled.li`
+const RadixDropdownMenuItem = styled(RadixDropdownMenu.Item)`
   width: 100%;
   padding: 0px 16px;
   color: var(--color-gray-1);
@@ -544,7 +542,7 @@ const RadixPopoverItem = styled.li`
   }
 `;
 
-const RadixPopoverAction = styled(Link)`
+const DropdownMenuAction = styled(Link)`
   display: flex;
   width: 100%;
   text-decoration: none;
@@ -557,13 +555,13 @@ const RadixPopoverAction = styled(Link)`
   }
 `;
 
-const RadixPopoverSeparator = styled(Separator.Root)`
+const RadixDropdownMenuSeparator = styled(RadixDropdownMenu.Separator)`
   height: 1px;
   width: "100%";
   background-color: var(--color-gray-6);
 `;
 
-const DropDown = styled(UnstyledButton)`
+const DropdownMenuButton = styled(UnstyledButton)`
   display: flex;
   align-items: center;
   gap: 8px;
