@@ -37,8 +37,8 @@ function Groups() {
   let groupPage = [];
   for (let pageNum in groupArray) {
     groupPage.push(
-      <TabsContent value={pageNum}>
-        <GroupWrapper>
+      <TabsContent class="container">
+        <div class="group-position-1">
           <Group
             groupData={
               userGroupData[groupArray[pageNum].locationIds[0]]
@@ -48,7 +48,10 @@ function Groups() {
             groupId={groupArray[pageNum].locationIds[0]}
             userGroupData={userGroupData}
           />
+        </div>
+        <div class="group-position-2">
           <Group
+            class="group-position-2"
             groupData={
               userGroupData[groupArray[pageNum].locationIds[1]]
                 ? userGroupData[groupArray[pageNum].locationIds[1]]
@@ -57,7 +60,10 @@ function Groups() {
             groupId={groupArray[pageNum].locationIds[1]}
             userGroupData={userGroupData}
           />
+        </div>
+        <div class="group-position-3">
           <Group
+            class="group-position-3"
             groupData={
               userGroupData[groupArray[pageNum].locationIds[2]]
                 ? userGroupData[groupArray[pageNum].locationIds[2]]
@@ -66,9 +72,10 @@ function Groups() {
             groupId={groupArray[pageNum].locationIds[2]}
             userGroupData={userGroupData}
           />
-        </GroupWrapper>
-        <GroupWrapper>
+        </div>
+        <div class="group-position-4">
           <Group
+            class="group-position-4"
             groupData={
               userGroupData[groupArray[pageNum].locationIds[3]]
                 ? userGroupData[groupArray[pageNum].locationIds[3]]
@@ -77,7 +84,10 @@ function Groups() {
             groupId={groupArray[pageNum].locationIds[3]}
             userGroupData={userGroupData}
           />
+        </div>
+        <div class="group-position-5">
           <Group
+            class="group-position-5"
             groupData={
               userGroupData[groupArray[pageNum].locationIds[4]]
                 ? userGroupData[groupArray[pageNum].locationIds[4]]
@@ -86,7 +96,10 @@ function Groups() {
             groupId={groupArray[pageNum].locationIds[4]}
             userGroupData={userGroupData}
           />
+        </div>
+        <div class="group-position-6">
           <Group
+            class="group-position-6"
             groupData={
               userGroupData[groupArray[pageNum].locationIds[5]]
                 ? userGroupData[groupArray[pageNum].locationIds[5]]
@@ -95,7 +108,7 @@ function Groups() {
             groupId={groupArray[pageNum].locationIds[5]}
             userGroupData={userGroupData}
           />
-        </GroupWrapper>
+        </div>
       </TabsContent>
     );
   }
@@ -103,12 +116,12 @@ function Groups() {
   return (
     <Wrapper defaultValue="PAGE_1" orientation="horizontal">
       <Content>
-        <>{groupPage[0]}</>
-        <>{groupPage[1]}</>
-        <>{groupPage[2]}</>
-        <>{groupPage[3]}</>
-        <>{groupPage[4]}</>
-        <>{groupPage[5]}</>
+        <GroupTab value="PAGE_1">{groupPage[0]}</GroupTab>
+        <GroupTab value="PAGE_2">{groupPage[1]}</GroupTab>
+        <GroupTab value="PAGE_3">{groupPage[2]}</GroupTab>
+        <GroupTab value="PAGE_4">{groupPage[3]}</GroupTab>
+        <GroupTab value="PAGE_5">{groupPage[4]}</GroupTab>
+        <GroupTab value="PAGE_6">{groupPage[5]}</GroupTab>
         <GroupsPageNumbers>
           <div
             style={{ borderBottom: "1px solid var(--color-gray-1)", flex: 1 }}
@@ -142,17 +155,33 @@ const Content = styled.div`
   padding-bottom: 32px;
 `;
 
-const TabsContent = styled(Tabs.Content)`
-  display: flex;
+const GroupTab = styled(Tabs.Content)`
   height: 100%;
-  flex-direction: column;
-  gap: 64px;
 `;
 
-const GroupWrapper = styled.ol`
-  display: flex;
-  justify-content: space-between;
-  padding: 0px 80px;
+const TabsContent = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto;
+  grid-row-gap: 48px;
+  .group-position-1 {
+    justify-self: end;
+  }
+  .group-position-2 {
+    justify-self: center;
+  }
+  .group-position-3 {
+    justify-self: start;
+  }
+  .group-position-4 {
+    justify-self: end;
+  }
+  .group-position-5 {
+    justify-self: center;
+  }
+  .group-position-6 {
+    justify-self: start;
+  }
 `;
 
 const GroupsPageNumbers = styled(Tabs.List)`

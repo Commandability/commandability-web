@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiPlus, FiX, FiCheck } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiCheck, FiX } from "react-icons/fi";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import { updateDoc } from "firebase/firestore";
 
@@ -21,6 +21,7 @@ function Group({ groupData, groupId, userGroupData }) {
   const { snapshots } = useSnapshots();
   const [editGroupOpen, setEditGroupOpen] = React.useState(false);
   const [removeGroupOpen, setRemoveGroupOpen] = React.useState(false);
+
   const { [groupId]: _, ...newUserGroupData } = userGroupData;
 
   async function handleAddGroup() {
@@ -85,7 +86,7 @@ function Group({ groupData, groupId, userGroupData }) {
           <AlertDialogTrigger asChild>
             <CloseButton>
               <VisuallyHidden>Close</VisuallyHidden>
-              <FiX />
+              <FiTrash2 />
             </CloseButton>
           </AlertDialogTrigger>
           <GroupRemoveAlertDialogContent
@@ -146,19 +147,18 @@ const Content = styled.div`
 `;
 
 const Heading = styled.h1`
-  display: flex;
   justify-content: center;
   align-items: center;
   color: var(--color-gray-4);
   font-size: ${20 / 16}rem;
-  text-transform: uppercase;
 `;
 
 const AlertWrapper = styled.div`
   display: flex;
+  height: 36px;
   flex-direction: row;
-  align-items: baseline;
   justify-content: center;
+  align-items: flex-end;
   gap: 6px;
 `;
 
@@ -166,12 +166,14 @@ const AlertTime = styled.h2`
   font-size: ${24 / 16}rem;
   font-weight: bold;
   color: var(--color-yellow-3);
+  line-height: 1;
 `;
 
 const AlertText = styled.h2`
   color: var(--color-gray-4);
   font-size: ${16 / 16}rem;
   font-weight: bold;
+  line-height: 1;
 `;
 
 const EditGroupButton = styled(UnstyledButton)`
