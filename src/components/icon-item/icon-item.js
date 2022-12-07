@@ -1,13 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
 
-function IconItem({ icon, children, ...props }) {
-  return (
-    <Wrapper {...props}>
-      {icon ? icon() : null}
-      <Contents>{children}</Contents>
-    </Wrapper>
-  );
+function IconItem({ children, ...props }) {
+  return <Wrapper {...props}>{children}</Wrapper>;
 }
 
 const Wrapper = styled.li`
@@ -24,7 +19,7 @@ const Wrapper = styled.li`
   }
 `;
 
-const Contents = styled.div`
+export const ItemContents = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;

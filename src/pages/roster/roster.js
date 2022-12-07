@@ -32,10 +32,11 @@ import {
   AlertDialogContent,
 } from "components/alert-dialog";
 import { Select, SelectItem } from "components/select";
-import IconItem from "components/icon-item";
+import IconItem, { ItemContents } from "components/icon-item";
 import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
 import Button from "components/button";
+import Spacer from "components/spacer";
 import SearchInput from "components/search-input";
 import RosterItem from "components/roster-item";
 
@@ -288,7 +289,11 @@ function Roster() {
         </RosterSelect>
         <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
           <DialogTrigger asChild>
-            <Button icon={FiUserPlus}>Add person</Button>
+            <Button>
+              <FiUserPlus />
+              <Spacer size={8} axis="horizontal" />
+              Add person
+            </Button>
           </DialogTrigger>
           <DialogContent
             header
@@ -325,7 +330,9 @@ function Roster() {
                   error={badge ? "" : "Please enter a badge"}
                 />
               </DialogInputs>
-              <Button type="submit" icon={FiSave}>
+              <Button type="submit">
+                <FiSave />
+                <Spacer size={8} axis="horizontal" />
                 Save person
               </Button>
             </DialogForm>
@@ -350,7 +357,9 @@ function Roster() {
                 onOpenChange={setRemovePersonnelOpen}
               >
                 <AlertDialogTrigger asChild>
-                  <Button variant="tertiary" icon={FiTrash2}>
+                  <Button variant="tertiary">
+                    <FiTrash2 />
+                    <Spacer size={8} axis="horizontal" />
                     Delete personnel
                   </Button>
                 </AlertDialogTrigger>
@@ -361,12 +370,16 @@ function Roster() {
                 >
                   <AlertOptions>
                     <AlertDialogCancel asChild>
-                      <Button icon={FiX} variant="secondary">
+                      <Button variant="secondary">
+                        <FiX />
+                        <Spacer size={8} axis="horizontal" />
                         Cancel
                       </Button>
                     </AlertDialogCancel>
                     <AlertDialogAction asChild>
-                      <Button onClick={onRemovePersonnelAction} icon={FiCheck}>
+                      <Button onClick={onRemovePersonnelAction}>
+                        <FiCheck />
+                        <Spacer size={8} axis="horizontal" />
                         Yes, delete personnel
                       </Button>
                     </AlertDialogAction>
@@ -401,7 +414,11 @@ function Roster() {
       <Bottom>
         <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
           <DialogTrigger asChild>
-            <Button icon={FiUpload}>Import CSV</Button>
+            <Button>
+              <FiUpload />
+              <Spacer size={8} axis="horizontal" />
+              Import CSV
+            </Button>
           </DialogTrigger>
           <DialogContent
             header
@@ -410,21 +427,32 @@ function Roster() {
           >
             <DialogContainer>
               <UnorderedList>
-                <IconItem icon={FiCheckSquare}>
-                  The file should be a Comma Separated Value (CSV) file
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    The file should be a Comma Separated Value (CSV) file
+                  </ItemContents>
                 </IconItem>
-                <IconItem icon={FiCheckSquare}>
-                  The first line in the file should be a comma-separated header
-                  with columns labeled:
-                  <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    The first line in the file should be a comma-separated
+                    header with columns labeled:
+                    <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
+                  </ItemContents>
                 </IconItem>
-                <IconItem icon={FiCheckSquare}>
-                  All other lines should contain comma-separated personnel data
-                  corresponding to the columns in the header
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    All other lines should contain comma-separated personnel
+                    data corresponding to the columns in the header
+                  </ItemContents>
                 </IconItem>
               </UnorderedList>
               <DialogActions>
-                <Button onClick={importCSVOnClick} icon={FiArrowRight}>
+                <Button onClick={importCSVOnClick}>
+                  <FiArrowRight />
+                  <Spacer size={8} axis="horizontal" />
                   Continue
                 </Button>
               </DialogActions>
@@ -444,24 +472,28 @@ function Roster() {
               <DialogScrollContainer>
                 <UnorderedList>
                   {importStatus.parseErrors.map((error) => (
-                    <IconItem
-                      key={error.id}
-                      icon={FiAlertTriangle}
-                    >{`Row ${error.row} - ${error.message}`}</IconItem>
+                    <IconItem key={error.id}>
+                      <FiAlertTriangle />
+                      <ItemContents>{`Row ${error.row} - ${error.message}`}</ItemContents>
+                    </IconItem>
                   ))}
                 </UnorderedList>
               </DialogScrollContainer>
             ) : null}
             <DialogActions>
               <AlertDialogAction asChild>
-                <Button onClick={() => setImportStatus(null)} icon={FiCheck}>
+                <Button onClick={() => setImportStatus(null)}>
+                  <FiCheck />
+                  <Spacer size={8} axis="horizontal" />
                   Ok
                 </Button>
               </AlertDialogAction>
             </DialogActions>
           </ImportAlertDialogContent>
         </AlertDialog>
-        <Button icon={FiDownload} download="personnel.csv" href={downloadLink}>
+        <Button download="personnel.csv" href={downloadLink}>
+          <FiDownload />
+          <Spacer size={8} axis="horizontal" />
           Export CSV
         </Button>
       </Bottom>

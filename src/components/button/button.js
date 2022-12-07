@@ -2,30 +2,44 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import Spacer from "components/spacer";
-
 const THEMES = {
   light: {
     "--background-color": "var(--color-yellow-9)",
-    "--hover-background-color": "var(--color-yellow-10)",
+    "--background-color-hover": "var(--color-yellow-10)",
+    "--background-color-disabled": "var(--color-gray-6)",
 
     "--color": "var(--color-yellow-2)",
-    "--color-alternate": "var(--color-yellow-9)",
-    "--hover-color-alternate": "var(--color-yellow-10)",
+    "--color-disabled": "var(--color-gray-1)",
 
-    "--border-color": "var(--color-yellow-6)",
-    "--hover-border-color": "var(--color-yellow-7)",
+    "--color-alternate": "var(--color-yellow-9)",
+    "--color-alternate-hover": "var(--color-yellow-10)",
+    "--color-alternate-disabled": "var(--color-gray-6)",
+
+    "--accent-color": "var(--color-yellow-6)",
+    "--accent-color-hover": "var(--color-yellow-7)",
+    "--accent-color-disabled": "var(--color-gray-4)",
+
+    "--accent-color-alternate": "var(--color-yellow-3)",
+    "--accent-color-alternate-disabled": "var(--color-gray-3)",
   },
   dark: {
     "--background-color": "var(--color-yellow-2)",
-    "--hover-background-color": "var(--color-yellow-1)",
+    "--background-color-hover": "var(--color-yellow-1)",
+    "--background-color-disabled": "var(--color-gray-4)",
 
     "--color": "var(--color-yellow-9)",
-    "--color-alternate": "var(--color-yellow-2)",
-    "--hover-color-alternate": "var(--color-yellow-1)",
+    "--color-disabled": "var(--color-gray-9)",
 
-    "--border-color": "var(--color-yellow-4)",
-    "--hover-border-color": "var(--color-yellow-3)",
+    "--color-alternate": "var(--color-yellow-2)",
+    "--color-alternate-hover": "var(--color-yellow-1)",
+    "--color-alternate-disabled": "var(--color-gray-4)",
+
+    "--accent-color": "var(--color-yellow-4)",
+    "--accent-color-hover": "var(--color-yellow-3)",
+    "--accent-color-disabled": "var(--color-gray-6)",
+
+    "--accent-color-alternate": "var(--color-yellow-8)",
+    "--accent-color-alternate-disabled": "var(--color-gray-8)",
   },
 };
 
@@ -35,12 +49,27 @@ const VARIANTS = {
   tertiary: "tertiary",
 };
 
+const SIZES = {
+  small: {
+    "--font-size": `${16 / 16}rem`,
+    "--stroke-width": "0.175rem",
+  },
+  medium: {
+    "--font-size": `${24 / 16}rem`,
+    "--stroke-width": "0.15rem",
+  },
+  large: {
+    "--font-size": `${40 / 16}rem`,
+    "--stroke-width": "0.125rem",
+  },
+};
+
 const Button = React.forwardRef(
   (
     {
       theme = "dark",
       variant = "primary",
-      icon,
+      size = "small",
       to,
       href,
       children,
@@ -52,8 +81,10 @@ const Button = React.forwardRef(
     if (!THEMES[theme]) throw new Error(`Unknown theme provided to Button.`);
     if (!VARIANTS[variant])
       throw new Error(`Unknown variant provided to Button.`);
+    if (!SIZES[size]) throw new Error(`Unknown size provided to Button.`);
 
     const themeStyles = THEMES[theme];
+    const sizesStyles = SIZES[size];
 
     function selectTag() {
       if (to) {
@@ -71,6 +102,7 @@ const Button = React.forwardRef(
         ref={forwardedRef}
         style={{
           ...themeStyles,
+          ...sizesStyles,
           ...style,
         }}
         to={to}
@@ -79,9 +111,7 @@ const Button = React.forwardRef(
         variant={variant}
         {...props}
       >
-        {icon ? icon() : null}
-        {icon ? <Spacer size={8} axis="horizontal" /> : null}
-        <Text>{children}</Text>
+        {children}
       </ButtonWrapper>
     );
   }
@@ -94,6 +124,7 @@ const ButtonWrapper = styled.button`
   -webkit-tap-highlight-color: transparent;
   letter-spacing: 0.05em;
   font-weight: bold;
+  font-size: var(--font-size);
   text-transform: uppercase;
   text-decoration: none;
 
@@ -128,7 +159,7 @@ const ButtonWrapper = styled.button`
   border: ${(props) => {
     switch (props.variant) {
       case VARIANTS.secondary:
-        return "2px solid var(--border-color)";
+        return "2px solid var(--accent-color)";
       default:
         return "none";
     }
@@ -143,7 +174,19 @@ const ButtonWrapper = styled.button`
   }};
 
   & > svg {
-    stroke-width: 0.175rem;
+    position: relative;
+    top: 0.05em;
+    stroke-width: var(--stroke-width);
+
+    stroke: ${(props) => {
+      switch (props.variant) {
+        case VARIANTS.secondary:
+        case VARIANTS.tertiary:
+          return "var(--accent-color);";
+        default:
+          return "var(--accent-color-alternate);";
+      }
+    }};
   }
 
   &:focus {
@@ -174,15 +217,26 @@ const ButtonWrapper = styled.button`
       switch (props.variant) {
         case VARIANTS.secondary:
         case VARIANTS.tertiary:
-          return "var(--hover-color-alternate);";
+          return "var(--color-alternate-hover);";
         default:
           return "var(--color);";
       }
     }};
+    & > svg {
+      stroke: ${(props) => {
+        switch (props.variant) {
+          case VARIANTS.secondary:
+          case VARIANTS.tertiary:
+            return "var(--accent-color-hover)";
+          default:
+            return "var(--accent-color-alternate)";
+        }
+      }};
+    }
     border-color: ${(props) => {
       switch (props.variant) {
         case VARIANTS.secondary:
-          return "var(--hover-border-color);";
+          return "var(--accent-color-hover);";
         default:
           return "transparent";
       }
@@ -193,7 +247,7 @@ const ButtonWrapper = styled.button`
         case VARIANTS.tertiary:
           return "transparent";
         default:
-          return "var(--hover-background-color);";
+          return "var(--background-color-hover);";
       }
     }};
   }
@@ -204,15 +258,26 @@ const ButtonWrapper = styled.button`
         switch (props.variant) {
           case VARIANTS.secondary:
           case VARIANTS.tertiary:
-            return "var(--hover-color-alternate);";
+            return "var(--color-alternate-hover);";
           default:
             return "var(--color);";
         }
       }};
+      & > svg {
+        stroke: ${(props) => {
+          switch (props.variant) {
+            case VARIANTS.secondary:
+            case VARIANTS.tertiary:
+              return "var(--accent-color-hover)";
+            default:
+              return "var(--accent-color-alternate)";
+          }
+        }};
+      }
       border-color: ${(props) => {
         switch (props.variant) {
           case VARIANTS.secondary:
-            return "var(--hover-border-color);";
+            return "var(--accent-color-hover);";
           default:
             return "transparent";
         }
@@ -223,16 +288,52 @@ const ButtonWrapper = styled.button`
           case VARIANTS.tertiary:
             return "transparent";
           default:
-            return "var(--hover-background-color);";
+            return "var(--background-color-hover);";
         }
       }};
     }
   }
-`;
 
-const Text = styled.span`
-  position: relative;
-  top: -0.05rem;
+  &:disabled {
+    cursor: auto;
+    color: ${(props) => {
+      switch (props.variant) {
+        case VARIANTS.secondary:
+        case VARIANTS.tertiary:
+          return "var(--color-alternate-disabled)";
+        default:
+          return "var(--color-disabled)";
+      }
+    }};
+    & > svg {
+      stroke: ${(props) => {
+        switch (props.variant) {
+          case VARIANTS.secondary:
+          case VARIANTS.tertiary:
+            return "var(--accent-color-disabled)";
+          default:
+            return "var(--accent-color-alternate-disabled)";
+        }
+      }};
+    }
+    border-color: ${(props) => {
+      switch (props.variant) {
+        case VARIANTS.secondary:
+          return "var(--accent-color-disabled);";
+        default:
+          return "transparent";
+      }
+    }};
+    background-color: ${(props) => {
+      switch (props.variant) {
+        case VARIANTS.secondary:
+        case VARIANTS.tertiary:
+          return "transparent";
+        default:
+          return "var(--background-color-disabled)";
+      }
+    }};
+  }
 `;
 
 export default Button;

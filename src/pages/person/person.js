@@ -1,8 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
-import { FiChevronLeft, FiEdit, FiSave } from "react-icons/fi";
+import { FiArrowLeft, FiEdit, FiSave } from "react-icons/fi";
 
 import { useSnapshots } from "context/snapshot-context";
 import {
@@ -15,6 +15,7 @@ import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import TextInput from "components/text-input";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
+import Spacer from "components/spacer";
 
 function Person() {
   const { badge: paramBadge } = useParams();
@@ -91,8 +92,8 @@ function Person() {
 
   return (
     <Wrapper>
-      <Back to="/dashboard/roster">
-        <FiChevronLeft />
+      <Back to="/dashboard/roster" variant="tertiary" size="large">
+        <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
       <Name>
@@ -108,7 +109,9 @@ function Person() {
         }}
       >
         <DialogTrigger asChild>
-          <EditButton type="submit" icon={FiEdit}>
+          <EditButton type="submit">
+            <FiEdit />
+            <Spacer size={8} axis="horizontal" />
             Edit Person
           </EditButton>
         </DialogTrigger>
@@ -147,7 +150,9 @@ function Person() {
                 error={badge ? "" : "Please enter a badge"}
               />
             </DialogInputs>
-            <Button type="submit" icon={FiSave}>
+            <Button type="submit">
+              <Spacer size={8} axis="horizontal" />
+              <FiSave />
               Save person
             </Button>
           </DialogForm>
@@ -187,21 +192,10 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Back = styled(Link)`
+const Back = styled(Button)`
   position: absolute;
-  top: 32px;
-  left: calc(32px - 6px);
-  text-decoration: none;
-  color: var(--color-yellow-3);
-  font-size: ${48 / 16}rem;
-  padding: 8px;
-  border-radius: 100%;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--color-yellow-9);
-    }
-  }
+  top: 48px;
+  left: calc(48px - 6px);
 `;
 
 const Name = styled.span`

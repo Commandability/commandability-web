@@ -16,15 +16,33 @@ const THEMES = {
   },
 };
 
-function IconButton({ theme = "dark", children, style, ...props }) {
-  if (!THEMES[theme]) throw new Error(`Unknown theme provided to Button.`);
+const SIZES = {
+  small: {
+    "--dimension": "24px",
+    "--stroke-width": "0.175rem",
+  },
+  large: {
+    "--dimension": "48px",
+    "--stroke-width": "0.125rem",
+  },
+};
 
+function IconButton({
+  icon,
+  theme = "dark",
+  size = "small",
+  children,
+  style,
+  ...props
+}) {
   const themeStyles = THEMES[theme];
+  const sizeStyles = SIZES[size];
 
   return (
     <Wrapper
       style={{
         ...themeStyles,
+        ...sizeStyles,
         ...style,
       }}
       {...props}
@@ -41,19 +59,15 @@ const Wrapper = styled(UnstyledButton)`
   color: var(--color);
 
   & > svg {
-    stroke-width: 0.175rem;
-    width: 24px;
-    height: 24px;
+    stroke-width: var(--stroke-width);
+    width: var(--dimension);
+    height: var(--dimension);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--color-hover);
     }
-  }
-
-  &:active {
-    background-color: var(--background-color);
   }
 
   &:focus {

@@ -1,11 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import { Link, useLoaderData } from "react-router-dom";
-import { FiChevronLeft } from "react-icons/fi";
+import { useLoaderData } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import { getAuth } from "firebase/auth";
 import { ref, getBlob } from "firebase/storage";
 
 import { storage } from "firebase.js";
+import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 
 export async function loader({ params }) {
@@ -21,8 +22,8 @@ function Report() {
 
   return (
     <Wrapper>
-      <Back to="/dashboard/reports">
-        <FiChevronLeft />
+      <Back to="/dashboard/reports" variant="tertiary" size="large">
+        <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
       <Contents>{report}</Contents>
@@ -40,23 +41,10 @@ const Wrapper = styled.div`
   position: relative;
 `;
 
-const Back = styled(Link)`
+const Back = styled(Button)`
   position: absolute;
-  top: 32px;
-  left: calc(32px - 6px);
-  display: grid;
-  place-content: center;
-  text-decoration: none;
-  color: var(--color-yellow-3);
-  font-size: ${48 / 16}rem;
-  padding: 8px;
-  border-radius: 100%;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--color-yellow-9);
-    }
-  }
+  top: 48px;
+  left: calc(48px - 6px);
 `;
 
 const Contents = styled.div`

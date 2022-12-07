@@ -12,7 +12,7 @@ import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
 import FooterImage from "components/footer-image";
 import Card from "components/card";
-import IconItem from "components/icon-item";
+import IconItem, { ItemContents } from "components/icon-item";
 import Pill from "components/pill";
 import Spacer from "components/spacer";
 import LandingNav from "components/landing-nav";
@@ -197,14 +197,23 @@ function Home() {
             backgroundColor="var(--color-red-3)"
           >
             <UnorderedList>
-              <IconItem icon={FiCheckSquare}>
-                Create an account on the Commandability website homepage
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Create an account on the Commandability website homepage
+                </ItemContents>
               </IconItem>
-              <IconItem icon={FiCheckSquare}>
-                Add or import personnel on the website roster page
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Add or import personnel on the website roster page
+                </ItemContents>
               </IconItem>
-              <IconItem icon={FiCheckSquare}>
-                Configure group names and alerts on the website groups page
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Configure group names and alerts on the website groups page
+                </ItemContents>
               </IconItem>
             </UnorderedList>
           </StepOne>
@@ -214,16 +223,25 @@ function Home() {
             backgroundColor="var(--color-red-2)"
           >
             <UnorderedList>
-              <IconItem icon={FiCheckSquare}>
-                Download the Commandability app on your tablet device
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Download the Commandability app on your tablet device
+                </ItemContents>
               </IconItem>
-              <IconItem icon={FiCheckSquare}>
-                Sign in and update to load your department’s data, then start an
-                incident
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Sign in and update to load your department’s data, then start
+                  an incident
+                </ItemContents>
               </IconItem>
-              <IconItem icon={FiCheckSquare}>
-                Customize your groups to match the incident, and begin managing
-                on-site personnel in real time
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Customize your groups to match the incident, and begin
+                  managing on-site personnel in real time
+                </ItemContents>
               </IconItem>
             </UnorderedList>
           </StepTwo>
@@ -233,15 +251,24 @@ function Home() {
             backgroundColor="var(--color-red-1)"
           >
             <UnorderedList>
-              <IconItem icon={FiCheckSquare}>
-                After the incident, enter the incident location and any
-                additional notes
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  After the incident, enter the incident location and any
+                  additional notes
+                </ItemContents>
               </IconItem>
-              <IconItem icon={FiCheckSquare}>
-                Upload the report to your Commandability account
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Upload the report to your Commandability account
+                </ItemContents>
               </IconItem>
-              <IconItem icon={FiCheckSquare}>
-                Review all uploaded reports on the Commandability website
+              <IconItem>
+                <FiCheckSquare />
+                <ItemContents>
+                  Review all uploaded reports on the Commandability website
+                </ItemContents>
               </IconItem>
             </UnorderedList>
           </StepThree>

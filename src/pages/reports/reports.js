@@ -47,9 +47,9 @@ import {
 } from "components/alert-dialog";
 import Checkbox from "components/checkbox";
 import SearchInput from "components/search-input";
-import IconButton from "components/icon-button";
-import VisuallyHidden from "components/visually-hidden";
 import Button from "components/button";
+import VisuallyHidden from "components/visually-hidden";
+import Spacer from "components/spacer";
 import ReportItem, { FallbackItem } from "components/report-item";
 
 export const REPORTS_CONFIGURATION = {
@@ -284,24 +284,28 @@ function Reports() {
                     prevReportsCount + reportsDocs.docs.length
                   } of ${allReportsCount}`}
                   <PaginationButtons>
-                    <IconButton
+                    <Button
                       type="submit"
                       name="p"
                       value={"prev"}
                       disabled={prevReportsCount === 0}
+                      variant="tertiary"
+                      size="medium"
                     >
-                      <VisuallyHidden>Previous page</VisuallyHidden>
                       <FiChevronLeft />
-                    </IconButton>
-                    <IconButton
+                      <VisuallyHidden>Previous page</VisuallyHidden>
+                    </Button>
+                    <Button
                       type="submit"
                       name="p"
                       value={"next"}
                       disabled={reportsDocs.docs.length < reportsPerPage}
+                      variant="tertiary"
+                      size="medium"
                     >
-                      <VisuallyHidden>Next page</VisuallyHidden>
                       <FiChevronRight />
-                    </IconButton>
+                      <VisuallyHidden>Next page</VisuallyHidden>
+                    </Button>
                     <input
                       type="hidden"
                       name="f"
@@ -342,7 +346,9 @@ function Reports() {
                 onOpenChange={setRemoveReportsOpen}
               >
                 <AlertDialogTrigger asChild>
-                  <Button variant="tertiary" icon={FiTrash2}>
+                  <Button variant="tertiary">
+                    <FiTrash2 />
+                    <Spacer size={8} axis="horizontal" />
                     Delete reports
                   </Button>
                 </AlertDialogTrigger>
@@ -353,7 +359,9 @@ function Reports() {
                 >
                   <AlertOptions>
                     <AlertDialogCancel asChild>
-                      <Button icon={FiX} variant="secondary">
+                      <Button variant="secondary">
+                        <FiX />
+                        <Spacer size={8} axis="horizontal" />
                         Cancel
                       </Button>
                     </AlertDialogCancel>
@@ -362,8 +370,9 @@ function Reports() {
                         type="submit"
                         name="checked-items"
                         value={JSON.stringify(checkedItems)}
-                        icon={FiCheck}
                       >
+                        <FiCheck />
+                        <Spacer size={8} axis="horizontal" />
                         Yes, delete reports
                       </Button>
                     </fetcher.Form>
@@ -410,8 +419,16 @@ function Reports() {
         )}
       </ListArea>
       <Bottom>
-        <Button icon={FiDownload}>Export all</Button>
-        <Button icon={FiTrash2}>Delete All</Button>
+        <Button>
+          <FiDownload />
+          <Spacer size={8} axis="horizontal" />
+          Export all
+        </Button>
+        <Button>
+          <FiTrash2 />
+          <Spacer size={8} axis="horizontal" />
+          Delete All
+        </Button>
       </Bottom>
     </Wrapper>
   );
@@ -457,7 +474,7 @@ const Pagination = styled.div`
 
 const PaginationButtons = styled.div`
   display: flex;
-  gap: 8px;
+  gap: 24px;
 `;
 
 const ListHeader = styled.div`
