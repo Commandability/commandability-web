@@ -33,6 +33,7 @@ import {
   FiDownload,
   FiChevronLeft,
   FiChevronRight,
+  FiAlertTriangle,
 } from "react-icons/fi";
 
 import { db } from "firebase.js";
@@ -281,7 +282,11 @@ function Reports() {
           </ReportsSelect>
         </Filter>
         <React.Suspense fallback={fallbackPagination}>
-          <Await resolve={reportsData}>
+          <Await
+            resolve={reportsData}
+            // Error displayed by reports suspense
+            errorElement={<></>}
+          >
             {(reportsData) => {
               const [reportsDocs, prevReportsAggregate, allReportsAggregate] =
                 reportsData;
@@ -406,7 +411,12 @@ function Reports() {
           <React.Suspense fallback={fallbackList}>
             <Await
               resolve={reportsData}
-              errorElement={<p>Error loading reports</p>}
+              errorElement={
+                <ErrorElement>
+                  <FiAlertTriangle />
+                  Error loading reports
+                </ErrorElement>
+              }
             >
               {(reportsData) => {
                 const [reportsDocs] = reportsData;
@@ -504,6 +514,19 @@ const ListHeader = styled.div`
   position: sticky;
   top: 0;
   z-index: 1;
+`;
+
+const ErrorElement = styled.div`
+  height: calc(100% - (24px + 16px * 2));
+  display: grid;
+  place-content: center;
+  text-transform: uppercase;
+  color: var(--color-gray-4);
+  letter-spacing: 0.05em;
+  font-size: ${20 / 16}rem;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 `;
 
 const Group = styled.div`
