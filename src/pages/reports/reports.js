@@ -51,6 +51,7 @@ import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
 import ReportItem, { FallbackItem } from "components/report-item";
+import * as Fallback from "components/fallback";
 
 export const REPORTS_CONFIGURATION = {
   reportsPerPage: 20,
@@ -213,6 +214,22 @@ function Reports() {
     [q, submit]
   );
 
+  const fallbackPagination = (
+    <Pagination>
+      <Fallback.Text style={{ "--text-length": "96px" }} />
+      <PaginationButtons>
+        <Button disabled={true} variant="tertiary" size="medium">
+          <FiChevronLeft />
+          <VisuallyHidden>Previous page</VisuallyHidden>
+        </Button>
+        <Button disabled={true} variant="tertiary" size="medium">
+          <FiChevronRight />
+          <VisuallyHidden>Next page</VisuallyHidden>
+        </Button>
+      </PaginationButtons>
+    </Pagination>
+  );
+
   const fallbackList = (
     <>
       <VisuallyHidden>Loading reports</VisuallyHidden>
@@ -263,7 +280,7 @@ function Reports() {
             <SelectItem value={SELECT_VALUES.oldest}>Oldest first</SelectItem>
           </ReportsSelect>
         </Filter>
-        <React.Suspense>
+        <React.Suspense fallback={fallbackPagination}>
           <Await resolve={reportsData}>
             {(reportsData) => {
               const [reportsDocs, prevReportsAggregate, allReportsAggregate] =

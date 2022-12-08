@@ -2,8 +2,9 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import { getRandomInt } from "utils";
 import Checkbox from "components/checkbox";
+import * as Fallback from "components/fallback";
+import { getRandomInt } from "utils";
 
 export function FallbackItem() {
   // Only generate one random length per mount as opposed to on every render
@@ -12,8 +13,8 @@ export function FallbackItem() {
     <FallbackWrapper>
       <FallbackCheckbox />
       <FallbackContents>
-        <FallbackText style={{ "--text-length": `${textLength}px` }} />
-        <FallbackText style={{ "--text-length": "144px" }} />
+        <Fallback.Text style={{ "--text-length": `${textLength}px` }} />
+        <Fallback.Text style={{ "--text-length": "144px" }} />
       </FallbackContents>
     </FallbackWrapper>
   );
@@ -164,13 +165,6 @@ const FallbackContents = styled.div`
   justify-content: space-between;
   padding-left: 32px;
   align-items: center;
-`;
-
-const FallbackText = styled.div`
-  width: var(--text-length);
-  height: 1rem;
-  border-radius: 8px;
-  background-color: var(--color-gray-9);
 `;
 
 export default ReportItem;
