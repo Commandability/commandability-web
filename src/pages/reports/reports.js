@@ -170,6 +170,8 @@ function Reports() {
   const submit = useSubmit();
   const fetcher = useFetcher();
 
+  const [prevQ, setPrevQ] = React.useState(q);
+
   const [key, setKey] = React.useState(true);
   const [prevS, setPrevS] = React.useState(s);
 
@@ -187,8 +189,10 @@ function Reports() {
   // Synchronize input values with URL search params
   // Browser navigation changes the URL, but not element values
   React.useEffect(() => {
-    document.getElementById("q").value = q;
-  }, [q]);
+    // If q changes from any value to undefined, reset q
+    if (!q && prevQ) document.getElementById("q").value = q;
+    if (!prevQ) setPrevQ(q);
+  }, [q, prevQ, setPrevQ]);
   React.useEffect(() => {
     // If s changes from SELECT_VALUES.oldest to undefined, remount
     if (!s && prevS === SELECT_VALUES.oldest) setKey((prevKey) => !prevKey);
