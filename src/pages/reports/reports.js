@@ -300,6 +300,10 @@ function Reports() {
 
               const allReportsCount = allReportsAggregate?.data().count;
 
+              const firstDisplayedReport = reportsDocs.docs[0]?.data();
+              const lastDisplayedReport =
+                reportsDocs.docs[reportsDocs.docs.length - 1]?.data();
+
               return (
                 <Pagination>
                   {`${prevReportsCount} - ${
@@ -332,15 +336,20 @@ function Reports() {
                       type="hidden"
                       name="f"
                       // The first displayed report's timestamp's seconds
-                      value={reportsDocs.docs[0]?.data().startTimestamp.seconds}
+                      value={
+                        firstDisplayedReport
+                          ? firstDisplayedReport.startTimestamp.seconds.toString()
+                          : ""
+                      }
                     />
                     <input
                       type="hidden"
                       name="l"
                       // The last displayed report's timestamp's seconds
                       value={
-                        reportsDocs.docs[reportsDocs.docs.length - 1]?.data()
-                          .startTimestamp.seconds
+                        lastDisplayedReport
+                          ? lastDisplayedReport.startTimestamp.seconds.toString()
+                          : ""
                       }
                     />
                   </PaginationButtons>
