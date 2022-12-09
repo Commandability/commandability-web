@@ -173,6 +173,9 @@ function Reports() {
   const [key, setKey] = React.useState(true);
   const [prevS, setPrevS] = React.useState(s);
 
+  // Don't add new search to the history stack unless it's the first one
+  const isFirstFilter = q === null || s === null;
+
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
@@ -206,13 +209,11 @@ function Reports() {
   const handleSearchChange = React.useMemo(
     () =>
       debounce((currentTarget) => {
-        const isFirstSearch = q === null;
-
         submit(currentTarget, {
-          replace: !isFirstSearch,
+          replace: !isFirstFilter,
         });
       }, SEARCH_DEBOUNCE),
-    [q, submit]
+    [isFirstFilter, submit]
   );
 
   const fallbackPagination = (
@@ -252,11 +253,8 @@ function Reports() {
           if (event.target.name === "q") {
             handleSearchChange(event.currentTarget);
           } else {
-            // Don't add new search to the history stack unless it's the first one
-            const isFirstSearch = q === null;
-
             submit(event.currentTarget, {
-              replace: !isFirstSearch,
+              replace: !isFirstFilter,
             });
           }
         }}
