@@ -98,8 +98,9 @@ export async function loader({ request }) {
   let prevDocsQueryParams = [];
   if (f) prevDocsQueryParams = [endBefore(new Timestamp(parseInt(f), 0))];
 
+  let reportsQueryParams;
   if (q) {
-    const filteredReportsQueryParams = [
+    reportsQueryParams = [
       collection(db, "users", currentUser.uid, "reports"),
       orderBy(fields.location),
       where(fields.location, ">=", q.toLowerCase()),
@@ -109,37 +110,24 @@ export async function loader({ request }) {
         s === SELECT_VALUES.oldest ? undefined : "desc"
       ),
     ];
-
-    return defer({
-      ...urlSearchParams,
-      reportsData: Promise.all([
-        getDocs(query(...filteredReportsQueryParams, ...rangeQueryParams)),
-        getCountFromServer(
-          query(...filteredReportsQueryParams, ...prevDocsQueryParams)
-        ),
-        getCountFromServer(query(...filteredReportsQueryParams)),
-      ]),
-    });
   } else {
-    const reportsQueryParams = [
+    reportsQueryParams = [
       collection(db, "users", currentUser.uid, "reports"),
       orderBy(
         fields.startTimestamp,
         s === SELECT_VALUES.oldest ? undefined : "desc"
       ),
     ];
-
-    return defer({
-      ...urlSearchParams,
-      reportsData: Promise.all([
-        getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
-        getCountFromServer(
-          query(...reportsQueryParams, ...prevDocsQueryParams)
-        ),
-        getCountFromServer(query(...reportsQueryParams)),
-      ]),
-    });
   }
+
+  return defer({
+    ...urlSearchParams,
+    reportsData: Promise.all([
+      getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
+      getCountFromServer(query(...reportsQueryParams, ...prevDocsQueryParams)),
+      getCountFromServer(query(...reportsQueryParams)),
+    ]),
+  });
 }
 
 export async function action({ request }) {
