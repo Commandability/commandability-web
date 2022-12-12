@@ -151,8 +151,8 @@ function Person() {
               />
             </DialogInputs>
             <Button type="submit">
-              <Spacer size={8} axis="horizontal" />
               <FiSave />
+              <Spacer size={8} axis="horizontal" />
               Save person
             </Button>
           </DialogForm>

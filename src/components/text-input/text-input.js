@@ -1,18 +1,35 @@
 import React from "react";
 import styled from "styled-components";
+import { FiEye, FiEyeOff } from "react-icons/fi";
+
+import UnstyledButton from "components/unstyled-button";
+import VisuallyHidden from "components/visually-hidden";
+
+const VARIANTS = {
+  text: "text",
+  password: "password",
+};
 
 const TextInput = ({
   id,
-  type,
   className,
   label,
-  value,
-  onChange,
+  variant = "text",
   error,
   ...props
 }) => {
   if (!id) {
     throw new Error("TextInput must have an id");
+  }
+  if (!VARIANTS[variant])
+    throw new Error(`Unknown variant provided to TextInput.`);
+
+  const [visiblePassword, setVisiblePassword] = React.useState(false);
+  const passwordInputRef = React.useRef();
+
+  function handleTogglePassword() {
+    setVisiblePassword((isVisible) => !isVisible);
+    passwordInputRef.current.focus();
   }
 
   return (
@@ -20,12 +37,26 @@ const TextInput = ({
       <InputGroup className={className}>
         <label htmlFor={id}>{label}</label>
         <Input
-          type={type ? type : "text"}
+          ref={passwordInputRef}
+          type={
+            variant === "password" && !visiblePassword ? "password" : "text"
+          }
           id={id}
-          value={value}
-          onChange={onChange}
+          placeholder={variant === "password" ? "password" : undefined}
+          required={variant === "password" ? true : false}
+          autoComplete={variant === "password" ? "current-password" : undefined}
           {...props}
         />
+        {variant === "password" ? (
+          <ToggleVisibilityButton
+            type="button"
+            aria-pressed={visiblePassword ? "true" : "false"}
+            onClick={handleTogglePassword}
+          >
+            <VisuallyHidden>Toggle password visibility</VisuallyHidden>
+            {visiblePassword ? <FiEyeOff /> : <FiEye />}
+          </ToggleVisibilityButton>
+        ) : null}
       </InputGroup>
       <InputError>{error}</InputError>
     </Wrapper>
@@ -61,6 +92,24 @@ const Input = styled.input`
   &:focus-visible {
     outline: 2px solid var(--color-yellow-3);
     border-color: var(--color-yellow-3);
+  }
+`;
+
+const ToggleVisibilityButton = styled(UnstyledButton)`
+  position: absolute;
+  top: 10px;
+  right: 8px;
+  padding: 4px;
+
+  & > svg {
+    stroke: var(--color-yellow-3);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      border-radius: 100%;
+      background-color: var(--color-yellow-9);
+    }
   }
 `;
 
