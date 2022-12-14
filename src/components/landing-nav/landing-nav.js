@@ -33,7 +33,7 @@ function LandingNav({
   footerInView,
 }) {
   const { hash } = useLocation();
-  const { auth, user } = useAuth();
+  const { user } = useAuth();
   const initialLoad = useInitialLoad();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -273,7 +273,7 @@ function LandingNav({
 
   function handleSignOut() {
     window.location.assign("/");
-    signOut(auth);
+    signOut(user.current.auth);
   }
 
   return (

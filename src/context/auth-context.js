@@ -28,7 +28,6 @@ function AuthProvider({ children }) {
   }, []);
 
   const value = {
-    auth,
     user,
     setUser,
   };

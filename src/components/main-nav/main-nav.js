@@ -30,7 +30,7 @@ const TAB_TRANSITION_DURATION = 400;
 
 function MainNav() {
   const { pathname } = useLocation();
-  const { auth, user } = useAuth();
+  const { user } = useAuth();
 
   const [reportsTabRef, reportsTabRect] = useRect();
   const [rosterTabRef, rosterTabRect] = useRect();
@@ -83,7 +83,7 @@ function MainNav() {
     } else {
       window.location.assign(window.location);
     }
-    signOut(auth);
+    signOut(user.current.auth);
   }
 
   return (

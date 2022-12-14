@@ -11,7 +11,7 @@ import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 
-import { db } from "firebase.js";
+import { db, auth } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
@@ -65,7 +65,7 @@ const defaultConfig = {
 };
 
 function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
-  const { auth, setUser } = useAuth();
+  const { setUser } = useAuth();
 
   const [displayName, setDisplayName] = React.useState("");
   const [displayNameError, setDisplayNameError] = React.useState(false);
@@ -157,7 +157,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         ) {
           setToastState({
             title: "Login failed",
-            message: "Invalid email or password",
+            message: "Incorrect email or password",
           });
         } else {
           setToastState(unknownToastState);
