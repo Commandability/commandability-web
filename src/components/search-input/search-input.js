@@ -14,7 +14,7 @@ const SearchInput = ({ id, className, variant, ...props }) => {
     <Wrapper className={className}>
       <Label htmlFor={id}>Search</Label>
       <InputWrapper>
-        <TextInput type="text" id={id} {...props} />
+        <TextInput id={id} {...props} />
         {variant === "button" ? (
           <SearchButton type="submit">
             <VisuallyHidden>Search</VisuallyHidden>

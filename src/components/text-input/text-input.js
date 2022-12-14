@@ -13,9 +13,9 @@ const VARIANTS = {
 const TextInput = ({
   id,
   className,
-  label,
+  labelText,
   variant = "text",
-  error,
+  errorText,
   ...props
 }) => {
   if (!id) {
@@ -35,7 +35,7 @@ const TextInput = ({
   return (
     <Wrapper>
       <InputGroup className={className}>
-        <label htmlFor={id}>{label}</label>
+        {labelText ? <label htmlFor={id}>{labelText}</label> : null}
         <Input
           ref={passwordInputRef}
           type={
@@ -58,7 +58,7 @@ const TextInput = ({
           </ToggleVisibilityButton>
         ) : null}
       </InputGroup>
-      <InputError>{error}</InputError>
+      <InputError>{errorText}</InputError>
     </Wrapper>
   );
 };
