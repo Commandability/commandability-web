@@ -54,7 +54,7 @@ const TextInput = ({
             onClick={handleTogglePassword}
           >
             <VisuallyHidden>Toggle password visibility</VisuallyHidden>
-            {visiblePassword ? <FiEyeOff /> : <FiEye />}
+            {visiblePassword ? <FiEye /> : <FiEyeOff />}
           </ToggleVisibilityButton>
         ) : null}
       </InputGroup>
