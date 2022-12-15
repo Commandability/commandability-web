@@ -14,7 +14,7 @@ import UnstyledButton from "components/unstyled-button";
 import SmoothScrollTo from "components/smooth-scroll-to";
 import VisuallyHidden from "components/visually-hidden";
 import MenuButton from "components/menu-button";
-import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import * as Dialog from "components/dialog";
 import AccountDialogContent, {
   accountContentType,
 } from "components/account-dialog-content";
@@ -491,37 +491,37 @@ function LandingNav({
               Go to dashboard
             </Option>
           ) : (
-            <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
-              <DialogTrigger asChild>
+            <Dialog.Root open={newAccountOpen} onOpenChange={setNewAccountOpen}>
+              <Dialog.Trigger asChild>
                 <Option>Create an account</Option>
-              </DialogTrigger>
-              <DialogContent title="Create an account" portal={false}>
+              </Dialog.Trigger>
+              <Dialog.Content title="Create an account" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
                   setToastOpen={setToastOpen}
                   setToastState={setToastState}
                 />
-              </DialogContent>
-            </Dialog>
+              </Dialog.Content>
+            </Dialog.Root>
           )}
           {user.current ? (
             <Option onClick={handleSignOut}>Sign out</Option>
           ) : (
-            <Dialog
+            <Dialog.Root
               open={currentAccountOpen}
               onOpenChange={setCurrentAccountOpen}
             >
-              <DialogTrigger asChild>
+              <Dialog.Trigger asChild>
                 <Option>Sign in</Option>
-              </DialogTrigger>
-              <DialogContent title="Sign in" portal={false}>
+              </Dialog.Trigger>
+              <Dialog.Content title="Sign in" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
                   setToastOpen={setToastOpen}
                   setToastState={setToastState}
                 />
-              </DialogContent>
-            </Dialog>
+              </Dialog.Content>
+            </Dialog.Root>
           )}
         </AccountOptions>
       </RightSide>

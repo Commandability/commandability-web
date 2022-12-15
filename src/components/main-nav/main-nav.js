@@ -19,7 +19,7 @@ import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import MenuButton from "components/menu-button";
 import Spacer from "components/spacer";
-import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import * as Dialog from "components/dialog";
 import AccountDialogContent, {
   accountContentType,
 } from "components/account-dialog-content";
@@ -210,33 +210,33 @@ function MainNav() {
           </RadixDropdownMenu.Root>
         ) : (
           <AccountOptions>
-            <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
-              <DialogTrigger asChild>
+            <Dialog.Root open={newAccountOpen} onOpenChange={setNewAccountOpen}>
+              <Dialog.Trigger asChild>
                 <Option>Create an account</Option>
-              </DialogTrigger>
-              <DialogContent title="Create an account" portal={false}>
+              </Dialog.Trigger>
+              <Dialog.Content title="Create an account" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.NEW_USER}
                   setToastOpen={setToastOpen}
                   setToastState={setToastState}
                 />
-              </DialogContent>
-            </Dialog>
-            <Dialog
+              </Dialog.Content>
+            </Dialog.Root>
+            <Dialog.Root
               open={currentAccountOpen}
               onOpenChange={setCurrentAccountOpen}
             >
-              <DialogTrigger asChild>
+              <Dialog.Trigger asChild>
                 <Option>Sign in</Option>
-              </DialogTrigger>
-              <DialogContent title="Sign in" portal={false}>
+              </Dialog.Trigger>
+              <Dialog.Content title="Sign in" portal={false}>
                 <AccountDialogContent
                   defaultContent={accountContentType.CURRENT_USER}
                   setToastOpen={setToastOpen}
                   setToastState={setToastState}
                 />
-              </DialogContent>
-            </Dialog>
+              </Dialog.Content>
+            </Dialog.Root>
           </AccountOptions>
         )}
       </RightSide>
@@ -453,10 +453,10 @@ const RadixDialogMenu = styled.div`
   box-shadow: var(--box-shadow);
 
   @media (prefers-reduced-motion: no-preference) {
-    ${DialogContent}[data-state="open"] & {
+    ${Dialog.Content}[data-state="open"] & {
       animation: ${slideIn} 300ms ease-out forwards;
     }
-    ${DialogContent}[data-state="closed"] & {
+    ${Dialog.Content}[data-state="closed"] & {
       animation: ${slideOut} 300ms ease-in forwards;
     }
   }

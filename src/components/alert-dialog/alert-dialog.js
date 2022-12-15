@@ -4,16 +4,29 @@ import * as RadixAlertDialog from "@radix-ui/react-alert-dialog";
 
 import VisuallyHidden from "components/visually-hidden";
 
-export const AlertDialog = RadixAlertDialog.Root;
-export const AlertDialogTrigger = RadixAlertDialog.Trigger;
-export const AlertDialogCancel = RadixAlertDialog.Cancel;
-export const AlertDialogAction = RadixAlertDialog.Action;
+export const Root = RadixAlertDialog.Root;
+export const Trigger = RadixAlertDialog.Trigger;
+export const Cancel = RadixAlertDialog.Cancel;
+export const Action = RadixAlertDialog.Action;
 
-export const AlertDialogContent = React.forwardRef(
+/**
+ * Styles for children of Content in case the dialog content has a wrapper as its direct child
+ */
+export const contentChildrenStyles = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "32px",
+};
+
+export const Content = React.forwardRef(
   ({ header, title, description, children, ...props }, forwardedRef) => (
     <RadixAlertDialog.Portal>
       <RadixAlertDialogOverlay>
-        <RadixAlertDialogContent {...props} ref={forwardedRef}>
+        <RadixAlertDialogContent
+          style={contentChildrenStyles}
+          {...props}
+          ref={forwardedRef}
+        >
           {header ? (
             <Header>
               <RadixAlertDialogTitle>{title}</RadixAlertDialogTitle>
@@ -68,9 +81,6 @@ const RadixAlertDialogContent = styled(RadixAlertDialog.Content)`
   border-radius: 8px;
   background-color: var(--color-gray-10);
   color: var(--color-yellow-2);
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;

@@ -1,7 +1,8 @@
 export {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogContent,
+  Root,
+  Trigger,
+  Cancel,
+  Action,
+  Content,
+  contentChildrenStyles,
 } from "./alert-dialog";

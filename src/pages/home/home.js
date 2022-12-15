@@ -19,7 +19,7 @@ import LandingNav from "components/landing-nav";
 import VisuallyHidden from "components/visually-hidden";
 import Skip from "components/skip";
 import SmoothScrollTo from "components/smooth-scroll-to";
-import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import * as Dialog from "components/dialog";
 import AccountDialogContent, {
   accountContentType,
 } from "components/account-dialog-content";
@@ -115,20 +115,23 @@ function Home() {
                   Go to dashboard
                 </Pill>
               ) : (
-                <Dialog open={newAccountOpen} onOpenChange={setNewAccountOpen}>
-                  <DialogTrigger asChild>
+                <Dialog.Root
+                  open={newAccountOpen}
+                  onOpenChange={setNewAccountOpen}
+                >
+                  <Dialog.Trigger asChild>
                     <DesktopPill theme="dark" angle>
                       Get started
                     </DesktopPill>
-                  </DialogTrigger>
-                  <DialogContent title="Get started" portal={false}>
+                  </Dialog.Trigger>
+                  <Dialog.Content title="Get started" portal={false}>
                     <AccountDialogContent
                       defaultContent={accountContentType.NEW_USER}
                       setToastOpen={setToastOpen}
                       setToastState={setToastState}
                     />
-                  </DialogContent>
-                </Dialog>
+                  </Dialog.Content>
+                </Dialog.Root>
               )}
             </HeaderPills>
             <DownloadsWrapper>

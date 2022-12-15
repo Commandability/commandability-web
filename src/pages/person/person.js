@@ -11,7 +11,7 @@ import {
   ToastViewport,
   unknownToastState,
 } from "components/toast";
-import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
+import * as Dialog from "components/dialog";
 import TextInput from "components/text-input";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
@@ -100,7 +100,7 @@ function Person() {
         {person.firstName} {person.lastName}
       </Name>
       <Hr />
-      <Dialog
+      <Dialog.Root
         open={editPersonOpen}
         onOpenChange={(editPersonOpen) => {
           setEditPersonOpen(editPersonOpen);
@@ -108,14 +108,14 @@ function Person() {
           resetEditPersonInputs();
         }}
       >
-        <DialogTrigger asChild>
+        <Dialog.Trigger asChild>
           <EditButton type="submit">
             <FiEdit />
             <Spacer size={8} axis="horizontal" />
             Edit Person
           </EditButton>
-        </DialogTrigger>
-        <DialogContent
+        </Dialog.Trigger>
+        <Dialog.Content
           header
           title="Edit person"
           description="Edit the selected person in the roster here."
@@ -156,8 +156,8 @@ function Person() {
               Save person
             </Button>
           </DialogForm>
-        </DialogContent>
-      </Dialog>
+        </Dialog.Content>
+      </Dialog.Root>
       <PersonData>
         <Datum>
           <DatumLabel>Shift: </DatumLabel>

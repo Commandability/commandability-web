@@ -23,14 +23,8 @@ import {
   ToastViewport,
   unknownToastState,
 } from "components/toast";
-import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogCancel,
-  AlertDialogAction,
-  AlertDialogContent,
-} from "components/alert-dialog";
+import * as Dialog from "components/dialog";
+import * as AlertDialog from "components/alert-dialog";
 import { Select, SelectItem } from "components/select";
 import IconItem, { ItemContents } from "components/icon-item";
 import TextInput from "components/text-input";
@@ -287,15 +281,15 @@ function Roster() {
           <SelectItem value={selectValues.lastName}>Last name</SelectItem>
           <SelectItem value={selectValues.badge}>Badge</SelectItem>
         </RosterSelect>
-        <Dialog open={addPersonOpen} onOpenChange={setAddPersonOpen}>
-          <DialogTrigger asChild>
+        <Dialog.Root open={addPersonOpen} onOpenChange={setAddPersonOpen}>
+          <Dialog.Trigger asChild>
             <Button>
               <FiUserPlus />
               <Spacer size={8} axis="horizontal" />
               Add person
             </Button>
-          </DialogTrigger>
-          <DialogContent
+          </Dialog.Trigger>
+          <Dialog.Content
             header
             title="Add person"
             description="Add a new person to the roster here."
@@ -336,8 +330,8 @@ function Roster() {
                 Save person
               </Button>
             </DialogForm>
-          </DialogContent>
-        </Dialog>
+          </Dialog.Content>
+        </Dialog.Root>
       </Top>
       <ListArea>
         <ListHeader aria-live="polite" aria-atomic="true">
@@ -352,40 +346,40 @@ function Roster() {
             {checkedItems.length === 0 ? (
               <Name>Name</Name>
             ) : (
-              <AlertDialog
+              <AlertDialog.Root
                 open={removePersonnelOpen}
                 onOpenChange={setRemovePersonnelOpen}
               >
-                <AlertDialogTrigger asChild>
+                <AlertDialog.Trigger asChild>
                   <Button variant="tertiary">
                     <FiTrash2 />
                     <Spacer size={8} axis="horizontal" />
                     Delete personnel
                   </Button>
-                </AlertDialogTrigger>
+                </AlertDialog.Trigger>
                 <RemoveAlertDialogContent
                   header
                   title="Are you absolutely sure?"
                   description="This action cannot be undone. This will permanently delete the selected personnel from your account."
                 >
                   <AlertOptions>
-                    <AlertDialogCancel asChild>
+                    <AlertDialog.Cancel asChild>
                       <Button variant="secondary">
                         <FiX />
                         <Spacer size={8} axis="horizontal" />
                         Cancel
                       </Button>
-                    </AlertDialogCancel>
-                    <AlertDialogAction asChild>
+                    </AlertDialog.Cancel>
+                    <AlertDialog.Action asChild>
                       <Button onClick={onRemovePersonnelAction}>
                         <FiCheck />
                         <Spacer size={8} axis="horizontal" />
                         Yes, delete personnel
                       </Button>
-                    </AlertDialogAction>
+                    </AlertDialog.Action>
                   </AlertOptions>
                 </RemoveAlertDialogContent>
-              </AlertDialog>
+              </AlertDialog.Root>
             )}
             {checkedItems.length === 0 ? <span>Shift</span> : null}
           </Group>
@@ -412,15 +406,15 @@ function Roster() {
         </List>
       </ListArea>
       <Bottom>
-        <Dialog open={importCSVOpen} onOpenChange={setImportCSVOpen}>
-          <DialogTrigger asChild>
+        <Dialog.Root open={importCSVOpen} onOpenChange={setImportCSVOpen}>
+          <Dialog.Trigger asChild>
             <Button>
               <FiUpload />
               <Spacer size={8} axis="horizontal" />
               Import CSV
             </Button>
-          </DialogTrigger>
-          <DialogContent
+          </Dialog.Trigger>
+          <Dialog.Content
             header
             title="Import CSV"
             description="Add personnel from a file here."
@@ -457,9 +451,9 @@ function Roster() {
                 </Button>
               </DialogActions>
             </DialogContainer>
-          </DialogContent>
-        </Dialog>
-        <AlertDialog
+          </Dialog.Content>
+        </Dialog.Root>
+        <AlertDialog.Root
           open={importAlertDialogOpen}
           onOpenChange={setImportAlertDialogOpen}
         >
@@ -481,16 +475,16 @@ function Roster() {
               </DialogScrollContainer>
             ) : null}
             <DialogActions>
-              <AlertDialogAction asChild>
+              <AlertDialog.Action asChild>
                 <Button onClick={() => setImportStatus(null)}>
                   <FiCheck />
                   <Spacer size={8} axis="horizontal" />
                   Ok
                 </Button>
-              </AlertDialogAction>
+              </AlertDialog.Action>
             </DialogActions>
           </ImportAlertDialogContent>
-        </AlertDialog>
+        </AlertDialog.Root>
         <Button download="personnel.csv" href={downloadLink}>
           <FiDownload />
           <Spacer size={8} axis="horizontal" />
@@ -649,11 +643,11 @@ const List = styled.ul`
   isolation: isolate;
 `;
 
-const RemoveAlertDialogContent = styled(AlertDialogContent)`
+const RemoveAlertDialogContent = styled(AlertDialog.Content)`
   width: 512px;
 `;
 
-const ImportAlertDialogContent = styled(AlertDialogContent)`
+const ImportAlertDialogContent = styled(AlertDialog.Content)`
   min-width: 384px;
   max-width: 640px;
 `;

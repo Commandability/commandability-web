@@ -1,1 +1,1 @@
-export { Dialog, DialogTrigger, DialogContent } from "./dialog";
+export { Root, Trigger, Content, contentChildrenStyles } from "./dialog";

@@ -6,10 +6,19 @@ import { FiX } from "react-icons/fi";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 
-export const Dialog = RadixDialog.Root;
-export const DialogTrigger = RadixDialog.Trigger;
+export const Root = RadixDialog.Root;
+export const Trigger = RadixDialog.Trigger;
 
-export const DialogContent = React.forwardRef(
+/**
+ * Styles for children of Content in case the dialog content has a wrapper as its direct child
+ */
+export const contentChildrenStyles = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "32px",
+};
+
+export const Content = React.forwardRef(
   (
     { header, title, description, portal = true, children, ...props },
     forwardedRef
@@ -22,6 +31,7 @@ export const DialogContent = React.forwardRef(
           style={{
             // Account for extra space above and below 16px close icon in 24px container to space everything 24px apart
             "--padding-top": `${header ? "24px" : `${24 - 8 * 2 + 24 * 2}px`}`,
+            ...contentChildrenStyles,
           }}
         >
           {header ? (
@@ -84,9 +94,6 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   padding-top: var(--padding-top);
   border-radius: 8px;
   background-color: var(--color-gray-10);
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
   color: var(--color-gray-2);
 
   @media (prefers-reduced-motion: no-preference) {
