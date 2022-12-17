@@ -1,6 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
-import { getAuth } from "firebase/auth";
+import {
+  getAuth,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 import {
   doc,
   writeBatch,
@@ -40,14 +44,10 @@ import { db } from "firebase.js";
 import { debounce } from "utils";
 import { storage } from "firebase.js";
 import { Select, SelectItem } from "components/select";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogCancel,
-  AlertDialogContent,
-} from "components/alert-dialog";
+import * as AlertDialog from "components/alert-dialog";
 import Checkbox from "components/checkbox";
 import SearchInput from "components/search-input";
+import TextInput from "components/text-input";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
@@ -131,13 +131,27 @@ export async function loader({ request }) {
 }
 
 export async function action({ request }) {
+  const errors = {};
   const formData = await request.formData();
+  const password = formData.get("password");
+
+  const { currentUser } = getAuth();
+
+  const userCredentials = await EmailAuthProvider.credential(
+    currentUser.email,
+    password
+  );
+  try {
+    await reauthenticateWithCredential(currentUser, userCredentials);
+  } catch (error) {
+    errors.password = error.code;
+    return errors;
+  }
+
   if (formData.has("checked-items")) {
     const checkedItems = JSON.parse(formData.get("checked-items"));
-
     const { currentUser } = getAuth();
     const reportsRef = collection(db, "users", currentUser.uid, "reports");
-
     // Remove firestore metadata
     const batch = writeBatch(db);
     checkedItems.forEach((item) => {
@@ -158,12 +172,14 @@ function Reports() {
   const submit = useSubmit();
   const fetcher = useFetcher();
 
+  const errors = fetcher.data;
+
   const [prevQ, setPrevQ] = React.useState(q);
 
   const [key, setKey] = React.useState(true);
   const [prevS, setPrevS] = React.useState(s);
 
-  // Don't add new search to the history stack unless it's the first one
+  // Don't add new filter to the history stack unless it's the first one
   const isFirstFilter = q === null || s === null;
 
   const { reportsPerPage } = REPORTS_CONFIGURATION;
@@ -172,7 +188,30 @@ function Reports() {
   const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedItems, setCheckedItems] = React.useState([]);
 
+  const [removeAllReportsOpen, setRemoveAllReportsOpen] = React.useState(false);
+
   const isAnyItemChecked = !!checkedItems.length;
+
+  const [password, setPassword] = React.useState("");
+  const [passwordError, setPasswordError] = React.useState("");
+
+  const [isRemovingReports, setIsRemovingReports] = React.useState(false);
+
+  // Close dialogs if there are no errors when remove action completes
+  React.useEffect(() => {
+    if (isRemovingReports && fetcher.state === "idle" && !errors?.password) {
+      setRemoveReportsOpen(false);
+      setRemoveAllReportsOpen(false);
+      setIsRemovingReports(false);
+    }
+  }, [isRemovingReports, fetcher.state, errors]);
+
+  React.useEffect(() => {
+    if (!errors?.password) setPasswordError("");
+    else if (errors.password === "auth/wrong-password")
+      setPasswordError("Incorrect password");
+    else setPasswordError("Unknown error");
+  }, [errors]);
 
   // Synchronize input values with URL search params
   // Browser navigation changes the URL, but not element values
@@ -193,9 +232,18 @@ function Reports() {
   }, [isAnyItemChecked]);
 
   async function onRemoveReports() {
-    setRemoveReportsOpen(false);
+    setIsRemovingReports(true);
     setCheckedAll(false);
     setCheckedItems([]);
+  }
+
+  async function onRemoveAllReports() {
+    setIsRemovingReports(true);
+  }
+
+  function onRemoveReportsClose() {
+    setPassword("");
+    setPasswordError("");
   }
 
   const handleSearchChange = React.useMemo(
@@ -359,36 +407,51 @@ function Reports() {
                 setCheckedAll({ status: checked, origin: "header" })
               }
             />
-            {checkedItems.length === 0 ? (
+            {checkedItems.length === 0 && !removeReportsOpen ? (
               <Location>Location</Location>
             ) : (
-              <AlertDialog
+              <AlertDialog.Root
                 open={removeReportsOpen}
                 onOpenChange={setRemoveReportsOpen}
               >
-                <AlertDialogTrigger asChild>
+                <AlertDialog.Trigger asChild>
                   <Button variant="tertiary">
                     <FiTrash2 />
                     <Spacer size={8} axis="horizontal" />
                     Delete reports
                   </Button>
-                </AlertDialogTrigger>
+                </AlertDialog.Trigger>
                 <RemoveAlertDialogContent
                   header
                   title="Are you absolutely sure?"
-                  description="This action cannot be undone. This will permanently delete the selected reports from your account."
+                  description="This action cannot be undone. This will permanently delete all selected reports from your account."
+                  onCloseAutoFocus={onRemoveReportsClose}
                 >
-                  <AlertOptions>
-                    <AlertDialogCancel asChild>
-                      <Button variant="secondary">
-                        <FiX />
-                        <Spacer size={8} axis="horizontal" />
-                        Cancel
-                      </Button>
-                    </AlertDialogCancel>
-                    <fetcher.Form method="post" onSubmit={onRemoveReports}>
+                  <fetcher.Form
+                    method="post"
+                    onSubmit={onRemoveReports}
+                    style={AlertDialog.contentChildrenStyles}
+                  >
+                    <TextInput
+                      id="current-password"
+                      name="password"
+                      labelText="Password"
+                      errorText={passwordError}
+                      variant="password"
+                      onChange={(e) => {
+                        setPassword(e.target.value);
+                      }}
+                      value={password}
+                    />
+                    <AlertOptions>
+                      <AlertDialog.Cancel asChild>
+                        <Button type="button" variant="secondary">
+                          <FiX />
+                          <Spacer size={8} axis="horizontal" />
+                          Cancel
+                        </Button>
+                      </AlertDialog.Cancel>
                       <Button
-                        type="submit"
                         name="checked-items"
                         value={JSON.stringify(checkedItems)}
                       >
@@ -396,10 +459,10 @@ function Reports() {
                         <Spacer size={8} axis="horizontal" />
                         Yes, delete reports
                       </Button>
-                    </fetcher.Form>
-                  </AlertOptions>
+                    </AlertOptions>
+                  </fetcher.Form>
                 </RemoveAlertDialogContent>
-              </AlertDialog>
+              </AlertDialog.Root>
             )}
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
@@ -450,11 +513,56 @@ function Reports() {
           <Spacer size={8} axis="horizontal" />
           Export all
         </Button>
-        <Button>
-          <FiTrash2 />
-          <Spacer size={8} axis="horizontal" />
-          Delete All
-        </Button>
+        <AlertDialog.Root
+          open={removeAllReportsOpen}
+          onOpenChange={setRemoveAllReportsOpen}
+        >
+          <AlertDialog.Trigger asChild>
+            <Button>
+              <FiTrash2 />
+              <Spacer size={8} axis="horizontal" />
+              Delete All
+            </Button>
+          </AlertDialog.Trigger>
+          <RemoveAlertDialogContent
+            header
+            title="Are you absolutely sure?"
+            description="This action cannot be undone. This will permanently delete all reports from your account."
+            onCloseAutoFocus={onRemoveReportsClose}
+          >
+            <fetcher.Form
+              method="post"
+              onSubmit={onRemoveAllReports}
+              style={AlertDialog.contentChildrenStyles}
+            >
+              <TextInput
+                id="current-password"
+                name="password"
+                labelText="Password"
+                errorText={passwordError}
+                variant="password"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                value={password}
+              />
+              <AlertOptions>
+                <AlertDialog.Cancel asChild>
+                  <Button type="button" variant="secondary">
+                    <FiX />
+                    <Spacer size={8} axis="horizontal" />
+                    Cancel
+                  </Button>
+                </AlertDialog.Cancel>
+                <Button>
+                  <FiCheck />
+                  <Spacer size={8} axis="horizontal" />
+                  Yes, delete reports
+                </Button>
+              </AlertOptions>
+            </fetcher.Form>
+          </RemoveAlertDialogContent>
+        </AlertDialog.Root>
       </Bottom>
     </Wrapper>
   );
@@ -537,7 +645,7 @@ const Location = styled.span`
   width: 256px;
 `;
 
-const RemoveAlertDialogContent = styled(AlertDialogContent)`
+const RemoveAlertDialogContent = styled(AlertDialog.Content)`
   width: 512px;
 `;
 
