@@ -31,12 +31,13 @@ import {
   Form,
 } from "react-router-dom";
 import {
-  FiTrash2,
   FiX,
   FiCheck,
   FiChevronLeft,
   FiChevronRight,
   FiAlertTriangle,
+  FiTrash2,
+  FiDownload,
 } from "react-icons/fi";
 
 import { db } from "firebase.js";
@@ -423,59 +424,66 @@ function Reports() {
             {checkedItems.length === 0 && !removeReportsOpen ? (
               <Location>Location</Location>
             ) : (
-              <AlertDialog.Root
-                open={removeReportsOpen}
-                onOpenChange={setRemoveReportsOpen}
-              >
-                <AlertDialog.Trigger asChild>
-                  <Button variant="tertiary">
-                    <FiTrash2 />
-                    <Spacer size={8} axis="horizontal" />
-                    Delete reports
-                  </Button>
-                </AlertDialog.Trigger>
-                <RemoveAlertDialogContent
-                  header
-                  title="Are you absolutely sure?"
-                  description="This action cannot be undone. This will permanently delete all selected reports from your account."
-                  onCloseAutoFocus={onRemoveReportsClose}
+              <Group>
+                <AlertDialog.Root
+                  open={removeReportsOpen}
+                  onOpenChange={setRemoveReportsOpen}
                 >
-                  <fetcher.Form
-                    method="post"
-                    onSubmit={onRemoveReports}
-                    style={AlertDialog.contentChildrenStyles}
+                  <AlertDialog.Trigger asChild>
+                    <Button variant="tertiary">
+                      <FiTrash2 />
+                      <Spacer size={8} axis="horizontal" />
+                      Delete reports
+                    </Button>
+                  </AlertDialog.Trigger>
+                  <RemoveAlertDialogContent
+                    header
+                    title="Are you absolutely sure?"
+                    description="This action cannot be undone. This will permanently delete all selected reports from your account."
+                    onCloseAutoFocus={onRemoveReportsClose}
                   >
-                    <TextInput
-                      id="current-password"
-                      name="password"
-                      labelText="Password"
-                      errorText={passwordError}
-                      variant="password"
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                      }}
-                      value={password}
-                    />
-                    <AlertOptions>
-                      <AlertDialog.Cancel asChild>
-                        <Button type="button" variant="secondary">
-                          <FiX />
+                    <fetcher.Form
+                      method="post"
+                      onSubmit={onRemoveReports}
+                      style={AlertDialog.contentChildrenStyles}
+                    >
+                      <TextInput
+                        id="current-password"
+                        name="password"
+                        labelText="Password"
+                        errorText={passwordError}
+                        variant="password"
+                        onChange={(e) => {
+                          setPassword(e.target.value);
+                        }}
+                        value={password}
+                      />
+                      <AlertOptions>
+                        <AlertDialog.Cancel asChild>
+                          <Button type="button" variant="secondary">
+                            <FiX />
+                            <Spacer size={8} axis="horizontal" />
+                            Cancel
+                          </Button>
+                        </AlertDialog.Cancel>
+                        <Button
+                          name="checked-items"
+                          value={JSON.stringify(checkedItems)}
+                        >
+                          <FiCheck />
                           <Spacer size={8} axis="horizontal" />
-                          Cancel
+                          Yes, delete reports
                         </Button>
-                      </AlertDialog.Cancel>
-                      <Button
-                        name="checked-items"
-                        value={JSON.stringify(checkedItems)}
-                      >
-                        <FiCheck />
-                        <Spacer size={8} axis="horizontal" />
-                        Yes, delete reports
-                      </Button>
-                    </AlertOptions>
-                  </fetcher.Form>
-                </RemoveAlertDialogContent>
-              </AlertDialog.Root>
+                      </AlertOptions>
+                    </fetcher.Form>
+                  </RemoveAlertDialogContent>
+                </AlertDialog.Root>
+                <Button variant="tertiary">
+                  <FiDownload />
+                  <Spacer size={8} axis="horizontal" />
+                  Download reports
+                </Button>
+              </Group>
             )}
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
