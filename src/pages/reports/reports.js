@@ -20,7 +20,7 @@ import {
   limitToLast,
   getCountFromServer,
 } from "firebase/firestore";
-import { ref, deleteObject } from "firebase/storage";
+import { ref, deleteObject, getBlob } from "firebase/storage";
 import {
   defer,
   useLoaderData,
@@ -39,10 +39,12 @@ import {
   FiTrash2,
   FiDownload,
 } from "react-icons/fi";
+import * as JSZip from "jszip";
 
 import { db } from "firebase.js";
 import { debounce } from "utils";
 import { storage } from "firebase.js";
+import { useAuth } from "context/auth-context";
 import { Select, SelectItem } from "components/select";
 import * as AlertDialog from "components/alert-dialog";
 import Checkbox from "components/checkbox";
@@ -186,6 +188,8 @@ function Reports() {
   const submit = useSubmit();
   const fetcher = useFetcher();
 
+  const { user } = useAuth();
+
   const errors = fetcher.data;
 
   const [prevQ, setPrevQ] = React.useState(q);
@@ -269,6 +273,31 @@ function Reports() {
       }, SEARCH_DEBOUNCE),
     [isFirstFilter, submit]
   );
+
+  async function onDownloadReports() {
+    const zip = new JSZip();
+
+    const blobPromises = checkedItems.map((item) => {
+      return getBlob(
+        ref(storage, `users/${user.current?.uid}/reports/${item}`)
+      );
+    });
+
+    const blobs = await Promise.all(blobPromises);
+
+    const dataPromises = blobs.map(async (blob) => {
+      return await blob.text();
+    });
+
+    const data = await Promise.all(dataPromises);
+
+    data.forEach((datum, index) => {
+      zip.file(`${checkedItems[index]}.txt`, datum);
+    });
+
+    const base64 = await zip.generateAsync({ type: "base64" });
+    window.location = "data:application/zip;base64," + base64;
+  }
 
   const fallbackPagination = (
     <Pagination>
@@ -478,7 +507,7 @@ function Reports() {
                     </fetcher.Form>
                   </RemoveAlertDialogContent>
                 </AlertDialog.Root>
-                <Button variant="tertiary">
+                <Button variant="tertiary" onClick={onDownloadReports}>
                   <FiDownload />
                   <Spacer size={8} axis="horizontal" />
                   Download reports
