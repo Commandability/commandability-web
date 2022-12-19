@@ -34,7 +34,6 @@ import {
   FiTrash2,
   FiX,
   FiCheck,
-  FiDownload,
   FiChevronLeft,
   FiChevronRight,
   FiAlertTriangle,
@@ -148,10 +147,10 @@ export async function action({ request }) {
     return errors;
   }
 
+  const reportsRef = collection(db, "users", currentUser.uid, "reports");
+
   if (formData.has("checked-items")) {
     const checkedItems = JSON.parse(formData.get("checked-items"));
-    const { currentUser } = getAuth();
-    const reportsRef = collection(db, "users", currentUser.uid, "reports");
     // Remove firestore metadata
     const batch = writeBatch(db);
     checkedItems.forEach((item) => {
@@ -163,6 +162,20 @@ export async function action({ request }) {
       const itemRef = ref(storage, `users/${currentUser.uid}/reports/${item}`);
       await deleteObject(itemRef);
     }
+  } else {
+    // Remove firestore metadata
+    const batch = writeBatch(db);
+    const reportsSnapshot = await getDocs(reportsRef);
+    reportsSnapshot.docs.forEach((item) => {
+      batch.delete(doc(reportsRef, item.id));
+    });
+    await batch.commit();
+    // Remove files from storage
+    const listResults = await reportsRef.listAll();
+    const promises = listResults.items.map((itemRef) => {
+      return deleteObject(itemRef);
+    });
+    await Promise.all(promises);
   }
 }
 
@@ -508,11 +521,6 @@ function Reports() {
         )}
       </ListArea>
       <Bottom>
-        <Button>
-          <FiDownload />
-          <Spacer size={8} axis="horizontal" />
-          Export all
-        </Button>
         <AlertDialog.Root
           open={removeAllReportsOpen}
           onOpenChange={setRemoveAllReportsOpen}
@@ -521,7 +529,7 @@ function Reports() {
             <Button>
               <FiTrash2 />
               <Spacer size={8} axis="horizontal" />
-              Delete All
+              Delete all reports
             </Button>
           </AlertDialog.Trigger>
           <RemoveAlertDialogContent
@@ -557,7 +565,7 @@ function Reports() {
                 <Button>
                   <FiCheck />
                   <Spacer size={8} axis="horizontal" />
-                  Yes, delete reports
+                  Yes, delete all reports
                 </Button>
               </AlertOptions>
             </fetcher.Form>
