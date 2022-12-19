@@ -1,13 +1,14 @@
 import * as React from "react";
 import styled from "styled-components";
 import { useLoaderData } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiDownload } from "react-icons/fi";
 import { getAuth } from "firebase/auth";
 import { ref, getBlob } from "firebase/storage";
 
 import { storage } from "firebase.js";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
+import Spacer from "components/spacer";
 
 export async function loader({ params }) {
   const { currentUser } = getAuth();
@@ -20,12 +21,26 @@ export async function loader({ params }) {
 function Report() {
   const report = useLoaderData();
 
+  const [downloadLink, setDownloadLink] = React.useState();
+
+  React.useEffect(() => {
+    const data = new Blob([report], {
+      type: "text/plain",
+    });
+    setDownloadLink(window.URL.createObjectURL(data));
+  }, [report]);
+
   return (
     <Wrapper>
       <Back to="/dashboard/reports" variant="tertiary" size="large">
         <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
+      <ExportButton download="report.txt" href={downloadLink}>
+        <FiDownload />
+        <Spacer size={8} axis="horizontal" />
+        Download report
+      </ExportButton>
       <Contents>{report}</Contents>
     </Wrapper>
   );
@@ -37,7 +52,7 @@ const Wrapper = styled.div`
   padding: 48px;
   display: grid;
   grid-template-columns: 96px 1fr 96px;
-  grid-template-rows: 1fr;
+  grid-template-rows: 128px 1fr;
   position: relative;
 `;
 
@@ -47,8 +62,15 @@ const Back = styled(Button)`
   left: calc(48px - 6px);
 `;
 
+const ExportButton = styled(Button)`
+  grid-column: 2;
+  justify-self: flex-start;
+  align-self: center;
+`;
+
 const Contents = styled.div`
   white-space: pre-line;
+  grid-row: 2;
   grid-column: 2;
 
   overflow-y: scroll;
