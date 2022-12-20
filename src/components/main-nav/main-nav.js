@@ -531,13 +531,13 @@ const RadixDropdownMenuItem = styled(RadixDropdownMenu.Item)`
   width: 100%;
   padding: 0px 16px;
   color: var(--color-gray-1);
-  stroke: var(--color-yellow-2);
+  stroke: var(--color-red-3);
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--color-yellow-2);
-      color: var(--color-white);
-      stroke: var(--color-white);
+      background-color: var(--color-red-3);
+      color: var(--color-gray-10);
+      stroke: var(--color-gray-10);
     }
   }
 `;
@@ -570,10 +570,10 @@ const DropdownMenuButton = styled(UnstyledButton)`
 
   & > svg {
     position: relative;
-    top: 2px;
-    stroke: var(--color-yellow-3);
+    top: 0.05rem;
+    stroke: var(--color-red-4);
     stroke-width: 0.175rem;
-    font-size: ${20 / 16}rem;
+    font-size: ${18 / 16}rem;
   }
 `;
 

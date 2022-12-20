@@ -319,10 +319,10 @@ function LandingNav({
         role="list"
         style={{
           "--color": `${
-            scrolled ? "var(--color-gray-4)" : "var(--color-gray-8)"
+            scrolled ? "var(--color-gray-3)" : "var(--color-gray-9)"
           }`,
           "--color-active": `${
-            scrolled ? "var(--color-red-3)" : "var(--color-white)"
+            scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
           }`,
           "--tab-transition":
             tabTransition === "active"
@@ -479,10 +479,10 @@ function LandingNav({
         <AccountOptions
           style={{
             "--color": `${
-              scrolled ? "var(--color-yellow-2)" : "var(--color-yellow-9)"
+              scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
             }`,
             "--color-active": `${
-              scrolled ? "var(--color-yellow-4)" : "var(--color-white)"
+              scrolled ? "var(--color-red-3)" : "var(--color-white)"
             }`,
           }}
         >
