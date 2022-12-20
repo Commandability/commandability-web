@@ -1,5 +1,5 @@
 import * as React from "react";
-import { doc } from "firebase/firestore";
+import { collection, doc } from "firebase/firestore";
 
 import { db } from "firebase.js";
 import { SnapshotProvider } from "context/snapshot-context";
@@ -34,6 +34,11 @@ function App() {
         {
           id: "user",
           ref: user.current ? doc(db, "users", user.current.uid) : null,
+          snapshotOptions: { ...snapshotOptions },
+        },
+        {
+          id: "configuration",
+          ref: collection(db, "configuration"),
           snapshotOptions: { ...snapshotOptions },
         },
       ]}
