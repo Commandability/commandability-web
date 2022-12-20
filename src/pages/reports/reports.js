@@ -45,6 +45,7 @@ import { db } from "firebase.js";
 import { debounce } from "utils";
 import { storage } from "firebase.js";
 import { useAuth } from "context/auth-context";
+import { useSnapshots } from "context/snapshot-context";
 import { Select, SelectItem } from "components/select";
 import * as AlertDialog from "components/alert-dialog";
 import Checkbox from "components/checkbox";
@@ -189,6 +190,14 @@ function Reports() {
   const fetcher = useFetcher();
 
   const { user } = useAuth();
+
+  const {
+    snapshots: { configuration },
+  } = useSnapshots();
+
+  const reportsConfiguration = configuration.data
+    ?.find((doc) => doc.id === "reports")
+    .data();
 
   const errors = fetcher.data;
 
@@ -517,7 +526,8 @@ function Reports() {
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
-        {navigation.location || fetcher.state !== "idle" ? (
+        {/* Fallback on page navigation */}
+        {navigation.location ? (
           fallbackList
         ) : (
           <React.Suspense fallback={fallbackList}>
@@ -558,6 +568,30 @@ function Reports() {
         )}
       </ListArea>
       <Bottom>
+        <React.Suspense
+          fallback={<Fallback.Text style={{ "--text-length": "192px" }} />}
+        >
+          <Await
+            resolve={reportsData}
+            // Error displayed by reports suspense
+            errorElement={<></>}
+          >
+            {(reportsData) => {
+              // eslint-disable-next-line no-unused-vars
+              const [_1, _2, allReportsAggregate] = reportsData;
+              const allReportsCount = allReportsAggregate?.data().count;
+
+              return (
+                <Capacity>
+                  <Highlight>{allReportsCount}</Highlight>
+                  {" of "}
+                  <Highlight>{reportsConfiguration.capacity}</Highlight>
+                  {" reports saved "}
+                </Capacity>
+              );
+            }}
+          </Await>
+        </React.Suspense>
         <AlertDialog.Root
           open={removeAllReportsOpen}
           onOpenChange={setRemoveAllReportsOpen}
@@ -735,6 +769,15 @@ const Bottom = styled.div`
   align-items: center;
   gap: 24px;
   padding: 0 48px;
+`;
+
+const Capacity = styled.div`
+  color: var(--color-gray-3);
+`;
+
+const Highlight = styled.span`
+  color: var(--color-yellow-2);
+  font-weight: bold;
 `;
 
 export default Reports;
