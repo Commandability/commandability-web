@@ -526,7 +526,7 @@ function Reports() {
           </Group>
           {checkedItems.length === 0 ? <span>Timestamp</span> : null}
         </ListHeader>
-        {/* Fallback on page navigation */}
+        {/* Render fallback for pagination */}
         {navigation.location ? (
           fallbackList
         ) : (
@@ -596,13 +596,29 @@ function Reports() {
           open={removeAllReportsOpen}
           onOpenChange={setRemoveAllReportsOpen}
         >
-          <AlertDialog.Trigger asChild>
-            <Button>
-              <FiTrash2 />
-              <Spacer size={8} axis="horizontal" />
-              Delete all reports
-            </Button>
-          </AlertDialog.Trigger>
+          <React.Suspense
+            fallback={
+              <Button disabled>
+                <FiTrash2 />
+                <Spacer size={8} axis="horizontal" />
+                Delete all reports
+              </Button>
+            }
+          >
+            <Await
+              resolve={reportsData}
+              // Error displayed by reports suspense
+              errorElement={<></>}
+            >
+              <AlertDialog.Trigger asChild>
+                <Button disabled={fetcher.state !== "idle"}>
+                  <FiTrash2 />
+                  <Spacer size={8} axis="horizontal" />
+                  Delete all reports
+                </Button>
+              </AlertDialog.Trigger>
+            </Await>
+          </React.Suspense>
           <RemoveAlertDialogContent
             header
             title="Are you absolutely sure?"
