@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Outlet, ScrollRestoration } from "react-router-dom";
+import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import Skip from "components/skip";
 import MainNav from "components/main-nav";
@@ -13,7 +14,7 @@ function Layout({ type, children }) {
         <Skip href={"#main"} />
         <MainNav />
       </header>
-      <PositionedHeroImage blur />
+      <PositionedHeroImage blur className={zeroRightClassName} />
       <Main id="main">{type === "outlet" ? <Outlet /> : children}</Main>
       <ScrollRestoration />
     </Wrapper>
