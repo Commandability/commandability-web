@@ -30,9 +30,10 @@ import IconItem, { ItemContents } from "components/icon-item";
 import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
 import Button from "components/button";
+import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
 import SearchInput from "components/search-input";
-import RosterItem from "components/roster-item";
+import RosterItem, { FallbackItem } from "components/roster-item";
 
 const selectValues = {
   firstName: "first name",
@@ -261,6 +262,19 @@ function Roster() {
     effect();
   }, [user]);
 
+  const fallbackList = (
+    <>
+      <VisuallyHidden>Loading reports</VisuallyHidden>
+      <List>
+        {Array(25)
+          .fill(null)
+          .map((_, index) => (
+            <FallbackItem key={index} />
+          ))}
+      </List>
+    </>
+  );
+
   return (
     <Wrapper>
       <Top>
@@ -386,8 +400,7 @@ function Roster() {
           {checkedItems.length === 0 ? <span>Badge</span> : null}
         </ListHeader>
         <List aria-live="polite" aria-atomic="true">
-          {/* Ensure data has loaded */}
-          {user.data
+          {user.status === "resolved"
             ? [...user.data.personnel]
                 .filter((person) => personFilter(person))
                 .sort((firstPerson, secondPerson) =>
@@ -402,7 +415,7 @@ function Roster() {
                     setCheckedItems={setCheckedItems}
                   />
                 ))
-            : null}
+            : fallbackList}
         </List>
       </ListArea>
       <Bottom>

@@ -6,6 +6,14 @@ import { FiCheck } from "react-icons/fi";
 
 import VisuallyHidden from "components/visually-hidden";
 
+export const FallbackCheckbox = styled.div`
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background-color: var(--color-gray-9);
+  z-index: 1;
+`;
+
 export default React.forwardRef(
   ({ children, label, ...props }, forwardedRef) => {
     return (

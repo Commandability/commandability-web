@@ -2,7 +2,23 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import Checkbox from "components/checkbox";
+import Checkbox, { FallbackCheckbox } from "components/checkbox";
+import * as Fallback from "components/fallback";
+import { getRandomInt } from "utils";
+
+export function FallbackItem() {
+  // Only generate one random length per mount as opposed to on every render
+  const [textLength] = React.useState(getRandomInt(64, 256));
+  return (
+    <FallbackWrapper>
+      <FallbackCheckbox />
+      <FallbackContents>
+        <Fallback.Text style={{ "--text-length": `${textLength}px` }} />
+        <Fallback.Text style={{ "--text-length": "144px" }} />
+      </FallbackContents>
+    </FallbackWrapper>
+  );
+}
 
 function RosterItem({
   setCheckedItems,
@@ -113,6 +129,22 @@ const Name = styled(Link)`
     position: absolute;
     inset: 0;
   }
+`;
+
+const FallbackWrapper = styled.li`
+  display: flex;
+  padding: 16px 48px;
+  border-bottom: 1px solid var(--color-gray-9);
+  background-color: var(--color-white);
+  color: var(--color-gray-3);
+`;
+
+const FallbackContents = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 32px;
+  align-items: center;
 `;
 
 export default RosterItem;

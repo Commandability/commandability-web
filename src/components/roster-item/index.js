@@ -1,1 +1,1 @@
-export { default } from "./roster-item";
+export { default, FallbackItem } from "./roster-item";

@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import Checkbox from "components/checkbox";
+import Checkbox, { FallbackCheckbox } from "components/checkbox";
 import * as Fallback from "components/fallback";
 import { getRandomInt } from "utils";
 
@@ -149,14 +149,6 @@ const FallbackWrapper = styled.li`
   border-bottom: 1px solid var(--color-gray-9);
   background-color: var(--color-white);
   color: var(--color-gray-3);
-`;
-
-const FallbackCheckbox = styled.div`
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  background-color: var(--color-gray-9);
-  z-index: 1;
 `;
 
 const FallbackContents = styled.div`
