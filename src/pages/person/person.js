@@ -16,14 +16,19 @@ import TextInput from "components/text-input";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
+import * as Fallback from "components/fallback";
 
 function Person() {
   const { badge: paramBadge } = useParams();
-  const { db, snapshots } = useSnapshots();
+  const {
+    db,
+    snapshots: { user },
+  } = useSnapshots();
 
-  const person = snapshots.user.data.personnel.find(
-    (person) => person.badge === paramBadge
-  );
+  const person =
+    user.status === "resolved"
+      ? user.data?.personnel.find((person) => person.badge === paramBadge)
+      : {};
 
   const [toastState, setToastState] = React.useState({
     title: "",
@@ -46,8 +51,8 @@ function Person() {
 
   async function editPerson(firstName, lastName, shift, badge) {
     const batch = writeBatch(db);
-    batch.update(snapshots.user.ref, { personnel: arrayRemove(person) });
-    batch.update(snapshots.user.ref, {
+    batch.update(user.ref, { personnel: arrayRemove(person) });
+    batch.update(user.ref, {
       personnel: arrayUnion({ firstName, lastName, shift, badge }),
     });
     await batch.commit();
@@ -65,7 +70,7 @@ function Person() {
       // Check if the person and firebase contain any personnel with duplicate badges
       let mergeDuplicates = false;
       if (person.badge !== badge) {
-        mergeDuplicates = snapshots.user.data.personnel.some(
+        mergeDuplicates = user.data.personnel.some(
           (person) => person.badge === badge
         );
       }
@@ -97,7 +102,11 @@ function Person() {
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
       <Name>
-        {person.firstName} {person.lastName}
+        {user.status !== "resolved" ? (
+          <Fallback.Text style={{ "--text-length": "384px" }} />
+        ) : (
+          <div>{`${person.firstName} ${person.lastName}`}</div>
+        )}
       </Name>
       <Hr />
       <Dialog.Root
@@ -109,7 +118,7 @@ function Person() {
         }}
       >
         <Dialog.Trigger asChild>
-          <EditButton type="submit">
+          <EditButton disabled={user.status !== "resolved"}>
             <FiEdit />
             <Spacer size={8} axis="horizontal" />
             Edit Person
@@ -161,11 +170,23 @@ function Person() {
       <PersonData>
         <Datum>
           <DatumLabel>Shift: </DatumLabel>
-          <DatumContent>{person.shift}</DatumContent>
+          <DatumContent>
+            {user.status !== "resolved" ? (
+              <Fallback.Text style={{ "--text-length": "96px" }} />
+            ) : (
+              `${person.shift}`
+            )}
+          </DatumContent>
         </Datum>
         <Datum>
           <DatumLabel>Badge: </DatumLabel>
-          <DatumContent>{person.badge}</DatumContent>
+          <DatumContent>
+            {user.status !== "resolved" ? (
+              <Fallback.Text style={{ "--text-length": "96px" }} />
+            ) : (
+              `${person.badge}`
+            )}
+          </DatumContent>
         </Datum>
       </PersonData>
       <ToastProvider>
