@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 import { BREAKPOINTS, COLORS } from "constants.js";
 
-function HeroImage({ blur, children }) {
+function HeroImage({ blur, children, ...props }) {
   return (
-    <Picture>
+    <Picture {...props}>
       {/* Images generated with https://responsivebreakpoints.com/ */}
       <source
         type="image/webp"

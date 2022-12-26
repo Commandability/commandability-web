@@ -13,9 +13,8 @@ function Layout({ type, children }) {
         <Skip href={"#main"} />
         <MainNav />
       </header>
-      <HeroImage blur>
-        <Main id="main">{type === "outlet" ? <Outlet /> : children}</Main>
-      </HeroImage>
+      <PositionedHeroImage blur />
+      <Main id="main">{type === "outlet" ? <Outlet /> : children}</Main>
       <ScrollRestoration />
     </Wrapper>
   );
@@ -23,6 +22,11 @@ function Layout({ type, children }) {
 
 const Wrapper = styled.div`
   height: 100%;
+`;
+
+const PositionedHeroImage = styled(HeroImage)`
+  position: fixed;
+  width: 100%;
 `;
 
 const Main = styled.main`

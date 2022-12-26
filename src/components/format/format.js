@@ -10,18 +10,23 @@ const Wrapper = styled.div`
 
   h1 {
     font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-gray-2);
     padding-bottom: 0.3em;
     border-bottom: 1px solid var(--color-gray-8);
   }
 
   h2 {
     font-size: 1.5em;
+    color: var(--color-gray-3);
     padding-bottom: 0.3em;
     border-bottom: 1px solid var(--color-gray-8);
   }
 
   h3 {
     font-size: 1.25em;
+    color: var(--color-gray-3);
   }
 
   h4 {
@@ -71,6 +76,10 @@ const Wrapper = styled.div`
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  strong {
+    color: var(--color-yellow-1);
   }
 `;
 
