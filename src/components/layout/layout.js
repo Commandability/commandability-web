@@ -28,6 +28,12 @@ const Wrapper = styled.div`
 const PositionedHeroImage = styled(HeroImage)`
   position: fixed;
   width: 100%;
+  // vh units use the entire viewport height on mobile after
+  // the browser nav has slid up. This prevents the hero image's size
+  // from being recalculated on scrolling pages in mobile browsers, and
+  // doesn't cause the page to scroll on non-scrolling pages in
+  // mobile browsers because the parent height is 100%.
+  height: 100vh;
 `;
 
 const Main = styled.main`
