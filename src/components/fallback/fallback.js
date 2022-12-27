@@ -1,10 +1,16 @@
 import styled from "styled-components";
 
+export const Base = styled.div`
+  background-color: var(--color-gray-9);
+  color: transparent;
+  border-radius: 8px;
+`;
+
 export function Text({ ...props }) {
   return <TextWrapper aria-hidden={true} {...props} />;
 }
 
-const TextWrapper = styled.div`
+const TextWrapper = styled(Base)`
   background-color: var(--color-gray-9);
   color: transparent;
   border-radius: 8px;
