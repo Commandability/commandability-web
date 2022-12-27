@@ -11,7 +11,7 @@ import webp1200 from "assets/images/footer_gaugzs_c_scale,w_1200.webp";
 import webp2449 from "assets/images/footer_gaugzs_c_scale,w_2449.webp";
 import webp2917 from "assets/images/footer_gaugzs_c_scale,w_2917.webp";
 import jpg1920 from "assets/images/footer_apkfbg_c_scale,w_1920.jpg";
-import { COLORS } from "constants.js";
+import { COLORS } from "constants";
 
 function FooterImage({ children }) {
   return (

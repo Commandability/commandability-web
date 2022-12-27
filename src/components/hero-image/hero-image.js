@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import { BREAKPOINTS, COLORS } from "constants.js";
+import { BREAKPOINTS, COLORS } from "constants";
 
 function HeroImage({ blur, children, ...props }) {
   return (

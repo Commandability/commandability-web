@@ -1,4 +1,12 @@
-export const COLORS = {
+type Color = `${number} ${number}% ${number}%`;
+type Shade = {
+  [index: number]: Color;
+};
+type Colors = {
+  [index: string]: Shade | Color;
+};
+
+export const COLORS: Colors = {
   white: "0 0% 100%",
   red: {
     1: "360 92% 20%",
@@ -50,13 +58,22 @@ export const COLORS = {
   },
 };
 
-export const BREAKPOINTS = {
+type Breakpoints = {
+  [index: string]: number;
+};
+
+export const BREAKPOINTS: Breakpoints = {
   phone: 600,
   tablet: 950,
   laptop: 1300,
 };
 
-export const QUERIES = {
+type Query = `(max-width: ${number}rem)`;
+type Queries = {
+  [index: string]: Query;
+};
+
+export const QUERIES: Queries = {
   phoneAndSmaller: `(max-width: ${BREAKPOINTS.phone / 16}rem)`,
   tabletAndSmaller: `(max-width: ${BREAKPOINTS.tablet / 16}rem)`,
   laptopAndSmaller: `(max-width: ${BREAKPOINTS.laptop / 16}rem)`,

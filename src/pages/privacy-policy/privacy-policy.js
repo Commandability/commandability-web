@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 
 import Format from "components/format";
-import { QUERIES } from "constants.js";
+import { QUERIES } from "constants";
 
 function PrivacyPolicy() {
   return (

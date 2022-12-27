@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
 
-import { QUERIES } from "constants.js";
+import { QUERIES } from "constants";
 
 function DashboardContainer({ children }) {
   return (

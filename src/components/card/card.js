@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 
-import { QUERIES } from "constants.js";
+import { QUERIES } from "constants";
 
 function Card({ subheader, header, backgroundColor, children, ...props }) {
   return (

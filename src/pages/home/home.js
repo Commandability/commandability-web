@@ -27,7 +27,7 @@ import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "assets/icons/customize-icon.svg";
 import { ReactComponent as UnstyledReviewIcon } from "assets/icons/review-icon.svg";
-import { BREAKPOINTS, QUERIES } from "constants.js";
+import { BREAKPOINTS, QUERIES } from "constants";
 
 const hashIds = {
   hero: "home",

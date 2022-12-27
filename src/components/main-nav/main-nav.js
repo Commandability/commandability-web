@@ -24,7 +24,7 @@ import AccountDialogContent, {
   accountContentType,
 } from "components/account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "assets/icons/fire-icon.svg";
-import { QUERIES } from "constants.js";
+import { QUERIES } from "constants";
 
 const TAB_TRANSITION_DURATION = 400;
 
