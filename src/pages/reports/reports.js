@@ -20,7 +20,7 @@ import {
   limitToLast,
   getCountFromServer,
 } from "firebase/firestore";
-import { ref, deleteObject, getBlob } from "firebase/storage";
+import { ref, deleteObject, getDownloadURL } from "firebase/storage";
 import {
   defer,
   useLoaderData,
@@ -42,12 +42,13 @@ import {
 import * as JSZip from "jszip";
 
 import { db } from "firebase.js";
-import { debounce } from "utils";
+import { debounce, sum } from "utils";
 import { storage } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import { useSnapshots } from "context/snapshot-context";
 import { Select, SelectItem } from "components/select";
 import * as AlertDialog from "components/alert-dialog";
+import * as Progress from "components/progress";
 import Checkbox from "components/checkbox";
 import SearchInput from "components/search-input";
 import TextInput from "components/text-input";
@@ -283,13 +284,55 @@ function Reports() {
     [isFirstFilter, submit]
   );
 
+  const [blobs, setBlobs] = React.useState({ data: [], number: 0 });
+  const blobsLoaded = blobs.data.map((datum) => datum.loaded);
+  const blobsTotal = blobs.data.map((datum) => datum.total);
+  const blobsLoadedSum = sum(blobsLoaded);
+  const blobsTotalSum = sum(blobsTotal);
+
+  // Ensure all blob totals have been loaded and their sum is nonzero
+  let blobsPercent = 0;
+  if (blobsTotalSum && blobsTotal.length === blobs.number) {
+    blobsPercent = (blobsLoadedSum * 100) / blobsTotalSum;
+  }
+
   async function onDownloadReports() {
     const zip = new JSZip();
 
-    const blobPromises = checkedItems.map((item) => {
-      return getBlob(
+    const urlPromises = checkedItems.map((item) => {
+      return getDownloadURL(
         ref(storage, `users/${user.current?.uid}/reports/${item}`)
       );
+    });
+
+    const urls = await Promise.all(urlPromises);
+
+    const blobPromises = [];
+    urls.forEach((url, index) => {
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+      blobPromises[index] = new Promise((resolve) => {
+        xhr.addEventListener("load", () => {
+          resolve(xhr.response);
+        });
+      });
+      xhr.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          setBlobs((prevBlobs) => {
+            const nextBlobs = {};
+            // Slice(0) is the most performant method of copying an array
+            nextBlobs.data = prevBlobs.data.slice(0);
+            nextBlobs.data[index] = {
+              loaded: event.loaded,
+              total: event.total,
+            };
+            nextBlobs.number = urls.length;
+            return nextBlobs;
+          });
+        }
+      });
+      xhr.open("GET", url);
+      xhr.send();
     });
 
     const blobs = await Promise.all(blobPromises);
@@ -568,6 +611,9 @@ function Reports() {
         )}
       </ListArea>
       <Bottom>
+        <ProgressRoot>
+          <Progress.Indicator progress={blobsPercent} />
+        </ProgressRoot>
         <React.Suspense
           fallback={<Fallback.Text style={{ "--text-length": "192px" }} />}
         >
@@ -785,6 +831,11 @@ const Bottom = styled.div`
   align-items: center;
   gap: 24px;
   padding: 0 48px;
+`;
+
+const ProgressRoot = styled(Progress.Root)`
+  width: 128px;
+  height: 8px;
 `;
 
 const Capacity = styled.div`
