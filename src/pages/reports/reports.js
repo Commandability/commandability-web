@@ -210,6 +210,24 @@ function Reports() {
   // Don't add new filter to the history stack unless it's the first one
   const isFirstFilter = q === null || s === null;
 
+  const [blobs, setBlobs] = React.useState({ data: [], number: 0 });
+  const blobsLoaded = blobs.data.map((datum) => datum.loaded);
+  const blobsTotal = blobs.data.map((datum) => datum.total);
+  const blobsLoadedSum = sum(blobsLoaded);
+  const blobsTotalSum = sum(blobsTotal);
+
+  // Ensure all blob totals have been loaded and their sum is nonzero
+  let blobsPercent = 0;
+  if (
+    blobsTotalSum &&
+    blobsTotal.length === blobs.number &&
+    // In case the final blobTotal is loaded giving the array the correct length
+    // despite the array missing other blobTotals
+    !blobsTotal.includes(undefined)
+  ) {
+    blobsPercent = (blobsLoadedSum * 100) / blobsTotalSum;
+  }
+
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
@@ -283,18 +301,6 @@ function Reports() {
       }, SEARCH_DEBOUNCE),
     [isFirstFilter, submit]
   );
-
-  const [blobs, setBlobs] = React.useState({ data: [], number: 0 });
-  const blobsLoaded = blobs.data.map((datum) => datum.loaded);
-  const blobsTotal = blobs.data.map((datum) => datum.total);
-  const blobsLoadedSum = sum(blobsLoaded);
-  const blobsTotalSum = sum(blobsTotal);
-
-  // Ensure all blob totals have been loaded and their sum is nonzero
-  let blobsPercent = 0;
-  if (blobsTotalSum && blobsTotal.length === blobs.number) {
-    blobsPercent = (blobsLoadedSum * 100) / blobsTotalSum;
-  }
 
   async function onDownloadReports() {
     const zip = new JSZip();
