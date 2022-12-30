@@ -2,7 +2,7 @@
  * https://www.joshwcomeau.com/snippets/react-components/visually-hidden/
  */
 
-import React from "react";
+import * as React from "react";
 import styled from "styled-components/macro";
 
 const VisuallyHidden = ({ children, ...delegated }) => {

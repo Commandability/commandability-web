@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixAlertDialog from "@radix-ui/react-alert-dialog";
 

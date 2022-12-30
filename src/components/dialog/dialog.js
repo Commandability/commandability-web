@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import { FiX } from "react-icons/fi";
