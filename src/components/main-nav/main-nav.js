@@ -13,7 +13,7 @@ import {
 } from "react-icons/fi";
 
 import { useAuth } from "context/auth-context";
-import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import * as Toast from "components/toast";
 import useRect from "hooks/use-rect";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
@@ -44,7 +44,7 @@ function MainNav() {
 
   const [toastState, setToastState] = React.useState({
     title: "",
-    message: "",
+    description: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -240,15 +240,11 @@ function MainNav() {
           </AccountOptions>
         )}
       </RightSide>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-        />
-        <ToastViewport />
-      </ToastProvider>
+      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
+        <Toast.Title>{toastState.title}</Toast.Title>
+        <Toast.Description>{toastState.description}</Toast.Description>
+      </Toast.Root>
+      <Toast.Viewport />
     </Nav>
   );
 }

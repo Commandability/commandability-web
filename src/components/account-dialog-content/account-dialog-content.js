@@ -15,7 +15,7 @@ import { db, auth } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
-import { unknownToastState } from "components/toast";
+import { unknownState } from "components/toast";
 import VisuallyHidden from "components/visually-hidden";
 
 export const accountContentType = {
@@ -125,11 +125,11 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         if (error.code === "auth/email-already-in-use") {
           setToastState({
             title: "Email already in use",
-            message:
+            description:
               "There is already an account associated with this email address",
           });
         } else {
-          setToastState(unknownToastState);
+          setToastState(unknownState);
         }
         setTimeout(() => {
           setLoading(false);
@@ -157,10 +157,10 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         ) {
           setToastState({
             title: "Login failed",
-            message: "Incorrect email or password",
+            description: "Incorrect email or password",
           });
         } else {
-          setToastState(unknownToastState);
+          setToastState(unknownState);
         }
         setTimeout(() => {
           setLoading(false);
@@ -177,7 +177,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
     } else {
       const recoverAccountToastState = {
         title: "Password reset email sent",
-        message:
+        description:
           "If an account exists, you will receive a password reset email",
       };
 
@@ -193,7 +193,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         if (error.code === "auth/user-not-found") {
           setToastState(recoverAccountToastState);
         } else {
-          setToastState(unknownToastState);
+          setToastState(unknownState);
         }
         setTimeout(() => {
           setLoading(false);

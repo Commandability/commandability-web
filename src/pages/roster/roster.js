@@ -17,12 +17,7 @@ import { v4 as uuidv4 } from "uuid";
 import { updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 
 import { useSnapshots } from "context/snapshot-context";
-import {
-  Toast,
-  ToastProvider,
-  ToastViewport,
-  unknownToastState,
-} from "components/toast";
+import * as Toast from "components/toast";
 import * as Dialog from "components/dialog";
 import * as AlertDialog from "components/alert-dialog";
 import { Select, SelectItem } from "components/select";
@@ -130,18 +125,18 @@ function Roster() {
       if (mergeDuplicates) {
         setToastState({
           title: "Failed to add person",
-          message:
+          description:
             "Make sure there are no other personnel in the roster with the same badge.",
         });
       } else {
         await addPersonnel([{ firstName, lastName, shift, badge }]);
         setToastState({
           title: "Person added successfully",
-          message: "The person has been added to the roster.",
+          description: "The person has been added to the roster.",
         });
       }
     } catch (error) {
-      setToastState(unknownToastState);
+      setToastState(Toast.unknownState);
     }
 
     setToastOpen(true);
@@ -162,10 +157,10 @@ function Roster() {
       setCheckedItems([]);
       setToastState({
         title: "Personnel deleted successfully",
-        message: "The selected personnel have been removed the roster.",
+        description: "The selected personnel have been removed the roster.",
       });
     } catch (error) {
-      setToastState(unknownToastState);
+      setToastState(Toast.unknownState);
     }
 
     setToastOpen(true);
@@ -504,15 +499,11 @@ function Roster() {
           Export CSV
         </Button>
       </Bottom>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-        />
-        <ToastViewport />
-      </ToastProvider>
+      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
+        <Toast.Title>{toastState.title}</Toast.Title>
+        <Toast.Description>{toastState.description}</Toast.Description>
+      </Toast.Root>
+      <Toast.Viewport />
     </Wrapper>
   );
 }

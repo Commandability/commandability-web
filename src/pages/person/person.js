@@ -5,12 +5,7 @@ import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
 import { FiArrowLeft, FiEdit, FiSave } from "react-icons/fi";
 
 import { useSnapshots } from "context/snapshot-context";
-import {
-  Toast,
-  ToastProvider,
-  ToastViewport,
-  unknownToastState,
-} from "components/toast";
+import * as Toast from "components/toast";
 import * as Dialog from "components/dialog";
 import TextInput from "components/text-input";
 import Button from "components/button";
@@ -32,7 +27,7 @@ function Person() {
 
   const [toastState, setToastState] = React.useState({
     title: "",
-    message: "",
+    description: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -78,18 +73,19 @@ function Person() {
       if (mergeDuplicates) {
         setToastState({
           title: "Failed to edit person",
-          message:
+          description:
             "Make sure there are no other personnel in the roster with the same badge.",
         });
       } else {
         await editPerson(firstName, lastName, shift, badge);
         setToastState({
           title: "Person edited successfully",
-          message: "The roster reflects all changes to the selected person.",
+          description:
+            "The roster reflects all changes to the selected person.",
         });
       }
     } catch (error) {
-      setToastState(unknownToastState);
+      setToastState(Toast.unknownState);
     }
 
     setToastOpen(true);
@@ -189,15 +185,11 @@ function Person() {
           </DatumContent>
         </Datum>
       </PersonData>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-        />
-        <ToastViewport />
-      </ToastProvider>
+      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
+        <Toast.Title>{toastState.title}</Toast.Title>
+        <Toast.Description>{toastState.description}</Toast.Description>
+      </Toast.Root>
+      <Toast.Viewport />
     </Wrapper>
   );
 }

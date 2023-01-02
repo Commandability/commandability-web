@@ -6,7 +6,7 @@ import { useInView } from "react-intersection-observer";
 
 import { useAuth } from "context/auth-context";
 import { useInitialLoad } from "context/initial-load-context";
-import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import * as Toast from "components/toast";
 import useMergeRefs from "hooks/use-merge-refs";
 import useFragment from "hooks/use-fragment";
 import HeroImage from "components/hero-image";
@@ -66,7 +66,7 @@ function Home() {
 
   const [toastState, setToastState] = React.useState({
     title: "",
-    message: "",
+    description: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -302,15 +302,11 @@ function Home() {
           </Footer>
         </FooterImage>
       </Main>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-        />
-        <ToastViewport />
-      </ToastProvider>
+      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
+        <Toast.Title>{toastState.title}</Toast.Title>
+        <Toast.Description>{toastState.description}</Toast.Description>
+      </Toast.Root>
+      <Toast.Viewport />
     </Wrapper>
   );
 }

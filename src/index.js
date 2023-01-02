@@ -7,6 +7,7 @@ import App from "app";
 import GlobalStyles from "global-styles.js";
 import ScrollbarWidth from "scrollbar-width.js";
 import reportWebVitals from "reportWebVitals.js";
+import * as Toast from "components/toast";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -15,7 +16,9 @@ root.render(
     <ScrollbarWidth />
     <InitialLoadProvider>
       <AuthProvider>
-        <App />
+        <Toast.Provider>
+          <App />
+        </Toast.Provider>
       </AuthProvider>
     </InitialLoadProvider>
   </React.StrictMode>

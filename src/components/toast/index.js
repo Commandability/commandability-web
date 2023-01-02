@@ -1,6 +1,10 @@
 export {
-  Toast,
-  ToastProvider,
-  ToastViewport,
-  unknownToastState,
+  Provider,
+  Root,
+  Viewport,
+  Title,
+  Description,
+  Action,
+  Close,
+  unknownState,
 } from "./toast";

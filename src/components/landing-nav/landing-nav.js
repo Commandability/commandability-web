@@ -7,7 +7,7 @@ import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import { useAuth } from "context/auth-context";
 import { useInitialLoad } from "context/initial-load-context";
-import { Toast, ToastProvider, ToastViewport } from "components/toast";
+import * as Toast from "components/toast";
 import useRect from "hooks/use-rect";
 import useScroll from "hooks/use-scroll";
 import UnstyledButton from "components/unstyled-button";
@@ -64,7 +64,7 @@ function LandingNav({
 
   const [toastState, setToastState] = React.useState({
     title: "",
-    message: "",
+    description: "",
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -525,19 +525,18 @@ function LandingNav({
           )}
         </AccountOptions>
       </RightSide>
-      <ToastProvider>
-        <Toast
-          open={toastOpen}
-          onOpenChange={setToastOpen}
-          title={toastState.title}
-          content={toastState.message}
-          style={{
-            // Reset box shadow after nav conditional
-            "--nav-box-shadow": "0px 8px 8px -8px hsl(0 0% 0% / 50%)",
-          }}
-        />
-        <ToastViewport />
-      </ToastProvider>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        style={{
+          // Reset box shadow after nav conditional
+          "--nav-box-shadow": "0px 8px 8px -8px hsl(0 0% 0% / 50%)",
+        }}
+      >
+        <Toast.Title>{toastState.title}</Toast.Title>
+        <Toast.Description>{toastState.description}</Toast.Description>
+      </Toast.Root>
+      <Toast.Viewport />
     </Nav>
   );
 }
