@@ -92,7 +92,7 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   right: calc(var(--scrollbar-width) / 2);
   padding: 24px;
   padding-top: var(--padding-top);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background-color: var(--color-gray-10);
   color: var(--color-gray-2);
 

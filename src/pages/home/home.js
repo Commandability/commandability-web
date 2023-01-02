@@ -487,7 +487,7 @@ const FeatureText = styled.p`
 const ManageIcon = styled(UnstyledManageIcon)`
   fill: var(--color-yellow-9);
   background-color: var(--color-yellow-1);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   min-width: 192px;
   min-height: 192px;
@@ -501,7 +501,7 @@ const ManageIcon = styled(UnstyledManageIcon)`
 const CustomizeIcon = styled(UnstyledCustomizeIcon)`
   fill: var(--color-yellow-9);
   background-color: var(--color-yellow-2);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   min-width: 192px;
   min-height: 192px;
@@ -515,7 +515,7 @@ const CustomizeIcon = styled(UnstyledCustomizeIcon)`
 const ReviewIcon = styled(UnstyledReviewIcon)`
   fill: var(--color-yellow-9);
   background-color: var(--color-yellow-3);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   min-width: 192px;
   min-height: 192px;

@@ -31,7 +31,7 @@ const Content = styled.div`
   height: 100%;
   max-width: 1200px;
   background-color: var(--color-gray-10);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0px 8px;

@@ -119,6 +119,8 @@ const GlobalStyles = createGlobalStyle`
     --box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
     --nav-box-shadow: 0px 8px 8px -8px hsl(0 0% 0% / 50%);
 
+    --border-radius: 8px;
+
     --scrollbar-thumb: hsl(${COLORS.gray[4]});
     --scrollbar: hsl(${COLORS.gray[8]});
 
@@ -141,7 +143,7 @@ const GlobalStyles = createGlobalStyle`
     background-color: var(--scrollbar-thumb);
   }
   ::-webkit-scrollbar-track {
-    margin: 2px 0px;
+    margin: 2px 0;
   }
   `;
 

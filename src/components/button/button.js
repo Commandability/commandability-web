@@ -151,7 +151,7 @@ const ButtonWrapper = styled.button`
       case VARIANTS.secondary:
         return "calc(8px - 2px) calc(16px - 2px)";
       case VARIANTS.tertiary:
-        return "0px";
+        return "0";
       default:
         return "8px 16px";
     }
@@ -167,9 +167,9 @@ const ButtonWrapper = styled.button`
   border-radius: ${(props) => {
     switch (props.variant) {
       case VARIANTS.tertiary:
-        return "0px";
+        return "0";
       default:
-        return "8px";
+        return "var(--border-radius);";
     }
   }};
 

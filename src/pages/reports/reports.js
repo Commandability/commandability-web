@@ -819,7 +819,7 @@ const ListArea = styled.div`
     background-color: var(--color-gray-5);
   }
   ::-webkit-scrollbar-track {
-    margin: 2px 0px;
+    margin: 2px 0;
   }
 `;
 

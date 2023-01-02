@@ -85,7 +85,7 @@ const Gradient = styled.div`
 
 const Content = styled.div`
   position: absolute;
-  inset: 0px;
+  inset: 0;
 `;
 
 export default FooterImage;

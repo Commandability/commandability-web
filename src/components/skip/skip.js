@@ -13,7 +13,7 @@ const SkipLink = styled.a`
   z-index: 2147483647;
   transform: translate(-50%, -100%);
   padding: 8px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background-color: var(--color-yellow-9);
   color: var(--color-yellow-2);
   font-weight: bold;

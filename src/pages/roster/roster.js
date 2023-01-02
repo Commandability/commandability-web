@@ -558,7 +558,7 @@ const DialogScrollContainer = styled.div`
   width: 544px;
   max-height: 200px;
   overflow-y: auto;
-  padding: 16px 0px;
+  padding: 16px 0;
 
   scrollbar-color: var(--color-gray-5) var(--color-gray-10);
   scrollbar-width: thin;
@@ -573,7 +573,7 @@ const DialogScrollContainer = styled.div`
     background-color: var(--color-gray-5);
   }
   ::-webkit-scrollbar-track {
-    margin: 2px 0px;
+    margin: 2px 0;
   }
 `;
 
@@ -616,7 +616,7 @@ const ListArea = styled.div`
     background-color: var(--color-gray-5);
   }
   ::-webkit-scrollbar-track {
-    margin: 2px 0px;
+    margin: 2px 0;
   }
 `;
 

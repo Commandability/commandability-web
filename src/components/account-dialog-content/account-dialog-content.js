@@ -496,7 +496,7 @@ const Input = styled.input`
   flex: 1;
   padding: 8px 12px;
   border: solid 1px var(--color-gray-5);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 
   &::placeholder {
     color: var(--color-gray-5);
@@ -565,7 +565,7 @@ const InputError = styled.div`
 const SubmitButton = styled(UnstyledButton)`
   padding: 12px;
   background-color: var(--color-yellow-2);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   color: var(--color-white);
   font-size: ${16 / 16}rem;
   font-weight: bold;

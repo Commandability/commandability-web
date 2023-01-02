@@ -543,7 +543,7 @@ const Content = styled.div`
   max-width: calc(75ch + 64px);
   padding: 16px 32px;
   background-color: var(--color-white);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0px 8px;

@@ -500,11 +500,11 @@ const RightSide = styled.div`
 const RadixDropdownMenuContent = styled(RadixDropdownMenu.Content)`
   width: 160px;
   background-color: var(--color-gray-9);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   position: relative;
   top: 8px;
-  padding: 8px 0px;
+  padding: 8px 0;
   display: flex;
   flex-direction: column;
 
@@ -520,7 +520,7 @@ const RadixDropdownMenuArrow = styled(RadixDropdownMenu.Arrow)`
 `;
 
 const RadixDropdownMenuGroup = styled(RadixDropdownMenu.Group)`
-  padding: 4px 0px;
+  padding: 4px 0;
 `;
 
 const RadixDropdownMenuItem = styled(RadixDropdownMenu.Item)`

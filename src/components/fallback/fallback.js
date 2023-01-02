@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Base = styled.div`
   background-color: var(--color-gray-9);
   color: transparent;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 `;
 
 export function Text({ ...props }) {
@@ -13,7 +13,7 @@ export function Text({ ...props }) {
 const TextWrapper = styled(Base)`
   background-color: var(--color-gray-9);
   color: transparent;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 
   width: var(--text-length);
   height: 1em;

@@ -80,7 +80,7 @@ const InputGroup = styled.div`
 
 const Input = styled.input`
   border: 1px solid var(--color-yellow-3);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: 8px 12px;
   color: inherit;
   width: 320px;

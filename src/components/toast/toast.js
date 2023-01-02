@@ -58,7 +58,7 @@ const swipeOut = keyframes`
 export const Root = styled(RadixToast.Root)`
   background-color: var(--color-white);
   box-shadow: var(--box-shadow);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   position: relative;
   padding: 16px;
   display: flex;

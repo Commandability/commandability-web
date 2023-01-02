@@ -49,7 +49,7 @@ const Label = styled.label`
 
 const TextInput = styled.input`
   border: 1px solid var(--color-gray-5);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   padding: 8px 12px;
   padding-left: 36px;
   flex: 1;

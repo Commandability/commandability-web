@@ -78,7 +78,7 @@ const RadixAlertDialogContent = styled(RadixAlertDialog.Content)`
   position: relative;
   right: calc(var(--scrollbar-width) / 2);
   padding: 24px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background-color: var(--color-gray-10);
   color: var(--color-yellow-2);
 

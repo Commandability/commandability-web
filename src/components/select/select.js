@@ -49,7 +49,7 @@ const SelectButton = styled(UnstyledButton)`
   justify-content: space-between;
   gap: 32px;
   align-items: center;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   border: 1px solid var(--color-gray-5);
   color: var(--color-gray-2);
   padding: 8px;
@@ -60,13 +60,14 @@ const SelectButton = styled(UnstyledButton)`
 const SelectContent = styled(RadixSelect.Content)`
   background-color: var(--color-white);
   color: inherit;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   cursor: pointer;
 `;
 
 const SelectViewport = styled(RadixSelect.Viewport)`
-  padding: 4px;
+  --select-viewport-padding: calc(var(--border-radius) / 2);
+  padding: var(--select-viewport-padding);
 `;
 
 export const SelectItem = React.forwardRef(
@@ -90,7 +91,7 @@ const SelectItemWrapper = styled(RadixSelect.Item)`
   padding-right: 32px;
   user-select: none;
   // Outer radius - padding
-  border-radius: calc(8px - 4px);
+  border-radius: calc(var(--border-radius) - var(--select-viewport-padding));
   display: flex;
   align-items: center;
 
