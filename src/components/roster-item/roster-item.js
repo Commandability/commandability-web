@@ -8,13 +8,23 @@ import { getRandomInt } from "utils";
 
 export function FallbackItem() {
   // Only generate one random length per mount as opposed to on every render
-  const [textLength] = React.useState(getRandomInt(64, 256));
+  const [nameLength] = React.useState(getRandomInt(92, 156));
+  const [shiftLength] = React.useState(getRandomInt(48, 92));
   return (
     <FallbackWrapper>
       <FallbackCheckbox />
       <FallbackContents>
-        <Fallback.Text style={{ "--text-length": `${textLength}px` }} />
-        <Fallback.Text style={{ "--text-length": "144px" }} />
+        <Group>
+          <FallbackName>
+            <Fallback.Text style={{ "--text-length": `${nameLength}px` }} />
+          </FallbackName>
+          <span>
+            <Fallback.Text style={{ "--text-length": `${shiftLength}px` }} />
+          </span>
+        </Group>
+        <span>
+          <Fallback.Text style={{ "--text-length": "32px" }} />
+        </span>
       </FallbackContents>
     </FallbackWrapper>
   );
@@ -144,7 +154,10 @@ const FallbackContents = styled.div`
   display: flex;
   justify-content: space-between;
   padding-left: 32px;
-  align-items: center;
+`;
+
+const FallbackName = styled.span`
+  width: 256px;
 `;
 
 export default RosterItem;
