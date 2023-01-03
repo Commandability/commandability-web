@@ -169,8 +169,10 @@ function Person() {
           <DatumContent>
             {user.status !== "resolved" ? (
               <Fallback.Text style={{ "--text-length": "96px" }} />
-            ) : (
+            ) : person.shift ? (
               `${person.shift}`
+            ) : (
+              <EmptyDatum>unassigned</EmptyDatum>
             )}
           </DatumContent>
         </Datum>
@@ -270,6 +272,10 @@ const DatumLabel = styled.span`
 const DatumContent = styled.span`
   font-size: ${48 / 16}rem;
   color: var(--color-yellow-3);
+`;
+
+const EmptyDatum = styled.span`
+  color: var(--color-gray-5);
 `;
 
 export default Person;
