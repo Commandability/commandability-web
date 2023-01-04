@@ -496,13 +496,16 @@ function LandingNav({
               <Dialog.Trigger asChild>
                 <Option>Create an account</Option>
               </Dialog.Trigger>
-              <Dialog.Content title="Create an account" portal={false}>
-                <AccountDialogContent
-                  defaultContent={accountContentType.NEW_USER}
-                  setToastOpen={setToastOpen}
-                  setToastState={setToastState}
-                />
-              </Dialog.Content>
+              {/* Render without portal so toast is not unmounted */}
+              <Dialog.Overlay>
+                <Dialog.Content title="Create an account">
+                  <AccountDialogContent
+                    defaultContent={accountContentType.NEW_USER}
+                    setToastOpen={setToastOpen}
+                    setToastState={setToastState}
+                  />
+                </Dialog.Content>
+              </Dialog.Overlay>
             </Dialog.Root>
           )}
           {user.current ? (
@@ -515,13 +518,16 @@ function LandingNav({
               <Dialog.Trigger asChild>
                 <Option>Sign in</Option>
               </Dialog.Trigger>
-              <Dialog.Content title="Sign in" portal={false}>
-                <AccountDialogContent
-                  defaultContent={accountContentType.CURRENT_USER}
-                  setToastOpen={setToastOpen}
-                  setToastState={setToastState}
-                />
-              </Dialog.Content>
+              {/* Render without portal so toast is not unmounted */}
+              <Dialog.Overlay>
+                <Dialog.Content title="Sign in">
+                  <AccountDialogContent
+                    defaultContent={accountContentType.CURRENT_USER}
+                    setToastOpen={setToastOpen}
+                    setToastState={setToastState}
+                  />
+                </Dialog.Content>
+              </Dialog.Overlay>
             </Dialog.Root>
           )}
         </AccountOptions>

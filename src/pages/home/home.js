@@ -125,13 +125,16 @@ function Home() {
                       Get started
                     </DesktopPill>
                   </Dialog.Trigger>
-                  <Dialog.Content title="Get started" portal={false}>
-                    <AccountDialogContent
-                      defaultContent={accountContentType.NEW_USER}
-                      setToastOpen={setToastOpen}
-                      setToastState={setToastState}
-                    />
-                  </Dialog.Content>
+                  {/* Render without portal so toast is not unmounted */}
+                  <Dialog.Overlay>
+                    <Dialog.Content title="Get started">
+                      <AccountDialogContent
+                        defaultContent={accountContentType.NEW_USER}
+                        setToastOpen={setToastOpen}
+                        setToastState={setToastState}
+                      />
+                    </Dialog.Content>
+                  </Dialog.Overlay>
                 </Dialog.Root>
               )}
             </HeaderPills>

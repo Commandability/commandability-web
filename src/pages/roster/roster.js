@@ -302,48 +302,52 @@ function Roster() {
               Add person
             </Button>
           </Dialog.Trigger>
-          <Dialog.Content
-            header
-            title="Add person"
-            description="Add a new person to the roster here."
-          >
-            <DialogForm onSubmit={onAddPersonSubmit}>
-              <DialogInputs>
-                <TextInput
-                  id="first-name-input"
-                  labelText="First name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  errorText={firstName ? "" : "Please enter a first name"}
-                />
-                <TextInput
-                  id="last-name-input"
-                  labelText="Last name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  errorText={lastName ? "" : "Please enter a last name"}
-                />
-                <TextInput
-                  id="shift-input"
-                  labelText="Shift"
-                  value={shift}
-                  onChange={(e) => setShift(e.target.value)}
-                />
-                <TextInput
-                  id="badge-input"
-                  labelText="Badge"
-                  value={badge}
-                  onChange={(e) => setBadge(e.target.value)}
-                  errorText={badge ? "" : "Please enter a badge"}
-                />
-              </DialogInputs>
-              <Button type="submit">
-                <FiSave />
-                <Spacer size={8} axis="horizontal" />
-                Save person
-              </Button>
-            </DialogForm>
-          </Dialog.Content>
+          <Dialog.Portal>
+            <Dialog.Overlay>
+              <Dialog.Content
+                header
+                title="Add person"
+                description="Add a new person to the roster here."
+              >
+                <DialogForm onSubmit={onAddPersonSubmit}>
+                  <DialogInputs>
+                    <TextInput
+                      id="first-name-input"
+                      labelText="First name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      errorText={firstName ? "" : "Please enter a first name"}
+                    />
+                    <TextInput
+                      id="last-name-input"
+                      labelText="Last name"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      errorText={lastName ? "" : "Please enter a last name"}
+                    />
+                    <TextInput
+                      id="shift-input"
+                      labelText="Shift"
+                      value={shift}
+                      onChange={(e) => setShift(e.target.value)}
+                    />
+                    <TextInput
+                      id="badge-input"
+                      labelText="Badge"
+                      value={badge}
+                      onChange={(e) => setBadge(e.target.value)}
+                      errorText={badge ? "" : "Please enter a badge"}
+                    />
+                  </DialogInputs>
+                  <Button type="submit">
+                    <FiSave />
+                    <Spacer size={8} axis="horizontal" />
+                    Save person
+                  </Button>
+                </DialogForm>
+              </Dialog.Content>
+            </Dialog.Overlay>
+          </Dialog.Portal>
         </Dialog.Root>
       </Top>
       <ListArea>
@@ -426,44 +430,48 @@ function Roster() {
               Import CSV
             </Button>
           </Dialog.Trigger>
-          <Dialog.Content
-            header
-            title="Import CSV"
-            description="Add personnel from a file here."
-          >
-            <DialogContainer>
-              <UnorderedList>
-                <IconItem>
-                  <FiCheckSquare />
-                  <ItemContents>
-                    The file should be a Comma Separated Value (CSV) file
-                  </ItemContents>
-                </IconItem>
-                <IconItem>
-                  <FiCheckSquare />
-                  <ItemContents>
-                    The first line in the file should be a comma-separated
-                    header with columns labeled:
-                    <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
-                  </ItemContents>
-                </IconItem>
-                <IconItem>
-                  <FiCheckSquare />
-                  <ItemContents>
-                    All other lines should contain comma-separated personnel
-                    data corresponding to the columns in the header
-                  </ItemContents>
-                </IconItem>
-              </UnorderedList>
-              <DialogActions>
-                <Button onClick={importCSVOnClick}>
-                  <FiArrowRight />
-                  <Spacer size={8} axis="horizontal" />
-                  Continue
-                </Button>
-              </DialogActions>
-            </DialogContainer>
-          </Dialog.Content>
+          <Dialog.Portal>
+            <Dialog.Overlay>
+              <Dialog.Content
+                header
+                title="Import CSV"
+                description="Add personnel from a file here."
+              >
+                <DialogContainer>
+                  <UnorderedList>
+                    <IconItem>
+                      <FiCheckSquare />
+                      <ItemContents>
+                        The file should be a Comma Separated Value (CSV) file
+                      </ItemContents>
+                    </IconItem>
+                    <IconItem>
+                      <FiCheckSquare />
+                      <ItemContents>
+                        The first line in the file should be a comma-separated
+                        header with columns labeled:
+                        <CodeBlock>firstName,lastName,shift,badge</CodeBlock>
+                      </ItemContents>
+                    </IconItem>
+                    <IconItem>
+                      <FiCheckSquare />
+                      <ItemContents>
+                        All other lines should contain comma-separated personnel
+                        data corresponding to the columns in the header
+                      </ItemContents>
+                    </IconItem>
+                  </UnorderedList>
+                  <DialogActions>
+                    <Button onClick={importCSVOnClick}>
+                      <FiArrowRight />
+                      <Spacer size={8} axis="horizontal" />
+                      Continue
+                    </Button>
+                  </DialogActions>
+                </DialogContainer>
+              </Dialog.Content>
+            </Dialog.Overlay>
+          </Dialog.Portal>
         </Dialog.Root>
         <AlertDialog.Root
           open={importAlertDialogOpen}

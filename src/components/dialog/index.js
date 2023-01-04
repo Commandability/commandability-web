@@ -1,1 +1,8 @@
-export { Root, Trigger, Content, contentChildrenStyles } from "./dialog";
+export {
+  Root,
+  Trigger,
+  Portal,
+  Overlay,
+  Content,
+  contentChildrenStyles,
+} from "./dialog";

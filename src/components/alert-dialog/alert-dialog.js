@@ -75,6 +75,8 @@ const RadixAlertDialogOverlay = styled(RadixAlertDialog.Overlay)`
 `;
 
 const RadixAlertDialogContent = styled(RadixAlertDialog.Content)`
+  // Disregard scrollbar width when centering so content is centered
+  // consistently regardless of scrollbar presence
   position: relative;
   right: calc(var(--scrollbar-width) / 2);
   padding: 24px;
