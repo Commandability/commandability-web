@@ -20,7 +20,7 @@ import { useSnapshots } from "context/snapshot-context";
 import * as Toast from "components/toast";
 import * as Dialog from "components/dialog";
 import * as AlertDialog from "components/alert-dialog";
-import { Select, SelectItem } from "components/select";
+import * as Select from "components/select";
 import IconItem, { ItemContents } from "components/icon-item";
 import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
@@ -284,16 +284,16 @@ function Roster() {
           placeholder="name, badge, shift"
           role="search"
         />
-        <RosterSelect
+        <SelectRoot
           select={selectSort}
           onValueChange={(select) => setSelectSort(select)}
           defaultValue={selectValues.firstName}
           label="Sort"
         >
-          <SelectItem value={selectValues.firstName}>First name</SelectItem>
-          <SelectItem value={selectValues.lastName}>Last name</SelectItem>
-          <SelectItem value={selectValues.badge}>Badge</SelectItem>
-        </RosterSelect>
+          <Select.Item value={selectValues.firstName}>First name</Select.Item>
+          <Select.Item value={selectValues.lastName}>Last name</Select.Item>
+          <Select.Item value={selectValues.badge}>Badge</Select.Item>
+        </SelectRoot>
         <Dialog.Root open={addPersonOpen} onOpenChange={setAddPersonOpen}>
           <Dialog.Trigger asChild>
             <Button>
@@ -535,7 +535,7 @@ const RosterSearch = styled(SearchInput)`
   width: 256px;
 `;
 
-const RosterSelect = styled(Select)`
+const SelectRoot = styled(Select.Root)`
   width: 208px;
 `;
 

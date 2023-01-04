@@ -6,34 +6,34 @@ import { FiChevronDown, FiCheck } from "react-icons/fi";
 
 import UnstyledButton from "components/unstyled-button";
 
-export const Select = React.forwardRef(
+export const Root = React.forwardRef(
   ({ className, children, label, ...props }, forwardedRef) => {
     return (
-      <SelectWrapper className={className}>
+      <RootWrapper className={className}>
         <RadixLabel.Root>
           <LabelText>{label}</LabelText>
           <RadixSelect.Root {...props}>
             <RadixSelect.Trigger ref={forwardedRef} asChild>
-              <SelectButton>
+              <TriggerButton>
                 <RadixSelect.Value />
                 <RadixSelect.Icon>
                   <FiChevronDown />
                 </RadixSelect.Icon>
-              </SelectButton>
+              </TriggerButton>
             </RadixSelect.Trigger>
             <RadixSelect.Portal>
-              <SelectContent onCloseAutoFocus={(e) => e.preventDefault()}>
+              <RootContent onCloseAutoFocus={(e) => e.preventDefault()}>
                 <SelectViewport>{children}</SelectViewport>
-              </SelectContent>
+              </RootContent>
             </RadixSelect.Portal>
           </RadixSelect.Root>
         </RadixLabel.Root>
-      </SelectWrapper>
+      </RootWrapper>
     );
   }
 );
 
-const SelectWrapper = styled.div`
+const RootWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -44,7 +44,7 @@ const LabelText = styled.span`
   font-size: ${14 / 16}rem;
 `;
 
-const SelectButton = styled(UnstyledButton)`
+const TriggerButton = styled(UnstyledButton)`
   display: flex;
   justify-content: space-between;
   gap: 32px;
@@ -57,7 +57,7 @@ const SelectButton = styled(UnstyledButton)`
   width: 100%;
 `;
 
-const SelectContent = styled(RadixSelect.Content)`
+const RootContent = styled(RadixSelect.Content)`
   background-color: var(--color-white);
   color: inherit;
   border-radius: var(--border-radius);
@@ -70,20 +70,18 @@ const SelectViewport = styled(RadixSelect.Viewport)`
   padding: var(--select-viewport-padding);
 `;
 
-export const SelectItem = React.forwardRef(
-  ({ children, ...props }, forwardedRef) => {
-    return (
-      <SelectItemWrapper {...props} ref={forwardedRef}>
-        <SelectItemIndicator>
-          <FiCheck />
-        </SelectItemIndicator>
-        <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
-      </SelectItemWrapper>
-    );
-  }
-);
+export const Item = React.forwardRef(({ children, ...props }, forwardedRef) => {
+  return (
+    <ItemWrapper {...props} ref={forwardedRef}>
+      <ItemIndicator>
+        <FiCheck />
+      </ItemIndicator>
+      <RadixSelect.ItemText>{children}</RadixSelect.ItemText>
+    </ItemWrapper>
+  );
+});
 
-const SelectItemWrapper = styled(RadixSelect.Item)`
+const ItemWrapper = styled(RadixSelect.Item)`
   all: unset;
   display: flex;
   padding: 8px;
@@ -101,12 +99,12 @@ const SelectItemWrapper = styled(RadixSelect.Item)`
   }
 `;
 
-const SelectItemIndicator = styled(RadixSelect.ItemIndicator)`
+const ItemIndicator = styled(RadixSelect.ItemIndicator)`
   position: absolute;
   left: 8px;
   color: var(--color-yellow-2);
 
-  ${SelectItemWrapper}[data-highlighted] & {
+  ${ItemWrapper}[data-highlighted] & {
     color: var(--color-yellow-9);
   }
 `;

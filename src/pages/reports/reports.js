@@ -46,7 +46,7 @@ import { debounce, sum } from "utils";
 import { storage } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import { useSnapshots } from "context/snapshot-context";
-import { Select, SelectItem } from "components/select";
+import * as Select from "components/select";
 import * as AlertDialog from "components/alert-dialog";
 import * as Progress from "components/progress";
 import Checkbox from "components/checkbox";
@@ -407,7 +407,7 @@ function Reports() {
             defaultValue={q}
             placeholder="location"
           />
-          <ReportsSelect
+          <SelectRoot
             id="s"
             name="s"
             defaultValue={SELECT_VALUES.newest}
@@ -416,9 +416,9 @@ function Reports() {
             // Change the key to remount the select component when the URL has no s query param to synchronize its state with the URL
             key={key}
           >
-            <SelectItem value={SELECT_VALUES.newest}>Newest first</SelectItem>
-            <SelectItem value={SELECT_VALUES.oldest}>Oldest first</SelectItem>
-          </ReportsSelect>
+            <Select.Item value={SELECT_VALUES.newest}>Newest first</Select.Item>
+            <Select.Item value={SELECT_VALUES.oldest}>Oldest first</Select.Item>
+          </SelectRoot>
         </Filter>
         <React.Suspense fallback={fallbackPagination}>
           <Await
@@ -739,7 +739,7 @@ const ReportsSearch = styled(SearchInput)`
   width: 256px;
 `;
 
-const ReportsSelect = styled(Select)`
+const SelectRoot = styled(Select.Root)`
   width: 160px;
 `;
 
