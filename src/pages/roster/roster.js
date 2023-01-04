@@ -85,7 +85,8 @@ function Roster() {
 
   const [toastState, setToastState] = React.useState({
     title: "",
-    message: "",
+    description: "",
+    icon: null,
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -127,12 +128,14 @@ function Roster() {
           title: "Failed to add person",
           description:
             "Make sure there are no other personnel in the roster with the same badge.",
+          icon: <FiAlertTriangle />,
         });
       } else {
         await addPersonnel([{ firstName, lastName, shift, badge }]);
         setToastState({
           title: "Person added successfully",
           description: "The person has been added to the roster.",
+          icon: <FiCheck />,
         });
       }
     } catch (error) {
@@ -158,6 +161,7 @@ function Roster() {
       setToastState({
         title: "Personnel deleted successfully",
         description: "The selected personnel have been removed the roster.",
+        icon: <FiCheck />,
       });
     } catch (error) {
       setToastState(Toast.unknownState);
@@ -499,9 +503,13 @@ function Roster() {
           Export CSV
         </Button>
       </Bottom>
-      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
-        <Toast.Title>{toastState.title}</Toast.Title>
-        <Toast.Description>{toastState.description}</Toast.Description>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title={toastState.title}
+        description={toastState.description}
+      >
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
       </Toast.Root>
       <Toast.Viewport />
     </Wrapper>

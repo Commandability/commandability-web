@@ -45,6 +45,7 @@ function MainNav() {
   const [toastState, setToastState] = React.useState({
     title: "",
     description: "",
+    icon: null,
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -240,9 +241,13 @@ function MainNav() {
           </AccountOptions>
         )}
       </RightSide>
-      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
-        <Toast.Title>{toastState.title}</Toast.Title>
-        <Toast.Description>{toastState.description}</Toast.Description>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title={toastState.title}
+        description={toastState.description}
+      >
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
       </Toast.Root>
       <Toast.Viewport />
     </Nav>

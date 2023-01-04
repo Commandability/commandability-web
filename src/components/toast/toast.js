@@ -1,9 +1,11 @@
 import styled, { keyframes } from "styled-components";
 import * as RadixToast from "@radix-ui/react-toast";
+import { FiAlertTriangle } from "react-icons/fi";
 
 export const unknownState = {
   title: "Unknown error",
   description: "Try again later or contact support.",
+  icon: <FiAlertTriangle />,
 };
 
 export const Provider = RadixToast.Provider;
@@ -55,15 +57,29 @@ const swipeOut = keyframes`
   }
 `;
 
-export const Root = styled(RadixToast.Root)`
+export function Root({ children, title, description, ...props }) {
+  return (
+    <RadixToastRoot {...props}>
+      <Content>
+        {title ? <Title>{title}</Title> : null}
+        {description ? <Description>{description}</Description> : null}
+      </Content>
+      {children}
+    </RadixToastRoot>
+  );
+}
+
+const RadixToastRoot = styled(RadixToast.Root)`
   background-color: var(--color-white);
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
   position: relative;
   padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  display: grid;
+  grid-template-areas: "icon content buttons" "icon content buttons";
+  grid-template-columns: max-content auto max-content;
+  column-gap: 16px;
+  align-items: center;
 
   // Based on https://www.radix-ui.com/docs/primitives/components/toast
   @media (prefers-reduced-motion: no-preference) {
@@ -86,15 +102,28 @@ export const Root = styled(RadixToast.Root)`
   }
 `;
 
-export const Title = styled(RadixToast.Title)`
+export const Icon = styled.div`
+  color: var(--color-yellow-3);
+  font-size: ${32 / 16}rem;
+  grid-area: icon;
+`;
+
+const Content = styled.div`
   font-size: ${16 / 16}rem;
+  grid-area: content;
+`;
+
+const Title = styled(RadixToast.Title)`
   font-weight: bold;
+  color: var(--color-gray-1);
+`;
+
+const Description = styled(RadixToast.Description)`
   color: var(--color-gray-3);
 `;
 
-export const Description = styled(RadixToast.Description)`
-  font-size: ${16 / 16}rem;
-  color: var(--color-yellow-1);
+export const Buttons = styled.div`
+  grid-area: buttons;
 `;
 
 export const Action = RadixToast.Action;

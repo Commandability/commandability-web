@@ -2,7 +2,13 @@ import * as React from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
-import { FiArrowLeft, FiEdit, FiSave } from "react-icons/fi";
+import {
+  FiAlertTriangle,
+  FiCheck,
+  FiArrowLeft,
+  FiEdit,
+  FiSave,
+} from "react-icons/fi";
 
 import { useSnapshots } from "context/snapshot-context";
 import * as Toast from "components/toast";
@@ -28,6 +34,7 @@ function Person() {
   const [toastState, setToastState] = React.useState({
     title: "",
     description: "",
+    icon: null,
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -75,6 +82,7 @@ function Person() {
           title: "Failed to edit person",
           description:
             "Make sure there are no other personnel in the roster with the same badge.",
+          icon: <FiAlertTriangle />,
         });
       } else {
         await editPerson(firstName, lastName, shift, badge);
@@ -82,6 +90,7 @@ function Person() {
           title: "Person edited successfully",
           description:
             "The roster reflects all changes to the selected person.",
+          icon: <FiCheck />,
         });
       }
     } catch (error) {
@@ -187,9 +196,13 @@ function Person() {
           </DatumContent>
         </Datum>
       </PersonData>
-      <Toast.Root open={toastOpen} onOpenChange={setToastOpen}>
-        <Toast.Title>{toastState.title}</Toast.Title>
-        <Toast.Description>{toastState.description}</Toast.Description>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title={toastState.title}
+        description={toastState.description}
+      >
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
       </Toast.Root>
       <Toast.Viewport />
     </Wrapper>

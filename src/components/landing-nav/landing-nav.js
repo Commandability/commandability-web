@@ -65,6 +65,7 @@ function LandingNav({
   const [toastState, setToastState] = React.useState({
     title: "",
     description: "",
+    icon: null,
   });
   const [toastOpen, setToastOpen] = React.useState(false);
 
@@ -532,9 +533,10 @@ function LandingNav({
           // Reset box shadow after nav conditional
           "--nav-box-shadow": "0px 8px 8px -8px hsl(0 0% 0% / 50%)",
         }}
+        title={toastState.title}
+        description={toastState.description}
       >
-        <Toast.Title>{toastState.title}</Toast.Title>
-        <Toast.Description>{toastState.description}</Toast.Description>
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
       </Toast.Root>
       <Toast.Viewport />
     </Nav>

@@ -9,13 +9,13 @@ import {
 import { doc, setDoc } from "firebase/firestore";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FiAlertTriangle, FiMail, FiEye, FiEyeOff } from "react-icons/fi";
 
 import { db, auth } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import FireLoader from "components/fire-loader";
 import UnstyledButton from "components/unstyled-button";
-import { unknownState } from "components/toast";
+import * as Toast from "components/toast";
 import VisuallyHidden from "components/visually-hidden";
 
 export const accountContentType = {
@@ -127,9 +127,10 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
             title: "Email already in use",
             description:
               "There is already an account associated with this email address",
+            icon: <FiAlertTriangle />,
           });
         } else {
-          setToastState(unknownState);
+          setToastState(Toast.unknownState);
         }
         setTimeout(() => {
           setLoading(false);
@@ -158,9 +159,10 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
           setToastState({
             title: "Login failed",
             description: "Incorrect email or password",
+            icon: <FiAlertTriangle />,
           });
         } else {
-          setToastState(unknownState);
+          setToastState(Toast.unknownState);
         }
         setTimeout(() => {
           setLoading(false);
@@ -179,6 +181,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         title: "Password reset email sent",
         description:
           "If an account exists, you will receive a password reset email",
+        icon: <FiMail />,
       };
 
       setLoading(true);
@@ -193,7 +196,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
         if (error.code === "auth/user-not-found") {
           setToastState(recoverAccountToastState);
         } else {
-          setToastState(unknownState);
+          setToastState(Toast.unknownState);
         }
         setTimeout(() => {
           setLoading(false);
