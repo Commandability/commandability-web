@@ -99,13 +99,15 @@ const Wrapper = styled.li`
   // Also add name pseudo-element containing position
   position: relative;
 
+  --selected-background-color: var(--color-gray-8);
+
   &[data-checked="true"] {
-    background-color: var(--color-gray-8);
+    background-color: var(--selected-background-color);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--color-gray-8);
+      background-color: var(--selected-background-color);
     }
   }
 `;
