@@ -251,7 +251,10 @@ function Reports() {
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
-  const [checkedAll, setCheckedAll] = React.useState(false);
+  const [checkedAll, setCheckedAll] = React.useState({
+    status: false,
+    origin: "",
+  });
   const [checkedItems, setCheckedItems] = React.useState([]);
 
   const [removeAllReportsOpen, setRemoveAllReportsOpen] = React.useState(false);
@@ -332,7 +335,7 @@ function Reports() {
 
   async function onRemoveReports() {
     setIsRemovingReports(true);
-    setCheckedAll(false);
+    setCheckedAll({ status: false, origin: "form" });
     setCheckedItems([]);
   }
 
@@ -518,7 +521,7 @@ function Reports() {
                       value={"prev"}
                       disabled={prevReportsCount === 0}
                       onClick={() => {
-                        setCheckedAll(false);
+                        setCheckedAll({ status: false, origin: "header" });
                         setCheckedItems([]);
                       }}
                       variant="tertiary"
@@ -533,7 +536,7 @@ function Reports() {
                       value={"next"}
                       disabled={reportsDocs.docs.length < reportsPerPage}
                       onClick={() => {
-                        setCheckedAll(false);
+                        setCheckedAll({ status: false, origin: "header" });
                         setCheckedItems([]);
                       }}
                       variant="tertiary"
