@@ -46,6 +46,7 @@ import { debounce, sum } from "utils";
 import { storage } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import { useSnapshots } from "context/snapshot-context";
+import * as Toast from "components/toast";
 import * as Select from "components/select";
 import * as AlertDialog from "components/alert-dialog";
 import * as Progress from "components/progress";
@@ -69,7 +70,6 @@ const SELECT_VALUES = {
   newest: "newest",
   oldest: "oldest",
 };
-const SEARCH_DEBOUNCE = 400;
 
 export async function loader({ request }) {
   const { currentUser } = getAuth();
@@ -184,6 +184,14 @@ export async function action({ request }) {
   }
 }
 
+const SEARCH_DEBOUNCE = 400;
+
+const initialBlobsState = {
+  status: "idle",
+  data: [],
+  number: 0,
+};
+
 function Reports() {
   const { q, s, p, reportsData } = useLoaderData();
   const navigation = useNavigation();
@@ -210,11 +218,18 @@ function Reports() {
   // Don't add new filter to the history stack unless it's the first one
   const isFirstFilter = q === null || s === null;
 
-  const [blobs, setBlobs] = React.useState({ data: [], number: 0 });
+  const [blobs, setBlobs] = React.useState(initialBlobsState);
   const blobsLoaded = blobs.data.map((datum) => datum.loaded);
   const blobsTotal = blobs.data.map((datum) => datum.total);
   const blobsLoadedSum = sum(blobsLoaded);
   const blobsTotalSum = sum(blobsTotal);
+
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    description: "",
+    icon: null,
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
 
   // Ensure all blob totals have been loaded and their sum is nonzero
   let blobsPercent = 0;
@@ -277,6 +292,18 @@ function Reports() {
     if (!isAnyItemChecked) setCheckedAll({ status: false, origin: "form" });
   }, [isAnyItemChecked]);
 
+  React.useEffect(() => {
+    if (blobsPercent === 100) {
+      setBlobs((prevBlobs) => ({ ...prevBlobs, status: "resolved" }));
+    }
+  }, [blobsPercent]);
+
+  React.useEffect(() => {
+    if (blobsPercent === 100 && checkedItems.length === 0) {
+      setBlobs(initialBlobsState);
+    }
+  }, [blobsPercent, checkedItems]);
+
   async function onRemoveReports() {
     setIsRemovingReports(true);
     setCheckedAll(false);
@@ -303,58 +330,68 @@ function Reports() {
   );
 
   async function onDownloadReports() {
-    const zip = new JSZip();
+    setBlobs(() => ({ ...initialBlobsState, status: "pending" }));
 
-    const urlPromises = checkedItems.map((item) => {
-      return getDownloadURL(
-        ref(storage, `users/${user.current?.uid}/reports/${item}`)
-      );
-    });
+    try {
+      const zip = new JSZip();
 
-    const urls = await Promise.all(urlPromises);
-
-    const blobPromises = [];
-    urls.forEach((url, index) => {
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = "blob";
-      blobPromises[index] = new Promise((resolve) => {
-        xhr.addEventListener("load", () => {
-          resolve(xhr.response);
-        });
+      const urlPromises = checkedItems.map((item) => {
+        return getDownloadURL(
+          ref(storage, `users/${user.current?.uid}/reports/${item}`)
+        );
       });
-      xhr.addEventListener("progress", (event) => {
-        if (event.lengthComputable) {
-          setBlobs((prevBlobs) => {
-            const nextBlobs = {};
-            // Slice(0) is the most performant method of copying an array
-            nextBlobs.data = prevBlobs.data.slice(0);
-            nextBlobs.data[index] = {
-              loaded: event.loaded,
-              total: event.total,
-            };
-            nextBlobs.number = urls.length;
-            return nextBlobs;
+
+      const urls = await Promise.all(urlPromises);
+
+      const blobPromises = [];
+      urls.forEach((url, index) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        blobPromises[index] = new Promise((resolve) => {
+          xhr.addEventListener("load", () => {
+            resolve(xhr.response);
           });
-        }
+        });
+        xhr.addEventListener("progress", (event) => {
+          if (event.lengthComputable) {
+            setBlobs((prevBlobs) => {
+              // slice(0) is the most performant method of copying an array
+              const data = prevBlobs.data.slice(0);
+              data[index] = {
+                loaded: event.loaded,
+                total: event.total,
+              };
+
+              return {
+                ...prevBlobs,
+                status: "pending",
+                data,
+                number: urls.length,
+              };
+            });
+          }
+        });
+        xhr.open("GET", url);
+        xhr.send();
       });
-      xhr.open("GET", url);
-      xhr.send();
-    });
 
-    const blobs = await Promise.all(blobPromises);
+      const blobs = await Promise.all(blobPromises);
 
-    const dataPromises = blobs.map(async (blob) => {
-      return await blob.text();
-    });
+      const dataPromises = blobs.map(async (blob) => {
+        return await blob.text();
+      });
 
-    const data = await Promise.all(dataPromises);
+      const data = await Promise.all(dataPromises);
 
-    data.forEach((datum, index) => {
-      zip.file(`${checkedItems[index]}.txt`, datum);
-    });
+      data.forEach((datum, index) => {
+        zip.file(`${checkedItems[index]}.txt`, datum);
+      });
 
-    const base64 = await zip.generateAsync({ type: "base64" });
-    window.location = "data:application/zip;base64," + base64;
+      const base64 = await zip.generateAsync({ type: "base64" });
+      window.location = "data:application/zip;base64," + base64;
+    } catch (error) {
+      setToastState(Toast.unknownState);
+    }
   }
 
   const fallbackPagination = (
@@ -525,7 +562,10 @@ function Reports() {
                   onOpenChange={setRemoveReportsOpen}
                 >
                   <AlertDialog.Trigger asChild>
-                    <Button variant="tertiary">
+                    <Button
+                      variant="tertiary"
+                      disabled={blobs.status === "pending"}
+                    >
                       <FiTrash2 />
                       <Spacer size={8} axis="horizontal" />
                       Delete reports
@@ -573,11 +613,25 @@ function Reports() {
                     </fetcher.Form>
                   </RemoveAlertDialogContent>
                 </AlertDialog.Root>
-                <Button variant="tertiary" onClick={onDownloadReports}>
-                  <FiDownload />
-                  <Spacer size={8} axis="horizontal" />
-                  Download reports
-                </Button>
+                <SubGroup>
+                  <Button variant="tertiary" onClick={onDownloadReports}>
+                    <FiDownload />
+                    <Spacer size={8} axis="horizontal" />
+                    Download reports
+                  </Button>
+                  <ProgressRoot>
+                    <Progress.Indicator
+                      progress={blobsPercent}
+                      // Don't transition resetting the progress bar to 0
+                      transition={blobs.number !== 0}
+                    />
+                  </ProgressRoot>
+                  {blobsPercent
+                    ? blobsPercent < 100
+                      ? "Downloading reports..."
+                      : "Download complete."
+                    : null}
+                </SubGroup>
               </Group>
             )}
           </Group>
@@ -625,9 +679,6 @@ function Reports() {
         )}
       </ListArea>
       <Bottom>
-        <ProgressRoot>
-          <Progress.Indicator progress={blobsPercent} />
-        </ProgressRoot>
         <React.Suspense
           fallback={<Fallback.Text style={{ "--text-length": "192px" }} />}
         >
@@ -719,6 +770,15 @@ function Reports() {
           </RemoveAlertDialogContent>
         </AlertDialog.Root>
       </Bottom>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title={toastState.title}
+        description={toastState.description}
+      >
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
+      </Toast.Root>
+      <Toast.Viewport />
     </Wrapper>
   );
 }
@@ -793,7 +853,19 @@ const ErrorElement = styled.div`
 
 const Group = styled.div`
   display: flex;
+  align-items: center;
   gap: 32px;
+`;
+
+const SubGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+`;
+
+const ProgressRoot = styled(Progress.Root)`
+  width: 128px;
+  height: 8px;
 `;
 
 const Location = styled.span`
@@ -845,11 +917,6 @@ const Bottom = styled.div`
   align-items: center;
   gap: 24px;
   padding: 0 48px;
-`;
-
-const ProgressRoot = styled(Progress.Root)`
-  width: 128px;
-  height: 8px;
 `;
 
 const Capacity = styled.div`
