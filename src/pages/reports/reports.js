@@ -417,7 +417,10 @@ function Reports() {
       });
 
       const base64 = await zip.generateAsync({ type: "base64" });
-      window.location = "data:application/zip;base64," + base64;
+      const a = document.createElement("a");
+      a.download = "reports.zip";
+      a.href = "data:application/zip;base64," + base64;
+      a.click();
     } catch (error) {
       setToastState(Toast.unknownState);
     }
