@@ -551,7 +551,7 @@ const TextButton = styled(UnstyledButton)`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-yellow-4);
+      color: var(--color-yellow-1);
     }
   }
 `;
@@ -578,7 +578,7 @@ const SubmitButton = styled(UnstyledButton)`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--color-yellow-3);
+      background-color: var(--color-yellow-1);
     }
   }
 
