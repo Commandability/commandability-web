@@ -20,7 +20,7 @@ export function getRandomInt(min: number, max: number): number {
  * @param wait - The wait time in milliseconds
  */
 export function debounce(callback: (...args: any[]) => void, wait: number) {
-  let timeoutId = 0;
+  let timeoutId: number;
   return (...args: any[]) => {
     window.clearTimeout(timeoutId);
     timeoutId = window.setTimeout(() => {

@@ -13,11 +13,18 @@ export const Root = styled(RadixProgress.Root)`
   transform: translateZ(0);
 `;
 
-export function Indicator({ progress, transition = true }) {
+export const DEFAULT_DURATION = 600;
+
+export function Indicator({
+  progress,
+  transition = true,
+  duration = DEFAULT_DURATION,
+}) {
   return (
     <IndicatorWrapper
       style={{ transform: `translateX(-${100 - progress}%)` }}
       data-transition={transition}
+      duration={duration}
     />
   );
 }
@@ -28,6 +35,6 @@ const IndicatorWrapper = styled(RadixProgress.Indicator)`
   height: 100%;
 
   &[data-transition="true"] {
-    transition: transform 600ms ease-in-out;
+    transition: transform ${(props) => props.duration}ms ease-in-out;
   }
 `;

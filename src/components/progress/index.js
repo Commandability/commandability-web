@@ -1,1 +1,1 @@
-export { Root, Indicator } from "./progress";
+export { Root, Indicator, DEFAULT_DURATION } from "./progress";

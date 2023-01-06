@@ -243,6 +243,11 @@ function Reports() {
     blobsPercent = (blobsLoadedSum * 100) / blobsTotalSum;
   }
 
+  const [downloadStatus, setDownloadStatus] = React.useState({
+    text: "",
+    timeoutId: undefined,
+  });
+
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
   const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
@@ -303,6 +308,27 @@ function Reports() {
       setBlobs(initialBlobsState);
     }
   }, [blobsPercent, checkedItems]);
+
+  React.useEffect(() => {
+    if (blobs.status === "idle") {
+      clearTimeout(downloadStatus.timeoutId);
+      setDownloadStatus({
+        text: "",
+        timeoutId: undefined,
+      });
+    } else if (blobs.status === "pending") {
+      clearTimeout(downloadStatus.timeoutId);
+      setDownloadStatus({
+        text: "Downloading reports...",
+        timeoutId: undefined,
+      });
+    } else if (blobs.status === "resolved" && !downloadStatus.timeoutId) {
+      const timeoutId = setTimeout(
+        () => setDownloadStatus({ text: "Download complete.", timeoutId }),
+        Progress.DEFAULT_DURATION
+      );
+    }
+  }, [blobs.status, downloadStatus.timeoutId]);
 
   async function onRemoveReports() {
     setIsRemovingReports(true);
@@ -626,11 +652,7 @@ function Reports() {
                       transition={blobs.number !== 0}
                     />
                   </ProgressRoot>
-                  {blobsPercent
-                    ? blobsPercent < 100
-                      ? "Downloading reports..."
-                      : "Download complete."
-                    : null}
+                  {downloadStatus.text}
                 </SubGroup>
               </Group>
             )}
