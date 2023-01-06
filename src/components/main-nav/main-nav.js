@@ -319,7 +319,7 @@ const NavFireIcon = styled(UnstyledFireIcon)`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      fill: var(--color-yellow-4);
+      fill: var(--color-yellow-3);
     }
   }
 
@@ -591,7 +591,7 @@ const AccountOptions = styled.div`
 
 const Option = styled(UnstyledButton)`
   display: flex;
-  color: var(--color-yellow-2);
+  color: var(--color-red-3);
   font-size: ${16 / 16}rem;
   font-weight: bold;
 
@@ -602,7 +602,7 @@ const Option = styled(UnstyledButton)`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      color: var(--color-yellow-4);
+      color: var(--color-red-1);
     }
   }
 `;

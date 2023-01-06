@@ -308,7 +308,7 @@ function LandingNav({
                   scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
                 }`,
                 "--fill-active": `${
-                  scrolled ? "var(--color-yellow-4)" : "var(--color-white)"
+                  scrolled ? "var(--color-yellow-3)" : "var(--color-white)"
                 }`,
               }}
             />
@@ -483,7 +483,7 @@ function LandingNav({
               scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
             }`,
             "--color-active": `${
-              scrolled ? "var(--color-red-3)" : "var(--color-white)"
+              scrolled ? "var(--color-red-1)" : "var(--color-white)"
             }`,
           }}
         >

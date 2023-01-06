@@ -540,8 +540,9 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
-  max-width: calc(75ch + 64px);
-  padding: 16px 32px;
+  --horizontal-padding: 64px;
+  max-width: calc(75ch + var(--horizontal-padding) * 2);
+  padding: 32px var(--horizontal-padding);
   background-color: var(--color-white);
   border-radius: var(--border-radius);
 
