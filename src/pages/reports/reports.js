@@ -454,6 +454,10 @@ function Reports() {
                       name="p"
                       value={"prev"}
                       disabled={prevReportsCount === 0}
+                      onClick={() => {
+                        setCheckedAll(false);
+                        setCheckedItems([]);
+                      }}
                       variant="tertiary"
                       size="medium"
                     >
@@ -465,6 +469,10 @@ function Reports() {
                       name="p"
                       value={"next"}
                       disabled={reportsDocs.docs.length < reportsPerPage}
+                      onClick={() => {
+                        setCheckedAll(false);
+                        setCheckedItems([]);
+                      }}
                       variant="tertiary"
                       size="medium"
                     >
