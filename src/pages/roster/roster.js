@@ -350,8 +350,17 @@ function Roster() {
           </Dialog.Portal>
         </Dialog.Root>
       </Top>
-      <ListArea>
-        <ListHeader aria-live="polite" aria-atomic="true">
+      <ListArea
+        // Display scrollbar only if there are personnel or the fallback is visible
+        data-personnel={
+          user.status === "pending" || user.data?.personnel.length
+            ? "true"
+            : "false"
+        }
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        <ListHeader>
           <Group>
             <Checkbox
               label="Select all"
@@ -398,13 +407,14 @@ function Roster() {
                 </RemoveAlertDialogContent>
               </AlertDialog.Root>
             )}
-            {checkedItems.length === 0 ? <span>Shift</span> : null}
+            {!checkedItems.length ? <span>Shift</span> : null}
           </Group>
-          {checkedItems.length === 0 ? <span>Badge</span> : null}
+          {!checkedItems.length ? <span>Badge</span> : null}
         </ListHeader>
-        <List aria-live="polite" aria-atomic="true">
-          {user.status === "resolved"
-            ? [...user.data.personnel]
+        {user.status === "resolved" ? (
+          user.data?.personnel.length ? (
+            <List>
+              {[...user.data.personnel]
                 .filter((person) => personFilter(person))
                 .sort((firstPerson, secondPerson) =>
                   sortFunction(firstPerson, secondPerson)
@@ -417,9 +427,14 @@ function Roster() {
                     setCheckedAll={setCheckedAll}
                     setCheckedItems={setCheckedItems}
                   />
-                ))
-            : fallbackList}
-        </List>
+                ))}
+            </List>
+          ) : (
+            <ListMessage>No personnel</ListMessage>
+          )
+        ) : (
+          fallbackList
+        )}
       </ListArea>
       <Bottom>
         <Dialog.Root open={importCSVOpen} onOpenChange={setImportCSVOpen}>
@@ -525,7 +540,6 @@ function Roster() {
 }
 
 const Wrapper = styled.div`
-  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -617,22 +631,25 @@ const DialogActions = styled.div`
 
 const ListArea = styled.div`
   flex: 1;
+  --header-padding-vertical: 16px;
 
-  overflow-y: scroll;
-  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-  scrollbar-width: thin;
+  &[data-personnel="true"] {
+    overflow-y: scroll;
+    scrollbar-color: var(--color-gray-5) var(--color-gray-10);
+    scrollbar-width: thin;
 
-  ::-webkit-scrollbar {
-    width: 10px;
-    background-color: var(--color-gray-10);
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 999999px;
-    border: 2px solid var(--color-gray-10);
-    background-color: var(--color-gray-5);
-  }
-  ::-webkit-scrollbar-track {
-    margin: 2px 0;
+    ::-webkit-scrollbar {
+      width: 10px;
+      background-color: var(--color-gray-10);
+    }
+    ::-webkit-scrollbar-thumb {
+      border-radius: 999999px;
+      border: 2px solid var(--color-gray-10);
+      background-color: var(--color-gray-5);
+    }
+    ::-webkit-scrollbar-track {
+      margin: 2px 0;
+    }
   }
 `;
 
@@ -640,12 +657,23 @@ const ListHeader = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 16px 48px;
+  padding: var(--header-padding-vertical) 48px;
   background-color: var(--color-gray-10);
   color: var(--color-gray-2);
   position: sticky;
   top: 0;
   z-index: 1;
+`;
+
+const ListMessage = styled.div`
+  height: 100%;
+  display: grid;
+  place-content: center;
+  position: relative;
+  // Account for sticky header in centering
+  top: calc(-0.5rem - var(--header-padding-vertical) * 2);
+  font-size: ${18 / 16}rem;
+  color: var(--color-gray-4);
 `;
 
 const Group = styled.div`
