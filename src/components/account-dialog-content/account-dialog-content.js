@@ -116,11 +116,11 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
           email,
           password
         );
-        window.location.assign("/");
         await updateProfile(userCredentials.user, { displayName: displayName });
         setUser((prevUser) => ({ ...prevUser, current: userCredentials.user }));
         await setDoc(doc(db, "users", userCredentials.user.uid), defaultConfig);
         setLoading(false);
+        window.location.assign("/");
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
           setToastState({
