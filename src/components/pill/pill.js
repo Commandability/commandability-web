@@ -46,7 +46,7 @@ const Pill = React.forwardRef(
     }
 
     return (
-      <PillBase
+      <PillWrapper
         {...props}
         ref={forwardedRef}
         style={{ ...themeStyles, ...style }}
@@ -61,12 +61,12 @@ const Pill = React.forwardRef(
         <Text>{children}</Text>
         <Spacer size={8} axis="horizontal" />
         {angle ? <FiChevronRight /> : null}
-      </PillBase>
+      </PillWrapper>
     );
   }
 );
 
-const PillBase = styled.button`
+const PillWrapper = styled.button`
   display: flex;
   align-items: center;
   padding: 8px 16px;

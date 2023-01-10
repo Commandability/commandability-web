@@ -7,7 +7,8 @@ import { FiCheck } from "react-icons/fi";
 import * as Fallback from "components/fallback";
 import VisuallyHidden from "components/visually-hidden";
 
-export const FallbackCheckbox = styled(Fallback.Base)`
+export const FallbackCheckbox = styled.div`
+  ${Fallback.html}
   width: 24px;
   height: 24px;
   border-radius: 4px;

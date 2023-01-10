@@ -1,1 +1,1 @@
-export { Base, Text } from "./fallback";
+export { html, svg, Text } from "./fallback";
