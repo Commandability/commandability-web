@@ -12,26 +12,30 @@ function AccountOption({ header, children }) {
 
 const Wrapper = styled.div`
   display: flex;
+  flex-direction: column;
   background-color: var(--color-gray-10);
   border-radius: 8px;
   height: fit-content;
   width: 640px;
-  padding: 32px;
+  padding: 24px;
+  /* gap: 16px; */
 `;
 
 const Header = styled.div`
   flex: 1;
-  color: var(--color-red-3);
   font-weight: bold;
   text-transform: uppercase;
   font-size: ${20 / 16}rem;
+  color: var(--color-gray-1);
+  margin-bottom: 24px;
 `;
 
 const Content = styled.div`
   flex: 3;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  justify-self: flex-end;
+  gap: 16px;
 `;
 
 export default AccountOption;

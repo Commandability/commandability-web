@@ -186,7 +186,7 @@ function MainNav() {
                   <RadixDropdownMenuItem asChild>
                     <DropdownMenuAction to="/dashboard/settings">
                       <FiSettings />
-                      Settings
+                      Account
                     </DropdownMenuAction>
                   </RadixDropdownMenuItem>
                 </RadixDropdownMenuGroup>

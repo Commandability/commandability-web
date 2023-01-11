@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import Home from "@pages/home";
-import Settings from "@pages/settings";
+import Account from "@pages/account";
 import NotFound from "@pages/not-found";
 import PrivacyPolicy from "@pages/privacy-policy";
 
@@ -51,7 +51,7 @@ const router = createBrowserRouter(
           <Route index element={<Groups />} />
           <Route path=":groupId" element={<Group />} />
         </Route>
-        <Route path="settings" element={<Settings />} />
+        <Route path="settings" element={<Account />} />
       </Route>
       <Route element={<Layout type="outlet" />} errorElement={<NotFound />}>
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
