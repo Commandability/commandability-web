@@ -28,7 +28,9 @@ import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
 import SearchInput from "components/search-input";
-import RosterItem, { FallbackItem } from "components/roster-item";
+import RosterItem from "components/roster-item";
+import * as Fallback from "components/fallback";
+import FireLoader from "components/fire-loader";
 
 const selectValues = {
   firstName: "first name",
@@ -264,13 +266,7 @@ function Roster() {
   const fallbackList = (
     <>
       <VisuallyHidden>Loading reports</VisuallyHidden>
-      <List>
-        {Array(25)
-          .fill(null)
-          .map((_, index) => (
-            <FallbackItem key={index} />
-          ))}
-      </List>
+      <PersonnelLoader />
     </>
   );
 
@@ -350,16 +346,7 @@ function Roster() {
           </Dialog.Portal>
         </Dialog.Root>
       </Top>
-      <ListArea
-        // Display scrollbar only if there are personnel or the fallback is visible
-        data-personnel={
-          user.status === "pending" || user.data?.personnel.length
-            ? "true"
-            : "false"
-        }
-        aria-live="polite"
-        aria-atomic="true"
-      >
+      <ListArea aria-live="polite" aria-atomic="true">
         <ListHeader>
           <Group>
             <Checkbox
@@ -632,29 +619,29 @@ const DialogActions = styled.div`
 const ListArea = styled.div`
   flex: 1;
   --header-padding-vertical: 16px;
+  --header-height: calc(
+    var(--header-padding-vertical) * 2 + max(24px, 1rem * var(--line-height))
+  );
 
-  &[data-personnel="true"] {
-    overflow-y: scroll;
-    scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-    scrollbar-width: thin;
-
-    ::-webkit-scrollbar {
-      width: 10px;
-      background-color: var(--color-gray-10);
-    }
-    ::-webkit-scrollbar-thumb {
-      border-radius: 999999px;
-      border: 2px solid var(--color-gray-10);
-      background-color: var(--color-gray-5);
-    }
-    ::-webkit-scrollbar-track {
-      margin: 2px 0;
-    }
+  overflow-y: auto;
+  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
+  scrollbar-width: thin;
+  ::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--color-gray-10);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    border: 2px solid var(--color-gray-10);
+    background-color: var(--color-gray-5);
+  }
+  ::-webkit-scrollbar-track {
+    margin: 2px 0;
   }
 `;
 
 const ListHeader = styled.div`
-  width: 100%;
+  min-height: 24px;
   display: flex;
   justify-content: space-between;
   padding: var(--header-padding-vertical) 48px;
@@ -666,14 +653,21 @@ const ListHeader = styled.div`
 `;
 
 const ListMessage = styled.div`
-  height: 100%;
+  // Account for sticky header
+  height: calc(100% - var(--header-height));
   display: grid;
   place-content: center;
-  position: relative;
-  // Account for sticky header in centering
-  top: calc(-0.5rem - var(--header-padding-vertical) * 2);
   font-size: ${18 / 16}rem;
   color: var(--color-gray-4);
+`;
+
+const PersonnelLoader = styled(FireLoader)`
+  & > svg {
+    ${Fallback.svg}
+  }
+
+  // Account for sticky header
+  height: calc(100% - var(--header-height));
 `;
 
 const Group = styled.div`

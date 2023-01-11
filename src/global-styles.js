@@ -35,7 +35,8 @@ const GlobalStyles = createGlobalStyle`
     5. Improve text rendering
   */
   body {
-    line-height: 1.5;
+    --line-height: 1.5;
+    line-height: var(--line-height);
     -webkit-font-smoothing: antialiased;
     overflow-y: scroll;
   }
