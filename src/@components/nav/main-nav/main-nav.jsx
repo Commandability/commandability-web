@@ -217,7 +217,7 @@ function MainNav() {
                   <DropdownMenuItem asChild>
                     <DropdownMenuAction to="/dashboard/settings">
                       <FiSettings />
-                      Settings
+                      Account
                     </DropdownMenuAction>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
