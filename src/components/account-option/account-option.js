@@ -25,9 +25,10 @@ const Header = styled.div`
   flex: 1;
   font-weight: bold;
   text-transform: uppercase;
-  font-size: ${20 / 16}rem;
-  color: var(--color-gray-1);
+  font-size: ${16 / 16}rem;
+  color: var(--color-gray-3);
   margin-bottom: 24px;
+  letter-spacing: 0.05em;
 `;
 
 const Content = styled.div`

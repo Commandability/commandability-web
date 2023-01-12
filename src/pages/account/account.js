@@ -74,7 +74,7 @@ function Account() {
             error={!accountEmailError ? "" : inputErrors.email}
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button icon={FiSave}>Save</Button>
+            <Button icon={FiSave}>Save Changes</Button>
           </div>
         </AccountOption>
         <AccountOption header="Change Password">
@@ -115,7 +115,7 @@ function Account() {
             error={!confirmNewPasswordError ? "" : inputErrors.confirmPassword}
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button icon={FiSave}>Save</Button>
+            <Button icon={FiSave}>Save Password</Button>
           </div>
         </AccountOption>
         <AccountOption header="Delete Account">
