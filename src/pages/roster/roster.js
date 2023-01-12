@@ -99,6 +99,35 @@ function Roster() {
 
   const [downloadLink, setDownloadLink] = React.useState();
 
+  const [action, setAction] = React.useState("idle");
+
+  React.useEffect(() => {
+    const effect = async () => {
+      const personnelCSV = await Papa.unparse(
+        {
+          fields: ["firstName", "lastName", "shift", "badge"],
+          data: user.data?.personnel,
+        },
+        {
+          header: true,
+          skipEmptyLines: true,
+        }
+      );
+      const data = new Blob([personnelCSV], {
+        type: "text/csv",
+      });
+      setDownloadLink(window.URL.createObjectURL(data));
+    };
+    effect();
+  }, [user]);
+
+  React.useEffect(() => {
+    if (user.status === "resolved" && action === "resolved") {
+      setAction("idle");
+      setToastOpen(true);
+    }
+  }, [user.status, action]);
+
   function resetAddPersonInputs() {
     setFirstName("");
     setLastName("");
@@ -106,8 +135,8 @@ function Roster() {
     setBadge("");
   }
 
-  async function addPersonnel(personnel) {
-    await updateDoc(user.ref, {
+  function addPersonnel(personnel) {
+    return updateDoc(user.ref, {
       personnel: arrayUnion(...personnel),
     });
   }
@@ -117,6 +146,7 @@ function Roster() {
 
     if (!firstName || !lastName || !badge) return;
 
+    setAction("pending");
     setAddPersonOpen(false);
     resetAddPersonInputs();
 
@@ -143,12 +173,11 @@ function Roster() {
     } catch (error) {
       setToastState(Toast.unknownState);
     }
-
-    setToastOpen(true);
+    setAction("resolved");
   }
 
-  async function removePersonnel(personnel) {
-    await updateDoc(user.ref, {
+  function removePersonnel(personnel) {
+    return updateDoc(user.ref, {
       personnel: arrayRemove(...personnel),
     });
   }
@@ -156,6 +185,7 @@ function Roster() {
   async function onRemovePersonnelAction() {
     setRemovePersonnelOpen(false);
     setCheckedAll(false);
+    setAction("pending");
 
     try {
       await removePersonnel(checkedItems);
@@ -169,7 +199,7 @@ function Roster() {
       setToastState(Toast.unknownState);
     }
 
-    setToastOpen(true);
+    setAction("resolved");
   }
 
   const openCSVFile = async () => {
@@ -224,7 +254,7 @@ function Roster() {
               "No personnel were imported. Resolve all badge conflicts in both the CSV file and roster.",
           });
         } else {
-          addPersonnel(personnel.data);
+          await addPersonnel(personnel.data);
           setImportStatus({
             title: "Personnel imported successfully",
             description:
@@ -242,26 +272,6 @@ function Roster() {
 
     setImportAlertDialogOpen(true);
   }
-
-  React.useEffect(() => {
-    const effect = async () => {
-      const personnelCSV = await Papa.unparse(
-        {
-          fields: ["firstName", "lastName", "shift", "badge"],
-          data: user.data?.personnel,
-        },
-        {
-          header: true,
-          skipEmptyLines: true,
-        }
-      );
-      const data = new Blob([personnelCSV], {
-        type: "text/csv",
-      });
-      setDownloadLink(window.URL.createObjectURL(data));
-    };
-    effect();
-  }, [user]);
 
   const fallbackList = (
     <>
