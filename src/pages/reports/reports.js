@@ -50,6 +50,8 @@ import * as Toast from "components/toast";
 import * as Select from "components/select";
 import * as AlertDialog from "components/alert-dialog";
 import * as Progress from "components/progress";
+import * as Fallback from "components/fallback";
+import FireLoader from "components/fire-loader";
 import Checkbox from "components/checkbox";
 import SearchInput from "components/search-input";
 import TextInput from "components/text-input";
@@ -57,7 +59,6 @@ import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
 import ReportItem, { FallbackItem } from "components/report-item";
-import * as Fallback from "components/fallback";
 
 export const REPORTS_CONFIGURATION = {
   reportsPerPage: 20,
@@ -442,8 +443,22 @@ function Reports() {
     </Pagination>
   );
 
+  const fallbackListArea = (
+    <ListArea>
+      <VisuallyHidden>Loading reports</VisuallyHidden>
+      <ListHeader>
+        <Group>
+          <Checkbox label="Select all" checked={checkedAll.status} />
+          <Location>Location</Location>
+        </Group>
+        <span>Timestamp</span>
+      </ListHeader>
+      <ReportsLoader />
+    </ListArea>
+  );
+
   const fallbackList = (
-    <>
+    <ListArea>
       <VisuallyHidden>Loading reports</VisuallyHidden>
       <List>
         {Array(reportsPerPage)
@@ -452,11 +467,22 @@ function Reports() {
             <FallbackItem key={index} />
           ))}
       </List>
-    </>
+    </ListArea>
+  );
+
+  const fallbackBottom = (
+    <Bottom>
+      <Fallback.Text style={{ "--text-length": "192px" }} />
+      <Button disabled>
+        <FiTrash2 />
+        <Spacer size={8} axis="horizontal" />
+        Delete all reports
+      </Button>
+    </Bottom>
   );
 
   return (
-    <Wrapper>
+    <Wrapper aria-live="polite" aria-atomic="true">
       <ReportsForm
         id="reports-form"
         onChange={(event) => {
@@ -575,43 +601,184 @@ function Reports() {
           </Await>
         </React.Suspense>
       </ReportsForm>
-      <ListArea>
-        <ListHeader aria-live="polite" aria-atomic="true">
-          <Group>
-            <Checkbox
-              label="Select all"
-              checked={checkedAll.status}
-              onCheckedChange={(checked) =>
-                setCheckedAll({ status: checked, origin: "header" })
-              }
-            />
-            {checkedItems.length === 0 && !removeReportsOpen ? (
-              <Location>Location</Location>
-            ) : (
-              <Group>
+      <React.Suspense fallback={fallbackListArea}>
+        <Await
+          resolve={reportsData}
+          errorElement={
+            <ReportsError>
+              <FiAlertTriangle />
+              Error loading reports
+            </ReportsError>
+          }
+        >
+          {(reportsData) => {
+            const [reportsDocs] = reportsData;
+            return (
+              <ListArea>
+                <ListHeader>
+                  <Group>
+                    <Checkbox
+                      label="Select all"
+                      checked={checkedAll.status}
+                      onCheckedChange={(checked) =>
+                        setCheckedAll({ status: checked, origin: "header" })
+                      }
+                    />
+                    {checkedItems.length === 0 && !removeReportsOpen ? (
+                      <Location>Location</Location>
+                    ) : (
+                      <Group>
+                        <AlertDialog.Root
+                          open={removeReportsOpen}
+                          onOpenChange={setRemoveReportsOpen}
+                        >
+                          <AlertDialog.Trigger asChild>
+                            <Button
+                              variant="tertiary"
+                              disabled={blobs.status === "pending"}
+                            >
+                              <FiTrash2 />
+                              <Spacer size={8} axis="horizontal" />
+                              Delete reports
+                            </Button>
+                          </AlertDialog.Trigger>
+                          <RemoveAlertDialogContent
+                            header
+                            title="Are you absolutely sure?"
+                            description="This action cannot be undone. This will permanently delete all selected reports from your account."
+                            onCloseAutoFocus={onRemoveReportsClose}
+                          >
+                            <fetcher.Form
+                              method="post"
+                              onSubmit={onRemoveReports}
+                              style={AlertDialog.contentChildrenStyles}
+                            >
+                              <TextInput
+                                id="current-password"
+                                name="password"
+                                labelText="Password"
+                                errorText={passwordError}
+                                variant="password"
+                                onChange={(e) => {
+                                  setPassword(e.target.value);
+                                }}
+                                value={password}
+                              />
+                              <AlertOptions>
+                                <AlertDialog.Cancel asChild>
+                                  <Button type="button" variant="secondary">
+                                    <FiX />
+                                    <Spacer size={8} axis="horizontal" />
+                                    Cancel
+                                  </Button>
+                                </AlertDialog.Cancel>
+                                <Button
+                                  name="checked-items"
+                                  value={JSON.stringify(checkedItems)}
+                                >
+                                  <FiCheck />
+                                  <Spacer size={8} axis="horizontal" />
+                                  Yes, delete reports
+                                </Button>
+                              </AlertOptions>
+                            </fetcher.Form>
+                          </RemoveAlertDialogContent>
+                        </AlertDialog.Root>
+                        <SubGroup>
+                          <Button
+                            variant="tertiary"
+                            onClick={onDownloadReports}
+                          >
+                            <FiDownload />
+                            <Spacer size={8} axis="horizontal" />
+                            Download reports
+                          </Button>
+                          <ProgressRoot>
+                            <Progress.Indicator
+                              progress={blobsPercent}
+                              // Don't transition resetting the progress bar to 0
+                              transition={blobs.number !== 0}
+                            />
+                          </ProgressRoot>
+                          {downloadStatus.text}
+                        </SubGroup>
+                      </Group>
+                    )}
+                  </Group>
+                  {checkedItems.length === 0 ? <span>Timestamp</span> : null}
+                </ListHeader>
+                {/* Render fallback for pagination */}
+                {navigation.location ? (
+                  fallbackList
+                ) : reportsDocs.docs.length ? (
+                  <List>
+                    {[...reportsDocs.docs].map((report) => {
+                      const { location, startTimestamp } = report.data();
+                      return (
+                        <ReportItem
+                          key={report.id}
+                          reportId={report.id}
+                          location={location}
+                          startTimestamp={startTimestamp}
+                          checkedAll={checkedAll}
+                          setCheckedAll={setCheckedAll}
+                          setCheckedItems={setCheckedItems}
+                          isAnyItemChecked={isAnyItemChecked}
+                        />
+                      );
+                    })}
+                  </List>
+                ) : (
+                  <ListMessage>No reports</ListMessage>
+                )}
+              </ListArea>
+            );
+          }}
+        </Await>
+      </React.Suspense>
+      <React.Suspense fallback={fallbackBottom}>
+        <Await
+          resolve={reportsData}
+          // Error displayed by reports suspense
+          errorElement={<></>}
+        >
+          {(reportsData) => {
+            // eslint-disable-next-line no-unused-vars
+            const [reportsDocs, _, allReportsAggregate] = reportsData;
+            const allReportsCount = allReportsAggregate?.data().count;
+
+            return (
+              <Bottom>
+                <Capacity>
+                  <Highlight>{allReportsCount}</Highlight>
+                  {" of "}
+                  <Highlight>{reportsConfiguration.capacity}</Highlight>
+                  {" reports saved "}
+                </Capacity>
                 <AlertDialog.Root
-                  open={removeReportsOpen}
-                  onOpenChange={setRemoveReportsOpen}
+                  open={removeAllReportsOpen}
+                  onOpenChange={setRemoveAllReportsOpen}
                 >
                   <AlertDialog.Trigger asChild>
                     <Button
-                      variant="tertiary"
-                      disabled={blobs.status === "pending"}
+                      disabled={
+                        fetcher.state !== "idle" || !reportsDocs.docs.length
+                      }
                     >
                       <FiTrash2 />
                       <Spacer size={8} axis="horizontal" />
-                      Delete reports
+                      Delete all reports
                     </Button>
                   </AlertDialog.Trigger>
                   <RemoveAlertDialogContent
                     header
                     title="Are you absolutely sure?"
-                    description="This action cannot be undone. This will permanently delete all selected reports from your account."
+                    description="This action cannot be undone. This will permanently delete all reports from your account."
                     onCloseAutoFocus={onRemoveReportsClose}
                   >
                     <fetcher.Form
                       method="post"
-                      onSubmit={onRemoveReports}
+                      onSubmit={onRemoveAllReports}
                       style={AlertDialog.contentChildrenStyles}
                     >
                       <TextInput
@@ -633,171 +800,20 @@ function Reports() {
                             Cancel
                           </Button>
                         </AlertDialog.Cancel>
-                        <Button
-                          name="checked-items"
-                          value={JSON.stringify(checkedItems)}
-                        >
+                        <Button>
                           <FiCheck />
                           <Spacer size={8} axis="horizontal" />
-                          Yes, delete reports
+                          Yes, delete all reports
                         </Button>
                       </AlertOptions>
                     </fetcher.Form>
                   </RemoveAlertDialogContent>
                 </AlertDialog.Root>
-                <SubGroup>
-                  <Button variant="tertiary" onClick={onDownloadReports}>
-                    <FiDownload />
-                    <Spacer size={8} axis="horizontal" />
-                    Download reports
-                  </Button>
-                  <ProgressRoot>
-                    <Progress.Indicator
-                      progress={blobsPercent}
-                      // Don't transition resetting the progress bar to 0
-                      transition={blobs.number !== 0}
-                    />
-                  </ProgressRoot>
-                  {downloadStatus.text}
-                </SubGroup>
-              </Group>
-            )}
-          </Group>
-          {checkedItems.length === 0 ? <span>Timestamp</span> : null}
-        </ListHeader>
-        {/* Render fallback for pagination */}
-        {navigation.location ? (
-          fallbackList
-        ) : (
-          <React.Suspense fallback={fallbackList}>
-            <Await
-              resolve={reportsData}
-              errorElement={
-                <ErrorElement>
-                  <FiAlertTriangle />
-                  Error loading reports
-                </ErrorElement>
-              }
-            >
-              {(reportsData) => {
-                const [reportsDocs] = reportsData;
-                return (
-                  <List aria-live="polite" aria-atomic="true">
-                    {/* Ensure data has loaded */}
-                    {[...reportsDocs.docs].map((report) => {
-                      const { location, startTimestamp } = report.data();
-                      return (
-                        <ReportItem
-                          key={report.id}
-                          reportId={report.id}
-                          location={location}
-                          startTimestamp={startTimestamp}
-                          checkedAll={checkedAll}
-                          setCheckedAll={setCheckedAll}
-                          setCheckedItems={setCheckedItems}
-                          isAnyItemChecked={isAnyItemChecked}
-                        />
-                      );
-                    })}
-                  </List>
-                );
-              }}
-            </Await>
-          </React.Suspense>
-        )}
-      </ListArea>
-      <Bottom>
-        <React.Suspense
-          fallback={<Fallback.Text style={{ "--text-length": "192px" }} />}
-        >
-          <Await
-            resolve={reportsData}
-            // Error displayed by reports suspense
-            errorElement={<></>}
-          >
-            {(reportsData) => {
-              // eslint-disable-next-line no-unused-vars
-              const [_1, _2, allReportsAggregate] = reportsData;
-              const allReportsCount = allReportsAggregate?.data().count;
-
-              return (
-                <Capacity>
-                  <Highlight>{allReportsCount}</Highlight>
-                  {" of "}
-                  <Highlight>{reportsConfiguration.capacity}</Highlight>
-                  {" reports saved "}
-                </Capacity>
-              );
-            }}
-          </Await>
-        </React.Suspense>
-        <AlertDialog.Root
-          open={removeAllReportsOpen}
-          onOpenChange={setRemoveAllReportsOpen}
-        >
-          <React.Suspense
-            fallback={
-              <Button disabled>
-                <FiTrash2 />
-                <Spacer size={8} axis="horizontal" />
-                Delete all reports
-              </Button>
-            }
-          >
-            <Await
-              resolve={reportsData}
-              // Error displayed by reports suspense
-              errorElement={<></>}
-            >
-              <AlertDialog.Trigger asChild>
-                <Button disabled={fetcher.state !== "idle"}>
-                  <FiTrash2 />
-                  <Spacer size={8} axis="horizontal" />
-                  Delete all reports
-                </Button>
-              </AlertDialog.Trigger>
-            </Await>
-          </React.Suspense>
-          <RemoveAlertDialogContent
-            header
-            title="Are you absolutely sure?"
-            description="This action cannot be undone. This will permanently delete all reports from your account."
-            onCloseAutoFocus={onRemoveReportsClose}
-          >
-            <fetcher.Form
-              method="post"
-              onSubmit={onRemoveAllReports}
-              style={AlertDialog.contentChildrenStyles}
-            >
-              <TextInput
-                id="current-password"
-                name="password"
-                labelText="Password"
-                errorText={passwordError}
-                variant="password"
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                value={password}
-              />
-              <AlertOptions>
-                <AlertDialog.Cancel asChild>
-                  <Button type="button" variant="secondary">
-                    <FiX />
-                    <Spacer size={8} axis="horizontal" />
-                    Cancel
-                  </Button>
-                </AlertDialog.Cancel>
-                <Button>
-                  <FiCheck />
-                  <Spacer size={8} axis="horizontal" />
-                  Yes, delete all reports
-                </Button>
-              </AlertOptions>
-            </fetcher.Form>
-          </RemoveAlertDialogContent>
-        </AlertDialog.Root>
-      </Bottom>
+              </Bottom>
+            );
+          }}
+        </Await>
+      </React.Suspense>
       <Toast.Root
         open={toastOpen}
         onOpenChange={setToastOpen}
@@ -812,7 +828,6 @@ function Reports() {
 }
 
 const Wrapper = styled.div`
-  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -854,11 +869,35 @@ const PaginationButtons = styled.div`
   gap: 24px;
 `;
 
+const ListArea = styled.div`
+  flex: 1;
+  --header-padding-vertical: 16px;
+  --header-height: calc(
+    var(--header-padding-vertical) * 2 + max(24px, 1rem * var(--line-height))
+  );
+
+  overflow-y: auto;
+  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
+  scrollbar-width: thin;
+  ::-webkit-scrollbar {
+    width: 10px;
+    background-color: var(--color-gray-10);
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 999999px;
+    border: 2px solid var(--color-gray-10);
+    background-color: var(--color-gray-5);
+  }
+  ::-webkit-scrollbar-track {
+    margin: 2px 0;
+  }
+`;
+
 const ListHeader = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 16px 48px;
+  padding: var(--header-padding-vertical) 48px;
   background-color: var(--color-gray-10);
   color: var(--color-gray-2);
   position: sticky;
@@ -866,8 +905,27 @@ const ListHeader = styled.div`
   z-index: 1;
 `;
 
-const ErrorElement = styled.div`
-  height: calc(100% - (24px + 16px * 2));
+const ListMessage = styled.div`
+  // Account for sticky header
+  height: calc(100% - var(--header-height));
+  display: grid;
+  place-content: center;
+  font-size: ${18 / 16}rem;
+  color: var(--color-gray-4);
+`;
+
+const ReportsLoader = styled(FireLoader)`
+  & > svg {
+    ${Fallback.svg}
+  }
+
+  // Account for sticky header
+  height: calc(100% - var(--header-height));
+`;
+
+const ReportsError = styled.div`
+  // Account for sticky header
+  height: calc(100% - var(--header-height));
   display: grid;
   place-content: center;
   text-transform: uppercase;
@@ -908,27 +966,6 @@ const AlertOptions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 16px;
-`;
-
-const ListArea = styled.div`
-  flex: 1;
-
-  overflow-y: scroll;
-  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-  scrollbar-width: thin;
-
-  ::-webkit-scrollbar {
-    width: 10px;
-    background-color: var(--color-gray-10);
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 999999px;
-    border: 2px solid var(--color-gray-10);
-    background-color: var(--color-gray-5);
-  }
-  ::-webkit-scrollbar-track {
-    margin: 2px 0;
-  }
 `;
 
 const List = styled.ul`
