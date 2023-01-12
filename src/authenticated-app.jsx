@@ -49,7 +49,7 @@ const router = createBrowserRouter(
         <Route path="groups" element={<DashboardContainer />}>
           <Route index element={<Groups />} />
         </Route>
-        <Route path="settings" element={<Account />} />
+        <Route path="account" element={<Account />} />
       </Route>
       <Route element={<Layout type="outlet" />} errorElement={<NotFound />}>
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
