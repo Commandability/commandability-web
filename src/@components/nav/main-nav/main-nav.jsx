@@ -4,12 +4,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { zeroRightClassName } from "react-remove-scroll-bar";
-import {
-  FiChevronDown,
-  FiHelpCircle,
-  FiSettings,
-  FiLogOut,
-} from "react-icons/fi";
+import { FiChevronDown, FiHelpCircle, FiUsers, FiLogOut } from "react-icons/fi";
 
 import { useAuth } from "@context/auth-context";
 import * as NavBase from "@components/nav/nav-base";
@@ -215,8 +210,8 @@ function MainNav() {
                     </DropdownMenuAction>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <DropdownMenuAction to="/dashboard/settings">
-                      <FiSettings />
+                    <DropdownMenuAction to="/dashboard/account">
+                      <FiUsers />
                       Account
                     </DropdownMenuAction>
                   </DropdownMenuItem>
