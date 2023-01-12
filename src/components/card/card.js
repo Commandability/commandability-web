@@ -52,7 +52,7 @@ const Title = styled.div`
 
   @media ${QUERIES.phoneAndSmaller} {
     border-radius: var(--border-radius) var(--border-radius) 0 0;
-    width: 100%;
+    width: revert;
   }
 `;
 

@@ -456,7 +456,6 @@ const RadixDialogMenu = styled.div`
   -webkit-tap-highlight-color: transparent;
   padding: 24px 48px;
   padding-top: 16px;
-  width: 100%;
   box-shadow: var(--box-shadow);
 
   @media (prefers-reduced-motion: no-preference) {
@@ -531,6 +530,7 @@ const RadixDropdownMenuArrow = styled(RadixDropdownMenu.Arrow)`
 `;
 
 const RadixDropdownMenuGroup = styled(RadixDropdownMenu.Group)`
+  width: 100%;
   padding: 4px 0;
 `;
 
@@ -551,7 +551,6 @@ const RadixDropdownMenuItem = styled(RadixDropdownMenu.Item)`
 
 const DropdownMenuAction = styled(Link)`
   display: flex;
-  width: 100%;
   text-decoration: none;
   color: inherit;
 

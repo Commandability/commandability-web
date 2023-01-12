@@ -750,7 +750,6 @@ const Menu = styled.div`
   -webkit-tap-highlight-color: transparent;
   padding: 24px 48px;
   padding-top: 16px;
-  width: 100%;
   box-shadow: var(--box-shadow);
 
   @media (prefers-reduced-motion: no-preference) {

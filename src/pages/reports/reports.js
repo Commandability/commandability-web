@@ -894,7 +894,6 @@ const ListArea = styled.div`
 `;
 
 const ListHeader = styled.div`
-  width: 100%;
   display: flex;
   justify-content: space-between;
   padding: var(--header-padding-vertical) 48px;
@@ -975,7 +974,6 @@ const List = styled.ul`
 `;
 
 const Bottom = styled.div`
-  width: 100%;
   min-height: 100px;
   display: flex;
   justify-content: flex-end;

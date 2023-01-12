@@ -17,7 +17,6 @@ function DashboardContainer({ children }) {
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
   height: 100%;
   padding: 32px 16px;
 

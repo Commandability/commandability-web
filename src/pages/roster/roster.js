@@ -543,7 +543,6 @@ const Wrapper = styled.div`
 `;
 
 const Top = styled.div`
-  width: 100%;
   display: flex;
   align-items: flex-end;
   gap: 24px;
@@ -711,7 +710,6 @@ const AlertOptions = styled.div`
 `;
 
 const Bottom = styled.div`
-  width: 100%;
   min-height: 100px;
   display: flex;
   justify-content: flex-end;

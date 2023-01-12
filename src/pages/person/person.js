@@ -214,7 +214,6 @@ function Person() {
 }
 
 const Wrapper = styled.div`
-  width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: 96px 1fr 96px;
