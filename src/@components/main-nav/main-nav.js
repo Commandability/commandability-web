@@ -5,12 +5,7 @@ import { signOut } from "firebase/auth";
 import * as RadixDialog from "@radix-ui/react-dialog";
 import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
 import { zeroRightClassName } from "react-remove-scroll-bar";
-import {
-  FiChevronDown,
-  FiHelpCircle,
-  FiSettings,
-  FiLogOut,
-} from "react-icons/fi";
+import { FiChevronDown, FiHelpCircle, FiUsers, FiLogOut } from "react-icons/fi";
 
 import { useAuth } from "@context/auth-context";
 import * as Toast from "@components/toast";
@@ -184,8 +179,8 @@ function MainNav() {
                     </DropdownMenuAction>
                   </RadixDropdownMenuItem>
                   <RadixDropdownMenuItem asChild>
-                    <DropdownMenuAction to="/dashboard/settings">
-                      <FiSettings />
+                    <DropdownMenuAction to="/dashboard/account">
+                      <FiUsers />
                       Account
                     </DropdownMenuAction>
                   </RadixDropdownMenuItem>

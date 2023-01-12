@@ -51,7 +51,7 @@ const router = createBrowserRouter(
           <Route index element={<Groups />} />
           <Route path=":groupId" element={<Group />} />
         </Route>
-        <Route path="settings" element={<Account />} />
+        <Route path="account" element={<Account />} />
       </Route>
       <Route element={<Layout type="outlet" />} errorElement={<NotFound />}>
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
