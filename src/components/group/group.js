@@ -1,28 +1,18 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiPlus, FiTrash2, FiCheck, FiX } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import { updateDoc } from "firebase/firestore";
+import { FiChevronRight } from "react-icons/fi";
 
 import Spacer from "components/spacer";
 import UnstyledButton from "components/unstyled-button";
 import EditGroupDialogContent from "components/edit-group-dialog-content";
 import { useSnapshots } from "context/snapshot-context";
-import VisuallyHidden from "components/visually-hidden";
-import Button from "components/button";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogCancel,
-  AlertDialogContent,
-} from "components/alert-dialog";
 
 function Group({ groupData, groupId, userGroupData }) {
   const { snapshots } = useSnapshots();
   const [editGroupOpen, setEditGroupOpen] = React.useState(false);
-  const [removeGroupOpen, setRemoveGroupOpen] = React.useState(false);
-
-  const { [groupId]: _, ...newUserGroupData } = userGroupData;
 
   async function handleAddGroup() {
     await updateDoc(snapshots.user.ref, {
@@ -35,17 +25,6 @@ function Group({ groupData, groupId, userGroupData }) {
         },
       },
     });
-  }
-
-  async function handleRemoveGroup(event) {
-    event.preventDefault();
-    console.log(newUserGroupData);
-    await updateDoc(snapshots.user.ref, {
-      groups: {
-        ...newUserGroupData,
-      },
-    });
-    setRemoveGroupOpen(false);
   }
 
   let active;
@@ -82,30 +61,10 @@ function Group({ groupData, groupId, userGroupData }) {
             />
           </DialogContent>
         </Dialog>
-        <AlertDialog open={removeGroupOpen} onOpenChange={setRemoveGroupOpen}>
-          <AlertDialogTrigger asChild>
-            <CloseButton>
-              <VisuallyHidden>Close</VisuallyHidden>
-              <FiTrash2 />
-            </CloseButton>
-          </AlertDialogTrigger>
-          <GroupRemoveAlertDialogContent
-            header
-            title="Remove selected group?"
-            description="This action cannot be undone. This will remove the currently selected group."
-          >
-            <AlertOptions>
-              <AlertDialogCancel asChild>
-                <Button icon={FiX} variant="secondary">
-                  Cancel
-                </Button>
-              </AlertDialogCancel>
-              <Button type="submit" icon={FiCheck} onClick={handleRemoveGroup}>
-                Yes, delete group
-              </Button>
-            </AlertOptions>
-          </GroupRemoveAlertDialogContent>
-        </AlertDialog>
+        <ConfigureTab>
+          <ConfigureText>configure</ConfigureText>
+          <FiChevronRight />
+        </ConfigureTab>
       </Content>
     );
   } else if (active === false) {
@@ -125,8 +84,10 @@ const Wrapper = styled.li`
   width: 292px;
   border-radius: 8px;
   display: flex;
+  position: relative;
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
+  overflow: hidden;
   &:hover {
     background-color: var(--color-gray-9);
   }
@@ -209,40 +170,30 @@ const Text = styled.span`
   font-weight: bold;
 `;
 
-const CloseButton = styled(UnstyledButton)`
-  display: none;
-  position: absolute;
-  // The icon is 16px but its width and height are 24px for the hover circle size, so remove 8px to align with 24px padding
-  top: calc(24px - 8px);
-  right: calc(24px - 8px);
-  width: 24px;
-  height: 24px;
-  border-radius: 100%;
-  place-content: center;
-  color: var(--color-yellow-2);
-  @media (hover: hover) and (pointer: fine) {
-    ${EditGroupButton}:hover+& {
-      display: grid;
-    }
-    &:hover {
-      display: grid;
-      background-color: var(--color-yellow-9);
-    }
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-yellow-3);
-    border-color: var(--color-yellow-3);
-  }
-`;
-
-const GroupRemoveAlertDialogContent = styled(AlertDialogContent)`
-  width: 512px;
-`;
-
-const AlertOptions = styled.div`
+const ConfigureTab = styled.div`
   display: flex;
-  justify-content: flex-end;
-  gap: 16px;
+  position: absolute;
+  transition: 0.25s;
+  bottom: -30px;
+  height: 48px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-yellow-3);
+  pointer-events: none;
+  @media (hover: hover) and (pointer: fine) {
+    ${EditGroupButton}:hover ~ & {
+      transition: 0.25s;
+      bottom: 10px;
+    }
+  }
 `;
+
+const ConfigureText = styled.div`
+  font-size: ${16 / 16}rem;
+  font-weight: bold;
+  text-transform: uppercase;
+`;
+
 export default Group;

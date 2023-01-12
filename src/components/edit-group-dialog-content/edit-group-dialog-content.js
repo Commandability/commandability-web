@@ -1,12 +1,17 @@
 import * as React from "react";
 import styled from "styled-components";
 import { updateDoc } from "firebase/firestore";
+import { FiCheck, FiX, FiSave } from "react-icons/fi";
 
-import UnstyledButton from "components/unstyled-button";
 import { Select, SelectItem } from "components/select";
 import { useSnapshots } from "context/snapshot-context";
-
-const ANIMATION_DURATION = 300;
+import Button from "components/button";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogClose,
+} from "components/dialog";
 
 const selectValues = {
   zero: "No alert",
@@ -27,12 +32,24 @@ function EditGroupDialogContent({
   const { snapshots } = useSnapshots();
   const [groupName, setGroupName] = React.useState(groupData.name);
   const [alertTime, setAlertTime] = React.useState(groupData.alert);
+  const [removeGroupOpen, setRemoveGroupOpen] = React.useState(false);
+
   let defaultAlert = selectValues.zero;
   if (groupData.alert !== 0) {
     defaultAlert = groupData.alert.toString();
   }
 
-  console.log(groupData.name);
+  const { [groupId]: _, ...newUserGroupData } = userGroupData;
+
+  async function handleRemoveGroup(event) {
+    event.preventDefault();
+    await updateDoc(snapshots.user.ref, {
+      groups: {
+        ...newUserGroupData,
+      },
+    });
+    setRemoveGroupOpen(false);
+  }
 
   async function handleSubmitChanges(event) {
     event.preventDefault();
@@ -91,7 +108,38 @@ function EditGroupDialogContent({
               </div>
             </InputGroup>
           </FormInputs>
-          <SubmitButton type="submit">Save Changes</SubmitButton>
+          <SubmitWrapper>
+            <Dialog open={removeGroupOpen} onOpenChange={setRemoveGroupOpen}>
+              <DialogTrigger asChild>
+                <CloseButton variant="secondary" icon={FiX}>
+                  Delete Group
+                </CloseButton>
+              </DialogTrigger>
+              <GroupRemoveAlertDialogContent
+                header
+                title="Remove selected group?"
+                description="This action cannot be undone. This will remove the currently selected group."
+              >
+                <AlertOptions>
+                  <DialogClose asChild>
+                    <Button icon={FiX} variant="secondary">
+                      Cancel
+                    </Button>
+                  </DialogClose>
+                  <Button
+                    type="submit"
+                    icon={FiCheck}
+                    onClick={handleRemoveGroup}
+                  >
+                    Yes, delete group
+                  </Button>
+                </AlertOptions>
+              </GroupRemoveAlertDialogContent>
+            </Dialog>
+            <SubmitButton variant="primary" icon={FiSave}>
+              Save Changes
+            </SubmitButton>
+          </SubmitWrapper>
         </AccountForm>
       </Content>
     </Container>
@@ -99,7 +147,7 @@ function EditGroupDialogContent({
 }
 
 const Container = styled.div`
-  width: 448px;
+  width: 464px;
   display: flex;
   flex-direction: column;
   background-color: var(--color-gray-10);
@@ -155,27 +203,24 @@ const Input = styled.input`
   }
 `;
 
-const SubmitButton = styled(UnstyledButton)`
-  padding: 12px;
-  background-color: var(--color-yellow-2);
-  border-radius: 8px;
-  color: var(--color-white);
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  text-align: center;
+const SubmitButton = styled(Button)``;
 
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      background-color: var(--color-yellow-3);
-    }
-  }
+const CloseButton = styled(Button)``;
 
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: background-color;
-    transition: background-color ${ANIMATION_DURATION}ms;
-  }
+const GroupRemoveAlertDialogContent = styled(DialogContent)`
+  width: 640px;
+`;
+
+const AlertOptions = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+`;
+
+const SubmitWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 24px;
 `;
 
 export default EditGroupDialogContent;
