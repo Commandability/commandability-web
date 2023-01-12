@@ -103,8 +103,10 @@ const RadixToastRoot = styled(RadixToast.Root)`
 `;
 
 export const Icon = styled.div`
+  --size: ${24 / 16}rem;
   grid-area: icon;
-  font-size: ${24 / 16}rem;
+  min-width: var(--size);
+  font-size: var(--size);
   color: var(--color-yellow-2);
   border: solid 2px var(--color-yellow-4);
   border-radius: var(--border-radius);
