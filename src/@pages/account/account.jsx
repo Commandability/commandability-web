@@ -142,7 +142,7 @@ const Options = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-top: 32px;
+  margin-top: 72px;
 `;
 
 export default Account;
