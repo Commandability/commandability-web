@@ -4,5 +4,6 @@ export {
   Portal,
   Overlay,
   Content,
+  Close,
   contentChildrenStyles,
 } from "./dialog";

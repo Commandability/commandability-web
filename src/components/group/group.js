@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
 import { FiPlus } from "react-icons/fi";
-import { Dialog, DialogTrigger, DialogContent } from "components/dialog";
 import { updateDoc } from "firebase/firestore";
 import { FiChevronRight } from "react-icons/fi";
 
+import * as Dialog from "components/dialog";
 import Spacer from "components/spacer";
 import UnstyledButton from "components/unstyled-button";
 import EditGroupDialogContent from "components/edit-group-dialog-content";
@@ -44,23 +44,27 @@ function Group({ groupData, groupId, userGroupData }) {
           <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
           <AlertText>{alertTime === 0 ? "No alerts" : "Minutes"}</AlertText>
         </AlertWrapper>
-        <Dialog open={editGroupOpen} onOpenChange={setEditGroupOpen}>
-          <DialogTrigger asChild>
+        <Dialog.Root open={editGroupOpen} onOpenChange={setEditGroupOpen}>
+          <Dialog.Trigger asChild>
             <EditGroupButton type="button" />
-          </DialogTrigger>
-          <DialogContent
-            header
-            title="Edit Group"
-            description="Edit the group display name and alert time."
-          >
-            <EditGroupDialogContent
-              groupData={groupData}
-              groupId={groupId}
-              userGroupData={userGroupData}
-              closeDialog={() => setEditGroupOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
+          </Dialog.Trigger>
+          <Dialog.Portal>
+            <Dialog.Overlay>
+              <Dialog.Content
+                header
+                title="Edit Group"
+                description="Edit the group display name and alert time."
+              >
+                <EditGroupDialogContent
+                  groupData={groupData}
+                  groupId={groupId}
+                  userGroupData={userGroupData}
+                  closeDialog={() => setEditGroupOpen(false)}
+                />
+              </Dialog.Content>
+            </Dialog.Overlay>
+          </Dialog.Portal>
+        </Dialog.Root>
         <ConfigureTab>
           <ConfigureText>configure</ConfigureText>
           <FiChevronRight />

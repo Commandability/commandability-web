@@ -49,7 +49,6 @@ const router = createBrowserRouter(
         </Route>
         <Route path="groups" element={<DashboardContainer />}>
           <Route index element={<Groups />} />
-          <Route path=":groupId" element={<Group />} />
         </Route>
         <Route path="settings" element={<Settings />} />
       </Route>

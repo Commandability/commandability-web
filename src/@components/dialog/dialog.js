@@ -9,6 +9,7 @@ import VisuallyHidden from "@components/visually-hidden";
 export const Root = RadixDialog.Root;
 export const Trigger = RadixDialog.Trigger;
 export const Portal = RadixDialog.Portal;
+export const Close = RadixDialog.Close;
 
 const fadeIn = keyframes`
   from {

@@ -3,15 +3,10 @@ import styled from "styled-components";
 import { updateDoc } from "firebase/firestore";
 import { FiCheck, FiX, FiSave } from "react-icons/fi";
 
-import { Select, SelectItem } from "components/select";
+import * as Select from "components/select";
 import { useSnapshots } from "context/snapshot-context";
 import Button from "components/button";
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogClose,
-} from "components/dialog";
+import * as Dialog from "components/dialog";
 
 const selectValues = {
   zero: "No alert",
@@ -91,41 +86,44 @@ function EditGroupDialogContent({
             <InputGroup>
               <Label htmlFor="alert-time">Alert time</Label>
               <div style={{ width: "280px" }}>
-                <Select
+                <Select.Root
                   select={alertTime}
                   onValueChange={(alertTime) => setAlertTime(alertTime)}
                   defaultValue={defaultAlert}
                   aria-label="Alert time selector"
                 >
-                  <SelectItem value={selectValues.zero}>No alert</SelectItem>
-                  <SelectItem value={selectValues.five}>5</SelectItem>
-                  <SelectItem value={selectValues.ten}>10</SelectItem>
-                  <SelectItem value={selectValues.fifteen}>15</SelectItem>
-                  <SelectItem value={selectValues.twenty}>20</SelectItem>
-                  <SelectItem value={selectValues.twentyFive}>25</SelectItem>
-                  <SelectItem value={selectValues.thirty}>30</SelectItem>
-                </Select>
+                  <Select.Item value={selectValues.zero}>No alert</Select.Item>
+                  <Select.Item value={selectValues.five}>5</Select.Item>
+                  <Select.Item value={selectValues.ten}>10</Select.Item>
+                  <Select.Item value={selectValues.fifteen}>15</Select.Item>
+                  <Select.Item value={selectValues.twenty}>20</Select.Item>
+                  <Select.Item value={selectValues.twentyFive}>25</Select.Item>
+                  <Select.Item value={selectValues.thirty}>30</Select.Item>
+                </Select.Root>
               </div>
             </InputGroup>
           </FormInputs>
           <SubmitWrapper>
-            <Dialog open={removeGroupOpen} onOpenChange={setRemoveGroupOpen}>
-              <DialogTrigger asChild>
+            <Dialog.Root
+              open={removeGroupOpen}
+              onOpenChange={setRemoveGroupOpen}
+            >
+              <Dialog.Trigger asChild>
                 <CloseButton variant="secondary" icon={FiX}>
                   Delete Group
                 </CloseButton>
-              </DialogTrigger>
+              </Dialog.Trigger>
               <GroupRemoveAlertDialogContent
                 header
                 title="Remove selected group?"
                 description="This action cannot be undone. This will remove the currently selected group."
               >
                 <AlertOptions>
-                  <DialogClose asChild>
+                  <Dialog.Close asChild>
                     <Button icon={FiX} variant="secondary">
                       Cancel
                     </Button>
-                  </DialogClose>
+                  </Dialog.Close>
                   <Button
                     type="submit"
                     icon={FiCheck}
@@ -135,7 +133,7 @@ function EditGroupDialogContent({
                   </Button>
                 </AlertOptions>
               </GroupRemoveAlertDialogContent>
-            </Dialog>
+            </Dialog.Root>
             <SubmitButton variant="primary" icon={FiSave}>
               Save Changes
             </SubmitButton>
@@ -207,7 +205,7 @@ const SubmitButton = styled(Button)``;
 
 const CloseButton = styled(Button)``;
 
-const GroupRemoveAlertDialogContent = styled(DialogContent)`
+const GroupRemoveAlertDialogContent = styled(Dialog.Content)`
   width: 640px;
 `;
 
