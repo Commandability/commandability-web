@@ -57,7 +57,6 @@ import SearchInput from "components/search-input";
 import TextInput from "components/text-input";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
-import Spacer from "components/spacer";
 import ReportItem, { FallbackItem } from "components/report-item";
 
 export const REPORTS_CONFIGURATION = {
@@ -475,7 +474,6 @@ function Reports() {
       <Fallback.Text style={{ "--text-length": "192px" }} />
       <Button disabled>
         <FiTrash2 />
-        <Spacer size={8} axis="horizontal" />
         Delete all reports
       </Button>
     </Bottom>
@@ -638,7 +636,6 @@ function Reports() {
                               disabled={blobs.status === "pending"}
                             >
                               <FiTrash2 />
-                              <Spacer size={8} axis="horizontal" />
                               Delete reports
                             </Button>
                           </AlertDialog.Trigger>
@@ -668,7 +665,6 @@ function Reports() {
                                 <AlertDialog.Cancel asChild>
                                   <Button type="button" variant="secondary">
                                     <FiX />
-                                    <Spacer size={8} axis="horizontal" />
                                     Cancel
                                   </Button>
                                 </AlertDialog.Cancel>
@@ -677,7 +673,6 @@ function Reports() {
                                   value={JSON.stringify(checkedItems)}
                                 >
                                   <FiCheck />
-                                  <Spacer size={8} axis="horizontal" />
                                   Yes, delete reports
                                 </Button>
                               </AlertOptions>
@@ -690,7 +685,6 @@ function Reports() {
                             onClick={onDownloadReports}
                           >
                             <FiDownload />
-                            <Spacer size={8} axis="horizontal" />
                             Download reports
                           </Button>
                           <ProgressRoot>
@@ -766,7 +760,6 @@ function Reports() {
                       }
                     >
                       <FiTrash2 />
-                      <Spacer size={8} axis="horizontal" />
                       Delete all reports
                     </Button>
                   </AlertDialog.Trigger>
@@ -796,13 +789,11 @@ function Reports() {
                         <AlertDialog.Cancel asChild>
                           <Button type="button" variant="secondary">
                             <FiX />
-                            <Spacer size={8} axis="horizontal" />
                             Cancel
                           </Button>
                         </AlertDialog.Cancel>
                         <Button>
                           <FiCheck />
-                          <Spacer size={8} axis="horizontal" />
                           Yes, delete all reports
                         </Button>
                       </AlertOptions>

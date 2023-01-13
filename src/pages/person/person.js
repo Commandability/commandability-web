@@ -16,7 +16,6 @@ import * as Dialog from "components/dialog";
 import TextInput from "components/text-input";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
-import Spacer from "components/spacer";
 import * as Fallback from "components/fallback";
 
 function Person() {
@@ -125,7 +124,6 @@ function Person() {
         <Dialog.Trigger asChild>
           <EditButton disabled={user.status !== "resolved"}>
             <FiEdit />
-            <Spacer size={8} axis="horizontal" />
             Edit Person
           </EditButton>
         </Dialog.Trigger>
@@ -168,7 +166,6 @@ function Person() {
                 </DialogInputs>
                 <Button type="submit">
                   <FiSave />
-                  <Spacer size={8} axis="horizontal" />
                   Save person
                 </Button>
               </DialogForm>

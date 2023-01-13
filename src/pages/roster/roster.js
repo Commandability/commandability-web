@@ -26,7 +26,6 @@ import TextInput from "components/text-input";
 import Checkbox from "components/checkbox";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
-import Spacer from "components/spacer";
 import SearchInput from "components/search-input";
 import RosterItem from "components/roster-item";
 import * as Fallback from "components/fallback";
@@ -304,7 +303,6 @@ function Roster() {
           <Dialog.Trigger asChild>
             <Button>
               <FiUserPlus />
-              <Spacer size={8} axis="horizontal" />
               Add person
             </Button>
           </Dialog.Trigger>
@@ -346,7 +344,6 @@ function Roster() {
                   </DialogInputs>
                   <Button type="submit">
                     <FiSave />
-                    <Spacer size={8} axis="horizontal" />
                     Save person
                   </Button>
                 </DialogForm>
@@ -375,7 +372,6 @@ function Roster() {
                 <AlertDialog.Trigger asChild>
                   <Button variant="tertiary">
                     <FiTrash2 />
-                    <Spacer size={8} axis="horizontal" />
                     Delete personnel
                   </Button>
                 </AlertDialog.Trigger>
@@ -388,14 +384,12 @@ function Roster() {
                     <AlertDialog.Cancel asChild>
                       <Button variant="secondary">
                         <FiX />
-                        <Spacer size={8} axis="horizontal" />
                         Cancel
                       </Button>
                     </AlertDialog.Cancel>
                     <AlertDialog.Action asChild>
                       <Button onClick={onRemovePersonnelAction}>
                         <FiCheck />
-                        <Spacer size={8} axis="horizontal" />
                         Yes, delete personnel
                       </Button>
                     </AlertDialog.Action>
@@ -437,7 +431,6 @@ function Roster() {
           <Dialog.Trigger asChild>
             <Button>
               <FiUpload />
-              <Spacer size={8} axis="horizontal" />
               Import CSV
             </Button>
           </Dialog.Trigger>
@@ -475,7 +468,6 @@ function Roster() {
                   <DialogActions>
                     <Button onClick={importCSVOnClick}>
                       <FiArrowRight />
-                      <Spacer size={8} axis="horizontal" />
                       Continue
                     </Button>
                   </DialogActions>
@@ -509,7 +501,6 @@ function Roster() {
               <AlertDialog.Action asChild>
                 <Button onClick={() => setImportStatus(null)}>
                   <FiCheck />
-                  <Spacer size={8} axis="horizontal" />
                   Ok
                 </Button>
               </AlertDialog.Action>
@@ -518,7 +509,6 @@ function Roster() {
         </AlertDialog.Root>
         <Button download="personnel.csv" href={downloadLink}>
           <FiDownload />
-          <Spacer size={8} axis="horizontal" />
           Export CSV
         </Button>
       </Bottom>

@@ -18,7 +18,6 @@ import useRect from "hooks/use-rect";
 import UnstyledButton from "components/unstyled-button";
 import VisuallyHidden from "components/visually-hidden";
 import MenuButton from "components/menu-button";
-import Spacer from "components/spacer";
 import * as Dialog from "components/dialog";
 import AccountDialogContent, {
   accountContentType,
@@ -181,14 +180,12 @@ function MainNav() {
                       href="mailto:support@commandability.app?"
                     >
                       <FiHelpCircle />
-                      <Spacer axis="horizontal" size={8} />
                       Contact us
                     </DropdownMenuAction>
                   </RadixDropdownMenuItem>
                   <RadixDropdownMenuItem asChild>
                     <DropdownMenuAction to="/dashboard/settings">
                       <FiSettings />
-                      <Spacer axis="horizontal" size={8} />
                       Settings
                     </DropdownMenuAction>
                   </RadixDropdownMenuItem>
@@ -201,7 +198,6 @@ function MainNav() {
                       onClick={handleSignOut}
                     >
                       <FiLogOut />
-                      <Spacer axis="horizontal" size={8} />
                       Sign out
                     </DropdownMenuAction>
                   </RadixDropdownMenuItem>
@@ -551,6 +547,7 @@ const RadixDropdownMenuItem = styled(RadixDropdownMenu.Item)`
 
 const DropdownMenuAction = styled(Link)`
   display: flex;
+  gap: 8px;
   text-decoration: none;
   color: inherit;
 

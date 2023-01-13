@@ -120,6 +120,7 @@ const Button = React.forwardRef(
 const ButtonWrapper = styled.button`
   display: flex;
   align-items: center;
+  gap: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   letter-spacing: 0.05em;

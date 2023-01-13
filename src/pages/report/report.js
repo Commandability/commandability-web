@@ -10,7 +10,6 @@ import FireLoader from "components/fire-loader";
 import * as Fallback from "components/fallback";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
-import Spacer from "components/spacer";
 
 async function getReport(uid, reportId) {
   const blob = await getBlob(ref(storage, `users/${uid}/reports/${reportId}`));
@@ -53,7 +52,6 @@ function Report() {
         disabled={downloadLink ? false : true}
       >
         <FiDownload />
-        <Spacer size={8} axis="horizontal" />
         Download report
       </ExportButton>
       <Contents>
