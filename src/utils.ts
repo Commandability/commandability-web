@@ -1,6 +1,6 @@
-/**
- * Utility functions
- */
+/*
+  Utility functions
+*/
 
 /**
  * Get a random integer between min and max

@@ -1,3 +1,7 @@
+/*
+  Constants
+*/
+
 type Color = `${number} ${number}% ${number}%`;
 type Shade = {
   [index: number]: Color;

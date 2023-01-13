@@ -20,7 +20,7 @@ import {
   limitToLast,
   getCountFromServer,
 } from "firebase/firestore";
-import { ref, listAll, deleteObject, getDownloadURL } from "firebase/storage";
+import { ref, deleteObject, getDownloadURL } from "firebase/storage";
 import {
   defer,
   useLoaderData,
@@ -45,6 +45,7 @@ import { db, storage } from "firebase.js";
 import { debounce, sum } from "utils";
 import { useAuth } from "context/auth-context";
 import { useSnapshots } from "context/snapshot-context";
+import { deleteAllReports } from "helpers/reports.helpers";
 import * as Toast from "components/toast";
 import * as Select from "components/select";
 import * as AlertDialog from "components/alert-dialog";
@@ -167,21 +168,7 @@ export async function action({ request }) {
       await deleteObject(itemRef);
     }
   } else {
-    // Remove firestore metadata
-    const batch = writeBatch(db);
-    const reportsSnapshot = await getDocs(reportsRef);
-    reportsSnapshot.docs.forEach((item) => {
-      batch.delete(doc(reportsRef, item.id));
-    });
-    await batch.commit();
-
-    // Remove files from storage
-    const listRef = ref(storage, `users/${currentUser.uid}/reports/`);
-    const listResults = await listAll(listRef);
-    const promises = listResults.items.map((itemRef) => {
-      return deleteObject(itemRef);
-    });
-    await Promise.all(promises);
+    await deleteAllReports(currentUser.uid);
   }
 }
 
