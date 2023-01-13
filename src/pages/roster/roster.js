@@ -144,7 +144,7 @@ function Roster() {
   async function onAddPersonSubmit(e) {
     e.preventDefault();
 
-    if (!firstName || !lastName || !badge) return;
+    if (!firstName || !badge) return;
 
     setAction("pending");
     setAddPersonOpen(false);
@@ -329,7 +329,6 @@ function Roster() {
                       labelText="Last name"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
-                      errorText={lastName ? "" : "Please enter a last name"}
                     />
                     <TextInput
                       id="shift-input"
