@@ -20,7 +20,7 @@ import {
   limitToLast,
   getCountFromServer,
 } from "firebase/firestore";
-import { ref, deleteObject, getDownloadURL } from "firebase/storage";
+import { ref, listAll, deleteObject, getDownloadURL } from "firebase/storage";
 import {
   defer,
   useLoaderData,
@@ -41,9 +41,8 @@ import {
 } from "react-icons/fi";
 import * as JSZip from "jszip";
 
-import { db } from "firebase.js";
+import { db, storage } from "firebase.js";
 import { debounce, sum } from "utils";
-import { storage } from "firebase.js";
 import { useAuth } from "context/auth-context";
 import { useSnapshots } from "context/snapshot-context";
 import * as Toast from "components/toast";
@@ -175,8 +174,10 @@ export async function action({ request }) {
       batch.delete(doc(reportsRef, item.id));
     });
     await batch.commit();
+
     // Remove files from storage
-    const listResults = await reportsRef.listAll();
+    const listRef = ref(storage, `users/${currentUser.uid}/reports/`);
+    const listResults = await listAll(listRef);
     const promises = listResults.items.map((itemRef) => {
       return deleteObject(itemRef);
     });
@@ -339,13 +340,18 @@ function Reports() {
     setCheckedItems([]);
   }
 
-  async function onRemoveAllReports() {
-    setIsRemovingReports(true);
-  }
-
   function onRemoveReportsClose() {
     setPassword("");
     setPasswordError("");
+  }
+
+  async function onRemoveAllReportsPressed() {
+    setCheckedAll({ status: false, origin: "form" });
+    setCheckedItems([]);
+  }
+
+  async function onRemoveAllReports() {
+    setIsRemovingReports(true);
   }
 
   const handleSearchChange = React.useMemo(
@@ -755,6 +761,7 @@ function Reports() {
                 >
                   <AlertDialog.Trigger asChild>
                     <Button
+                      onClick={onRemoveAllReportsPressed}
                       disabled={
                         fetcher.state !== "idle" || !reportsDocs.docs.length
                       }
