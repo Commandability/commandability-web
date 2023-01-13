@@ -60,10 +60,8 @@ const swipeOut = keyframes`
 export function Root({ children, title, description, ...props }) {
   return (
     <RadixToastRoot {...props}>
-      <Content>
-        {title ? <Title>{title}</Title> : null}
-        {description ? <Description>{description}</Description> : null}
-      </Content>
+      {title ? <Title>{title}</Title> : null}
+      {description ? <Description>{description}</Description> : null}
       {children}
     </RadixToastRoot>
   );
@@ -76,7 +74,9 @@ const RadixToastRoot = styled(RadixToast.Root)`
   position: relative;
   padding: 16px;
   display: grid;
-  grid-template-areas: "icon content buttons" "icon content buttons";
+  grid-template-areas:
+    "icon title buttons"
+    "icon description buttons";
   grid-template-columns: max-content auto max-content;
   column-gap: 16px;
   align-items: center;
@@ -113,17 +113,14 @@ export const Icon = styled.div`
   padding: 4px;
 `;
 
-const Content = styled.div`
-  font-size: ${16 / 16}rem;
-  grid-area: content;
-`;
-
 const Title = styled(RadixToast.Title)`
+  grid-area: title;
   font-weight: bold;
   color: var(--color-gray-1);
 `;
 
 const Description = styled(RadixToast.Description)`
+  grid-area: description;
   color: var(--color-gray-3);
 `;
 
