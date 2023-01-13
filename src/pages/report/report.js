@@ -6,6 +6,8 @@ import { getAuth } from "firebase/auth";
 import { ref, getBlob } from "firebase/storage";
 
 import { storage } from "firebase.js";
+import FireLoader from "components/fire-loader";
+import * as Fallback from "components/fallback";
 import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
@@ -24,7 +26,7 @@ export async function loader({ params }) {
 function Report() {
   const loaderData = useLoaderData();
 
-  const [downloadLink, setDownloadLink] = React.useState();
+  const [downloadLink, setDownloadLink] = React.useState("");
 
   React.useEffect(() => {
     async function effect() {
@@ -45,13 +47,17 @@ function Report() {
         <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
-      <ExportButton download="report.txt" href={downloadLink}>
+      <ExportButton
+        download="report.txt"
+        href={downloadLink}
+        disabled={downloadLink ? false : true}
+      >
         <FiDownload />
         <Spacer size={8} axis="horizontal" />
         Download report
       </ExportButton>
       <Contents>
-        <React.Suspense fallback={<></>}>
+        <React.Suspense fallback={<ReportsLoader />}>
           <Await
             resolve={loaderData.report}
             // Error displayed by reports suspense
@@ -75,6 +81,12 @@ const Wrapper = styled.div`
   grid-template-columns: 96px 1fr 96px;
   grid-template-rows: 128px 1fr;
   position: relative;
+`;
+
+const ReportsLoader = styled(FireLoader)`
+  & > svg {
+    ${Fallback.svg}
+  }
 `;
 
 const Back = styled(Button)`
