@@ -135,8 +135,8 @@ function Roster() {
     setBadge("");
   }
 
-  function addPersonnel(personnel) {
-    return updateDoc(user.ref, {
+  async function addPersonnel(personnel) {
+    return await updateDoc(user.ref, {
       personnel: arrayUnion(...personnel),
     });
   }
@@ -176,8 +176,8 @@ function Roster() {
     setAction("resolved");
   }
 
-  function removePersonnel(personnel) {
-    return updateDoc(user.ref, {
+  async function removePersonnel(personnel) {
+    return await updateDoc(user.ref, {
       personnel: arrayRemove(...personnel),
     });
   }
