@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { useLoaderData } from "react-router-dom";
+import { defer, useLoaderData, Await } from "react-router-dom";
 import { FiArrowLeft, FiDownload } from "react-icons/fi";
 import { getAuth } from "firebase/auth";
 import { ref, getBlob } from "firebase/storage";
@@ -10,25 +10,34 @@ import Button from "components/button";
 import VisuallyHidden from "components/visually-hidden";
 import Spacer from "components/spacer";
 
+async function getReport(uid, reportId) {
+  const blob = await getBlob(ref(storage, `users/${uid}/reports/${reportId}`));
+  return await blob.text();
+}
+
 export async function loader({ params }) {
   const { currentUser } = getAuth();
-  const result = await getBlob(
-    ref(storage, `users/${currentUser?.uid}/reports/${params.reportId}`)
-  );
-  return await result.text();
+
+  return defer({ report: getReport(currentUser?.uid, params.reportId) });
 }
 
 function Report() {
-  const report = useLoaderData();
+  const loaderData = useLoaderData();
 
   const [downloadLink, setDownloadLink] = React.useState();
 
   React.useEffect(() => {
-    const data = new Blob([report], {
-      type: "text/plain",
-    });
-    setDownloadLink(window.URL.createObjectURL(data));
-  }, [report]);
+    async function effect() {
+      const data = await loaderData;
+      const report = await data.report;
+      const blob = new Blob([report], {
+        type: "text/plain",
+      });
+      setDownloadLink(window.URL.createObjectURL(blob));
+    }
+
+    effect();
+  }, [loaderData]);
 
   return (
     <Wrapper>
@@ -41,7 +50,19 @@ function Report() {
         <Spacer size={8} axis="horizontal" />
         Download report
       </ExportButton>
-      <Contents>{report}</Contents>
+      <Contents>
+        <React.Suspense fallback={<></>}>
+          <Await
+            resolve={loaderData.report}
+            // Error displayed by reports suspense
+            errorElement={<></>}
+          >
+            {(report) => {
+              return <>{report}</>;
+            }}
+          </Await>
+        </React.Suspense>
+      </Contents>
     </Wrapper>
   );
 }
