@@ -518,22 +518,25 @@ const TogglePasswordButton = styled(UnstyledButton)`
   padding: 4px;
 
   & > svg {
-    stroke: var(--color-gray-2);
+    stroke: var(--color-gray-4);
   }
 
   ${Input}:focus-visible + & {
     & > svg {
-      stroke: var(--color-yellow-3);
+      stroke: var(--color-yellow-4);
     }
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       border-radius: 100%;
-      background-color: var(--color-gray-9);
 
-      ${Input}:focus-visible + & {
-        background-color: var(--color-yellow-9);
+      & > svg {
+        stroke: var(--color-gray-2);
+
+        ${Input}:focus-visible + & {
+          stroke: var(--color-yellow-2);
+        }
       }
     }
   }

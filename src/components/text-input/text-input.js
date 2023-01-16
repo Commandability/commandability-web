@@ -102,13 +102,16 @@ const ToggleVisibilityButton = styled(UnstyledButton)`
   padding: 4px;
 
   & > svg {
-    stroke: var(--color-yellow-3);
+    stroke: var(--color-yellow-4);
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       border-radius: 100%;
-      background-color: var(--color-yellow-9);
+
+      & > svg {
+        stroke: var(--color-yellow-2);
+      }
     }
   }
 `;
