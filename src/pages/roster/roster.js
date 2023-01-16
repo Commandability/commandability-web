@@ -7,6 +7,7 @@ import {
   FiTrash2,
   FiArrowRight,
   FiAlertTriangle,
+  FiHardDrive,
   FiX,
   FiCheck,
   FiUpload,
@@ -420,7 +421,10 @@ function Roster() {
                 ))}
             </List>
           ) : (
-            <ListMessage>No personnel</ListMessage>
+            <ListMessage>
+              <FiHardDrive />
+              No personnel
+            </ListMessage>
           )
         ) : (
           fallbackList
@@ -653,10 +657,17 @@ const ListHeader = styled.div`
 const ListMessage = styled.div`
   // Account for sticky header
   height: calc(100% - var(--header-height));
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   font-size: ${18 / 16}rem;
   color: var(--color-gray-4);
+
+  & > svg {
+    font-size: ${24 / 16}rem;
+    stroke: var(--color-gray-6);
+  }
 `;
 
 const PersonnelLoader = styled(FireLoader)`
