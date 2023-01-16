@@ -68,6 +68,7 @@ const RadixAlertDialogOverlay = styled(RadixAlertDialog.Overlay)`
   inset: 0;
   display: grid;
   place-content: center;
+  backdrop-filter: blur(1px);
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;
