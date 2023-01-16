@@ -7,7 +7,6 @@ import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import { useAuth } from "context/auth-context";
 import { useInitialLoad } from "context/initial-load-context";
-import * as Toast from "components/toast";
 import useRect from "hooks/use-rect";
 import useScroll from "hooks/use-scroll";
 import UnstyledButton from "components/unstyled-button";
@@ -31,6 +30,8 @@ function LandingNav({
   featuresInView,
   howItWorksInView,
   footerInView,
+  setToastState,
+  setToastOpen,
 }) {
   const { hash } = useLocation();
   const { user } = useAuth();
@@ -61,13 +62,6 @@ function LandingNav({
 
   const [renderTimeout, setRenderTimeout] = React.useState(true);
   const [scrolled, setScrolled] = React.useState(!initialLoad);
-
-  const [toastState, setToastState] = React.useState({
-    title: "",
-    description: "",
-    icon: null,
-  });
-  const [toastOpen, setToastOpen] = React.useState(false);
 
   function activeReducer(state, action) {
     switch (action.type) {
@@ -532,19 +526,6 @@ function LandingNav({
           )}
         </AccountOptions>
       </RightSide>
-      <Toast.Root
-        open={toastOpen}
-        onOpenChange={setToastOpen}
-        style={{
-          // Reset box shadow after nav conditional
-          "--nav-box-shadow": "0px 8px 8px -8px hsl(0 0% 0% / 50%)",
-        }}
-        title={toastState.title}
-        description={toastState.description}
-      >
-        <Toast.Icon>{toastState.icon}</Toast.Icon>
-      </Toast.Root>
-      <Toast.Viewport />
     </Nav>
   );
 }

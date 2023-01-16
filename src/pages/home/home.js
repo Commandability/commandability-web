@@ -91,6 +91,8 @@ function Home() {
           featuresInView={featuresInView}
           howItWorksInView={howItWorksInView}
           footerInView={footerInView}
+          setToastState={setToastState}
+          setToastOpen={setToastOpen}
         />
       </header>
       <Main>
