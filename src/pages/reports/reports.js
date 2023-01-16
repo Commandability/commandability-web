@@ -36,6 +36,7 @@ import {
   FiChevronLeft,
   FiChevronRight,
   FiAlertTriangle,
+  FiHardDrive,
   FiTrash2,
   FiDownload,
 } from "react-icons/fi";
@@ -238,7 +239,8 @@ function Reports() {
 
   const { reportsPerPage } = REPORTS_CONFIGURATION;
 
-  const [removeReportsOpen, setRemoveReportsOpen] = React.useState(false);
+  const [removeSelectedReportsOpen, setRemoveSelectedReportsOpen] =
+    React.useState(false);
   const [checkedAll, setCheckedAll] = React.useState({
     status: false,
     origin: "",
@@ -254,11 +256,9 @@ function Reports() {
 
   const [isRemovingReports, setIsRemovingReports] = React.useState(false);
 
-  // Close dialogs if there are no errors when remove action completes
+  // Stop showing fallback when remove action completes
   React.useEffect(() => {
     if (isRemovingReports && fetcher.state === "idle" && !errors?.password) {
-      setRemoveReportsOpen(false);
-      setRemoveAllReportsOpen(false);
       setIsRemovingReports(false);
     }
   }, [isRemovingReports, fetcher.state, errors]);
@@ -321,7 +321,8 @@ function Reports() {
     }
   }, [blobs.status, downloadStatus.timeoutId]);
 
-  async function onRemoveReports() {
+  async function onRemoveSelectedReports() {
+    setRemoveSelectedReportsOpen(false);
     setIsRemovingReports(true);
     setCheckedAll({ status: false, origin: "form" });
     setCheckedItems([]);
@@ -332,12 +333,8 @@ function Reports() {
     setPasswordError("");
   }
 
-  async function onRemoveAllReportsPressed() {
-    setCheckedAll({ status: false, origin: "form" });
-    setCheckedItems([]);
-  }
-
   async function onRemoveAllReports() {
+    setRemoveAllReportsOpen(false);
     setIsRemovingReports(true);
   }
 
@@ -435,22 +432,43 @@ function Reports() {
     </Pagination>
   );
 
+  const fallbackListHeader = (
+    <ListHeader>
+      <Group>
+        <Checkbox label="Select all" checked={checkedAll.status} />
+        <Location>Location</Location>
+      </Group>
+      <span>Timestamp</span>
+    </ListHeader>
+  );
+
   const fallbackListArea = (
     <ListArea>
       <VisuallyHidden>Loading reports</VisuallyHidden>
-      <ListHeader>
-        <Group>
-          <Checkbox label="Select all" checked={checkedAll.status} />
-          <Location>Location</Location>
-        </Group>
-        <span>Timestamp</span>
-      </ListHeader>
+      {fallbackListHeader}
       <ReportsLoader />
     </ListArea>
   );
 
-  const fallbackList = (
+  const fallbackListAreaError = (
     <ListArea>
+      {fallbackListHeader}
+      <ReportsError>
+        <FiAlertTriangle />
+        Error loading reports
+      </ReportsError>
+    </ListArea>
+  );
+
+  const fallbackListFire = (
+    <>
+      <VisuallyHidden>Loading reports</VisuallyHidden>
+      <ReportsLoader />
+    </>
+  );
+
+  const fallbackListElements = (
+    <>
       <VisuallyHidden>Loading reports</VisuallyHidden>
       <List>
         {Array(reportsPerPage)
@@ -459,7 +477,7 @@ function Reports() {
             <FallbackItem key={index} />
           ))}
       </List>
-    </ListArea>
+    </>
   );
 
   const fallbackBottom = (
@@ -593,15 +611,7 @@ function Reports() {
         </React.Suspense>
       </ReportsForm>
       <React.Suspense fallback={fallbackListArea}>
-        <Await
-          resolve={reportsData}
-          errorElement={
-            <ReportsError>
-              <FiAlertTriangle />
-              Error loading reports
-            </ReportsError>
-          }
-        >
+        <Await resolve={reportsData} errorElement={fallbackListAreaError}>
           {(reportsData) => {
             const [reportsDocs] = reportsData;
             return (
@@ -615,13 +625,13 @@ function Reports() {
                         setCheckedAll({ status: checked, origin: "header" })
                       }
                     />
-                    {checkedItems.length === 0 && !removeReportsOpen ? (
+                    {checkedItems.length === 0 && !removeSelectedReportsOpen ? (
                       <Location>Location</Location>
                     ) : (
                       <Group>
                         <AlertDialog.Root
-                          open={removeReportsOpen}
-                          onOpenChange={setRemoveReportsOpen}
+                          open={removeSelectedReportsOpen}
+                          onOpenChange={setRemoveSelectedReportsOpen}
                         >
                           <AlertDialog.Trigger asChild>
                             <Button
@@ -640,7 +650,7 @@ function Reports() {
                           >
                             <fetcher.Form
                               method="post"
-                              onSubmit={onRemoveReports}
+                              onSubmit={onRemoveSelectedReports}
                               style={AlertDialog.contentChildrenStyles}
                             >
                               <TextInput
@@ -694,9 +704,11 @@ function Reports() {
                   </Group>
                   {checkedItems.length === 0 ? <span>Timestamp</span> : null}
                 </ListHeader>
-                {/* Render fallback for pagination */}
+                {/* Render fallback for filters */}
                 {navigation.location ? (
-                  fallbackList
+                  fallbackListElements
+                ) : isRemovingReports ? (
+                  fallbackListFire
                 ) : reportsDocs.docs.length ? (
                   <List>
                     {[...reportsDocs.docs].map((report) => {
@@ -716,7 +728,10 @@ function Reports() {
                     })}
                   </List>
                 ) : (
-                  <ListMessage>No reports</ListMessage>
+                  <ListMessage>
+                    <FiHardDrive />
+                    No reports
+                  </ListMessage>
                 )}
               </ListArea>
             );
@@ -744,11 +759,14 @@ function Reports() {
                 </Capacity>
                 <AlertDialog.Root
                   open={removeAllReportsOpen}
-                  onOpenChange={setRemoveAllReportsOpen}
+                  onOpenChange={(removeAllReportsOpen) => {
+                    setCheckedAll({ status: false, origin: "form" });
+                    setCheckedItems([]);
+                    setRemoveAllReportsOpen(removeAllReportsOpen);
+                  }}
                 >
                   <AlertDialog.Trigger asChild>
                     <Button
-                      onClick={onRemoveAllReportsPressed}
                       disabled={
                         fetcher.state !== "idle" || !reportsDocs.docs.length
                       }
@@ -892,10 +910,17 @@ const ListHeader = styled.div`
 const ListMessage = styled.div`
   // Account for sticky header
   height: calc(100% - var(--header-height));
-  display: grid;
-  place-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   font-size: ${18 / 16}rem;
   color: var(--color-gray-4);
+
+  & > svg {
+    font-size: ${24 / 16}rem;
+    stroke: var(--color-gray-6);
+  }
 `;
 
 const ReportsLoader = styled(FireLoader)`
@@ -910,15 +935,19 @@ const ReportsLoader = styled(FireLoader)`
 const ReportsError = styled.div`
   // Account for sticky header
   height: calc(100% - var(--header-height));
-  display: grid;
-  place-content: center;
-  text-transform: uppercase;
-  color: var(--color-gray-4);
-  letter-spacing: 0.05em;
-  font-size: ${20 / 16}rem;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
+  font-size: ${24 / 16}rem;
+  color: var(--color-gray-4);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  & > svg {
+    font-size: ${32 / 16}rem;
+    stroke: var(--color-gray-6);
+  }
 `;
 
 const Group = styled.div`
