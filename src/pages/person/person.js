@@ -62,7 +62,7 @@ function Person() {
   async function onEditPersonSubmit(e) {
     e.preventDefault();
 
-    if (!firstName || !lastName || !badge) return;
+    if (!firstName || !badge) return;
 
     setEditPersonOpen(false);
     resetEditPersonInputs();
