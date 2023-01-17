@@ -2,7 +2,6 @@ import * as React from "react";
 import styled from "styled-components";
 import { FiPlus } from "react-icons/fi";
 import { updateDoc } from "firebase/firestore";
-import { FiChevronRight } from "react-icons/fi";
 
 import * as Dialog from "components/dialog";
 import Spacer from "components/spacer";
@@ -49,7 +48,7 @@ function Group({ groupData, groupId, userGroupData }) {
             <EditGroupButton type="button" />
           </Dialog.Trigger>
           <Dialog.Portal>
-            <Dialog.Overlay>
+            <DialogOverlay>
               <Dialog.Content
                 header
                 title="Edit Group"
@@ -62,13 +61,9 @@ function Group({ groupData, groupId, userGroupData }) {
                   closeDialog={() => setEditGroupOpen(false)}
                 />
               </Dialog.Content>
-            </Dialog.Overlay>
+            </DialogOverlay>
           </Dialog.Portal>
         </Dialog.Root>
-        <ConfigureTab>
-          <ConfigureText>configure</ConfigureText>
-          <FiChevronRight />
-        </ConfigureTab>
       </Content>
     );
   } else if (active === false) {
@@ -116,6 +111,15 @@ const Heading = styled.h1`
   align-items: center;
   color: var(--color-gray-4);
   font-size: ${20 / 16}rem;
+`;
+
+const DialogOverlay = styled(Dialog.Overlay)`
+  background-color: hsl(0 0% 0% / 0.5);
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  backdrop-filter: blur(1px);
 `;
 
 const AlertWrapper = styled.div`
@@ -172,32 +176,6 @@ const Text = styled.span`
   top: -0.05rem;
   font-size: ${16 / 16}rem;
   font-weight: bold;
-`;
-
-const ConfigureTab = styled.div`
-  display: flex;
-  position: absolute;
-  transition: 0.25s;
-  bottom: -30px;
-  height: 48px;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  color: var(--color-yellow-3);
-  pointer-events: none;
-  @media (hover: hover) and (pointer: fine) {
-    ${EditGroupButton}:hover ~ & {
-      transition: 0.25s;
-      bottom: 10px;
-    }
-  }
-`;
-
-const ConfigureText = styled.div`
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
-  text-transform: uppercase;
 `;
 
 export default Group;
