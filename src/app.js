@@ -1,10 +1,10 @@
 import * as React from "react";
 import { collection, doc } from "firebase/firestore";
 
-import { db } from "firebase.js";
-import { SnapshotProvider } from "context/snapshot-context";
-import { useAuth } from "context/auth-context";
-import FireLoader from "components/fire-loader";
+import { db } from "firebase-config";
+import { SnapshotProvider } from "@context/snapshot-context";
+import { useAuth } from "@context/auth-context";
+import FireLoader from "@components/fire-loader";
 
 const MINIMUM_LOADING_TIME = 200;
 

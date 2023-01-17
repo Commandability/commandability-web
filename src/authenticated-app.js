@@ -6,24 +6,24 @@ import {
   Route,
 } from "react-router-dom";
 
-import Home from "pages/home";
-import Settings from "pages/settings";
-import NotFound from "pages/not-found";
-import PrivacyPolicy from "pages/privacy-policy";
+import Home from "@pages/home";
+import Settings from "@pages/settings";
+import NotFound from "@pages/not-found";
+import PrivacyPolicy from "@pages/privacy-policy";
 
-import Layout from "components/layout";
-import DashboardContainer from "components/dashboard-container";
+import Layout from "@components/layout";
+import DashboardContainer from "@components/dashboard-container";
 
 import Reports, {
   loader as reportsLoader,
   action as reportsAction,
-} from "pages/reports";
-import Roster from "pages/roster";
-import Groups from "pages/groups";
+} from "@pages/reports";
+import Roster from "@pages/roster";
+import Groups from "@pages/groups";
 
-import Report, { loader as reportLoader } from "pages/report";
-import Person from "pages/person";
-import Group from "pages/group";
+import Report, { loader as reportLoader } from "@pages/report";
+import Person from "@pages/person";
+import Group from "@pages/group";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

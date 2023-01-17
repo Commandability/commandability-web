@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { InitialLoadProvider } from "context/initial-load-context";
-import { AuthProvider } from "context/auth-context";
+import { InitialLoadProvider } from "@context/initial-load-context";
+import { AuthProvider } from "@context/auth-context";
 
 import App from "app";
 import GlobalStyles from "global-styles.js";
 import ScrollbarWidth from "scrollbar-width.js";
 import reportWebVitals from "reportWebVitals.js";
-import * as Toast from "components/toast";
+import * as Toast from "@components/toast";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
