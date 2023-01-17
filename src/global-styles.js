@@ -127,24 +127,42 @@ const GlobalStyles = createGlobalStyle`
 
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar);
     scrollbar-width: thin;
+
+    & ::selection {
+      color: var(--selection-color);
+      background: var(--selection-background);
+    }
+
+    & ::-webkit-scrollbar {
+      width: 12px;
+      background-color: var(--scrollbar);
+    }
+    & ::-webkit-scrollbar-thumb {
+      border-radius: 999999px;
+      border: 2px solid var(--scrollbar);
+      background-color: var(--scrollbar-thumb);
+    }
+    & ::-webkit-scrollbar-track {
+      margin: 2px 0;
+    }
   }
 
-  ::selection {
-    color: var(--selection-color);
-    background: var(--selection-background);
-  }
+  main {
+    scrollbar-color: var(--color-gray-5) var(--color-gray-10);
+    scrollbar-width: thin;
 
-  ::-webkit-scrollbar {
-    width: 12px;
-    background-color: var(--scrollbar);
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 999999px;
-    border: 2px solid var(--scrollbar);
-    background-color: var(--scrollbar-thumb);
-  }
-  ::-webkit-scrollbar-track {
-    margin: 2px 0;
+    & ::-webkit-scrollbar {
+      width: 10px;
+      background-color: var(--color-gray-10);
+    }
+    & ::-webkit-scrollbar-thumb {
+      border-radius: 999999px;
+      border: 2px solid var(--color-gray-10);
+      background-color: var(--color-gray-5);
+    }
+    & ::-webkit-scrollbar-track {
+      margin: 2px 0;
+    }
   }
   `;
 

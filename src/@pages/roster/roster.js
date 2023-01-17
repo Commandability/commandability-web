@@ -576,24 +576,8 @@ const DialogContainer = styled.div`
 const DialogScrollContainer = styled.div`
   width: 544px;
   max-height: 200px;
-  overflow-y: auto;
   padding: 16px 0;
-
-  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-  scrollbar-width: thin;
-
-  ::-webkit-scrollbar {
-    width: 10px;
-    background-color: var(--color-gray-10);
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 999999px;
-    border: 2px solid var(--color-gray-10);
-    background-color: var(--color-gray-5);
-  }
-  ::-webkit-scrollbar-track {
-    margin: 2px 0;
-  }
+  overflow-y: auto;
 `;
 
 const UnorderedList = styled.ul`
@@ -624,22 +608,7 @@ const ListArea = styled.div`
   --header-height: calc(
     var(--header-padding-vertical) * 2 + max(24px, 1rem * var(--line-height))
   );
-
   overflow-y: auto;
-  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-  scrollbar-width: thin;
-  ::-webkit-scrollbar {
-    width: 10px;
-    background-color: var(--color-gray-10);
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 999999px;
-    border: 2px solid var(--color-gray-10);
-    background-color: var(--color-gray-5);
-  }
-  ::-webkit-scrollbar-track {
-    margin: 2px 0;
-  }
 `;
 
 const ListHeader = styled.div`

@@ -103,23 +103,7 @@ const Contents = styled.div`
   white-space: pre-line;
   grid-row: 2;
   grid-column: 2;
-
-  overflow-y: scroll;
-  scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-  scrollbar-width: thin;
-
-  ::-webkit-scrollbar {
-    width: 10px;
-    background-color: var(--color-gray-10);
-  }
-  ::-webkit-scrollbar-thumb {
-    border-radius: 999999px;
-    border: 2px solid var(--color-gray-10);
-    background-color: var(--color-gray-5);
-  }
-  ::-webkit-scrollbar-track {
-    margin: 2px 0;
-  }
+  overflow-y: auto;
 `;
 
 export default Report;
