@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { updateDoc } from "firebase/firestore";
-import { FiCheck, FiX, FiSave, FiTrash } from "react-icons/fi";
+import { FiX, FiSave, FiTrash } from "react-icons/fi";
 
 import * as Select from "components/select";
 import { useSnapshots } from "context/snapshot-context";
@@ -64,85 +64,74 @@ function EditGroupDialogContent({
   }
 
   return (
-    <Container>
-      <Content>
-        <AccountForm onSubmit={handleSubmitChanges}>
-          <FormInputs>
-            <InputGroup>
-              <Label htmlFor="group-name">Group name</Label>
-              <Input
-                id="group-name"
-                type="text"
-                required
-                placeholder={groupData.name}
-                onChange={(e) => {
-                  setGroupName(e.target.value);
-                }}
-                value={groupName}
-              />
-            </InputGroup>
-            <InputGroup>
-              <Label htmlFor="alert-time">Alert time</Label>
-              <div style={{ width: "280px" }}>
-                <Select.Root
-                  select={alertTime}
-                  onValueChange={(alertTime) => setAlertTime(alertTime)}
-                  defaultValue={defaultAlert}
-                  aria-label="Alert time selector"
-                >
-                  <Select.Item value={selectValues.zero}>No alert</Select.Item>
-                  <Select.Item value={selectValues.five}>5</Select.Item>
-                  <Select.Item value={selectValues.ten}>10</Select.Item>
-                  <Select.Item value={selectValues.fifteen}>15</Select.Item>
-                  <Select.Item value={selectValues.twenty}>20</Select.Item>
-                  <Select.Item value={selectValues.twentyFive}>25</Select.Item>
-                  <Select.Item value={selectValues.thirty}>30</Select.Item>
-                </Select.Root>
-              </div>
-            </InputGroup>
-          </FormInputs>
-          <SubmitWrapper>
-            <Button variant="tertiary" onClick={handleRemoveGroup}>
-              Delete Group
+    <AccountForm
+      onSubmit={handleSubmitChanges}
+      style={Dialog.contentChildrenStyles}
+    >
+      <FormInputs>
+        <InputGroup>
+          <Label htmlFor="group-name">Group name</Label>
+          <Input
+            id="group-name"
+            type="text"
+            required
+            placeholder={groupData.name}
+            onChange={(e) => {
+              setGroupName(e.target.value);
+            }}
+            value={groupName}
+          />
+        </InputGroup>
+        <InputGroup>
+          <Label htmlFor="alert-time">Alert time</Label>
+          <div style={{ width: "280px" }}>
+            <Select.Root
+              select={alertTime}
+              onValueChange={(alertTime) => setAlertTime(alertTime)}
+              defaultValue={defaultAlert}
+              aria-label="Alert time selector"
+            >
+              <Select.Item value={selectValues.zero}>No alert</Select.Item>
+              <Select.Item value={selectValues.five}>5</Select.Item>
+              <Select.Item value={selectValues.ten}>10</Select.Item>
+              <Select.Item value={selectValues.fifteen}>15</Select.Item>
+              <Select.Item value={selectValues.twenty}>20</Select.Item>
+              <Select.Item value={selectValues.twentyFive}>25</Select.Item>
+              <Select.Item value={selectValues.thirty}>30</Select.Item>
+            </Select.Root>
+          </div>
+        </InputGroup>
+      </FormInputs>
+      <ButtonWrapper>
+        <Button variant="tertiary" onClick={handleRemoveGroup}>
+          <FiTrash />
+          Delete Group
+        </Button>
+        <EditSubmitWrapper>
+          <Dialog.Close asChild>
+            <Button variant="secondary">
+              <FiX />
+              Cancel
             </Button>
-            <Dialog.Close asChild>
-              <Button variant="secondary">Cancel</Button>
-            </Dialog.Close>
-            <Button variant="primary">Save Changes</Button>
-          </SubmitWrapper>
-        </AccountForm>
-      </Content>
-    </Container>
+          </Dialog.Close>
+          <Button variant="primary">
+            <FiSave />
+            Save Changes
+          </Button>
+        </EditSubmitWrapper>
+      </ButtonWrapper>
+    </AccountForm>
   );
 }
 
-const Container = styled.div`
-  width: 464px;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-gray-10);
-`;
-
-const Content = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 16px;
-`;
-
 const AccountForm = styled.form`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  width: 576px;
 `;
 
 const FormInputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-  margin-bottom: 24px;
 `;
 
 const InputGroup = styled.div`
@@ -150,7 +139,6 @@ const InputGroup = styled.div`
   justify-content: flex-end;
   align-items: baseline;
   gap: 16px;
-  color: var(--color-yellow-2);
 `;
 
 const Label = styled.label`
@@ -173,9 +161,13 @@ const Input = styled.input`
   }
 `;
 
-const SubmitWrapper = styled.div`
+const ButtonWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+`;
+
+const EditSubmitWrapper = styled.div`
+  display: flex;
   gap: 24px;
 `;
 
