@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { updateDoc } from "firebase/firestore";
-import { FiCheck, FiX, FiSave } from "react-icons/fi";
+import { FiCheck, FiX, FiSave, FiTrash } from "react-icons/fi";
 
 import * as Select from "components/select";
 import { useSnapshots } from "context/snapshot-context";
@@ -27,7 +27,6 @@ function EditGroupDialogContent({
   const { snapshots } = useSnapshots();
   const [groupName, setGroupName] = React.useState(groupData.name);
   const [alertTime, setAlertTime] = React.useState(groupData.alert);
-  const [removeGroupOpen, setRemoveGroupOpen] = React.useState(false);
 
   let defaultAlert = selectValues.zero;
   if (groupData.alert !== 0) {
@@ -43,7 +42,6 @@ function EditGroupDialogContent({
         ...newUserGroupData,
       },
     });
-    setRemoveGroupOpen(false);
   }
 
   async function handleSubmitChanges(event) {
@@ -104,39 +102,13 @@ function EditGroupDialogContent({
             </InputGroup>
           </FormInputs>
           <SubmitWrapper>
-            <Dialog.Root
-              open={removeGroupOpen}
-              onOpenChange={setRemoveGroupOpen}
-            >
-              <Dialog.Trigger asChild>
-                <CloseButton variant="secondary" icon={FiX}>
-                  Delete Group
-                </CloseButton>
-              </Dialog.Trigger>
-              <GroupRemoveAlertDialogContent
-                header
-                title="Remove selected group?"
-                description="This action cannot be undone. This will remove the currently selected group."
-              >
-                <AlertOptions>
-                  <Dialog.Close asChild>
-                    <Button icon={FiX} variant="secondary">
-                      Cancel
-                    </Button>
-                  </Dialog.Close>
-                  <Button
-                    type="submit"
-                    icon={FiCheck}
-                    onClick={handleRemoveGroup}
-                  >
-                    Yes, delete group
-                  </Button>
-                </AlertOptions>
-              </GroupRemoveAlertDialogContent>
-            </Dialog.Root>
-            <SubmitButton variant="primary" icon={FiSave}>
-              Save Changes
-            </SubmitButton>
+            <Button variant="tertiary" onClick={handleRemoveGroup}>
+              Delete Group
+            </Button>
+            <Dialog.Close asChild>
+              <Button variant="secondary">Cancel</Button>
+            </Dialog.Close>
+            <Button variant="primary">Save Changes</Button>
           </SubmitWrapper>
         </AccountForm>
       </Content>
@@ -199,20 +171,6 @@ const Input = styled.input`
     outline: solid 2px var(--color-yellow-3);
     border-color: var(--color-yellow-3);
   }
-`;
-
-const SubmitButton = styled(Button)``;
-
-const CloseButton = styled(Button)``;
-
-const GroupRemoveAlertDialogContent = styled(Dialog.Content)`
-  width: 640px;
-`;
-
-const AlertOptions = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
 `;
 
 const SubmitWrapper = styled.div`
