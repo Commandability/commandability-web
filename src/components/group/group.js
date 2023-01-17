@@ -176,6 +176,7 @@ const Text = styled.span`
   top: -0.05rem;
   font-size: ${16 / 16}rem;
   font-weight: bold;
+  color: var(--color-gray-4);
 `;
 
 export default Group;
