@@ -42,6 +42,7 @@ function EditGroupDialogContent({
         ...newUserGroupData,
       },
     });
+    closeDialog();
   }
 
   async function handleSubmitChanges(event) {

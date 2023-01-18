@@ -14,6 +14,7 @@ function Group({ groupData, groupId, userGroupData }) {
   const [editGroupOpen, setEditGroupOpen] = React.useState(false);
 
   async function handleAddGroup() {
+    setEditGroupOpen(true);
     await updateDoc(snapshots.user.ref, {
       groups: {
         ...userGroupData,
