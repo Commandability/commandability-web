@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiSave, FiX } from "react-icons/fi";
+import { FiSave, FiUserX } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 
@@ -51,7 +51,7 @@ function Account() {
         <AccountOption header="General">
           <TextInput
             id="organization-name-input"
-            label="Organization name"
+            labelText="Organization name"
             value={organizationName}
             onChange={(e) => {
               setOrganizationName(e.target.value);
@@ -59,11 +59,13 @@ function Account() {
                 ? setOrganizationNameError(false)
                 : setOrganizationNameError(true);
             }}
-            error={!organizationNameError ? "" : inputErrors.organizationName}
+            errorText={
+              !organizationNameError ? "" : inputErrors.organizationName
+            }
           />
           <TextInput
             id="account-email-input"
-            label="Account email"
+            labelText="Account email"
             value={accountEmail}
             onChange={(e) => {
               setAccountEmail(e.target.value);
@@ -71,56 +73,68 @@ function Account() {
                 ? setAccountEmailError(false)
                 : setAccountEmailError(true);
             }}
-            error={!accountEmailError ? "" : inputErrors.email}
+            errorText={!accountEmailError ? "" : inputErrors.email}
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button icon={FiSave}>Save Changes</Button>
+            <Button>
+              <FiSave />
+              Save Changes
+            </Button>
           </div>
         </AccountOption>
         <AccountOption header="Change Password">
           <TextInput
             id="current-password-input"
-            label="Current password"
+            labelText="Current password"
             value={currentPassword}
+            variant="password"
             onChange={(e) => {
               setCurrentPassword(e.target.value);
               isStrongPassword(e.target.value, passwordRequirements)
                 ? setCurrentPasswordError(false)
                 : setCurrentPasswordError(true);
             }}
-            error={!currentPasswordError ? "" : inputErrors.password}
+            errorText={!currentPasswordError ? "" : inputErrors.password}
           />
           <TextInput
             id="new-password-input"
-            label="New password"
+            labelText="New password"
             value={newPassword}
+            variant="password"
             onChange={(e) => {
               setNewPassword(e.target.value);
               isStrongPassword(e.target.value, passwordRequirements)
                 ? setNewPasswordError(false)
                 : setNewPasswordError(true);
             }}
-            error={!newPasswordError ? "" : inputErrors.password}
+            errorText={!newPasswordError ? "" : inputErrors.password}
           />
           <TextInput
             id="new-password-input"
-            label="Confirm new password"
+            labelText="Confirm new password"
             value={confirmNewPassword}
+            variant="password"
             onChange={(e) => {
               setConfirmNewPassword(e.target.value);
               e.target.value === newPassword
                 ? setConfirmNewPasswordError(false)
                 : setConfirmNewPasswordError(true);
             }}
-            error={!confirmNewPasswordError ? "" : inputErrors.confirmPassword}
+            errorText={
+              !confirmNewPasswordError ? "" : inputErrors.confirmPassword
+            }
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button icon={FiSave}>Save Password</Button>
+            <Button>
+              <FiSave />
+              Save Password
+            </Button>
           </div>
         </AccountOption>
         <AccountOption header="Delete Account">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button variant="primary" type="submit" icon={FiX}>
+            <Button variant="primary" type="submit">
+              <FiUserX />
               Delete
             </Button>
           </div>
