@@ -60,21 +60,33 @@ export const svg = css`
 `;
 
 export function Text({ ...props }) {
-  return <TextWrapper aria-hidden={true} {...props} />;
+  return (
+    // Prevent accessibility APIs from accessing content
+    <TextWrapper aria-hidden={true} {...props}>
+      <TextShape />
+    </TextWrapper>
+  );
 }
 
 const TextWrapper = styled.div`
-  ${html}
-
-  color: transparent;
+  // Ensure wrapper width reflects the absolutely positioned shape's width not
+  // its content. This prevents layout shift in sibling elements.
   width: var(--text-length);
-  height: 1em;
+  // Contain the absolutely positioned shape
   position: relative;
-  // Account for spacing under below typography specific to ClearSans font-family
-  top: 0.15em;
+  color: transparent;
 
-  // Maintain baseline alignment of other items that depend on the loaded text
+  // Render content for baseline-alignment
   &:after {
     content: "_";
   }
+`;
+
+const TextShape = styled.div`
+  height: 1em;
+  width: var(--text-length);
+  // Position the shape in the middle of the line
+  position: absolute;
+  top: calc((1em * var(--line-height) - 1em) / 2);
+  ${html}
 `;
