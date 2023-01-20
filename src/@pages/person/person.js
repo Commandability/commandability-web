@@ -174,9 +174,9 @@ function Person() {
         </Dialog.Portal>
       </Dialog.Root>
       <PersonData>
-        <Datum>
-          <DatumLabel>Shift: </DatumLabel>
-          <DatumContent>
+        <DatumList>
+          <DatumTerm>Shift: </DatumTerm>
+          <DatumDetails>
             {user.status !== "resolved" ? (
               <Fallback.Text style={{ "--text-length": "96px" }} />
             ) : person.shift ? (
@@ -184,18 +184,18 @@ function Person() {
             ) : (
               <EmptyDatum>unassigned</EmptyDatum>
             )}
-          </DatumContent>
-        </Datum>
-        <Datum>
-          <DatumLabel>Badge: </DatumLabel>
-          <DatumContent>
+          </DatumDetails>
+        </DatumList>
+        <DatumList>
+          <DatumTerm>Badge: </DatumTerm>
+          <DatumDetails>
             {user.status !== "resolved" ? (
               <Fallback.Text style={{ "--text-length": "96px" }} />
             ) : (
               `${person.badge}`
             )}
-          </DatumContent>
-        </Datum>
+          </DatumDetails>
+        </DatumList>
       </PersonData>
       <Toast.Root
         open={toastOpen}
@@ -271,18 +271,18 @@ const PersonData = styled.span`
   padding: 32px 0;
 `;
 
-const Datum = styled.div`
+const DatumList = styled.dl`
   display: grid;
 `;
 
-const DatumLabel = styled.span`
+const DatumTerm = styled.dt`
   font-size: ${24 / 16}rem;
   color: var(--color-gray-4);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 `;
 
-const DatumContent = styled.span`
+const DatumDetails = styled.dd`
   font-size: ${48 / 16}rem;
   color: var(--color-yellow-3);
 `;
