@@ -16,6 +16,13 @@ async function getReport(uid, reportId) {
   return await blob.text();
 }
 
+const HEADER_LINES = 2;
+const LINE_DELIMITER = ": ";
+
+function getLineLog(line) {
+  return line.substring(line.indexOf(LINE_DELIMITER) + LINE_DELIMITER.length);
+}
+
 export async function loader({ params }) {
   const { currentUser } = getAuth();
 
@@ -40,51 +47,106 @@ function Report() {
     effect();
   }, [loaderData]);
 
+  const reportAreaFallback = (
+    <ReportArea>
+      <Header>
+        <DatumList>
+          <DatumTerm>Location:</DatumTerm>
+          <DatumDetails>
+            <Fallback.Text style={{ "--text-length": "256px" }} />
+          </DatumDetails>
+        </DatumList>
+        <DatumList>
+          <DatumTerm>Description: </DatumTerm>
+          <DatumDetails>
+            <Fallback.Text style={{ "--text-length": "384px" }} />
+          </DatumDetails>
+        </DatumList>
+      </Header>
+      <Entries>
+        <ReportLoader />
+      </Entries>
+    </ReportArea>
+  );
+
   return (
     <Wrapper>
       <Back to="/dashboard/reports" variant="tertiary" size="large">
         <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
-      <ExportButton
-        download="report.txt"
-        href={downloadLink}
-        disabled={downloadLink ? false : true}
-      >
-        <FiDownload />
-        Download report
-      </ExportButton>
-      <Contents>
-        <React.Suspense fallback={<ReportsLoader />}>
-          <Await
-            resolve={loaderData.report}
-            // Error displayed by reports suspense
-            errorElement={<></>}
-          >
-            {(report) => {
-              return <>{report}</>;
-            }}
-          </Await>
-        </React.Suspense>
-      </Contents>
+      <React.Suspense fallback={reportAreaFallback}>
+        <Await resolve={loaderData.report} errorElement={<></>}>
+          {(report) => {
+            const reportLines = report.split("\n");
+            const [location, description] = reportLines.slice(0, HEADER_LINES);
+            const locationLog = getLineLog(location);
+            const descriptionLog = getLineLog(description);
+            const content = reportLines.slice(HEADER_LINES);
+
+            return (
+              <ReportArea>
+                <Header>
+                  <DatumList>
+                    <DatumTerm>Location: </DatumTerm>
+                    <DatumDetails>{locationLog}</DatumDetails>
+                  </DatumList>
+                  <DatumList>
+                    <DatumTerm>Description: </DatumTerm>
+                    <DatumDetails
+                      data-default={
+                        descriptionLog === "none" ? "true" : "false"
+                      }
+                    >
+                      {descriptionLog}
+                    </DatumDetails>
+                  </DatumList>
+                </Header>
+                <Entries>
+                  {content.map((line, index) => {
+                    const dateTime = line.substring(
+                      0,
+                      line.indexOf(LINE_DELIMITER)
+                    );
+                    const log = line.substring(
+                      line.indexOf(LINE_DELIMITER) + 1
+                    );
+                    return (
+                      <Entry key={line}>
+                        <LineNumber>{index + 1}</LineNumber>
+                        <span>
+                          {dateTime}
+                          {LINE_DELIMITER}
+                          <Highlight>{log}</Highlight>
+                        </span>
+                      </Entry>
+                    );
+                  })}
+                </Entries>
+              </ReportArea>
+            );
+          }}
+        </Await>
+      </React.Suspense>
+      <Bottom>
+        <Button
+          download="report.txt"
+          href={downloadLink}
+          disabled={downloadLink ? false : true}
+        >
+          <FiDownload />
+          Download report
+        </Button>
+      </Bottom>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  width: 100%;
   height: 100%;
-  padding: 48px;
-  display: grid;
-  grid-template-columns: 96px 1fr 96px;
-  grid-template-rows: 128px 1fr;
+  display: flex;
+  flex-direction: column;
   position: relative;
-`;
-
-const ReportsLoader = styled(FireLoader)`
-  & > svg {
-    ${Fallback.svg}
-  }
 `;
 
 const Back = styled(Button)`
@@ -93,17 +155,92 @@ const Back = styled(Button)`
   left: calc(48px - 6px);
 `;
 
-const ExportButton = styled(Button)`
-  grid-column: 2;
-  justify-self: flex-start;
-  align-self: center;
+const ReportLoader = styled(FireLoader)`
+  grid-column: 2 / 3;
+  place-self: center;
+
+  & > svg {
+    ${Fallback.svg}
+  }
 `;
 
-const Contents = styled.div`
-  white-space: pre-line;
-  grid-row: 2;
-  grid-column: 2;
+const ReportArea = styled.div`
+  flex: 1;
+  --col-width: 144px;
+  --grid-columns: var(--col-width) 1fr var(--col-width);
+  --gap: 16px;
+  display: grid;
+  grid-template-columns: var(--grid-columns);
+  grid-template-rows: max-content 1fr;
+  column-gap: var(--gap);
+  overflow: hidden;
+`;
+
+const Header = styled.div`
+  grid-row: 1;
+  grid-column: 2 / 3;
+  padding: 32px 0;
+  display: grid;
+  gap: 16px;
+`;
+
+const DatumList = styled.dl`
+  display: grid;
+`;
+
+const DatumTerm = styled.dt`
+  font-size: ${16 / 16}rem;
+  color: var(--color-gray-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+`;
+
+const DatumDetails = styled.dd`
+  font-size: ${16 / 16}rem;
+  color: var(--color-yellow-1);
+
+  &[data-default="true"] {
+    color: var(--color-gray-4);
+  }
+`;
+
+const Entries = styled.ul`
+  grid-row: 2 / 3;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: var(--grid-columns);
+  column-gap: var(--gap);
+  list-style: none;
+  padding: 16px 0;
+  padding-left: 0;
   overflow-y: auto;
+  background-color: var(--color-white);
+  color: var(--color-gray-3);
+  margin: 0 -2ch;
+`;
+
+const Entry = styled.li`
+  grid-column: 2 / 3;
+  display: grid;
+  grid-template-columns: 3ch max-content;
+  gap: 32px;
+  justify-items: end;
+`;
+
+const LineNumber = styled.span`
+  color: var(--color-gray-4);
+`;
+
+const Highlight = styled.span`
+  color: var(--color-yellow-1);
+`;
+
+const Bottom = styled.div`
+  min-height: 100px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 48px;
 `;
 
 export default Report;

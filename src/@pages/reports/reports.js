@@ -966,7 +966,7 @@ const AlertOptions = styled.div`
   gap: 16px;
 `;
 
-const List = styled.ul`
+const List = styled.ol`
   list-style: none;
   padding-left: 0;
   isolation: isolate;

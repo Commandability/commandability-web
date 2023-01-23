@@ -657,7 +657,7 @@ const Name = styled.span`
   width: 256px;
 `;
 
-const List = styled.ul`
+const List = styled.ol`
   list-style: none;
   padding-left: 0;
   isolation: isolate;
