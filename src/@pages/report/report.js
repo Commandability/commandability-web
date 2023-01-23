@@ -216,7 +216,7 @@ const Entries = styled.ul`
   overflow-y: auto;
   background-color: var(--color-white);
   color: var(--color-gray-3);
-  margin: 0 -2ch;
+  margin-left: -2ch;
 `;
 
 const Entry = styled.li`
