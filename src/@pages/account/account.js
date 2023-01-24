@@ -131,7 +131,7 @@ function Account() {
             </Button>
           </div>
         </AccountOption>
-        <AccountOption header="Delete Account">
+        <AccountOption header="Delete Account" layout="horizontal">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
             <Button variant="primary" type="submit">
               <FiUserX />
