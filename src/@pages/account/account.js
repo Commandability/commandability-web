@@ -4,10 +4,10 @@ import { FiSave, FiUserX } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 
-import AccountOption from "components/account-option";
-import TextInput from "components/text-input";
-import Button from "components/button";
-import { useAuth } from "context/auth-context";
+import AccountOption from "@components/account-option";
+import TextInput from "@components/text-input";
+import Button from "@components/button";
+import { useAuth } from "@context/auth-context";
 
 const isOrganizationName = /^([a-zA-Z0-9]){3,16}$/;
 

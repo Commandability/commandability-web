@@ -18,7 +18,6 @@ const Wrapper = styled.div`
   height: fit-content;
   width: 640px;
   padding: 24px;
-  /* gap: 16px; */
 `;
 
 const Header = styled.div`
