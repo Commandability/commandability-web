@@ -416,21 +416,28 @@ function Reports() {
     }
   }
 
+  const fallbackPaginationButtons = (
+    <PaginationButtons>
+      <Button disabled={true} variant="tertiary" size="medium">
+        <FiChevronLeft />
+        <VisuallyHidden>Previous page</VisuallyHidden>
+      </Button>
+      <Button disabled={true} variant="tertiary" size="medium">
+        <FiChevronRight />
+        <VisuallyHidden>Next page</VisuallyHidden>
+      </Button>
+    </PaginationButtons>
+  );
+
   const fallbackPagination = (
     <Pagination>
       <Fallback.Text style={{ "--text-length": "96px" }} />
-      <PaginationButtons>
-        <Button disabled={true} variant="tertiary" size="medium">
-          <FiChevronLeft />
-          <VisuallyHidden>Previous page</VisuallyHidden>
-        </Button>
-        <Button disabled={true} variant="tertiary" size="medium">
-          <FiChevronRight />
-          <VisuallyHidden>Next page</VisuallyHidden>
-        </Button>
-      </PaginationButtons>
+      {fallbackPaginationButtons}
     </Pagination>
   );
+
+  const errorPaginationButtons = fallbackPaginationButtons;
+  const errorPagination = <Pagination>{errorPaginationButtons}</Pagination>;
 
   const fallbackListHeader = (
     <ListHeader>
@@ -450,12 +457,13 @@ function Reports() {
     </ListArea>
   );
 
+  const errorListHeader = fallbackListHeader;
   const fallbackListAreaError = (
     <ListArea>
-      {fallbackListHeader}
+      {errorListHeader}
       <ReportsError>
         <FiAlertTriangle />
-        Error loading reports
+        Unknown error
       </ReportsError>
     </ListArea>
   );
@@ -470,6 +478,15 @@ function Reports() {
   const fallbackBottom = (
     <Bottom>
       <Fallback.Text style={{ "--text-length": "192px" }} />
+      <Button disabled>
+        <FiTrash2 />
+        Delete all reports
+      </Button>
+    </Bottom>
+  );
+
+  const errorBottom = (
+    <Bottom>
       <Button disabled>
         <FiTrash2 />
         Delete all reports
@@ -512,11 +529,7 @@ function Reports() {
           </SelectRoot>
         </Filter>
         <React.Suspense fallback={fallbackPagination}>
-          <Await
-            resolve={reportsData}
-            // Error displayed by reports suspense
-            errorElement={<></>}
-          >
+          <Await resolve={reportsData} errorElement={errorPagination}>
             {(reportsData) => {
               const [reportsDocs, prevReportsAggregate, allReportsAggregate] =
                 reportsData;
@@ -724,11 +737,7 @@ function Reports() {
         </Await>
       </React.Suspense>
       <React.Suspense fallback={fallbackBottom}>
-        <Await
-          resolve={reportsData}
-          // Error displayed by reports suspense
-          errorElement={<></>}
-        >
+        <Await resolve={reportsData} errorElement={errorBottom}>
           {(reportsData) => {
             // eslint-disable-next-line no-unused-vars
             const [reportsDocs, _, allReportsAggregate] = reportsData;
@@ -911,8 +920,6 @@ const ReportsError = styled.div`
   gap: 16px;
   font-size: ${24 / 16}rem;
   color: var(--color-gray-4);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 
   & > svg {
     font-size: ${32 / 16}rem;
