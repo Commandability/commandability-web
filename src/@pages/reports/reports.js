@@ -435,7 +435,7 @@ function Reports() {
   const fallbackListHeader = (
     <ListHeader>
       <Group>
-        <Checkbox label="Select all" checked={checkedAll.status} />
+        <Checkbox label="Select all" checked={checkedAll.status} disabled />
         <Location>Location</Location>
       </Group>
       <span>Timestamp</span>

@@ -362,6 +362,7 @@ function Roster() {
               onCheckedChange={(checked) =>
                 setCheckedAll({ status: checked, origin: "header" })
               }
+              disabled={user.status !== "resolved"}
             />
             {checkedItems.length === 0 ? (
               <Name>Name</Name>

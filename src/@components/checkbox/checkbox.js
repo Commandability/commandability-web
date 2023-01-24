@@ -31,6 +31,10 @@ const RadixCheckboxRoot = styled(RadixCheckbox.Root)`
   align-items: center;
   justify-content: center;
   cursor: pointer;
+
+  &[disabled] {
+    cursor: auto;
+  }
 `;
 
 const StyledFiCheck = styled(FiCheck)`
