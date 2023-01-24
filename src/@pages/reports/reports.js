@@ -58,7 +58,7 @@ import SearchInput from "@components/search-input";
 import TextInput from "@components/text-input";
 import Button from "@components/button";
 import VisuallyHidden from "@components/visually-hidden";
-import ReportItem, { FallbackItem } from "@components/report-item";
+import ReportItem from "@components/report-item";
 
 export const REPORTS_CONFIGURATION = {
   reportsPerPage: 20,
@@ -467,19 +467,6 @@ function Reports() {
     </>
   );
 
-  const fallbackListElements = (
-    <>
-      <VisuallyHidden>Loading reports</VisuallyHidden>
-      <List>
-        {Array(reportsPerPage)
-          .fill(null)
-          .map((_, index) => (
-            <FallbackItem key={index} />
-          ))}
-      </List>
-    </>
-  );
-
   const fallbackBottom = (
     <Bottom>
       <Fallback.Text style={{ "--text-length": "192px" }} />
@@ -705,9 +692,7 @@ function Reports() {
                   {checkedItems.length === 0 ? <span>Timestamp</span> : null}
                 </ListHeader>
                 {/* Render fallback for filters */}
-                {navigation.location ? (
-                  fallbackListElements
-                ) : isRemovingReports ? (
+                {navigation.location || isRemovingReports ? (
                   fallbackListFire
                 ) : reportsDocs.docs.length ? (
                   <List>

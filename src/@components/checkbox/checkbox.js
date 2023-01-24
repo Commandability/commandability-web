@@ -4,16 +4,7 @@ import * as RadixCheckbox from "@radix-ui/react-checkbox";
 import * as RadixLabel from "@radix-ui/react-label";
 import { FiCheck } from "react-icons/fi";
 
-import * as Fallback from "@components/fallback";
 import VisuallyHidden from "@components/visually-hidden";
-
-export const FallbackCheckbox = styled.div`
-  ${Fallback.html}
-  width: 24px;
-  height: 24px;
-  border-radius: 4px;
-  z-index: 1;
-`;
 
 export default React.forwardRef(
   ({ children, label, ...props }, forwardedRef) => {
@@ -35,7 +26,7 @@ const RadixCheckboxRoot = styled(RadixCheckbox.Root)`
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  border: 1px solid var(--color-gray-2);
+  border: 1px solid var(--color-gray-5);
   display: flex;
   align-items: center;
   justify-content: center;

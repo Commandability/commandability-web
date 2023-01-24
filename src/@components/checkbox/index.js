@@ -1,1 +1,1 @@
-export { default, FallbackCheckbox } from "./checkbox";
+export { default } from "./checkbox";
