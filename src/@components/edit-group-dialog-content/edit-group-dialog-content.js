@@ -3,10 +3,10 @@ import styled from "styled-components";
 import { updateDoc } from "firebase/firestore";
 import { FiX, FiSave, FiTrash } from "react-icons/fi";
 
-import * as Select from "components/select";
-import { useSnapshots } from "context/snapshot-context";
-import Button from "components/button";
-import * as Dialog from "components/dialog";
+import * as Select from "@components/select";
+import { useSnapshots } from "@context/snapshot-context";
+import Button from "@components/button";
+import * as Dialog from "@components/dialog";
 
 const selectValues = {
   zero: "No alert",

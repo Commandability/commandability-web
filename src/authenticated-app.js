@@ -23,7 +23,6 @@ import Groups from "@pages/groups";
 
 import Report, { loader as reportLoader } from "@pages/report";
 import Person from "@pages/person";
-import Group from "@pages/group";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

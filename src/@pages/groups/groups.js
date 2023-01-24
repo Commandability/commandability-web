@@ -2,8 +2,8 @@ import * as React from "react";
 import styled from "styled-components";
 import * as Tabs from "@radix-ui/react-tabs";
 
-import { useSnapshots } from "context/snapshot-context";
-import Group from "components/group";
+import { useSnapshots } from "@context/snapshot-context";
+import Group from "@components/group";
 
 function Groups() {
   const { snapshots } = useSnapshots();
