@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiSave, FiUserX } from "react-icons/fi";
+import { FiSave, FiUserX, FiUserCheck } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 
@@ -131,6 +131,14 @@ function Account() {
             </Button>
           </div>
         </AccountOption>
+        <AccountOption header="Verify Email Account" layout="horizontal">
+          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
+            <Button variant="primary" type="submit">
+              <FiUserCheck />
+              Verify
+            </Button>
+          </div>
+        </AccountOption>
         <AccountOption header="Delete Account" layout="horizontal">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
             <Button variant="primary" type="submit">
@@ -156,7 +164,8 @@ const Options = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  margin-top: 72px;
+  padding-top: 72px;
+  padding-bottom: 72px;
 `;
 
 export default Account;
