@@ -6,14 +6,22 @@ import { FiChevronDown, FiCheck } from "react-icons/fi";
 
 import UnstyledButton from "@components/unstyled-button";
 
+const VARIANTS = {
+  dialog: "dialog",
+  page: "page",
+};
+
 export const Root = React.forwardRef(
-  ({ className, children, label, ...props }, forwardedRef) => {
+  (
+    { className, children, label, variant = "dialog", ...props },
+    forwardedRef
+  ) => {
     return (
-      <RootWrapper className={className}>
-        <RadixLabel.Root>
-          <LabelText>{label}</LabelText>
+      <RootWrapper className={className} variant={variant}>
+        <LabelText variant={variant}>{label}</LabelText>
+        <RadixLabelRoot variant={variant}>
           <RadixSelect.Root {...props}>
-            <RadixSelect.Trigger ref={forwardedRef} asChild>
+            <RadixSelect.Trigger ref={forwardedRef} variant={variant} asChild>
               <TriggerButton>
                 <RadixSelect.Value />
                 <RadixSelect.Icon>
@@ -27,7 +35,7 @@ export const Root = React.forwardRef(
               </RootContent>
             </RadixSelect.Portal>
           </RadixSelect.Root>
-        </RadixLabel.Root>
+        </RadixLabelRoot>
       </RootWrapper>
     );
   }
@@ -35,13 +43,84 @@ export const Root = React.forwardRef(
 
 const RootWrapper = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  padding-bottom: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "20px";
+      case VARIANTS.page:
+        return null;
+      default:
+    }
+  }};
+  flex-direction: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "row";
+      case VARIANTS.page:
+        return "column";
+      default:
+    }
+  }};
+  gap: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "16px";
+      case VARIANTS.page:
+        return "4px";
+      default:
+    }
+  }};
+  align-items: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "baseline";
+      case VARIANTS.page:
+        return null;
+      default:
+    }
+  }};
+  justify-content: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "flex-end";
+      case VARIANTS.page:
+        return null;
+      default:
+    }
+  }};
+`;
+
+const RadixLabelRoot = styled(RadixLabel.Root)`
+  width: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "320px";
+      case VARIANTS.page:
+        return "fit-content";
+      default:
+    }
+  }};
 `;
 
 const LabelText = styled.span`
-  color: var(--color-gray-2);
-  font-size: ${14 / 16}rem;
+  color: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "var(--color-yellow-2)";
+      case VARIANTS.page:
+        return "var(--color-gray-2)";
+      default:
+    }
+  }};
+  font-size: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "1rem";
+      case VARIANTS.page:
+        return "0.875rem";
+      default:
+    }
+  }};
 `;
 
 const TriggerButton = styled(UnstyledButton)`
@@ -50,8 +129,26 @@ const TriggerButton = styled(UnstyledButton)`
   gap: 32px;
   align-items: center;
   border-radius: var(--border-radius);
-  border: 1px solid var(--color-gray-5);
-  color: var(--color-gray-2);
+  border: 1px solid
+    ${(props) => {
+      switch (props.variant) {
+        case VARIANTS.dialog:
+          return "var(--color-yellow-3)";
+        case VARIANTS.page:
+          return "var(--color-gray-5)";
+        default:
+      }
+    }};
+
+  color: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.dialog:
+        return "var(--color-yellow-2)";
+      case VARIANTS.page:
+        return "var(--color-gray-2)";
+      default:
+    }
+  }};
   padding: 8px;
   background-color: var(--color-white);
   width: 100%;

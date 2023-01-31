@@ -4,6 +4,7 @@ import { updateDoc } from "firebase/firestore";
 import { FiX, FiSave, FiTrash } from "react-icons/fi";
 
 import * as Select from "@components/select";
+import TextInput from "@components/text-input";
 import { useSnapshots } from "@context/snapshot-context";
 import Button from "@components/button";
 import * as Dialog from "@components/dialog";
@@ -70,38 +71,30 @@ function EditGroupDialogContent({
       style={Dialog.contentChildrenStyles}
     >
       <FormInputs>
-        <InputGroup>
-          <Label htmlFor="group-name">Group name</Label>
-          <Input
-            id="group-name"
-            type="text"
-            required
-            placeholder={groupData.name}
-            onChange={(e) => {
-              setGroupName(e.target.value);
-            }}
-            value={groupName}
-          />
-        </InputGroup>
-        <InputGroup>
-          <Label htmlFor="alert-time">Alert time</Label>
-          <div style={{ width: "280px" }}>
-            <Select.Root
-              select={alertTime}
-              onValueChange={(alertTime) => setAlertTime(alertTime)}
-              defaultValue={defaultAlert}
-              aria-label="Alert time selector"
-            >
-              <Select.Item value={selectValues.zero}>No alert</Select.Item>
-              <Select.Item value={selectValues.five}>5</Select.Item>
-              <Select.Item value={selectValues.ten}>10</Select.Item>
-              <Select.Item value={selectValues.fifteen}>15</Select.Item>
-              <Select.Item value={selectValues.twenty}>20</Select.Item>
-              <Select.Item value={selectValues.twentyFive}>25</Select.Item>
-              <Select.Item value={selectValues.thirty}>30</Select.Item>
-            </Select.Root>
-          </div>
-        </InputGroup>
+        <TextInput
+          id="group-name"
+          labelText="Group name"
+          type="text"
+          placeholder={groupData.name}
+          onChange={(e) => setGroupName(e.target.value)}
+          value={groupName}
+        />
+        <Select.Root
+          select={alertTime}
+          label="Alert time"
+          onValueChange={(alertTime) => setAlertTime(alertTime)}
+          defaultValue={defaultAlert}
+          aria-label="Alert time selector"
+          variant="dialog"
+        >
+          <Select.Item value={selectValues.zero}>No alert</Select.Item>
+          <Select.Item value={selectValues.five}>5</Select.Item>
+          <Select.Item value={selectValues.ten}>10</Select.Item>
+          <Select.Item value={selectValues.fifteen}>15</Select.Item>
+          <Select.Item value={selectValues.twenty}>20</Select.Item>
+          <Select.Item value={selectValues.twentyFive}>25</Select.Item>
+          <Select.Item value={selectValues.thirty}>30</Select.Item>
+        </Select.Root>
       </FormInputs>
       <ButtonWrapper>
         <Button variant="tertiary" onClick={handleRemoveGroup}>
@@ -133,33 +126,6 @@ const FormInputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 24px;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  align-items: baseline;
-  gap: 16px;
-`;
-
-const Label = styled.label`
-  color: var(--color-yellow-2);
-`;
-
-const Input = styled.input`
-  padding: 8px 12px;
-  border: solid 1px var(--color-gray-5);
-  border-radius: 8px;
-  width: 280px;
-
-  &::placeholder {
-    color: var(--color-gray-5);
-  }
-
-  &:focus-visible {
-    outline: solid 2px var(--color-yellow-3);
-    border-color: var(--color-yellow-3);
-  }
 `;
 
 const ButtonWrapper = styled.div`
