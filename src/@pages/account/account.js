@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiSave, FiUserX, FiUserCheck } from "react-icons/fi";
+import { FiSave, FiUserX, FiMail } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 
@@ -131,11 +131,11 @@ function Account() {
             </Button>
           </div>
         </AccountOption>
-        <AccountOption header="Verify Email Account" layout="horizontal">
+        <AccountOption header="Verify Email" layout="horizontal">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
             <Button variant="primary" type="submit">
-              <FiUserCheck />
-              Verify
+              <FiMail />
+              Send Email
             </Button>
           </div>
         </AccountOption>
