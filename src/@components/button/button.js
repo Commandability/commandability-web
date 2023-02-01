@@ -175,8 +175,6 @@ const ButtonWrapper = styled.button`
   }};
 
   & > svg {
-    position: relative;
-    top: 0.05em;
     stroke-width: var(--stroke-width);
 
     stroke: ${(props) => {
