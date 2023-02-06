@@ -31,6 +31,7 @@ import SearchInput from "@components/search-input";
 import RosterItem from "@components/roster-item";
 import * as Fallback from "@components/fallback";
 import FireLoader from "@components/fire-loader";
+import InputGroup from "@components/input-group";
 
 const selectValues = {
   firstName: "first name",
@@ -318,7 +319,7 @@ function Roster() {
                 description="Add a new person to the roster here."
               >
                 <DialogForm onSubmit={onAddPersonSubmit}>
-                  <DialogInputs>
+                  <InputGroup>
                     <TextInput
                       id="first-name-input"
                       labelText="First name"
@@ -345,7 +346,7 @@ function Roster() {
                       onChange={(e) => setBadge(e.target.value)}
                       errorText={badge ? "" : "Please enter a badge"}
                     />
-                  </DialogInputs>
+                  </InputGroup>
                   <Button type="submit">
                     <FiSave />
                     Save person
@@ -561,12 +562,6 @@ const DialogForm = styled.form`
   gap: 32px;
   width: 448px;
   color: var(--color-yellow-2);
-`;
-
-const DialogInputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
 `;
 
 const DialogContainer = styled.div`

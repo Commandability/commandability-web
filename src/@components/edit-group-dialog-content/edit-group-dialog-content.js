@@ -8,6 +8,7 @@ import TextInput from "@components/text-input";
 import { useSnapshots } from "@context/snapshot-context";
 import Button from "@components/button";
 import * as Dialog from "@components/dialog";
+import InputGroup from "@components/input-group";
 
 const selectValues = {
   zero: "No alert",
@@ -70,7 +71,7 @@ function EditGroupDialogContent({
       onSubmit={handleSubmitChanges}
       style={Dialog.contentChildrenStyles}
     >
-      <FormInputs>
+      <InputGroup>
         <TextInput
           id="group-name"
           labelText="Group name"
@@ -97,7 +98,7 @@ function EditGroupDialogContent({
           <Select.Item value={selectValues.twentyFive}>25</Select.Item>
           <Select.Item value={selectValues.thirty}>30</Select.Item>
         </Select.Root>
-      </FormInputs>
+      </InputGroup>
       <ButtonWrapper>
         <Button variant="tertiary" onClick={handleRemoveGroup}>
           <FiTrash />
@@ -122,12 +123,6 @@ function EditGroupDialogContent({
 
 const AccountForm = styled.form`
   width: 576px;
-`;
-
-const FormInputs = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
 `;
 
 const ButtonWrapper = styled.div`
