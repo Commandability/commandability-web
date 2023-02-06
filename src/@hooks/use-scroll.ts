@@ -1,24 +1,22 @@
 import * as React from "react";
 
-/**
- * A number, or a string containing a number.
- * @typedef {Object} Scroll
- * @property {number} y - The y scroll position
- * @property {string} status - The scroll status, either "scrolling-down", "scrolling-up", or "idle"
- */
+interface Scroll {
+  y: number;
+  status: "idle" | "scrolling-down" | "scrolling-up";
+}
 
 /**
  * Track the scroll position and status
- * @returns {Scroll} The last render's window.scrollY position and the current scroll status
+ * @returns The last render's window.scrollY position and the current scroll status
  */
-function useScroll() {
-  const [scroll, setScroll] = React.useState({
+function useScroll(): Scroll {
+  const [scroll, setScroll] = React.useState<Scroll>({
     y: window.scrollY,
     status: "idle",
   });
 
   React.useEffect(() => {
-    let statusTimeoutID;
+    let statusTimeoutID: ReturnType<typeof setTimeout>;
     function handleScroll() {
       setScroll((prevScroll) => ({
         y: window.scrollY,

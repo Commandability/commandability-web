@@ -8,10 +8,10 @@
  * @param wait - The wait time in milliseconds
  */
 export function debounce(callback: (...args: any[]) => void, wait: number) {
-  let timeoutId: number;
+  let timeoutId: ReturnType<typeof setTimeout>;
   return (...args: any[]) => {
-    window.clearTimeout(timeoutId);
-    timeoutId = window.setTimeout(() => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
       callback.apply(null, args);
     }, wait);
   };
