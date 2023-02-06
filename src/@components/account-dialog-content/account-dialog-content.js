@@ -49,15 +49,18 @@ const defaultConfig = {
   },
   groups: {
     GROUP_1: {
+      name: "GROUP 1",
       alert: 20,
       isVisible: true,
     },
     GROUP_2: {
+      name: "GROUP 2",
       alert: 20,
       isVisible: true,
     },
     GROUP_6: {
       isVisible: true,
+      alert: 0,
       name: "Rehab",
     },
   },
