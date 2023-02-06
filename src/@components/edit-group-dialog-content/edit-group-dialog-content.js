@@ -100,10 +100,10 @@ function EditGroupDialogContent({
         </Select.Root>
       </InputGroup>
       <ButtonWrapper>
-        <Button variant="tertiary" onClick={handleRemoveGroup}>
+        <DeleteButton variant="tertiary" onClick={handleRemoveGroup}>
           <FiTrash />
           Delete Group
-        </Button>
+        </DeleteButton>
         <EditSubmitWrapper>
           <Dialog.Close asChild>
             <Button variant="secondary">
@@ -128,6 +128,11 @@ const AccountForm = styled.form`
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+`;
+
+const DeleteButton = styled(Button)`
+  position: relative;
+  left: 16px;
 `;
 
 const EditSubmitWrapper = styled.div`

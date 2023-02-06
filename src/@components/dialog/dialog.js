@@ -39,7 +39,7 @@ export const Overlay = styled(RadixDialog.Overlay)`
 export const contentChildrenStyles = {
   display: "flex",
   flexDirection: "column",
-  gap: "32px",
+  gap: "40px",
 };
 
 export const Content = React.forwardRef(

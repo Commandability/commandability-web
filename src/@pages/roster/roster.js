@@ -318,7 +318,10 @@ function Roster() {
                 title="Add person"
                 description="Add a new person to the roster here."
               >
-                <DialogForm onSubmit={onAddPersonSubmit}>
+                <DialogForm
+                  style={Dialog.contentChildrenStyles}
+                  onSubmit={onAddPersonSubmit}
+                >
                   <InputGroup>
                     <TextInput
                       id="first-name-input"
@@ -556,12 +559,8 @@ const SelectRoot = styled(Select.Root)`
 `;
 
 const DialogForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 32px;
   width: 448px;
-  color: var(--color-yellow-2);
+  align-items: flex-end;
 `;
 
 const DialogContainer = styled.div`
