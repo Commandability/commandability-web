@@ -86,6 +86,8 @@ function EditGroupDialogContent({
           defaultValue={defaultAlert}
           aria-label="Alert time selector"
           variant="dialog"
+          selectHtmlFor="alert-time"
+          selectId="alert-time"
         >
           <Select.Item value={selectValues.zero}>No alert</Select.Item>
           <Select.Item value={selectValues.five}>5</Select.Item>

@@ -1,7 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
 import * as RadixSelect from "@radix-ui/react-select";
-import * as RadixLabel from "@radix-ui/react-label";
 import { FiChevronDown, FiCheck } from "react-icons/fi";
 
 import UnstyledButton from "@components/unstyled-button";
@@ -13,15 +12,30 @@ const VARIANTS = {
 
 export const Root = React.forwardRef(
   (
-    { className, children, label, variant = "dialog", ...props },
+    {
+      className,
+      children,
+      label,
+      variant = "dialog",
+      selectHtmlFor,
+      selectId,
+      ...props
+    },
     forwardedRef
   ) => {
     return (
       <RootWrapper className={className} variant={variant}>
-        <LabelText variant={variant}>{label}</LabelText>
-        <RadixLabelRoot variant={variant}>
+        <LabelText variant={variant} htmlFor={selectHtmlFor}>
+          {label}
+        </LabelText>
+        <InputWrapper variant={variant}>
           <RadixSelect.Root {...props}>
-            <RadixSelect.Trigger ref={forwardedRef} variant={variant} asChild>
+            <RadixSelect.Trigger
+              id={selectId}
+              ref={forwardedRef}
+              variant={variant}
+              asChild
+            >
               <TriggerButton>
                 <RadixSelect.Value />
                 <RadixSelect.Icon>
@@ -35,7 +49,7 @@ export const Root = React.forwardRef(
               </RootContent>
             </RadixSelect.Portal>
           </RadixSelect.Root>
-        </RadixLabelRoot>
+        </InputWrapper>
       </RootWrapper>
     );
   }
@@ -90,7 +104,7 @@ const RootWrapper = styled.div`
   }};
 `;
 
-const RadixLabelRoot = styled(RadixLabel.Root)`
+const InputWrapper = styled.div`
   width: ${(props) => {
     switch (props.variant) {
       case VARIANTS.dialog:
