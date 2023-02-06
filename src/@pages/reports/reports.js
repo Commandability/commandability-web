@@ -523,6 +523,7 @@ function Reports() {
             // Clicking reports in the layout component causes the loader to be called but does not remount the reports page
             // Change the key to remount the select component when the URL has no s query param to synchronize its state with the URL
             key={key}
+            variant="page"
           >
             <Select.Item value={SELECT_VALUES.newest}>Newest first</Select.Item>
             <Select.Item value={SELECT_VALUES.oldest}>Oldest first</Select.Item>

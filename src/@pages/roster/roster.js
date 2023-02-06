@@ -295,6 +295,7 @@ function Roster() {
           onValueChange={(select) => setSelectSort(select)}
           defaultValue={selectValues.firstName}
           label="Sort"
+          variant="page"
         >
           <Select.Item value={selectValues.firstName}>First name</Select.Item>
           <Select.Item value={selectValues.lastName}>Last name</Select.Item>
