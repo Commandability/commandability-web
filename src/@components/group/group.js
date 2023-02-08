@@ -9,7 +9,7 @@ import UnstyledButton from "@components/unstyled-button";
 import EditGroupDialogContent from "@components/edit-group-dialog-content";
 import { useSnapshots } from "@context/snapshot-context";
 
-function Group({ groupData, groupId, userGroupData }) {
+function Group({ groupData, groupId, userGroupData, ...props }) {
   const { snapshots } = useSnapshots();
   const [editGroupOpen, setEditGroupOpen] = React.useState(false);
 
@@ -76,7 +76,7 @@ function Group({ groupData, groupId, userGroupData }) {
       </AddGroupButton>
     );
   }
-  return <Wrapper>{groupContent}</Wrapper>;
+  return <Wrapper {...props}>{groupContent}</Wrapper>;
 }
 
 const Wrapper = styled.li`

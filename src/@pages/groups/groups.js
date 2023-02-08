@@ -34,13 +34,15 @@ function Groups() {
   let userGroupData = snapshots.user.data.groups;
 
   let groupArray = generatePageLocations();
-  let groupPage = [];
+  let groupPage = new Map();
   let subGroupPage;
+  let groupNumIndex = [];
 
   for (let pageNum in groupArray) {
-    subGroupPage = [];
+    subGroupPage = new Map();
     for (let groupNum in groupArray[pageNum].locationIds) {
-      subGroupPage.push(
+      subGroupPage.set(
+        pageNum + groupNum,
         <Group
           groupData={
             userGroupData[groupArray[pageNum].locationIds[groupNum]]
@@ -49,21 +51,45 @@ function Groups() {
           }
           groupId={groupArray[pageNum].locationIds[groupNum]}
           userGroupData={userGroupData}
+          key={pageNum + groupNum}
         />
       );
+      groupNumIndex.push(groupNum);
     }
-    groupPage.push(<TabsContent>{subGroupPage}</TabsContent>);
+    groupPage.set(
+      pageNum,
+      <TabsContent key={pageNum}>
+        <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[0])}</PlainOl>
+        <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[1])}</PlainOl>
+        <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[2])}</PlainOl>
+        <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[3])}</PlainOl>
+        <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[4])}</PlainOl>
+        <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[5])}</PlainOl>
+      </TabsContent>
+    );
   }
 
   return (
     <Wrapper defaultValue="PAGE_1" orientation="horizontal">
       <Content>
-        <GroupTab value="PAGE_1">{groupPage[0]}</GroupTab>
-        <GroupTab value="PAGE_2">{groupPage[1]}</GroupTab>
-        <GroupTab value="PAGE_3">{groupPage[2]}</GroupTab>
-        <GroupTab value="PAGE_4">{groupPage[3]}</GroupTab>
-        <GroupTab value="PAGE_5">{groupPage[4]}</GroupTab>
-        <GroupTab value="PAGE_6">{groupPage[5]}</GroupTab>
+        <GroupTab value="PAGE_1">
+          <PlainOl>{groupPage.get("PAGE_1")}</PlainOl>
+        </GroupTab>
+        <GroupTab value="PAGE_2">
+          <PlainOl>{groupPage.get("PAGE_2")}</PlainOl>
+        </GroupTab>
+        <GroupTab value="PAGE_3">
+          <PlainOl>{groupPage.get("PAGE_3")}</PlainOl>
+        </GroupTab>
+        <GroupTab value="PAGE_4">
+          <PlainOl>{groupPage.get("PAGE_4")}</PlainOl>
+        </GroupTab>
+        <GroupTab value="PAGE_5">
+          <PlainOl>{groupPage.get("PAGE_5")}</PlainOl>
+        </GroupTab>
+        <GroupTab value="PAGE_6">
+          <PlainOl>{groupPage.get("PAGE_6")}</PlainOl>
+        </GroupTab>
         <GroupsPageNumbers>
           <div
             style={{ borderBottom: "1px solid var(--color-gray-1)", flex: 1 }}
@@ -87,6 +113,11 @@ const Wrapper = styled(Tabs.Root)`
   height: 100%;
 `;
 
+const PlainOl = styled.ol`
+  list-style: none;
+  padding-left: 0;
+`;
+
 const Content = styled.div`
   height: 100%;
   display: flex;
@@ -101,7 +132,7 @@ const GroupTab = styled(Tabs.Content)`
   height: 100%;
 `;
 
-const TabsContent = styled.div`
+const TabsContent = styled.li`
   display: grid;
   grid-template-columns: 1fr 0fr 1fr;
   grid-template-rows: auto;
