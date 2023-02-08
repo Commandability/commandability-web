@@ -1,4 +1,8 @@
-// https://www.joshwcomeau.com/react/prefers-reduced-motion/
+/*
+  Adapted from Josh Comeau's usePrefersReducedMotion
+  https://www.joshwcomeau.com/react/prefers-reduced-motion/
+  License: none (public domain)
+*/
 
 import * as React from "react";
 
@@ -6,6 +10,10 @@ const QUERY = "(prefers-reduced-motion: no-preference)";
 
 const getInitialState = () => !window.matchMedia(QUERY).matches;
 
+/**
+ * Check if a user has reduced motion enabled
+ * @returns A boolean that is true if reduced motion is enabled
+ */
 function usePrefersReducedMotion() {
   const [prefersReducedMotion, setPrefersReducedMotion] =
     React.useState(getInitialState);

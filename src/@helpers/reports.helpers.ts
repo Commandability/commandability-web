@@ -2,6 +2,7 @@
   Reports helper functions
 */
 
+import type { UserInfo } from "firebase/auth";
 import { doc, writeBatch, collection, getDocs } from "firebase/firestore";
 import { ref, listAll, deleteObject } from "firebase/storage";
 
@@ -11,7 +12,7 @@ import { db, storage } from "firebase-config";
  * Delete all reports in a user's account
  * @param uid - A firebase userId
  */
-export async function deleteAllReports(uid) {
+export async function deleteAllReports(uid: UserInfo["uid"]) {
   const reportsRef = collection(db, "users", uid, "reports");
   // Remove firestore metadata
   const batch = writeBatch(db);
