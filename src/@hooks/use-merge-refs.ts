@@ -1,7 +1,7 @@
 import * as React from "react";
 
 /**
- * A mutable react ref
+ * A react ref that only contains mutable objects
  */
 export type ReactRef<T> = React.RefCallback<T> | React.MutableRefObject<T>;
 
@@ -11,12 +11,9 @@ export type ReactRef<T> = React.RefCallback<T> | React.MutableRefObject<T>;
  * @returns A react callback ref
  */
 function useMergeRefs<T>(...refs: ReactRef<T | null | undefined>[]) {
-  // Store the element the callback function is called with
-  // here to be passed to or assigned to the merged refs
   const targetRef = React.useRef<T | null | undefined>(null);
 
   const mergedRefs = React.useCallback(
-    // React will call the callback function with the element as a parameter
     (node: T | null | undefined) => {
       targetRef.current = node;
 
