@@ -58,7 +58,7 @@ function Groups() {
     }
     groupPage.set(
       pageNum,
-      <TabsContent key={pageNum}>
+      <TabsContent>
         <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[0])}</PlainOl>
         <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[1])}</PlainOl>
         <PlainOl>{subGroupPage.get(pageNum + groupNumIndex[2])}</PlainOl>
@@ -72,24 +72,12 @@ function Groups() {
   return (
     <Wrapper defaultValue="PAGE_1" orientation="horizontal">
       <Content>
-        <GroupTab value="PAGE_1">
-          <PlainOl>{groupPage.get("PAGE_1")}</PlainOl>
-        </GroupTab>
-        <GroupTab value="PAGE_2">
-          <PlainOl>{groupPage.get("PAGE_2")}</PlainOl>
-        </GroupTab>
-        <GroupTab value="PAGE_3">
-          <PlainOl>{groupPage.get("PAGE_3")}</PlainOl>
-        </GroupTab>
-        <GroupTab value="PAGE_4">
-          <PlainOl>{groupPage.get("PAGE_4")}</PlainOl>
-        </GroupTab>
-        <GroupTab value="PAGE_5">
-          <PlainOl>{groupPage.get("PAGE_5")}</PlainOl>
-        </GroupTab>
-        <GroupTab value="PAGE_6">
-          <PlainOl>{groupPage.get("PAGE_6")}</PlainOl>
-        </GroupTab>
+        <GroupTab value="PAGE_1">{groupPage.get("PAGE_1")}</GroupTab>
+        <GroupTab value="PAGE_2">{groupPage.get("PAGE_2")}</GroupTab>
+        <GroupTab value="PAGE_3">{groupPage.get("PAGE_3")}</GroupTab>
+        <GroupTab value="PAGE_4">{groupPage.get("PAGE_4")}</GroupTab>
+        <GroupTab value="PAGE_5">{groupPage.get("PAGE_5")}</GroupTab>
+        <GroupTab value="PAGE_6">{groupPage.get("PAGE_6")}</GroupTab>
         <GroupsPageNumbers>
           <div
             style={{ borderBottom: "1px solid var(--color-gray-1)", flex: 1 }}
@@ -132,7 +120,7 @@ const GroupTab = styled(Tabs.Content)`
   height: 100%;
 `;
 
-const TabsContent = styled.li`
+const TabsContent = styled.div`
   display: grid;
   grid-template-columns: 1fr 0fr 1fr;
   grid-template-rows: auto;
