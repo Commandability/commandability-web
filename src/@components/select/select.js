@@ -110,7 +110,7 @@ const InputWrapper = styled.div`
       case VARIANTS.dialog:
         return "320px";
       case VARIANTS.page:
-        return "fit-content";
+        return "208px";
       default:
     }
   }};
