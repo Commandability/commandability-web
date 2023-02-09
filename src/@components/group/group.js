@@ -8,8 +8,15 @@ import Spacer from "@components/spacer";
 import UnstyledButton from "@components/unstyled-button";
 import EditGroupDialogContent from "@components/edit-group-dialog-content";
 import { useSnapshots } from "@context/snapshot-context";
+import * as Fallback from "@components/fallback";
 
-function Group({ groupData, groupId, userGroupData, ...props }) {
+function Group({
+  groupData,
+  groupId,
+  userGroupData,
+  snapshotStatus,
+  ...props
+}) {
   const { snapshots } = useSnapshots();
   const [editGroupOpen, setEditGroupOpen] = React.useState(false);
 
@@ -26,7 +33,6 @@ function Group({ groupData, groupId, userGroupData, ...props }) {
       },
     });
   }
-
   let active;
   let alertTime = 0;
   if (groupData === null) {
@@ -36,45 +42,54 @@ function Group({ groupData, groupId, userGroupData, ...props }) {
     alertTime = groupData.alert;
   }
   let groupContent;
-  if (active === true) {
+
+  if (snapshotStatus === "pending") {
     groupContent = (
-      <Content>
-        <Heading>{groupData.name}</Heading>
-        <AlertWrapper>
-          <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
-          <AlertText>{alertTime === 0 ? "No alerts" : "Minutes"}</AlertText>
-        </AlertWrapper>
-        <Dialog.Root open={editGroupOpen} onOpenChange={setEditGroupOpen}>
-          <Dialog.Trigger asChild>
-            <EditGroupButton type="button" />
-          </Dialog.Trigger>
-          <Dialog.Portal>
-            <DialogOverlay>
-              <Dialog.Content
-                header
-                title="Edit Group"
-                description="Edit the group display name and alert time."
-              >
-                <EditGroupDialogContent
-                  groupData={groupData}
-                  groupId={groupId}
-                  userGroupData={userGroupData}
-                  closeDialog={() => setEditGroupOpen(false)}
-                />
-              </Dialog.Content>
-            </DialogOverlay>
-          </Dialog.Portal>
-        </Dialog.Root>
-      </Content>
+      <>
+        <GroupFallback />
+      </>
     );
-  } else if (active === false) {
-    groupContent = (
-      <AddGroupButton type="button" onClick={handleAddGroup}>
-        <Text>Add group</Text>
-        <Spacer size={6} axis="horizontal" />
-        <FiPlus />
-      </AddGroupButton>
-    );
+  } else {
+    if (active === true) {
+      groupContent = (
+        <Content>
+          <Heading>{groupData.name}</Heading>
+          <AlertWrapper>
+            <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
+            <AlertText>{alertTime === 0 ? "No alerts" : "Minutes"}</AlertText>
+          </AlertWrapper>
+          <Dialog.Root open={editGroupOpen} onOpenChange={setEditGroupOpen}>
+            <Dialog.Trigger asChild>
+              <EditGroupButton type="button" />
+            </Dialog.Trigger>
+            <Dialog.Portal>
+              <DialogOverlay>
+                <Dialog.Content
+                  header
+                  title="Edit Group"
+                  description="Edit the group display name and alert time."
+                >
+                  <EditGroupDialogContent
+                    groupData={groupData}
+                    groupId={groupId}
+                    userGroupData={userGroupData}
+                    closeDialog={() => setEditGroupOpen(false)}
+                  />
+                </Dialog.Content>
+              </DialogOverlay>
+            </Dialog.Portal>
+          </Dialog.Root>
+        </Content>
+      );
+    } else if (active === false) {
+      groupContent = (
+        <AddGroupButton type="button" onClick={handleAddGroup}>
+          <Text>Add group</Text>
+          <Spacer size={6} axis="horizontal" />
+          <FiPlus />
+        </AddGroupButton>
+      );
+    }
   }
   return <Wrapper {...props}>{groupContent}</Wrapper>;
 }
@@ -104,6 +119,13 @@ const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 8px;
+`;
+
+const GroupFallback = styled.div`
+  ${Fallback.html}
+  height: 324px;
+  width: 292px;
   border-radius: 8px;
 `;
 

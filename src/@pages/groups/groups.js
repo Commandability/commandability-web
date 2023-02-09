@@ -31,7 +31,10 @@ function Groups() {
     return pageLocations;
   };
 
-  let userGroupData = snapshots.user.data.groups;
+  let userGroupData = [];
+  if (snapshots.configuration.status !== "pending") {
+    userGroupData = snapshots.user.data.groups;
+  }
 
   let groupArray = generatePageLocations();
   let groupPage = new Map();
@@ -52,6 +55,7 @@ function Groups() {
           groupId={groupArray[pageNum].locationIds[groupNum]}
           userGroupData={userGroupData}
           key={pageNum + groupNum}
+          snapshotStatus={snapshots.configuration.status}
         />
       );
       groupNumIndex.push(groupNum);
