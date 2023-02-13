@@ -32,7 +32,7 @@ function useRect() {
     };
   }, [element]);
 
-  return [ref, rect];
+  return [ref, rect] as const;
 }
 
 export default useRect;
