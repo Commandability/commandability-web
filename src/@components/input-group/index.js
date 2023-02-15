@@ -1,1 +1,1 @@
-export { default } from "./input-group.js";
+export { default } from "./input-group";

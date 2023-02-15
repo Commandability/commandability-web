@@ -10,13 +10,13 @@ const MINIMUM_LOADING_TIME = 200;
 
 const AuthenticatedApp = React.lazy(() => {
   return Promise.all([
-    import("authenticated-app.js"),
+    import("authenticated-app.jsx"),
     new Promise((resolve) => setTimeout(resolve, MINIMUM_LOADING_TIME)),
   ]).then(([moduleExports]) => moduleExports);
 });
 const UnauthenticatedApp = React.lazy(() => {
   return Promise.all([
-    import("unauthenticated-app.js"),
+    import("unauthenticated-app.jsx"),
     new Promise((resolve) => setTimeout(resolve, MINIMUM_LOADING_TIME)),
   ]).then(([moduleExports]) => moduleExports);
 });

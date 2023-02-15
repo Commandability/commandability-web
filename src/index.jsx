@@ -4,9 +4,8 @@ import { InitialLoadProvider } from "@context/initial-load-context";
 import { AuthProvider } from "@context/auth-context";
 
 import App from "app";
-import GlobalStyles from "global-styles.js";
-import ScrollbarWidth from "scrollbar-width.js";
-import reportWebVitals from "reportWebVitals";
+import GlobalStyles from "global-styles.jsx";
+import ScrollbarWidth from "scrollbar-width.jsx";
 import * as Toast from "@components/toast";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -23,8 +22,3 @@ root.render(
     </InitialLoadProvider>
   </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

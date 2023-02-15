@@ -1,4 +1,4 @@
-import styled from "styled-components/macro";
+import styled from "styled-components";
 
 export default styled.button`
   display: ${(props) => props.display || "block"};
