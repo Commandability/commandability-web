@@ -32,7 +32,7 @@ type Snapshots = {
   [index: string]: Snapshot;
 };
 
-type SnapshotContext = {
+type SnapshotContextValue = {
   db: Firestore;
   snapshots: Snapshots;
   setSnapshotData: React.Dispatch<React.SetStateAction<SnapshotDatum[]>> | null;
@@ -57,7 +57,7 @@ declare module "firebase/firestore" {
   ): Unsubscribe;
 }
 
-const SnapshotContext = React.createContext<SnapshotContext | null>(null);
+const SnapshotContext = React.createContext<SnapshotContextValue | null>(null);
 SnapshotContext.displayName = "SnapshotContext";
 
 type SnapshotProviderProps = {
@@ -127,14 +127,14 @@ function SnapshotProvider({
     return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
   }, [snapshotData]);
 
-  const snapshotContext: SnapshotContext = {
+  const snapshotContextValue: SnapshotContextValue = {
     db,
     snapshots,
     setSnapshotData,
   };
 
   return (
-    <SnapshotContext.Provider value={snapshotContext}>
+    <SnapshotContext.Provider value={snapshotContextValue}>
       {children}
     </SnapshotContext.Provider>
   );
