@@ -1,9 +1,9 @@
 import * as React from "react";
 
-const InitialLoadContext = React.createContext();
+const InitialLoadContext = React.createContext(true);
 InitialLoadContext.displayName = "InitialLoadContext";
 
-function InitialLoadProvider({ children }) {
+function InitialLoadProvider({ children }: {children: React.ReactNode}) {
   const [initialLocation] = React.useState(document.location.href);
 
   const [initialLoad, setInitialLoad] = React.useState(true);
@@ -15,9 +15,15 @@ function InitialLoadProvider({ children }) {
       }
     });
 
-    observer.observe(document.getElementById("root"), {
-      childList: true,
-    });
+    const element = document.querySelector("#root");
+
+    if (element) {
+      observer.observe(element as Node, {
+        childList: true,
+      });
+    } else {
+      throw new Error("No root element is present in the DOM")
+    }
 
     return () => observer.disconnect();
   }, [initialLocation]);

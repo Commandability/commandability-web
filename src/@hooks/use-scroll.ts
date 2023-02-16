@@ -1,9 +1,9 @@
 import * as React from "react";
 
-interface Scroll {
+type Scroll = {
   y: number;
   status: "idle" | "scrolling-down" | "scrolling-up";
-}
+};
 
 /**
  * Track the scroll position and status

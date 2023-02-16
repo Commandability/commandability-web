@@ -1,28 +1,41 @@
 import * as React from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 
 import { auth } from "firebase-config";
 import FireLoader from "@components/fire-loader";
 
-const AuthContext = React.createContext();
+type User = {
+  status: "pending" | "resolved"
+  current: FirebaseUser | null
+}
+
+type Auth = {
+  user: User
+  setUser: React.Dispatch<React.SetStateAction<User>> | null
+}
+
+const initialUser: User = {
+  status: "pending",
+  current: null,
+}
+
+const initialAuth: Auth = {
+  user: initialUser,
+  setUser: null,
+}
+
+const AuthContext = React.createContext(initialAuth);
 AuthContext.displayName = "AuthContext";
 
-function AuthProvider({ children }) {
-  const [user, setUser] = React.useState({
-    status: "pending",
-    current: null,
-    error: null,
-  });
+function AuthProvider({ children }: { children: React.ReactNode}) {
+  const [user, setUser] = React.useState<User>(initialUser);
 
   React.useEffect(() => {
     const unsubscribe = onAuthStateChanged(
       auth,
       (user) => {
-        setUser({ status: "resolved", current: user, error: null });
+        setUser({ status: "resolved", current: user });
       },
-      (error) => {
-        setUser({ status: "rejected", current: null, error });
-      }
     );
     return () => unsubscribe();
   }, []);
@@ -36,17 +49,11 @@ function AuthProvider({ children }) {
     return <FireLoader />;
   }
 
-  if (user.status === "rejected") {
-    throw new Error(user.error);
-  }
-
   if (user.status === "resolved") {
     return (
       <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
     );
   }
-
-  throw new Error(`Unhandled authentication status: ${user.status}`);
 }
 
 function useAuth() {

@@ -34,12 +34,12 @@ function App() {
         {
           id: "user",
           ref: user.current ? doc(db, "users", user.current.uid) : null,
-          snapshotOptions: { ...snapshotOptions },
+          options: { ...snapshotOptions },
         },
         {
           id: "configuration",
           ref: collection(db, "configuration"),
-          snapshotOptions: { ...snapshotOptions },
+          options: { ...snapshotOptions },
         },
       ]}
     >
