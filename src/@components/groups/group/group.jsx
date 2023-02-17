@@ -95,7 +95,7 @@ function Group({
 }
 
 const Wrapper = styled.li`
-  height: 324px;
+  height: clamp(324px, 55vh - 324px, 1200px);
   width: 292px;
   border-radius: 8px;
   display: flex;
