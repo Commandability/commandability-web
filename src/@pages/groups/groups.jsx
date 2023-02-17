@@ -145,6 +145,7 @@ const PageNumber = styled(Tabs.Trigger)`
     color: var(--color-gray-3);
     border-bottom: solid 1px var(--color-gray-1);
   }
+  cursor: pointer;
 `;
 
 export default Groups;
