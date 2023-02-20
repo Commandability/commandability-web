@@ -7,9 +7,12 @@
  * @param callback - The debounced callback
  * @param wait - The wait time in milliseconds
  */
-export function debounce(callback: (...args: any[]) => void, wait: number) {
+export function debounce<T extends (...args: any[]) => void>(
+  callback: T,
+  wait: number
+) {
   let timeoutId: ReturnType<typeof setTimeout>;
-  return (...args: any[]) => {
+  return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       callback.apply(null, args);
