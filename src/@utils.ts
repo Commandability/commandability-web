@@ -7,6 +7,7 @@
  * @param callback - The debounced callback
  * @param wait - The wait time in milliseconds
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function debounce<T extends (...args: any[]) => void>(
   callback: T,
   wait: number
@@ -15,7 +16,7 @@ export function debounce<T extends (...args: any[]) => void>(
   return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
-      callback.apply(null, args);
+      callback(...args);
     }, wait);
   };
 }

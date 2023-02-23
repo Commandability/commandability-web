@@ -33,7 +33,7 @@ function App() {
       snapshotData={[
         {
           id: "user",
-          ref: user.current ? doc(db, "users", user.current.uid) : null,
+          ref: user.current ? doc(db, "users", user.current.uid) : undefined,
           options: { ...snapshotOptions },
         },
         {

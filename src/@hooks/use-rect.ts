@@ -17,7 +17,7 @@ function useRect() {
         setRect(element.getBoundingClientRect());
       }
     };
-    effect();
+    effect().catch(console.error);
   }, []);
 
   React.useLayoutEffect(() => {

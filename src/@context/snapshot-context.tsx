@@ -12,7 +12,10 @@ import {
   FirestoreError,
 } from "firebase/firestore";
 
-type SnapshotRef = DocumentReference<DocumentData> | Query<DocumentData> | null;
+type SnapshotRef =
+  | DocumentReference<DocumentData>
+  | Query<DocumentData>
+  | undefined;
 
 type SnapshotDatum = {
   id: string;
@@ -24,8 +27,8 @@ type Snapshot = {
   ref: SnapshotRef;
   options: SnapshotListenOptions;
   status: "pending" | "resolved" | "rejected";
-  data: any | null;
-  error?: FirestoreError | null;
+  data?: unknown | undefined;
+  error?: FirestoreError | undefined;
 };
 
 type Snapshots = {
@@ -35,7 +38,9 @@ type Snapshots = {
 type SnapshotContextValue = {
   db: Firestore;
   snapshots: Snapshots;
-  setSnapshotData: React.Dispatch<React.SetStateAction<SnapshotDatum[]>> | null;
+  setSnapshotData:
+    | React.Dispatch<React.SetStateAction<SnapshotDatum[]>>
+    | undefined;
 };
 
 declare module "firebase/firestore" {
@@ -57,7 +62,9 @@ declare module "firebase/firestore" {
   ): Unsubscribe;
 }
 
-const SnapshotContext = React.createContext<SnapshotContextValue | null>(null);
+const SnapshotContext = React.createContext<SnapshotContextValue | undefined>(
+  undefined
+);
 SnapshotContext.displayName = "SnapshotContext";
 
 type SnapshotProviderProps = {
@@ -73,24 +80,23 @@ function SnapshotProvider({
 }: SnapshotProviderProps) {
   const [snapshotData, setSnapshotData] =
     React.useState<SnapshotDatum[]>(initialSnapshotData);
-  const [snapshots, setSnapshots] = React.useState<Snapshots>(() => {
-    const state: Snapshots = {};
-    initialSnapshotData.forEach(
-      (snapshotDatum) =>
-        (state[snapshotDatum.id] = {
+  const [snapshots, setSnapshots] = React.useState<Snapshots>(() =>
+    initialSnapshotData.reduce<Snapshots>(
+      (accumulatedSnapshots: Snapshots, snapshotDatum: SnapshotDatum) => {
+        accumulatedSnapshots[snapshotDatum.id] = {
           ref: snapshotDatum.ref,
           options: snapshotDatum.options,
           status: "pending",
-          data: null,
-          error: null,
-        })
-    );
-    return state;
-  });
+        };
+        return accumulatedSnapshots;
+      },
+      {} as Snapshots
+    )
+  );
 
   React.useEffect(() => {
     const unsubscribes = snapshotData.map((snapshotDatum) => {
-      if (!snapshotDatum.ref) return () => {};
+      if (!snapshotDatum.ref) return;
 
       return onSnapshot(
         snapshotDatum.ref,
@@ -107,7 +113,7 @@ function SnapshotProvider({
                 snapshot instanceof DocumentSnapshot
                   ? snapshot.data()
                   : snapshot.docs,
-              error: null,
+              error: undefined,
             },
           }));
         },
@@ -117,14 +123,14 @@ function SnapshotProvider({
             [snapshotDatum.id]: {
               ...prevSnapshot[snapshotDatum.id],
               status: "rejected",
-              data: null,
+              data: undefined,
               error,
             },
           }));
         }
       );
     });
-    return () => unsubscribes.forEach((unsubscribe) => unsubscribe());
+    return () => unsubscribes.forEach((unsubscribe) => unsubscribe?.());
   }, [snapshotData]);
 
   const snapshotContextValue: SnapshotContextValue = {
