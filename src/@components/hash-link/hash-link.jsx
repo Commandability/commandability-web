@@ -6,45 +6,49 @@
 import * as React from "react";
 import { useLocation, useResolvedPath, Link } from "react-router-dom";
 
-function HashLink(
-  {
-    to,
-    className: classNameProp,
-    style: styleProp,
-    inView: inViewProp,
-    children,
-    ...props
-  },
-  forwardedRef
-) {
-  const { hash: locationHash } = useLocation();
-  const { hash: toHash } = useResolvedPath(to);
+const HashLink = React.forwardRef(
+  (
+    {
+      to,
+      className: classNameProp,
+      style: styleProp,
+      inView: inViewProp,
+      children,
+      ...props
+    },
+    forwardedRef
+  ) => {
+    const { hash: locationHash } = useLocation();
+    const { hash: toHash } = useResolvedPath(to);
 
-  let isActive = toHash ? locationHash === toHash : false;
-  isActive = inViewProp;
-  const style =
-    typeof styleProp === "function" ? styleProp({ isActive }) : styleProp;
+    let isActive = toHash ? locationHash === toHash : false;
+    isActive = inViewProp;
+    const style =
+      typeof styleProp === "function" ? styleProp({ isActive }) : styleProp;
 
-  let className;
-  if (typeof classNameProp === "function") {
-    className = classNameProp({ isActive });
-  } else {
-    className = [classNameProp, isActive ? "active" : null]
-      .filter(Boolean)
-      .join(" ");
+    let className;
+    if (typeof classNameProp === "function") {
+      className = classNameProp({ isActive });
+    } else {
+      className = [classNameProp, isActive ? "active" : null]
+        .filter(Boolean)
+        .join(" ");
+    }
+
+    return (
+      <Link
+        {...props}
+        ref={forwardedRef}
+        to={to}
+        className={className}
+        style={style}
+      >
+        {children}
+      </Link>
+    );
   }
+);
 
-  return (
-    <Link
-      {...props}
-      ref={forwardedRef}
-      to={to}
-      className={className}
-      style={style}
-    >
-      {children}
-    </Link>
-  );
-}
+HashLink.displayName = "HashLink";
 
-export default React.forwardRef(HashLink);
+export default HashLink;

@@ -1,3 +1,4 @@
+import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixToast from "@radix-ui/react-toast";
 import { FiAlertTriangle } from "react-icons/fi";

@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 
 import { BREAKPOINTS, COLORS } from "@constants";
@@ -51,7 +52,7 @@ function HeroImage({ blur, children, ...props }) {
         /images/hero/hero_ub8rir_ar_16_9,c_fill,g_auto__c_scale,w_3840.webp 3840w`}
       />
       <Img
-        src={`/images/hero/hero_dklzjh_ar_16_9,c_fill,g_auto__c_scale,w_1200.jpg`}
+        src={`/images/hero/hero_dklzjh_ar_4_3,c_fill,g_auto__c_scale,w_1982.jpg`}
         alt=""
       />
       <Gradient />

@@ -117,6 +117,8 @@ const Button = React.forwardRef(
   }
 );
 
+Button.displayName = "Button";
+
 const ButtonWrapper = styled.button`
   display: flex;
   align-items: center;

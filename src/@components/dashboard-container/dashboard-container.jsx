@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 
 import { QUERIES } from "@constants";
 
-function DashboardContainer({ children }) {
+function DashboardContainer() {
   return (
     <Wrapper>
       <Content>

@@ -66,6 +66,8 @@ const Pill = React.forwardRef(
   }
 );
 
+Pill.displayName = "Pill";
+
 const PillWrapper = styled.button`
   display: flex;
   align-items: center;

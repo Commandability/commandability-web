@@ -8,5 +8,5 @@ export default function ScrollbarWidth() {
     );
   }, []);
 
-  return null;
+  return undefined;
 }

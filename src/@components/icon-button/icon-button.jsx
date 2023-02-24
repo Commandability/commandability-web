@@ -28,7 +28,6 @@ const SIZES = {
 };
 
 function IconButton({
-  icon,
   theme = "dark",
   size = "small",
   children,

@@ -53,6 +53,8 @@ export const Content = React.forwardRef(
   )
 );
 
+Content.displayName = "Content";
+
 const fadeIn = keyframes`
   from {
     opacity: 0;

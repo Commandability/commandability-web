@@ -55,6 +55,8 @@ export const Root = React.forwardRef(
   }
 );
 
+Root.displayName = "Root";
+
 const RootWrapper = styled.div`
   display: flex;
   padding-bottom: ${(props) => {
@@ -191,6 +193,8 @@ export const Item = React.forwardRef(({ children, ...props }, forwardedRef) => {
     </ItemWrapper>
   );
 });
+
+Item.displayName = "Item";
 
 const ItemWrapper = styled(RadixSelect.Item)`
   all: unset;

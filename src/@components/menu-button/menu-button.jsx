@@ -4,7 +4,7 @@ import styled from "styled-components";
 import UnstyledButton from "@components/unstyled-button";
 import VisuallyHidden from "@components/visually-hidden";
 
-function MenuButton(props, forwardedRef) {
+const MenuButton = React.forwardRef((props, forwardedRef) => {
   return (
     <Wrapper ref={forwardedRef} {...props}>
       <BarOne />
@@ -13,7 +13,9 @@ function MenuButton(props, forwardedRef) {
       <VisuallyHidden>Toggle menu</VisuallyHidden>
     </Wrapper>
   );
-}
+});
+
+MenuButton.displayName = "MenuButton";
 
 const Wrapper = styled(UnstyledButton)`
   display: flex;
@@ -74,4 +76,4 @@ const BarThree = styled(Bar)`
   }
 `;
 
-export default React.forwardRef(MenuButton);
+export default MenuButton;

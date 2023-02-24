@@ -5,8 +5,6 @@ function Skip({ ...props }) {
   return <SkipLink {...props}>Skip to content</SkipLink>;
 }
 
-export default Skip;
-
 const SkipLink = styled.a`
   position: fixed;
   left: 50%;
@@ -29,3 +27,5 @@ const SkipLink = styled.a`
     transform: translate(-50%, calc(0% + 16px));
   }
 `;
+
+export default Skip;

@@ -79,6 +79,8 @@ export const Content = React.forwardRef(
   )
 );
 
+Content.displayName = Content;
+
 const RadixDialogContent = styled(RadixDialog.Content)`
   // Disregard scrollbar width when centering so content is centered
   // consistently regardless of scrollbar presence

@@ -35,7 +35,7 @@ function EditGroupDialogContent({
     defaultAlert = groupData.alert.toString();
   }
 
-  const { [groupId]: _, ...newUserGroupData } = userGroupData;
+  const { ...newUserGroupData } = userGroupData;
 
   async function handleRemoveGroup(event) {
     event.preventDefault();
