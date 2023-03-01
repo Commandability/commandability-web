@@ -1,10 +1,11 @@
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import * as RadixDialog from "@radix-ui/react-dialog";
-import * as RadixDropdownMenu from "@radix-ui/react-dropdown-menu";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { zeroRightClassName } from "react-remove-scroll-bar";
+import FocusLock from "react-focus-lock";
+import { useTransition, animated } from "@react-spring/web";
 import {
   FiChevronDown,
   FiHelpCircle,
@@ -13,10 +14,10 @@ import {
 } from "react-icons/fi";
 
 import { useAuth } from "@context/auth-context";
+import { useKeyPress } from "@hooks/use-keypress";
 import * as Toast from "@components/toast";
 import useRect from "@hooks/use-rect";
 import UnstyledButton from "@components/unstyled-button";
-import VisuallyHidden from "@components/visually-hidden";
 import MenuButton from "@components/menu-button";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
@@ -30,6 +31,22 @@ const TAB_TRANSITION_DURATION = 400;
 function MainNav() {
   const { pathname } = useLocation();
   const { user } = useAuth();
+
+  const escapeKey = useKeyPress("Escape");
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const navRef = React.useRef();
+
+  const transitions = useTransition(menuOpen, {
+    from: {
+      transform: "translateY(-100%)",
+    },
+    enter: {
+      transform: "translateY(0%)",
+    },
+    leave: {
+      transform: "translateY(-100%)",
+    },
+  });
 
   const [reportsTabRef, reportsTabRect] = useRect();
   const [rosterTabRef, rosterTabRect] = useRect();
@@ -77,6 +94,22 @@ function MainNav() {
     return () => clearTimeout(transitionTimeoutID);
   }, [transition]);
 
+  React.useEffect(() => {
+    setMenuOpen(false);
+  }, [escapeKey]);
+
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   function handleSignOut() {
     if (/\/dashboard\//.test(pathname)) {
       window.location.assign("/");
@@ -88,6 +121,7 @@ function MainNav() {
 
   return (
     <Nav
+      ref={navRef}
       /* 
         zeroRightClassName makes sure any fixed position elements have their right position modified
         to match the original right position before the scroll bar is removed
@@ -105,7 +139,6 @@ function MainNav() {
       </LeftSide>
       {user.current ? (
         <Desktop
-          role="list"
           style={{
             "--transition": transition
               ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
@@ -136,45 +169,44 @@ function MainNav() {
       ) : null}
       {user.current ? (
         <Mobile>
-          <RadixDialog.Root modal={false}>
-            <RadixDialogTrigger asChild>
-              <MenuButton />
-            </RadixDialogTrigger>
-            <RadixDialog.Portal>
-              <RadixDialogContent onInteractOutside={(e) => e.preventDefault()}>
-                <RadixDialog.Title>
-                  <VisuallyHidden>Navigation</VisuallyHidden>
-                </RadixDialog.Title>
-                <RadixDialogMenu>
-                  <RadixDialogItem to="/dashboard/reports">
-                    Reports
-                  </RadixDialogItem>
-                  <RadixDialogItem to="/dashboard/roster">
-                    Roster
-                  </RadixDialogItem>
-                  <RadixDialogItem to="/dashboard/groups">
-                    Groups
-                  </RadixDialogItem>
-                </RadixDialogMenu>
-              </RadixDialogContent>
-            </RadixDialog.Portal>
-          </RadixDialog.Root>
+          <FocusLock disabled={!menuOpen}>
+            <PositionedMenuButton value={menuOpen} onChange={setMenuOpen} />
+            <Menu aria-expanded={menuOpen}>
+              {transitions((style, item) =>
+                item ? (
+                  <Animated style={style}>
+                    <MenuList>
+                      <li>
+                        <MenuLink to="/dashboard/reports">Reports</MenuLink>
+                      </li>
+                      <li>
+                        <MenuLink to="/dashboard/roster">Roster</MenuLink>
+                      </li>
+                      <li>
+                        <MenuLink to="/dashboard/groups">Groups</MenuLink>
+                      </li>
+                    </MenuList>
+                  </Animated>
+                ) : null
+              )}
+            </Menu>
+          </FocusLock>
         </Mobile>
       ) : null}
       <RightSide>
         {user.current ? (
-          <RadixDropdownMenu.Root>
-            <RadixDropdownMenu.Trigger asChild>
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
               <DropdownMenuButton>
                 {user.current.displayName}
                 <FiChevronDown />
               </DropdownMenuButton>
-            </RadixDropdownMenu.Trigger>
-            <RadixDropdownMenu.Portal>
-              <RadixDropdownMenuContent>
-                <RadixDropdownMenuArrow />
-                <RadixDropdownMenuGroup>
-                  <RadixDropdownMenuItem asChild>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenuContent>
+                <DropdownMenuArrow />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
                     <DropdownMenuAction
                       as="a"
                       href="mailto:support@commandability.app?"
@@ -182,17 +214,17 @@ function MainNav() {
                       <FiHelpCircle />
                       Contact us
                     </DropdownMenuAction>
-                  </RadixDropdownMenuItem>
-                  <RadixDropdownMenuItem asChild>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
                     <DropdownMenuAction to="/dashboard/settings">
                       <FiSettings />
                       Settings
                     </DropdownMenuAction>
-                  </RadixDropdownMenuItem>
-                </RadixDropdownMenuGroup>
-                <RadixDropdownMenuSeparator />
-                <RadixDropdownMenuGroup>
-                  <RadixDropdownMenuItem asChild>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
                     <DropdownMenuAction
                       as={UnstyledButton}
                       onClick={handleSignOut}
@@ -200,11 +232,11 @@ function MainNav() {
                       <FiLogOut />
                       Sign out
                     </DropdownMenuAction>
-                  </RadixDropdownMenuItem>
-                </RadixDropdownMenuGroup>
-              </RadixDropdownMenuContent>
-            </RadixDropdownMenu.Portal>
-          </RadixDropdownMenu.Root>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         ) : (
           <AccountOptions>
             <Dialog.Root open={newAccountOpen} onOpenChange={setNewAccountOpen}>
@@ -387,63 +419,27 @@ const Mobile = styled.div`
 
   @media ${QUERIES.tabletAndSmaller} {
     display: flex;
-    flex: 1;
-    justify-content: flex-end;
   }
 `;
 
-const filler = keyframes`
-  from {
-    transform: translateY(0%);
-  }
-  to {
-    transform: translateY(0%);
-  }
-`;
-
-const RadixDialogContent = styled(RadixDialog.Content)`
-  display: none;
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: block;
-  }
-
+const Menu = styled.div`
   position: fixed;
   // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
   top: calc(72px - 1px);
-  width: 100%;
+  left: 0;
+  right: 0;
   font-size: ${18 / 16}rem;
   overflow: hidden;
   // Add padding to bottom for box-shadow
   padding-bottom: 8px;
-
-  @media (prefers-reduced-motion: no-preference) {
-    // Add filler animation because radix doesn't detect closed animations on children
-    &[data-state="closed"] {
-      animation: ${filler} 300ms ease-in forwards;
-    }
-  }
 `;
 
-const slideIn = keyframes`
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0%);
-  }
+const Animated = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
 `;
 
-const slideOut = keyframes`
-  from {
-    transform: translateY(0%);
-  }
-  to {
-    transform: translateY(-100%);
-  }
-`;
-
-const RadixDialogMenu = styled.div`
+const MenuList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -453,18 +449,10 @@ const RadixDialogMenu = styled.div`
   padding: 24px 48px;
   padding-top: 16px;
   box-shadow: var(--box-shadow);
-
-  @media (prefers-reduced-motion: no-preference) {
-    ${Dialog.Content}[data-state="open"] & {
-      animation: ${slideIn} 300ms ease-out forwards;
-    }
-    ${Dialog.Content}[data-state="closed"] & {
-      animation: ${slideOut} 300ms ease-in forwards;
-    }
-  }
+  list-style: none;
 `;
 
-const RadixDialogItem = styled(NavLink)`
+const MenuLink = styled(NavLink)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
@@ -485,7 +473,7 @@ const RadixDialogItem = styled(NavLink)`
   }
 `;
 
-const RadixDialogTrigger = styled(RadixDialog.Trigger)`
+const PositionedMenuButton = styled(MenuButton)`
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
@@ -503,7 +491,7 @@ const RightSide = styled.div`
   }
 `;
 
-const RadixDropdownMenuContent = styled(RadixDropdownMenu.Content)`
+const DropdownMenuContent = styled(DropdownMenu.Content)`
   width: 160px;
   background-color: var(--color-gray-9);
   border-radius: var(--border-radius);
@@ -519,18 +507,18 @@ const RadixDropdownMenuContent = styled(RadixDropdownMenu.Content)`
   }
 `;
 
-const RadixDropdownMenuArrow = styled(RadixDropdownMenu.Arrow)`
+const DropdownMenuArrow = styled(DropdownMenu.Arrow)`
   fill: var(--color-gray-9);
   position: relative;
   right: calc(160px / 2 - 16px);
 `;
 
-const RadixDropdownMenuGroup = styled(RadixDropdownMenu.Group)`
+const DropdownMenuGroup = styled(DropdownMenu.Group)`
   width: 100%;
   padding: 4px 0;
 `;
 
-const RadixDropdownMenuItem = styled(RadixDropdownMenu.Item)`
+const DropdownMenuItem = styled(DropdownMenu.Item)`
   width: 100%;
   padding: 0px 16px;
   color: var(--color-gray-1);
@@ -558,7 +546,7 @@ const DropdownMenuAction = styled(Link)`
   }
 `;
 
-const RadixDropdownMenuSeparator = styled(RadixDropdownMenu.Separator)`
+const DropdownMenuSeparator = styled(DropdownMenu.Separator)`
   height: 1px;
   width: "100%";
   background-color: var(--color-gray-6);

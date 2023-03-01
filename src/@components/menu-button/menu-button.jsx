@@ -4,16 +4,27 @@ import styled from "styled-components";
 import UnstyledButton from "@components/unstyled-button";
 import VisuallyHidden from "@components/visually-hidden";
 
-const MenuButton = React.forwardRef((props, forwardedRef) => {
-  return (
-    <Wrapper ref={forwardedRef} {...props}>
-      <BarOne />
-      <BarTwo />
-      <BarThree />
-      <VisuallyHidden>Toggle menu</VisuallyHidden>
-    </Wrapper>
-  );
-});
+const MenuButton = React.forwardRef(
+  ({ value, onChange, ...props }, forwardedRef) => {
+    if (typeof onChange !== "function")
+      throw new Error("onChange must be a function type");
+
+    return (
+      <Wrapper
+        ref={forwardedRef}
+        data-state={value ? "open" : "closed"}
+        aria-pressed={value}
+        onClick={() => onChange(!value)}
+        {...props}
+      >
+        <BarOne />
+        <BarTwo />
+        <BarThree />
+        <VisuallyHidden>Toggle menu</VisuallyHidden>
+      </Wrapper>
+    );
+  }
+);
 
 MenuButton.displayName = "MenuButton";
 
@@ -46,7 +57,6 @@ const BarOne = styled(Bar)`
     transition: transform 400ms;
   }
 
-  // data-state is controlled by radix's dialog trigger
   ${Wrapper}[data-state="open"] & {
     transform: translateY(6px) rotate(-45deg);
   }
@@ -58,7 +68,6 @@ const BarTwo = styled(Bar)`
     transition: opacity 400ms;
   }
 
-  // data-state is controlled by radix's dialog trigger
   ${Wrapper}[data-state="open"] & {
     opacity: 0;
   }

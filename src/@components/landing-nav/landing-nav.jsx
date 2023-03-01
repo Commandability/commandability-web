@@ -1,17 +1,18 @@
 import * as React from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import * as RadixDialog from "@radix-ui/react-dialog";
 import { zeroRightClassName } from "react-remove-scroll-bar";
+import FocusLock from "react-focus-lock";
+import { useTransition, animated } from "@react-spring/web";
 
 import { useAuth } from "@context/auth-context";
 import { useInitialLoad } from "@context/initial-load-context";
+import { useKeyPress } from "@hooks/use-keypress";
 import useRect from "@hooks/use-rect";
 import useScroll from "@hooks/use-scroll";
 import UnstyledButton from "@components/unstyled-button";
 import SmoothScrollTo from "@components/smooth-scroll-to";
-import VisuallyHidden from "@components/visually-hidden";
 import MenuButton from "@components/menu-button";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
@@ -36,6 +37,22 @@ function LandingNav({
   const { hash } = useLocation();
   const { user } = useAuth();
   const initialLoad = useInitialLoad();
+
+  const escapeKey = useKeyPress("Escape");
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const transitions = useTransition(menuOpen, {
+    from: {
+      transform: "translateY(-100%)",
+    },
+    enter: {
+      transform: "translateY(0%)",
+    },
+    leave: {
+      transform: "translateY(-100%)",
+    },
+  });
+
+  const navRef = React.useRef();
 
   const [homeTabRef, homeTabRect] = useRect();
   const [featuresTabRef, featuresTabRect] = useRect();
@@ -256,6 +273,22 @@ function LandingNav({
   }, []);
 
   React.useEffect(() => {
+    setMenuOpen(false);
+  }, [escapeKey]);
+
+  React.useEffect(() => {
+    function handleClickOutside(event) {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  React.useEffect(() => {
     // Prevent scrolled state from triggering nav transition during scroll restore
     if (renderTimeout) return;
 
@@ -264,15 +297,25 @@ function LandingNav({
     } else {
       setScrolled(false);
     }
-  }, [y, initialLoad, renderTimeout]);
+  }, [y, renderTimeout]);
 
   function handleSignOut() {
     window.location.assign("/");
     signOut(user.current.auth);
   }
 
+  function onNavLinkClick() {
+    dispatch({
+      type: "path-update",
+      payload: {
+        origin: "onclick",
+      },
+    });
+  }
+
   return (
     <Nav
+      ref={navRef}
       /* 
         zeroRightClassName makes sure any fixed position elements have their right position modified
         to match the original right position before the scroll bar is removed
@@ -311,7 +354,6 @@ function LandingNav({
         </h1>
       </LeftSide>
       <Desktop
-        role="list"
         style={{
           "--color": `${
             scrolled ? "var(--color-gray-3)" : "var(--color-gray-9)"
@@ -331,14 +373,7 @@ function LandingNav({
           <TabLink
             targetId={hashIds.hero}
             inView={state.activeTargetId === hashIds.hero ? true : false}
-            onClick={() =>
-              dispatch({
-                type: "path-update",
-                payload: {
-                  origin: "onclick",
-                },
-              })
-            }
+            onClick={onNavLinkClick}
           >
             Home
           </TabLink>
@@ -347,14 +382,7 @@ function LandingNav({
           <TabLink
             targetId={hashIds.features}
             inView={state.activeTargetId === hashIds.features ? true : false}
-            onClick={() =>
-              dispatch({
-                type: "path-update",
-                payload: {
-                  origin: "onclick",
-                },
-              })
-            }
+            onClick={onNavLinkClick}
           >
             Features
           </TabLink>
@@ -363,14 +391,7 @@ function LandingNav({
           <TabLink
             targetId={hashIds.howItWorks}
             inView={state.activeTargetId === hashIds.howItWorks ? true : false}
-            onClick={() =>
-              dispatch({
-                type: "path-update",
-                payload: {
-                  origin: "onclick",
-                },
-              })
-            }
+            onClick={onNavLinkClick}
           >
             How it works
           </TabLink>
@@ -379,96 +400,74 @@ function LandingNav({
           <TabLink
             targetId={hashIds.footer}
             inView={state.activeTargetId === hashIds.footer ? true : false}
-            onClick={() =>
-              dispatch({
-                type: "path-update",
-                payload: {
-                  origin: "onclick",
-                },
-              })
-            }
+            onClick={onNavLinkClick}
           >
             Contact
           </TabLink>
         </Tab>
       </Desktop>
       <Mobile>
-        <RadixDialog.Root modal={false}>
-          <Trigger asChild>
-            <MenuButton />
-          </Trigger>
-          <RadixDialog.Portal>
-            <Content onInteractOutside={(e) => e.preventDefault()}>
-              <RadixDialog.Title>
-                <VisuallyHidden>Navigation</VisuallyHidden>
-              </RadixDialog.Title>
-              <Menu>
-                <Item
-                  targetId={hashIds.hero}
-                  inView={state.activeTargetId === hashIds.hero ? true : false}
-                  onClick={() =>
-                    dispatch({
-                      type: "path-update",
-                      payload: {
-                        origin: "onclick",
-                      },
-                    })
-                  }
-                >
-                  Home
-                </Item>
-                <Item
-                  targetId={hashIds.features}
-                  inView={
-                    state.activeTargetId === hashIds.features ? true : false
-                  }
-                  onClick={() =>
-                    dispatch({
-                      type: "path-update",
-                      payload: {
-                        origin: "onclick",
-                      },
-                    })
-                  }
-                >
-                  Features
-                </Item>
-                <Item
-                  targetId={hashIds.howItWorks}
-                  inView={
-                    state.activeTargetId === hashIds.howItWorks ? true : false
-                  }
-                  onClick={() =>
-                    dispatch({
-                      type: "path-update",
-                      payload: {
-                        origin: "onclick",
-                      },
-                    })
-                  }
-                >
-                  How it works
-                </Item>
-                <Item
-                  targetId={hashIds.footer}
-                  inView={
-                    state.activeTargetId === hashIds.footer ? true : false
-                  }
-                  onClick={() =>
-                    dispatch({
-                      type: "path-update",
-                      payload: {
-                        origin: "onclick",
-                      },
-                    })
-                  }
-                >
-                  Contact
-                </Item>
-              </Menu>
-            </Content>
-          </RadixDialog.Portal>
-        </RadixDialog.Root>
+        <FocusLock disabled={!menuOpen}>
+          <PositionedMenuButton value={menuOpen} onChange={setMenuOpen} />
+          <Menu aria-expanded={menuOpen}>
+            {transitions((style, item) =>
+              item ? (
+                <Animated style={style}>
+                  <MenuList>
+                    <li>
+                      <MenuLink
+                        targetId={hashIds.hero}
+                        inView={
+                          state.activeTargetId === hashIds.hero ? true : false
+                        }
+                        onClick={onNavLinkClick}
+                      >
+                        Home
+                      </MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink
+                        targetId={hashIds.features}
+                        inView={
+                          state.activeTargetId === hashIds.features
+                            ? true
+                            : false
+                        }
+                        onClick={onNavLinkClick}
+                      >
+                        Features
+                      </MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink
+                        targetId={hashIds.howItWorks}
+                        inView={
+                          state.activeTargetId === hashIds.howItWorks
+                            ? true
+                            : false
+                        }
+                        onClick={onNavLinkClick}
+                      >
+                        How it works
+                      </MenuLink>
+                    </li>
+                    <li>
+                      <MenuLink
+                        targetId={hashIds.footer}
+                        inView={
+                          state.activeTargetId === hashIds.footer ? true : false
+                        }
+                        onClick={onNavLinkClick}
+                      >
+                        Contact
+                      </MenuLink>
+                    </li>
+                  </MenuList>
+                </Animated>
+              ) : null
+            )}
+          </Menu>
+        </FocusLock>
       </Mobile>
       <RightSide>
         <AccountOptions
@@ -666,63 +665,27 @@ const Mobile = styled.div`
 
   @media ${QUERIES.tabletAndSmaller} {
     display: flex;
-    flex: 1;
-    justify-content: flex-end;
-  }
-`;
-
-const filler = keyframes`
-  from {
-    transform: translateY(0%);
-  }
-  to {
-    transform: translateY(0%);
-  }
-`;
-
-const Content = styled(RadixDialog.Content)`
-  display: none;
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: block;
-  }
-
-  position: fixed;
-  // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
-  top: calc(72px - 1px);
-  width: 100%;
-  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
-  overflow: hidden;
-  // Add padding to bottom for box-shadow
-  padding-bottom: 8px;
-
-  @media (prefers-reduced-motion: no-preference) {
-    // Add filler animation because radix doesn't detect closed animations on children
-    &[data-state="closed"] {
-      animation: ${filler} 300ms ease-in forwards;
-    }
-  }
-`;
-
-const slideIn = keyframes`
-  from {
-    transform: translateY(-100%);
-  }
-  to {
-    transform: translateY(0%);
-  }
-`;
-
-const slideOut = keyframes`
-  from {
-    transform: translateY(0%);
-  }
-  to {
-    transform: translateY(-100%);
   }
 `;
 
 const Menu = styled.div`
+  position: fixed;
+  // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
+  top: calc(72px - 1px);
+  left: 0;
+  right: 0;
+  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
+  overflow: hidden;
+  // Add padding to bottom for box-shadow
+  padding-bottom: 8px;
+`;
+
+const Animated = styled(animated.div)`
+  display: flex;
+  flex-direction: column;
+`;
+
+const MenuList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -732,18 +695,10 @@ const Menu = styled.div`
   padding: 24px 48px;
   padding-top: 16px;
   box-shadow: var(--box-shadow);
-
-  @media (prefers-reduced-motion: no-preference) {
-    ${Content}[data-state="open"] & {
-      animation: ${slideIn} 300ms ease-out forwards;
-    }
-    ${Content}[data-state="closed"] & {
-      animation: ${slideOut} 300ms ease-in forwards;
-    }
-  }
+  list-style: none;
 `;
 
-const Item = styled(SmoothScrollTo)`
+const MenuLink = styled(SmoothScrollTo)`
   color: var(--color-gray-1);
   text-decoration: none;
   text-transform: uppercase;
@@ -759,7 +714,7 @@ const Item = styled(SmoothScrollTo)`
   }
 `;
 
-const Trigger = styled(RadixDialog.Trigger)`
+const PositionedMenuButton = styled(MenuButton)`
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
   padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
