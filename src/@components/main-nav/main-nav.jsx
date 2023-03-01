@@ -4,8 +4,6 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { zeroRightClassName } from "react-remove-scroll-bar";
-import FocusLock from "react-focus-lock";
-import { useTransition, animated } from "@react-spring/web";
 import {
   FiChevronDown,
   FiHelpCircle,
@@ -14,11 +12,10 @@ import {
 } from "react-icons/fi";
 
 import { useAuth } from "@context/auth-context";
-import { useKeyPress } from "@hooks/use-keypress";
+import * as NavMenu from "@components/nav-menu";
 import * as Toast from "@components/toast";
 import useRect from "@hooks/use-rect";
 import UnstyledButton from "@components/unstyled-button";
-import MenuButton from "@components/menu-button";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
@@ -32,21 +29,8 @@ function MainNav() {
   const { pathname } = useLocation();
   const { user } = useAuth();
 
-  const escapeKey = useKeyPress("Escape");
   const [menuOpen, setMenuOpen] = React.useState(false);
   const navRef = React.useRef();
-
-  const transitions = useTransition(menuOpen, {
-    from: {
-      transform: "translateY(-100%)",
-    },
-    enter: {
-      transform: "translateY(0%)",
-    },
-    leave: {
-      transform: "translateY(-100%)",
-    },
-  });
 
   const [reportsTabRef, reportsTabRect] = useRect();
   const [rosterTabRef, rosterTabRect] = useRect();
@@ -93,22 +77,6 @@ function MainNav() {
     }
     return () => clearTimeout(transitionTimeoutID);
   }, [transition]);
-
-  React.useEffect(() => {
-    setMenuOpen(false);
-  }, [escapeKey]);
-
-  React.useEffect(() => {
-    function handleClickOutside(event) {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    }
-    window.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      window.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   function handleSignOut() {
     if (/\/dashboard\//.test(pathname)) {
@@ -169,28 +137,21 @@ function MainNav() {
       ) : null}
       {user.current ? (
         <Mobile>
-          <FocusLock disabled={!menuOpen}>
-            <PositionedMenuButton value={menuOpen} onChange={setMenuOpen} />
-            <Menu aria-expanded={menuOpen}>
-              {transitions((style, item) =>
-                item ? (
-                  <Animated style={style}>
-                    <MenuList>
-                      <li>
-                        <MenuLink to="/dashboard/reports">Reports</MenuLink>
-                      </li>
-                      <li>
-                        <MenuLink to="/dashboard/roster">Roster</MenuLink>
-                      </li>
-                      <li>
-                        <MenuLink to="/dashboard/groups">Groups</MenuLink>
-                      </li>
-                    </MenuList>
-                  </Animated>
-                ) : null
-              )}
-            </Menu>
-          </FocusLock>
+          <NavMenu.Root
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
+            navRef={navRef}
+          >
+            <NavMenu.Link to="/dashboard/reports" as={NavLink}>
+              Reports
+            </NavMenu.Link>
+            <NavMenu.Link to="/dashboard/roster" as={NavLink}>
+              Roster
+            </NavMenu.Link>
+            <NavMenu.Link to="/dashboard/groups" as={NavLink}>
+              Groups
+            </NavMenu.Link>
+          </NavMenu.Root>
         </Mobile>
       ) : null}
       <RightSide>
@@ -420,62 +381,6 @@ const Mobile = styled.div`
   @media ${QUERIES.tabletAndSmaller} {
     display: flex;
   }
-`;
-
-const Menu = styled.div`
-  position: fixed;
-  // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
-  top: calc(72px - 1px);
-  left: 0;
-  right: 0;
-  font-size: ${18 / 16}rem;
-  overflow: hidden;
-  // Add padding to bottom for box-shadow
-  padding-bottom: 8px;
-`;
-
-const Animated = styled(animated.div)`
-  display: flex;
-  flex-direction: column;
-`;
-
-const MenuList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background-color: var(--color-white);
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  padding: 24px 48px;
-  padding-top: 16px;
-  box-shadow: var(--box-shadow);
-  list-style: none;
-`;
-
-const MenuLink = styled(NavLink)`
-  color: var(--color-gray-1);
-  text-decoration: none;
-  text-transform: uppercase;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
-    transition: color 400ms;
-  }
-
-  &.active {
-    color: var(--color-red-3);
-    &::before {
-      content: "→ ";
-      position: relative;
-      top: -0.05em;
-      opacity: 1;
-    }
-  }
-`;
-
-const PositionedMenuButton = styled(MenuButton)`
-  // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
-  padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
 
 const RightSide = styled.div`

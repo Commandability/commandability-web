@@ -3,17 +3,14 @@ import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { zeroRightClassName } from "react-remove-scroll-bar";
-import FocusLock from "react-focus-lock";
-import { useTransition, animated } from "@react-spring/web";
 
 import { useAuth } from "@context/auth-context";
 import { useInitialLoad } from "@context/initial-load-context";
-import { useKeyPress } from "@hooks/use-keypress";
 import useRect from "@hooks/use-rect";
 import useScroll from "@hooks/use-scroll";
 import UnstyledButton from "@components/unstyled-button";
 import SmoothScrollTo from "@components/smooth-scroll-to";
-import MenuButton from "@components/menu-button";
+import * as NavMenu from "@components/nav-menu";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
@@ -38,20 +35,7 @@ function LandingNav({
   const { user } = useAuth();
   const initialLoad = useInitialLoad();
 
-  const escapeKey = useKeyPress("Escape");
   const [menuOpen, setMenuOpen] = React.useState(false);
-  const transitions = useTransition(menuOpen, {
-    from: {
-      transform: "translateY(-100%)",
-    },
-    enter: {
-      transform: "translateY(0%)",
-    },
-    leave: {
-      transform: "translateY(-100%)",
-    },
-  });
-
   const navRef = React.useRef();
 
   const [homeTabRef, homeTabRect] = useRect();
@@ -273,22 +257,6 @@ function LandingNav({
   }, []);
 
   React.useEffect(() => {
-    setMenuOpen(false);
-  }, [escapeKey]);
-
-  React.useEffect(() => {
-    function handleClickOutside(event) {
-      if (navRef.current && !navRef.current.contains(event.target)) {
-        setMenuOpen(false);
-      }
-    }
-    window.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      window.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  React.useEffect(() => {
     // Prevent scrolled state from triggering nav transition during scroll restore
     if (renderTimeout) return;
 
@@ -407,67 +375,44 @@ function LandingNav({
         </Tab>
       </Desktop>
       <Mobile>
-        <FocusLock disabled={!menuOpen}>
-          <PositionedMenuButton value={menuOpen} onChange={setMenuOpen} />
-          <Menu aria-expanded={menuOpen}>
-            {transitions((style, item) =>
-              item ? (
-                <Animated style={style}>
-                  <MenuList>
-                    <li>
-                      <MenuLink
-                        targetId={hashIds.hero}
-                        inView={
-                          state.activeTargetId === hashIds.hero ? true : false
-                        }
-                        onClick={onNavLinkClick}
-                      >
-                        Home
-                      </MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink
-                        targetId={hashIds.features}
-                        inView={
-                          state.activeTargetId === hashIds.features
-                            ? true
-                            : false
-                        }
-                        onClick={onNavLinkClick}
-                      >
-                        Features
-                      </MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink
-                        targetId={hashIds.howItWorks}
-                        inView={
-                          state.activeTargetId === hashIds.howItWorks
-                            ? true
-                            : false
-                        }
-                        onClick={onNavLinkClick}
-                      >
-                        How it works
-                      </MenuLink>
-                    </li>
-                    <li>
-                      <MenuLink
-                        targetId={hashIds.footer}
-                        inView={
-                          state.activeTargetId === hashIds.footer ? true : false
-                        }
-                        onClick={onNavLinkClick}
-                      >
-                        Contact
-                      </MenuLink>
-                    </li>
-                  </MenuList>
-                </Animated>
-              ) : null
-            )}
-          </Menu>
-        </FocusLock>
+        <NavMenu.Root
+          menuOpen={menuOpen}
+          setMenuOpen={setMenuOpen}
+          navRef={navRef}
+        >
+          <NavMenu.Link
+            as={SmoothScrollTo}
+            targetId={hashIds.hero}
+            inView={state.activeTargetId === hashIds.hero ? true : false}
+            onClick={onNavLinkClick}
+          >
+            Home
+          </NavMenu.Link>
+          <NavMenu.Link
+            as={SmoothScrollTo}
+            targetId={hashIds.features}
+            inView={state.activeTargetId === hashIds.features ? true : false}
+            onClick={onNavLinkClick}
+          >
+            Features
+          </NavMenu.Link>
+          <NavMenu.Link
+            as={SmoothScrollTo}
+            targetId={hashIds.howItWorks}
+            inView={state.activeTargetId === hashIds.howItWorks ? true : false}
+            onClick={onNavLinkClick}
+          >
+            How it works
+          </NavMenu.Link>
+          <NavMenu.Link
+            as={SmoothScrollTo}
+            targetId={hashIds.footer}
+            inView={state.activeTargetId === hashIds.footer ? true : false}
+            onClick={onNavLinkClick}
+          >
+            Contact
+          </NavMenu.Link>
+        </NavMenu.Root>
       </Mobile>
       <RightSide>
         <AccountOptions
@@ -666,57 +611,6 @@ const Mobile = styled.div`
   @media ${QUERIES.tabletAndSmaller} {
     display: flex;
   }
-`;
-
-const Menu = styled.div`
-  position: fixed;
-  // Remove one pixel for when users drag the dialog upwards while scrolling at the bottom of the screen
-  top: calc(72px - 1px);
-  left: 0;
-  right: 0;
-  font-size: clamp(${16 / 16}rem, 0.25vw + 1rem, ${18 / 16}rem);
-  overflow: hidden;
-  // Add padding to bottom for box-shadow
-  padding-bottom: 8px;
-`;
-
-const Animated = styled(animated.div)`
-  display: flex;
-  flex-direction: column;
-`;
-
-const MenuList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background-color: var(--color-white);
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  padding: 24px 48px;
-  padding-top: 16px;
-  box-shadow: var(--box-shadow);
-  list-style: none;
-`;
-
-const MenuLink = styled(SmoothScrollTo)`
-  color: var(--color-gray-1);
-  text-decoration: none;
-  text-transform: uppercase;
-
-  &.active {
-    color: var(--color-red-3);
-    &::before {
-      content: "→ ";
-      position: relative;
-      top: -0.05em;
-      opacity: 1;
-    }
-  }
-`;
-
-const PositionedMenuButton = styled(MenuButton)`
-  // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container and the Menu icon and it's container
-  padding-right: calc(((32px - 18.67px) / 2) - ((24px - 18px) / 2));
 `;
 
 const RightSide = styled.div`
