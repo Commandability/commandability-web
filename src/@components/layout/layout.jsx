@@ -4,7 +4,7 @@ import { Outlet, ScrollRestoration } from "react-router-dom";
 import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import Skip from "@components/skip";
-import MainNav from "@components/main-nav";
+import { MainNav } from "@components/nav";
 import HeroImage from "@components/hero-image";
 
 function Layout({ type, children }) {

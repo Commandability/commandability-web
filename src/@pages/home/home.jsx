@@ -15,7 +15,7 @@ import Card from "@components/card";
 import IconItem, { ItemContents } from "@components/icon-item";
 import Pill from "@components/pill";
 import Spacer from "@components/spacer";
-import LandingNav from "@components/landing-nav";
+import { LandingNav } from "@components/nav";
 import VisuallyHidden from "@components/visually-hidden";
 import Skip from "@components/skip";
 import SmoothScrollTo from "@components/smooth-scroll-to";

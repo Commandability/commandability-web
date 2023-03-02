@@ -1,5 +1,4 @@
 import * as React from "react";
-import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { zeroRightClassName } from "react-remove-scroll-bar";
@@ -8,15 +7,14 @@ import { useAuth } from "@context/auth-context";
 import { useInitialLoad } from "@context/initial-load-context";
 import useRect from "@hooks/use-rect";
 import useScroll from "@hooks/use-scroll";
-import UnstyledButton from "@components/unstyled-button";
 import SmoothScrollTo from "@components/smooth-scroll-to";
-import * as NavMenu from "@components/nav-menu";
+import * as NavBase from "@components/nav/nav-base";
+import * as NavTabs from "@components/nav/nav-tabs";
+import * as NavMenu from "@components/nav/nav-menu";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
 } from "@components/account-dialog-content";
-import { ReactComponent as UnstyledFireIcon } from "@assets/icons/fire-icon.svg";
-import { QUERIES } from "@constants";
 
 const NAV_TRANSITION_DURATION = 800;
 const TAB_TRANSITION_DURATION = 400;
@@ -282,7 +280,7 @@ function LandingNav({
   }
 
   return (
-    <Nav
+    <NavBase.Root
       ref={navRef}
       /* 
         zeroRightClassName makes sure any fixed position elements have their right position modified
@@ -297,9 +295,9 @@ function LandingNav({
         "--nav-box-shadow": `${scrolled ? "inherit" : "none"}`,
       }}
     >
-      <LeftSide>
+      <NavBase.LeftSide>
         <h1>
-          <SiteID
+          <NavBase.SiteID
             href="/"
             style={{
               "--color": `${
@@ -307,7 +305,7 @@ function LandingNav({
               }`,
             }}
           >
-            <NavFireIcon
+            <NavBase.FireIcon
               style={{
                 "--fill": `${
                   scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
@@ -318,63 +316,74 @@ function LandingNav({
               }}
             />
             Commandability
-          </SiteID>
+          </NavBase.SiteID>
         </h1>
-      </LeftSide>
-      <Desktop
-        style={{
-          "--color": `${
-            scrolled ? "var(--color-gray-3)" : "var(--color-gray-9)"
-          }`,
-          "--color-active": `${
-            scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
-          }`,
-          "--tab-transition":
-            tabTransition === "active"
-              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms, background-color ${NAV_TRANSITION_DURATION}ms`
-              : `background-color ${NAV_TRANSITION_DURATION}ms`,
-          "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
-          "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
-        }}
-      >
-        <Tab ref={homeTabRef}>
-          <TabLink
-            targetId={hashIds.hero}
-            inView={state.activeTargetId === hashIds.hero ? true : false}
-            onClick={onNavLinkClick}
-          >
-            Home
-          </TabLink>
-        </Tab>
-        <Tab ref={featuresTabRef}>
-          <TabLink
-            targetId={hashIds.features}
-            inView={state.activeTargetId === hashIds.features ? true : false}
-            onClick={onNavLinkClick}
-          >
-            Features
-          </TabLink>
-        </Tab>
-        <Tab ref={howItWorksTabRef}>
-          <TabLink
-            targetId={hashIds.howItWorks}
-            inView={state.activeTargetId === hashIds.howItWorks ? true : false}
-            onClick={onNavLinkClick}
-          >
-            How it works
-          </TabLink>
-        </Tab>
-        <Tab ref={contactTabRef}>
-          <TabLink
-            targetId={hashIds.footer}
-            inView={state.activeTargetId === hashIds.footer ? true : false}
-            onClick={onNavLinkClick}
-          >
-            Contact
-          </TabLink>
-        </Tab>
-      </Desktop>
-      <Mobile>
+      </NavBase.LeftSide>
+      <NavBase.Middle>
+        <NavBase.Desktop>
+          <NavBase.Center>
+            <NavTabs.Root
+              style={{
+                "--color": `${
+                  scrolled ? "var(--color-gray-3)" : "var(--color-gray-9)"
+                }`,
+                "--color-active": `${
+                  scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
+                }`,
+                "--tab-transition":
+                  tabTransition === "active"
+                    ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms, background-color ${NAV_TRANSITION_DURATION}ms`
+                    : `background-color ${NAV_TRANSITION_DURATION}ms`,
+                "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
+                "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
+                "--max-width": "640px",
+              }}
+            >
+              <NavTabs.Tab
+                ref={homeTabRef}
+                targetId={hashIds.hero}
+                inView={state.activeTargetId === hashIds.hero ? true : false}
+                onClick={onNavLinkClick}
+                as={SmoothScrollTo}
+              >
+                Home
+              </NavTabs.Tab>
+              <NavTabs.Tab
+                ref={featuresTabRef}
+                targetId={hashIds.features}
+                inView={
+                  state.activeTargetId === hashIds.features ? true : false
+                }
+                onClick={onNavLinkClick}
+                as={SmoothScrollTo}
+              >
+                Features
+              </NavTabs.Tab>
+              <NavTabs.Tab
+                ref={howItWorksTabRef}
+                targetId={hashIds.howItWorks}
+                inView={
+                  state.activeTargetId === hashIds.howItWorks ? true : false
+                }
+                onClick={onNavLinkClick}
+                as={SmoothScrollTo}
+              >
+                How it works
+              </NavTabs.Tab>
+              <NavTabs.Tab
+                ref={contactTabRef}
+                targetId={hashIds.footer}
+                inView={state.activeTargetId === hashIds.footer ? true : false}
+                onClick={onNavLinkClick}
+                as={SmoothScrollTo}
+              >
+                Contact
+              </NavTabs.Tab>
+            </NavTabs.Root>
+          </NavBase.Center>
+        </NavBase.Desktop>
+      </NavBase.Middle>
+      <NavBase.Mobile>
         <NavMenu.Root
           menuOpen={menuOpen}
           setMenuOpen={setMenuOpen}
@@ -413,9 +422,9 @@ function LandingNav({
             Contact
           </NavMenu.Link>
         </NavMenu.Root>
-      </Mobile>
-      <RightSide>
-        <AccountOptions
+      </NavBase.Mobile>
+      <NavBase.RightSide>
+        <NavBase.AccountOptions
           style={{
             "--color": `${
               scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
@@ -426,13 +435,13 @@ function LandingNav({
           }}
         >
           {user.current ? (
-            <Option as={Link} to="/dashboard/reports">
+            <NavBase.Option as={Link} to="/dashboard/reports">
               Go to dashboard
-            </Option>
+            </NavBase.Option>
           ) : (
             <Dialog.Root open={newAccountOpen} onOpenChange={setNewAccountOpen}>
               <Dialog.Trigger asChild>
-                <Option>Create an account</Option>
+                <NavBase.Option>Create an account</NavBase.Option>
               </Dialog.Trigger>
               {/* Render without portal so toast is not unmounted */}
               <Dialog.Overlay>
@@ -447,14 +456,14 @@ function LandingNav({
             </Dialog.Root>
           )}
           {user.current ? (
-            <Option onClick={handleSignOut}>Sign out</Option>
+            <NavBase.Option onClick={handleSignOut}>Sign out</NavBase.Option>
           ) : (
             <Dialog.Root
               open={currentAccountOpen}
               onOpenChange={setCurrentAccountOpen}
             >
               <Dialog.Trigger asChild>
-                <Option>Sign in</Option>
+                <NavBase.Option>Sign in</NavBase.Option>
               </Dialog.Trigger>
               {/* Render without portal so toast is not unmounted */}
               <Dialog.Overlay>
@@ -468,188 +477,10 @@ function LandingNav({
               </Dialog.Overlay>
             </Dialog.Root>
           )}
-        </AccountOptions>
-      </RightSide>
-    </Nav>
+        </NavBase.AccountOptions>
+      </NavBase.RightSide>
+    </NavBase.Root>
   );
 }
-
-const Nav = styled.nav`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  display: flex;
-  z-index: 1;
-  align-items: center;
-  font-size: ${18 / 16}rem;
-  padding: 0px 24px;
-  background-color: var(--background-color);
-  box-shadow: var(--nav-box-shadow);
-  -webkit-tap-highlight-color: transparent;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: background-color;
-    transition: background-color ${NAV_TRANSITION_DURATION}ms;
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    background-color: var(--color-white);
-  }
-`;
-
-const LeftSide = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const SiteID = styled.a`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: ${18 / 16}rem;
-  font-weight: normal;
-  text-decoration: none;
-  color: var(--color);
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
-    transition: color ${NAV_TRANSITION_DURATION}ms;
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    color: var(--color-gray-1);
-  }
-`;
-
-const NavFireIcon = styled(UnstyledFireIcon)`
-  fill: var(--fill);
-  min-width: 32px;
-  min-height: 32px;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: fill;
-    transition: fill ${NAV_TRANSITION_DURATION}ms;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      fill: var(--fill-active);
-    }
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    fill: var(--color-red-3);
-  }
-`;
-
-const Desktop = styled.ul`
-  flex: 2;
-  display: flex;
-  max-width: 640px;
-  justify-content: space-between;
-  align-self: stretch;
-  list-style: none;
-  padding-left: 0;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: calc(72px - 4px);
-    left: var(--tab-left);
-    width: var(--tab-width);
-    height: 4px;
-    background-color: var(--color-active);
-
-    @media (prefers-reduced-motion: no-preference) {
-      will-change: left, width, background-color;
-      transition: var(--tab-transition);
-    }
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: none;
-  }
-`;
-
-const Tab = styled.li`
-  padding: 0px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const TabLink = styled(SmoothScrollTo)`
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  color: var(--color);
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color, border-bottom;
-    transition: color ${NAV_TRANSITION_DURATION}ms,
-      border-bottom ${NAV_TRANSITION_DURATION}ms;
-  }
-
-  &.active {
-    color: var(--color-active);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-active);
-    }
-  }
-`;
-
-const Mobile = styled.div`
-  display: none;
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: flex;
-  }
-`;
-
-const RightSide = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  align-self: center;
-  // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container
-  padding-right: calc((32px - 18.67px) / 2);
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: none;
-  }
-`;
-
-const AccountOptions = styled.div`
-  display: flex;
-  gap: 16px;
-`;
-
-const Option = styled(UnstyledButton)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: var(--color);
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
-  text-decoration: none;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
-    transition: color ${NAV_TRANSITION_DURATION}ms;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-active);
-    }
-  }
-`;
 
 export default LandingNav;

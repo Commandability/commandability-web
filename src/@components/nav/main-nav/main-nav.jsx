@@ -12,7 +12,9 @@ import {
 } from "react-icons/fi";
 
 import { useAuth } from "@context/auth-context";
-import * as NavMenu from "@components/nav-menu";
+import * as NavBase from "@components/nav/nav-base";
+import * as NavTabs from "@components/nav/nav-tabs";
+import * as NavMenu from "@components/nav/nav-menu";
 import * as Toast from "@components/toast";
 import useRect from "@hooks/use-rect";
 import UnstyledButton from "@components/unstyled-button";
@@ -20,10 +22,7 @@ import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
 } from "@components/account-dialog-content";
-import { ReactComponent as UnstyledFireIcon } from "@assets/icons/fire-icon.svg";
 import { QUERIES } from "@constants";
-
-const TAB_TRANSITION_DURATION = 400;
 
 function MainNav() {
   const { pathname } = useLocation();
@@ -36,7 +35,7 @@ function MainNav() {
   const [rosterTabRef, rosterTabRect] = useRect();
   const [groupsTabRef, groupsTabRect] = useRect();
 
-  const [transition, setTransition] = React.useState(false);
+  const [tabTransition, setTabTransition] = React.useState(false);
   const [activeTabRect, setActiveTabRect] = React.useState(null);
 
   const [currentAccountOpen, setCurrentAccountOpen] = React.useState(false);
@@ -68,15 +67,15 @@ function MainNav() {
   }, [pathname, reportsTabRect, rosterTabRect, groupsTabRect]);
 
   React.useEffect(() => {
-    let transitionTimeoutID;
-    if (transition) {
-      transitionTimeoutID = setTimeout(
-        () => setTransition(false),
-        TAB_TRANSITION_DURATION
+    let tabTransitionTimeoutID;
+    if (tabTransition) {
+      tabTransitionTimeoutID = setTimeout(
+        () => setTabTransition(false),
+        NavBase.TAB_TRANSITION_DURATION
       );
     }
-    return () => clearTimeout(transitionTimeoutID);
-  }, [transition]);
+    return () => clearTimeout(tabTransitionTimeoutID);
+  }, [tabTransition]);
 
   function handleSignOut() {
     if (/\/dashboard\//.test(pathname)) {
@@ -88,7 +87,7 @@ function MainNav() {
   }
 
   return (
-    <Nav
+    <NavBase.Root
       ref={navRef}
       /* 
         zeroRightClassName makes sure any fixed position elements have their right position modified
@@ -96,47 +95,86 @@ function MainNav() {
         https://github.com/theKashey/react-remove-scroll-bar#the-right-border
       */
       className={zeroRightClassName}
+      style={{
+        "--background-color": "var(--color-white)",
+      }}
     >
-      <LeftSide>
+      <NavBase.LeftSide>
         <h1>
-          <SiteID href="/">
-            <NavFireIcon />
+          <NavBase.SiteID
+            href="/"
+            style={{
+              "--color": "var(--color-gray-1)",
+            }}
+          >
+            <NavBase.FireIcon
+              style={{
+                "--fill": "var(--color-red-3)",
+                "--fill-active": "var(--color-yellow-3)",
+              }}
+            />
             Commandability
-          </SiteID>
+          </NavBase.SiteID>
         </h1>
-      </LeftSide>
+      </NavBase.LeftSide>
       {user.current ? (
-        <Desktop
-          style={{
-            "--transition": transition
-              ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms`
-              : "none",
-            "--tab-width": `${activeTabRect?.width}px`,
-            "--tab-left": `${activeTabRect?.left}px`,
-          }}
-        >
-          <Tab ref={reportsTabRef}>
-            <TabLink
-              to="/dashboard/reports"
-              onClick={() => setTransition(true)}
-            >
-              Reports
-            </TabLink>
-          </Tab>
-          <Tab ref={rosterTabRef}>
-            <TabLink to="/dashboard/roster" onClick={() => setTransition(true)}>
-              Roster
-            </TabLink>
-          </Tab>
-          <Tab ref={groupsTabRef}>
-            <TabLink to="/dashboard/groups" onClick={() => setTransition(true)}>
-              Groups
-            </TabLink>
-          </Tab>
-        </Desktop>
+        <NavBase.Middle>
+          <NavBase.Desktop>
+            <NavBase.Center>
+              <NavTabs.Root
+                style={{
+                  "--tab-transition": tabTransition
+                    ? `left ${NavBase.TAB_TRANSITION_DURATION}ms, width ${NavBase.TAB_TRANSITION_DURATION}ms`
+                    : "none",
+                  "--tab-width": `${activeTabRect?.width}px`,
+                  "--tab-left": `${activeTabRect?.left}px`,
+                  "--color-active": "var(--color-red-3)",
+                  "--max-width": "512px",
+                }}
+              >
+                <NavTabs.Tab
+                  ref={reportsTabRef}
+                  style={{
+                    "--color": "var(--color-gray-4)",
+                    "--color-active": "var(--color-red-3)",
+                  }}
+                  to="/dashboard/reports"
+                  onClick={() => setTabTransition(true)}
+                  as={NavLink}
+                >
+                  Reports
+                </NavTabs.Tab>
+                <NavTabs.Tab
+                  ref={rosterTabRef}
+                  style={{
+                    "--color": "var(--color-gray-4)",
+                    "--color-active": "var(--color-red-3)",
+                  }}
+                  to="/dashboard/roster"
+                  onClick={() => setTabTransition(true)}
+                  as={NavLink}
+                >
+                  Roster
+                </NavTabs.Tab>
+                <NavTabs.Tab
+                  ref={groupsTabRef}
+                  style={{
+                    "--color": "var(--color-gray-4)",
+                    "--color-active": "var(--color-red-3)",
+                  }}
+                  to="/dashboard/groups"
+                  onClick={() => setTabTransition(true)}
+                  as={NavLink}
+                >
+                  Groups
+                </NavTabs.Tab>
+              </NavTabs.Root>
+            </NavBase.Center>
+          </NavBase.Desktop>
+        </NavBase.Middle>
       ) : null}
       {user.current ? (
-        <Mobile>
+        <NavBase.Mobile>
           <NavMenu.Root
             menuOpen={menuOpen}
             setMenuOpen={setMenuOpen}
@@ -152,9 +190,9 @@ function MainNav() {
               Groups
             </NavMenu.Link>
           </NavMenu.Root>
-        </Mobile>
+        </NavBase.Mobile>
       ) : null}
-      <RightSide>
+      <NavBase.RightSide>
         {user.current ? (
           <DropdownMenu.Root>
             <DropdownMenu.Trigger asChild>
@@ -199,10 +237,17 @@ function MainNav() {
             </DropdownMenu.Portal>
           </DropdownMenu.Root>
         ) : (
-          <AccountOptions>
+          <NavBase.AccountOptions>
             <Dialog.Root open={newAccountOpen} onOpenChange={setNewAccountOpen}>
               <Dialog.Trigger asChild>
-                <Option>Create an account</Option>
+                <NavBase.Option
+                  style={{
+                    "--color": "var(--color-red-3)",
+                    "--color-active": "var(--color-red-1)",
+                  }}
+                >
+                  Create an account
+                </NavBase.Option>
               </Dialog.Trigger>
               {/* Render without portal so toast is not unmounted */}
               <Dialog.Overlay>
@@ -220,7 +265,14 @@ function MainNav() {
               onOpenChange={setCurrentAccountOpen}
             >
               <Dialog.Trigger asChild>
-                <Option>Sign in</Option>
+                <NavBase.Option
+                  style={{
+                    "--color": "var(--color-red-3)",
+                    "--color-active": "var(--color-red-1)",
+                  }}
+                >
+                  Sign in
+                </NavBase.Option>
               </Dialog.Trigger>
               {/* Render without portal so toast is not unmounted */}
               <Dialog.Overlay>
@@ -233,9 +285,9 @@ function MainNav() {
                 </Dialog.Content>
               </Dialog.Overlay>
             </Dialog.Root>
-          </AccountOptions>
+          </NavBase.AccountOptions>
         )}
-      </RightSide>
+      </NavBase.RightSide>
       <Toast.Root
         open={toastOpen}
         onOpenChange={setToastOpen}
@@ -245,156 +297,9 @@ function MainNav() {
         <Toast.Icon>{toastState.icon}</Toast.Icon>
       </Toast.Root>
       <Toast.Viewport />
-    </Nav>
+    </NavBase.Root>
   );
 }
-
-const Nav = styled.nav`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  display: flex;
-  z-index: 1;
-  align-items: center;
-  font-size: ${18 / 16}rem;
-  padding: 0px 24px;
-  background-color: var(--color-white);
-  box-shadow: var(--nav-box-shadow);
-  -webkit-tap-highlight-color: transparent;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: background-color;
-    transition: background-color 400ms;
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    background-color: var(--color-white);
-  }
-`;
-
-const LeftSide = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-`;
-
-const SiteID = styled.a`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: ${18 / 16}rem;
-  font-weight: normal;
-  text-decoration: none;
-  color: var(--color-gray-1);
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
-    transition: color 400ms;
-  }
-`;
-
-const NavFireIcon = styled(UnstyledFireIcon)`
-  fill: var(--color-red-3);
-  min-width: 32px;
-  min-height: 32px;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: fill;
-    transition: fill 400ms;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      fill: var(--color-yellow-3);
-    }
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    fill: var(--color-red-3);
-  }
-`;
-
-const Desktop = styled.ul`
-  flex: 2;
-  display: flex;
-  max-width: 512px;
-  justify-content: space-between;
-  align-self: stretch;
-  list-style: none;
-  padding-left: 0;
-
-  &::after {
-    content: "";
-    position: absolute;
-    top: calc(72px - 4px);
-    left: var(--tab-left);
-    width: var(--tab-width);
-    height: 4px;
-    background-color: var(--color-red-3);
-
-    @media (prefers-reduced-motion: no-preference) {
-      will-change: left, width;
-      transition: var(--transition);
-    }
-  }
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: none;
-  }
-`;
-
-const Tab = styled.li`
-  padding: 0px 8px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const TabLink = styled(NavLink)`
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  text-decoration: none;
-  color: var(--color-gray-4);
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color, border-bottom;
-    transition: color 400ms, border-bottom 400ms;
-  }
-
-  &.active {
-    color: var(--color-red-3);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-red-3);
-    }
-  }
-`;
-
-const Mobile = styled.div`
-  display: none;
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: flex;
-  }
-`;
-
-const RightSide = styled.div`
-  align-self: center;
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container
-  padding-right: calc((32px - 18.67px) / 2);
-
-  @media ${QUERIES.tabletAndSmaller} {
-    display: none;
-  }
-`;
 
 const DropdownMenuContent = styled(DropdownMenu.Content)`
   width: 160px;
@@ -470,29 +375,6 @@ const DropdownMenuButton = styled(UnstyledButton)`
     stroke: var(--color-red-4);
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
-  }
-`;
-
-const AccountOptions = styled.div`
-  display: flex;
-  gap: 16px;
-`;
-
-const Option = styled(UnstyledButton)`
-  display: flex;
-  color: var(--color-red-3);
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: color;
-    transition: color 400ms;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-red-1);
-    }
   }
 `;
 

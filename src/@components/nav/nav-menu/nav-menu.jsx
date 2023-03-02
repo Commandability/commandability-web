@@ -138,7 +138,7 @@ const Animated = styled(animated.div)`
   flex-direction: column;
 `;
 
-const List = styled.div`
+const List = styled.ul`
   display: flex;
   flex-direction: column;
   gap: 16px;
