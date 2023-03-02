@@ -3,10 +3,10 @@ import styled from "styled-components";
 
 import { QUERIES } from "@constants";
 
-function Card({ subheader, header, backgroundColor, children, ...props }) {
+function Card({ subheader, header, children, ...props }) {
   return (
     <Wrapper {...props}>
-      <Title style={{ "--background-color": backgroundColor }}>
+      <Title>
         <Subheader>{subheader}</Subheader>
         <Header>{header}</Header>
       </Title>

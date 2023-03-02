@@ -201,9 +201,9 @@ function Home() {
         </FeaturesWrapper>
         <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
           <StepOne
+            style={{ "--background-color": "var(--color-red-3)" }}
             subheader="Step 1"
             header="Setup an account"
-            backgroundColor="var(--color-red-3)"
           >
             <UnorderedList>
               <IconItem>
@@ -227,9 +227,9 @@ function Home() {
             </UnorderedList>
           </StepOne>
           <StepTwo
+            style={{ "--background-color": "var(--color-red-2)" }}
             subheader="Step 2"
             header="Take control of incidents"
-            backgroundColor="var(--color-red-2)"
           >
             <UnorderedList>
               <IconItem>
@@ -255,9 +255,9 @@ function Home() {
             </UnorderedList>
           </StepTwo>
           <StepThree
+            style={{ "--background-color": "var(--color-red-1)" }}
             subheader="Step 3"
             header="Stay accountable"
-            backgroundColor="var(--color-red-1)"
           >
             <UnorderedList>
               <IconItem>
