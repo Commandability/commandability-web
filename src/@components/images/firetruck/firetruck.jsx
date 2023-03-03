@@ -13,7 +13,7 @@ import webp2917 from "@assets/images/footer_gaugzs_c_scale,w_2917.webp";
 import jpg1920 from "@assets/images/footer_apkfbg_c_scale,w_1920.jpg";
 import { COLORS } from "@constants";
 
-function FooterImage({ children }) {
+function Firetruck({ children }) {
   return (
     <>
       <Picture>
@@ -88,4 +88,4 @@ const Content = styled.div`
   inset: 0;
 `;
 
-export default FooterImage;
+export default Firetruck;

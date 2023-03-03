@@ -6,7 +6,7 @@ import { updateDoc } from "firebase/firestore";
 import * as Dialog from "@components/dialog";
 import Spacer from "@components/spacer";
 import UnstyledButton from "@components/unstyled-button";
-import EditGroupDialogContent from "@components/edit-group-dialog-content";
+import EditGroupDialogContent from "@components/groups/edit-group-dialog-content";
 import { useSnapshots } from "@context/snapshot-context";
 import * as Fallback from "@components/fallback";
 

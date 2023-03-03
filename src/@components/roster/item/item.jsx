@@ -4,14 +4,11 @@ import { Link } from "react-router-dom";
 
 import Checkbox from "@components/checkbox";
 
-function ReportItem({
-  reportId,
-  location,
-  startTimestamp,
+function Item({
+  setCheckedItems,
   checkedAll,
   setCheckedAll,
-  setCheckedItems,
-  isAnyItemChecked,
+  person,
   ...props
 }) {
   const { status, origin } = checkedAll;
@@ -22,20 +19,15 @@ function ReportItem({
     // Check item when checkedAll is checked
     if (status) {
       setChecked(true);
-      setCheckedItems((checkedItems) => [...checkedItems, reportId]);
+      setCheckedItems((checkedItems) => [...checkedItems, person]);
       // Uncheck item when checkedAll is unchecked, but not when a single person has been unchecked
-    } else if (origin !== "list-item") {
+    } else if (origin !== "list") {
       setChecked(false);
       setCheckedItems((checkedItems) =>
-        checkedItems.filter((item) => item !== reportId)
+        checkedItems.filter((item) => item !== person)
       );
     }
-  }, [status, origin, setCheckedItems, reportId]);
-
-  // Ensure the item is unchecked even if a delete is unsuccessful
-  React.useEffect(() => {
-    if (!isAnyItemChecked) setChecked(false);
-  }, [isAnyItemChecked]);
+  }, [status, origin, setCheckedItems, person]);
 
   return (
     <Wrapper data-checked={checked ? "true" : "false"} {...props}>
@@ -46,30 +38,25 @@ function ReportItem({
           setChecked(checked);
 
           if (checked) {
-            setCheckedItems((checkedItems) => [...checkedItems, reportId]);
+            setCheckedItems((checkedItems) => [...checkedItems, person]);
           } else {
             setCheckedItems((checkedItems) =>
-              checkedItems.filter((item) => item !== reportId)
+              checkedItems.filter((item) => item !== person)
             );
 
             // Disable checked all when a single person has been unchecked
-            setCheckedAll({ status: false, origin: "list-item" });
+            setCheckedAll({ status: false, origin: "list" });
           }
         }}
       />
       <Contents>
         <Group>
-          <Location to={`/dashboard/reports/${reportId}`}>{location}</Location>
+          <Name to={`/dashboard/roster/${person.badge}`}>
+            {person.firstName} {person.lastName}
+          </Name>
+          <span>{person.shift}</span>
         </Group>
-        <span>
-          {startTimestamp.toDate().toLocaleString(navigator.language, {
-            year: "2-digit",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
-        </span>
+        <span>{person.badge}</span>
       </Contents>
     </Wrapper>
   );
@@ -118,7 +105,8 @@ const Group = styled.div`
   gap: 32px;
 `;
 
-const Location = styled(Link)`
+const Name = styled(Link)`
+  width: 256px;
   text-decoration: none;
   color: var(--color-gray-3);
 
@@ -129,4 +117,4 @@ const Location = styled(Link)`
   }
 `;
 
-export default ReportItem;
+export default Item;

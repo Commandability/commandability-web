@@ -28,10 +28,10 @@ import Checkbox from "@components/checkbox";
 import Button from "@components/button";
 import VisuallyHidden from "@components/visually-hidden";
 import SearchInput from "@components/search-input";
-import RosterItem from "@components/roster-item";
 import * as Fallback from "@components/fallback";
 import FireLoader from "@components/fire-loader";
 import InputGroup from "@components/input-group";
+import Item from "@components/roster/item";
 
 const selectValues = {
   firstName: "first name",
@@ -419,7 +419,7 @@ function Roster() {
                   sortFunction(firstPerson, secondPerson)
                 )
                 .map((person) => (
-                  <RosterItem
+                  <Item
                     key={person.badge}
                     person={person}
                     checkedAll={checkedAll}

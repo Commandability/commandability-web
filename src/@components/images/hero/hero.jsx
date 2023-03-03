@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { BREAKPOINTS, COLORS } from "@constants";
 
-function HeroImage({ blur, children, ...props }) {
+function Hero({ blur, children, ...props }) {
   return (
     <Picture {...props}>
       {/* Images generated with https://responsivebreakpoints.com/ */}
@@ -104,4 +104,4 @@ const Content = styled.div`
   inset: 0;
 `;
 
-export default HeroImage;
+export default Hero;

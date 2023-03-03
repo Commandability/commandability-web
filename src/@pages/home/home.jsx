@@ -9,8 +9,8 @@ import { useInitialLoad } from "@context/initial-load-context";
 import * as Toast from "@components/toast";
 import useMergeRefs from "@hooks/use-merge-refs";
 import useFragment from "@hooks/use-fragment";
-import HeroImage from "@components/hero-image";
-import FooterImage from "@components/footer-image";
+import HeroImage from "@components/images/hero";
+import FiretruckImage from "@components/images/firetruck";
 import Card from "@components/card";
 import IconItem, { ItemContents } from "@components/icon-item";
 import Pill from "@components/pill";
@@ -282,7 +282,7 @@ function Home() {
             </UnorderedList>
           </StepThree>
         </HowItWorks>
-        <FooterImage>
+        <FiretruckImage>
           <Footer id={hashIds.footer} ref={footerRef}>
             <Contact>
               <QuestionText>Have questions?</QuestionText>
@@ -306,7 +306,7 @@ function Home() {
               </Policies>
             </Legal>
           </Footer>
-        </FooterImage>
+        </FiretruckImage>
       </Main>
       <Toast.Root
         open={toastOpen}

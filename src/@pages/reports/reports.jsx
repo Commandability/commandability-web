@@ -58,7 +58,7 @@ import SearchInput from "@components/search-input";
 import TextInput from "@components/text-input";
 import Button from "@components/button";
 import VisuallyHidden from "@components/visually-hidden";
-import ReportItem from "@components/report-item";
+import Item from "@components/reports/item";
 
 export const REPORTS_CONFIGURATION = {
   reportsPerPage: 20,
@@ -715,7 +715,7 @@ function Reports() {
                     {[...reportsDocs.docs].map((report) => {
                       const { location, startTimestamp } = report.data();
                       return (
-                        <ReportItem
+                        <Item
                           key={report.id}
                           reportId={report.id}
                           location={location}

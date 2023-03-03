@@ -5,7 +5,7 @@ import { zeroRightClassName } from "react-remove-scroll-bar";
 
 import Skip from "@components/skip";
 import { MainNav } from "@components/nav";
-import HeroImage from "@components/hero-image";
+import HeroImage from "@components/images/hero";
 
 function Layout({ type, children }) {
   return (
