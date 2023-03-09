@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { FiSave, FiUserX, FiMail } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
+import { updateProfile, updateEmail } from "firebase/auth";
 
 import AccountOption from "@components/account-option";
 import TextInput from "@components/text-input";
@@ -37,6 +38,7 @@ function Account() {
     React.useState(false);
   const [accountEmail, setAccountEmail] = React.useState(user.current.email);
   const [accountEmailError, setAccountEmailError] = React.useState(false);
+  const [generalUpdateCheck, setGeneralUpdateCheck] = React.useState(false);
   const [currentPassword, setCurrentPassword] = React.useState();
   const [currentPasswordError, setCurrentPasswordError] = React.useState(false);
   const [newPassword, setNewPassword] = React.useState();
@@ -44,6 +46,23 @@ function Account() {
   const [confirmNewPassword, setConfirmNewPassword] = React.useState();
   const [confirmNewPasswordError, setConfirmNewPasswordError] =
     React.useState(false);
+
+  React.useEffect(() => {
+    if (
+      organizationName === user.current.displayName &&
+      accountEmail === user.current.email
+    ) {
+      setGeneralUpdateCheck(true);
+    } else {
+      setGeneralUpdateCheck(false);
+    }
+  }, [user, organizationName, accountEmail]);
+
+  async function handleAccountUpdate(event) {
+    event.preventDefault();
+    await updateProfile(user.current, { displayName: organizationName });
+    await updateEmail(user.current, accountEmail);
+  }
 
   return (
     <Wrapper>
@@ -76,7 +95,7 @@ function Account() {
             errorText={!accountEmailError ? "" : inputErrors.email}
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button>
+            <Button onClick={handleAccountUpdate} disabled={generalUpdateCheck}>
               <FiSave />
               Save Changes
             </Button>
