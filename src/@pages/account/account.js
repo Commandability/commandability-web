@@ -3,12 +3,18 @@ import styled from "styled-components";
 import { FiSave, FiUserX, FiMail } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
-import { updateProfile, updateEmail } from "firebase/auth";
+import {
+  updateProfile,
+  updateEmail,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+} from "firebase/auth";
 
 import AccountOption from "@components/account-option";
 import TextInput from "@components/text-input";
 import Button from "@components/button";
 import { useAuth } from "@context/auth-context";
+import * as Dialog from "@components/dialog";
 
 const isOrganizationName = /^([a-zA-Z0-9]){3,16}$/;
 
@@ -46,6 +52,10 @@ function Account() {
   const [confirmNewPassword, setConfirmNewPassword] = React.useState();
   const [confirmNewPasswordError, setConfirmNewPasswordError] =
     React.useState(false);
+  const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
+    React.useState(true);
+  const [loginEmail, setLoginEmail] = React.useState("");
+  const [loginPassword, setLoginPassword] = React.useState("");
 
   React.useEffect(() => {
     if (
@@ -60,14 +70,45 @@ function Account() {
 
   async function handleAccountUpdate(event) {
     event.preventDefault();
+    try {
+      await updateEmail(user.current, accountEmail);
+    } catch (error) {
+      if (error.code === "auth/requires-recent-login") {
+        setReauthenticationDialogOpen(true);
+      }
+    }
     await updateProfile(user.current, { displayName: organizationName });
-    await updateEmail(user.current, accountEmail);
+  }
+
+  async function onReauthenticationSubmit(event) {
+    event.preventDefault();
+    const credentials = await EmailAuthProvider.credential(
+      loginEmail,
+      loginPassword
+    );
+    try {
+      await reauthenticateWithCredential(user.current, credentials);
+    } catch (error) {
+      return error;
+    }
   }
 
   return (
     <Wrapper>
       <Options>
-        <AccountOption header="General">
+        <AccountOption header="Verify Email" layout="horizontal">
+          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
+            <Button variant="primary" type="submit">
+              <FiMail />
+              Send Email
+            </Button>
+          </div>
+        </AccountOption>
+        <AccountOption
+          header="General"
+          onSubmit={handleAccountUpdate}
+          method="post"
+        >
           <TextInput
             id="organization-name-input"
             labelText="Organization name"
@@ -95,7 +136,7 @@ function Account() {
             errorText={!accountEmailError ? "" : inputErrors.email}
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button onClick={handleAccountUpdate} disabled={generalUpdateCheck}>
+            <Button disabled={generalUpdateCheck}>
               <FiSave />
               Save Changes
             </Button>
@@ -150,14 +191,6 @@ function Account() {
             </Button>
           </div>
         </AccountOption>
-        <AccountOption header="Verify Email" layout="horizontal">
-          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button variant="primary" type="submit">
-              <FiMail />
-              Send Email
-            </Button>
-          </div>
-        </AccountOption>
         <AccountOption header="Delete Account" layout="horizontal">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
             <Button variant="primary" type="submit">
@@ -165,8 +198,43 @@ function Account() {
               Delete
             </Button>
           </div>
-        </AccountOption>
+        </AccountOption>{" "}
       </Options>
+      <Dialog.Root
+        open={reauthenticationDialogOpen}
+        onOpenChange={setReauthenticationDialogOpen}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay>
+            <Dialog.Content
+              header
+              title="Re-authentication required"
+              description="For security purposes, please re-enter your login credentials to make the requested account changes"
+            >
+              <DialogForm onSubmit={onReauthenticationSubmit}>
+                <DialogInputs>
+                  <TextInput
+                    id="email-input"
+                    labelText="Current Email"
+                    value={loginEmail}
+                    onChange={(e) => setLoginEmail(e.target.value)}
+                  />
+                  <TextInput
+                    id="password-input"
+                    labelText="Current Password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                  />
+                </DialogInputs>
+                <Button type="submit">
+                  <FiSave />
+                  Save person
+                </Button>
+              </DialogForm>
+            </Dialog.Content>
+          </Dialog.Overlay>
+        </Dialog.Portal>
+      </Dialog.Root>
     </Wrapper>
   );
 }
@@ -185,6 +253,20 @@ const Options = styled.div`
   gap: 32px;
   padding-top: 72px;
   padding-bottom: 72px;
+`;
+
+const DialogForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 32px;
+  color: var(--color-yellow-2);
+`;
+
+const DialogInputs = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 `;
 
 export default Account;
