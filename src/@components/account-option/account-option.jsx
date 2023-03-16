@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-function AccountOption({ header, children, layout = "vertical" }) {
+function AccountOption({ header, children, layout = "vertical", ...props }) {
   return (
-    <Wrapper layout={layout}>
+    <Wrapper layout={layout} {...props}>
       <Header>{header}</Header>
       <Content>{children}</Content>
     </Wrapper>
   );
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.form`
   position: relative;
   display: flex;
   flex-direction: ${(props) =>
