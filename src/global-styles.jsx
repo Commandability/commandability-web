@@ -117,8 +117,10 @@ const GlobalStyles = createGlobalStyle`
     --selection-color: hsl(${COLORS.yellow[9]});
     --selection-background: hsl(${COLORS.yellow[2]});
 
-    --box-shadow: 2px 4px 8px hsl(0 0% 0% / 50%);
-    --nav-box-shadow: 0px 8px 8px -8px hsl(0 0% 0% / 50%);
+    --box-shadow-color: hsl(${COLORS.gray[3]} / 50%);
+
+    --box-shadow: 2px 4px 8px var(--box-shadow-color);
+    --nav-box-shadow: 0px 8px 8px -8px var(--box-shadow-color);
 
     --border-radius: 8px;
 
