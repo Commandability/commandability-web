@@ -45,8 +45,8 @@ const Title = styled.div`
   justify-content: center;
   background-image: linear-gradient(
     135deg,
-    var(--background-color-one),
-    var(--background-color-two)
+    var(--background-color-1),
+    var(--background-color-2)
   );
 
   @media ${QUERIES.laptopAndSmaller} {

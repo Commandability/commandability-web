@@ -202,8 +202,8 @@ function Home() {
         <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
           <StepOne
             style={{
-              "--background-color-one": "var(--color-red-4)",
-              "--background-color-two": "var(--color-red-3)",
+              "--background-color-1": "var(--color-red-4)",
+              "--background-color-2": "var(--color-red-3)",
             }}
             subheader="Step 1"
             header="Setup an account"
@@ -231,8 +231,8 @@ function Home() {
           </StepOne>
           <StepTwo
             style={{
-              "--background-color-one": "var(--color-red-3)",
-              "--background-color-two": "var(--color-red-2)",
+              "--background-color-1": "var(--color-red-3)",
+              "--background-color-2": "var(--color-red-2)",
             }}
             subheader="Step 2"
             header="Take control of incidents"
@@ -262,8 +262,8 @@ function Home() {
           </StepTwo>
           <StepThree
             style={{
-              "--background-color-one": "var(--color-red-2)",
-              "--background-color-two": "var(--color-red-1)",
+              "--background-color-1": "var(--color-red-2)",
+              "--background-color-2": "var(--color-red-1)",
             }}
             subheader="Step 3"
             header="Stay accountable"
