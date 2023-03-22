@@ -43,7 +43,11 @@ const Title = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: var(--background-color);
+  background-image: linear-gradient(
+    135deg,
+    var(--background-color-one),
+    var(--background-color-two)
+  );
 
   @media ${QUERIES.laptopAndSmaller} {
     border-radius: var(--border-radius) 0 0 var(--border-radius);

@@ -201,7 +201,10 @@ function Home() {
         </FeaturesWrapper>
         <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
           <StepOne
-            style={{ "--background-color": "var(--color-red-3)" }}
+            style={{
+              "--background-color-one": "var(--color-red-4)",
+              "--background-color-two": "var(--color-red-3)",
+            }}
             subheader="Step 1"
             header="Setup an account"
           >
@@ -227,7 +230,10 @@ function Home() {
             </UnorderedList>
           </StepOne>
           <StepTwo
-            style={{ "--background-color": "var(--color-red-2)" }}
+            style={{
+              "--background-color-one": "var(--color-red-3)",
+              "--background-color-two": "var(--color-red-2)",
+            }}
             subheader="Step 2"
             header="Take control of incidents"
           >
@@ -255,7 +261,10 @@ function Home() {
             </UnorderedList>
           </StepTwo>
           <StepThree
-            style={{ "--background-color": "var(--color-red-1)" }}
+            style={{
+              "--background-color-one": "var(--color-red-2)",
+              "--background-color-two": "var(--color-red-1)",
+            }}
             subheader="Step 3"
             header="Stay accountable"
           >
@@ -496,7 +505,11 @@ const FeatureText = styled.p`
 
 const ManageIcon = styled(UnstyledManageIcon)`
   fill: var(--color-yellow-9);
-  background-color: var(--color-yellow-1);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-yellow-1),
+    var(--color-yellow-2)
+  );
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   min-width: 192px;
@@ -510,7 +523,11 @@ const ManageIcon = styled(UnstyledManageIcon)`
 
 const CustomizeIcon = styled(UnstyledCustomizeIcon)`
   fill: var(--color-yellow-9);
-  background-color: var(--color-yellow-2);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-yellow-2),
+    var(--color-yellow-3)
+  );
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   min-width: 192px;
@@ -524,7 +541,11 @@ const CustomizeIcon = styled(UnstyledCustomizeIcon)`
 
 const ReviewIcon = styled(UnstyledReviewIcon)`
   fill: var(--color-yellow-9);
-  background-color: var(--color-yellow-3);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-yellow-3),
+    var(--color-yellow-4)
+  );
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   min-width: 192px;
