@@ -76,6 +76,7 @@ function EditGroupDialogContent({
           id="group-name"
           labelText="Group name"
           type="text"
+          required
           placeholder={groupData.name}
           onChange={(e) => setGroupName(e.target.value)}
           value={groupName}
