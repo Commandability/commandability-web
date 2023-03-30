@@ -9,15 +9,16 @@ import { useSnapshots } from "@context/snapshot-context";
 import Button from "@components/button";
 import * as Dialog from "@components/dialog";
 import InputGroup from "@components/input-group";
+import { range } from "@utils";
 
 const selectValues = {
-  zero: "No alert",
-  five: "5",
-  ten: "10",
-  fifteen: "15",
-  twenty: "20",
-  twentyFive: "25",
-  thirty: "30",
+  0: "No alert",
+  5: "5",
+  10: "10",
+  15: "15",
+  20: "20",
+  25: "25",
+  30: "30",
 };
 
 function EditGroupDialogContent({
@@ -29,11 +30,6 @@ function EditGroupDialogContent({
   const { snapshots } = useSnapshots();
   const [groupName, setGroupName] = React.useState(groupData.name);
   const [alertTime, setAlertTime] = React.useState(groupData.alert);
-
-  let defaultAlert = selectValues.zero;
-  if (groupData.alert !== 0) {
-    defaultAlert = groupData.alert.toString();
-  }
 
   const { ...newUserGroupData } = userGroupData;
 
@@ -85,19 +81,21 @@ function EditGroupDialogContent({
           select={alertTime}
           label="Alert time"
           onValueChange={(alertTime) => setAlertTime(alertTime)}
-          defaultValue={defaultAlert}
+          defaultValue={
+            groupData.alert ? groupData.alert.toString() : selectValues[0]
+          }
           aria-label="Alert time selector"
           variant="dialog"
           selectHtmlFor="alert-time"
           selectId="alert-time"
         >
-          <Select.Item value={selectValues.zero}>No alert</Select.Item>
-          <Select.Item value={selectValues.five}>5</Select.Item>
-          <Select.Item value={selectValues.ten}>10</Select.Item>
-          <Select.Item value={selectValues.fifteen}>15</Select.Item>
-          <Select.Item value={selectValues.twenty}>20</Select.Item>
-          <Select.Item value={selectValues.twentyFive}>25</Select.Item>
-          <Select.Item value={selectValues.thirty}>30</Select.Item>
+          {range(0, 35, 5).map((value, index) => {
+            return (
+              <Select.Item key={index} value={selectValues[value]}>
+                {selectValues[value] ? selectValues[value] : "No alerts"}
+              </Select.Item>
+            );
+          })}
         </Select.Root>
       </InputGroup>
       <ButtonWrapper>

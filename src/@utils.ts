@@ -37,3 +37,25 @@ export function sum(arr: (number | undefined)[]): number {
 
   return sum;
 }
+
+/**
+ * Create an array of numbers in a range and based on a step size
+ * @param start - The start number
+ * @param end - The end number
+ * @param step - The array step size
+ * @returns An array of numbers
+ */
+export function range(start: number, end?: number, step = 1) {
+  const output = [];
+
+  if (typeof end === 'undefined') {
+    end = start;
+    start = 0;
+  }
+
+  for (let i = start; i < end; i += step) {
+    output.push(i);
+  }
+
+  return output;
+};
