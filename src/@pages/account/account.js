@@ -15,6 +15,7 @@ import TextInput from "@components/text-input";
 import Button from "@components/button";
 import { useAuth } from "@context/auth-context";
 import * as Dialog from "@components/dialog";
+import UnstyledButton from "@components/unstyled-button";
 
 const isOrganizationName = /^([a-zA-Z0-9]){3,16}$/;
 
@@ -54,7 +55,6 @@ function Account() {
     React.useState(false);
   const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
     React.useState(true);
-  const [loginEmail, setLoginEmail] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
 
   React.useEffect(() => {
@@ -83,7 +83,7 @@ function Account() {
   async function onReauthenticationSubmit(event) {
     event.preventDefault();
     const credentials = await EmailAuthProvider.credential(
-      loginEmail,
+      user.current.email,
       loginPassword
     );
     try {
@@ -214,22 +214,16 @@ function Account() {
               <DialogForm onSubmit={onReauthenticationSubmit}>
                 <DialogInputs>
                   <TextInput
-                    id="email-input"
-                    labelText="Current Email"
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                  />
-                  <TextInput
                     id="password-input"
                     labelText="Current Password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                   />
                 </DialogInputs>
-                <Button type="submit">
-                  <FiSave />
-                  Save person
-                </Button>
+                <SubmitWrapper>
+                  <TextButton type="button">Forgot password?</TextButton>
+                  <Button type="submit">Submit</Button>
+                </SubmitWrapper>
               </DialogForm>
             </Dialog.Content>
           </Dialog.Overlay>
@@ -259,7 +253,6 @@ const DialogForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 32px;
   color: var(--color-yellow-2);
 `;
 
@@ -267,6 +260,22 @@ const DialogInputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+`;
+
+const SubmitWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const TextButton = styled(UnstyledButton)`
+  color: var(--color-yellow-2);
+  font-weight: bold;
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      color: var(--color-yellow-1);
+    }
+  }
 `;
 
 export default Account;
