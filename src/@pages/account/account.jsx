@@ -54,7 +54,8 @@ function Account() {
   const [confirmNewPasswordError, setConfirmNewPasswordError] =
     React.useState(false);
   const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
-    React.useState(true);
+    React.useState(false);
+  const [dialogAction, setDialogAction] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
 
   React.useEffect(() => {
@@ -68,17 +69,16 @@ function Account() {
     }
   }, [user, organizationName, accountEmail]);
 
-  async function handleAccountUpdate(event) {
-    event.preventDefault();
+  async function handleAccountUpdate() {
     try {
       await updateEmail(user.current, accountEmail);
     } catch (error) {
-      if (error.code === "auth/requires-recent-login") {
-        setReauthenticationDialogOpen(true);
-      }
+      return error;
     }
     await updateProfile(user.current, { displayName: organizationName });
   }
+
+  async function handleAccountDelete() {}
 
   async function onReauthenticationSubmit(event) {
     event.preventDefault();
@@ -88,6 +88,12 @@ function Account() {
     );
     try {
       await reauthenticateWithCredential(user.current, credentials);
+      if (dialogAction === "update") {
+        handleAccountUpdate();
+      }
+      if (dialogAction === "delete") {
+        handleAccountDelete();
+      }
     } catch (error) {
       return error;
     }
@@ -96,14 +102,6 @@ function Account() {
   return (
     <Wrapper>
       <Options>
-        <AccountOption header="Verify Email" layout="horizontal">
-          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button variant="primary" type="submit">
-              <FiMail />
-              Send Email
-            </Button>
-          </div>
-        </AccountOption>
         <AccountOption
           header="General"
           onSubmit={handleAccountUpdate}
@@ -136,9 +134,16 @@ function Account() {
             errorText={!accountEmailError ? "" : inputErrors.email}
           />
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button disabled={generalUpdateCheck}>
+            <Button
+              type="button"
+              onClick={() => {
+                setDialogAction("update");
+                setReauthenticationDialogOpen(true);
+              }}
+              disabled={generalUpdateCheck}
+            >
               <FiSave />
-              Save Changes
+              Save
             </Button>
           </div>
         </AccountOption>
@@ -187,13 +192,27 @@ function Account() {
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
             <Button>
               <FiSave />
-              Save Password
+              Save
+            </Button>
+          </div>
+        </AccountOption>
+        <AccountOption header="Verify Email" layout="horizontal">
+          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
+            <Button variant="primary" type="submit">
+              <FiMail />
+              Send
             </Button>
           </div>
         </AccountOption>
         <AccountOption header="Delete Account" layout="horizontal">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button variant="primary" type="submit">
+            <Button
+              type="button"
+              onClick={() => {
+                setDialogAction("delete");
+                setReauthenticationDialogOpen(true);
+              }}
+            >
               <FiUserX />
               Delete
             </Button>
@@ -222,7 +241,14 @@ function Account() {
                 </DialogInputs>
                 <SubmitWrapper>
                   <TextButton type="button">Forgot password?</TextButton>
-                  <Button type="submit">Submit</Button>
+                  <Button
+                    type="submit"
+                    onClick={(event) => {
+                      onReauthenticationSubmit(event);
+                    }}
+                  >
+                    Submit
+                  </Button>
                 </SubmitWrapper>
               </DialogForm>
             </Dialog.Content>

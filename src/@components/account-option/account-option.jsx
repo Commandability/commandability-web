@@ -21,8 +21,6 @@ const Wrapper = styled.form`
   width: 640px;
   padding: 24px;
   gap: 24px;
-  align-items: ${(props) =>
-    props.layout === "horizontal" ? "baseline" : null};
 `;
 
 const Header = styled.header`
