@@ -56,6 +56,7 @@ function Account() {
   const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
     React.useState(false);
   const [dialogAction, setDialogAction] = React.useState("");
+  const [dialogButton, setDialogButton] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
 
   React.useEffect(() => {
@@ -68,6 +69,15 @@ function Account() {
       setGeneralUpdateCheck(false);
     }
   }, [user, organizationName, accountEmail]);
+
+  React.useEffect(() => {
+    if (dialogAction === "update") {
+      setDialogButton("update account");
+    }
+    if (dialogAction === "delete") {
+      setDialogButton("delete account");
+    }
+  }, [dialogAction, dialogButton]);
 
   async function handleAccountUpdate() {
     try {
@@ -247,7 +257,7 @@ function Account() {
                       onReauthenticationSubmit(event);
                     }}
                   >
-                    Submit
+                    {dialogButton}
                   </Button>
                 </SubmitWrapper>
               </DialogForm>
@@ -280,6 +290,7 @@ const DialogForm = styled.form`
   flex-direction: column;
   align-items: flex-end;
   color: var(--color-yellow-2);
+  gap: 16px;
 `;
 
 const DialogInputs = styled.div`
