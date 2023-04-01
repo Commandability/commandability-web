@@ -44,13 +44,13 @@ export const contentChildrenStyles = {
 export const Content = React.forwardRef(
   ({ header, title, description, children, ...props }, forwardedRef) => (
     <RadixDialogContent
-      {...props}
       ref={forwardedRef}
       style={{
         // Account for extra space above and below 16px close icon in 24px container to space everything 24px apart
         "--padding-top": `${header ? "24px" : `${24 - 8 * 2 + 24 * 2}px`}`,
         ...contentChildrenStyles,
       }}
+      {...props}
     >
       {header ? (
         <Header>
