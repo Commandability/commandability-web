@@ -235,7 +235,7 @@ function Account() {
       >
         <Dialog.Portal>
           <Dialog.Overlay>
-            <Dialog.Content
+            <DialogContent
               header
               title="Re-authentication required"
               description="For security purposes, please re-enter your login credentials to make the requested account changes"
@@ -261,7 +261,7 @@ function Account() {
                   </Button>
                 </SubmitWrapper>
               </DialogForm>
-            </Dialog.Content>
+            </DialogContent>
           </Dialog.Overlay>
         </Dialog.Portal>
       </Dialog.Root>
@@ -283,6 +283,10 @@ const Options = styled.div`
   gap: 32px;
   padding-top: 72px;
   padding-bottom: 72px;
+`;
+
+const DialogContent = styled(Dialog.Content)`
+  max-width: 664px;
 `;
 
 const DialogForm = styled.form`
