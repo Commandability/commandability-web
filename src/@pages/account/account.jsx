@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiSave, FiUserX, FiMail } from "react-icons/fi";
+import { FiSave, FiUserX, FiMail, FiX } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import {
@@ -101,20 +101,20 @@ function Account() {
     } else return;
   }, [dialogAction, dialogButton]);
 
-  async function handleAccountUpdate() {
-    try {
-      await updateEmail(user.current, accountEmail);
-    } catch (error) {
-      return error;
-    }
-    await updateProfile(user.current, { displayName: organizationName });
-  }
-
-  async function handleAccountDelete() {}
-
-  async function onReauthenticationSubmit(event) {
+  async function handleReauthentication(event) {
     event.preventDefault();
     setReauthenticationDialogOpen(false);
+    let reauthenticationToastState = {
+      title: "Invalid password",
+      description: "The password given for reauthentication was invalid",
+      icon: <FiX />,
+    };
+    if (loginPassword === "") {
+      setToastState(reauthenticationToastState);
+      setToastOpen(true);
+      resetState();
+      return;
+    }
     setLoading(true);
     const credentials = await EmailAuthProvider.credential(
       user.current.email,
@@ -123,6 +123,7 @@ function Account() {
     try {
       await reauthenticateWithCredential(user.current, credentials);
       setLoading(false);
+      // clearInputs();
       if (dialogAction === "updateAccount") {
         handleAccountUpdate();
       }
@@ -130,15 +131,51 @@ function Account() {
         handleAccountDelete();
       }
     } catch (error) {
-      console.log(error);
+      setLoading(false);
+      if (error.code === "auth/wrong-password") {
+        setToastState(reauthenticationToastState);
+        setToastOpen(true);
+        resetState(true);
+        return;
+      } else {
+        setToastState(Toast.unknownState);
+        setToastOpen(true);
+        resetState(true);
+        return error;
+      }
+    }
+  }
+
+  async function handleAccountUpdate() {
+    try {
+      await updateEmail(user.current, accountEmail);
+    } catch (error) {
+      setToastState(Toast.unknownState);
+      setToastOpen(true);
+      resetState(true);
+      return error;
+    }
+    try {
+      await updateProfile(user.current, { displayName: organizationName });
+    } catch (error) {
+      setToastState(Toast.unknownState);
+      setToastOpen(true);
+      resetState(true);
       return error;
     }
   }
 
-  async function onRecoverPasswordSubmit(event) {
+  async function handlePasswordChange(event) {
     event.preventDefault();
+    setToastState(Toast.unknownState);
+    setToastOpen(true);
+    resetState(true);
+    return;
+  }
 
-    const recoverAccountToastState = {
+  async function handleRecoverPassword(event) {
+    event.preventDefault();
+    const recoverPasswordToastState = {
       title: "Password reset email sent",
       description:
         "If an account exists, you will receive a password reset email",
@@ -147,22 +184,51 @@ function Account() {
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, accountEmail);
-      setToastState(recoverAccountToastState);
+      setToastState(recoverPasswordToastState);
       setTimeout(() => {
         setLoading(false);
         setToastOpen(true);
       }, MINIMUM_LOADING_TIME);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        setToastState(recoverAccountToastState);
+        setToastState(recoverPasswordToastState);
       } else {
         setToastState(Toast.unknownState);
       }
+      resetState(true);
       setTimeout(() => {
         setLoading(false);
         setToastOpen(true);
       }, MINIMUM_LOADING_TIME);
     }
+  }
+
+  async function handleAccountDelete() {
+    setToastState(Toast.unknownState);
+    setToastOpen(true);
+    resetState(true);
+    return;
+  }
+
+  async function handleVerifyEmail(event) {
+    event.preventDefault();
+    setToastState(Toast.unknownState);
+    setToastOpen(true);
+    resetState(true);
+    return;
+  }
+
+  function resetState() {
+    setDialogAction("");
+    setDialogButton("");
+  }
+
+  function clearInputs() {
+    setOrganizationName(user.current.displayName);
+    setAccountEmail(user.current.email);
+    setCurrentPassword("");
+    setConfirmNewPassword("");
+    setNewPassword("");
   }
 
   return (
@@ -274,8 +340,9 @@ function Account() {
             ) : null}
             <Button
               type="button"
-              onClick={() => {
+              onClick={(event) => {
                 setDialogAction(dialogActions.changePassword);
+                handlePasswordChange(event);
               }}
             >
               <FiSave />
@@ -298,7 +365,7 @@ function Account() {
               type="submit"
               onClick={(event) => {
                 setDialogAction(dialogActions.recoverPassword);
-                onRecoverPasswordSubmit(event);
+                handleRecoverPassword(event);
               }}
             >
               <FiMail />
@@ -319,8 +386,9 @@ function Account() {
             <Button
               variant="primary"
               type="button"
-              onClick={() => {
+              onClick={(event) => {
                 setDialogAction(dialogActions.verifyEmail);
+                handleVerifyEmail(event);
               }}
             >
               <FiMail />
@@ -362,7 +430,7 @@ function Account() {
               title="Re-authentication required"
               description="For security purposes, please re-enter your login credentials to make the requested account changes"
             >
-              <DialogForm onSubmit={onReauthenticationSubmit}>
+              <DialogForm onSubmit={handleReauthentication}>
                 <DialogInputs>
                   <TextInput
                     id="password-input"
@@ -378,7 +446,7 @@ function Account() {
                     onClick={(event) => {
                       setReauthenticationDialogOpen(false);
                       setDialogAction(dialogActions.recoverPassword);
-                      onRecoverPasswordSubmit(event);
+                      handleRecoverPassword(event);
                     }}
                   >
                     Forgot password?
@@ -386,7 +454,7 @@ function Account() {
                   <Button
                     type="submit"
                     onClick={(event) => {
-                      onReauthenticationSubmit(event);
+                      handleReauthentication(event);
                     }}
                   >
                     {dialogButton}
