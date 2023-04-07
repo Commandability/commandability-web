@@ -30,6 +30,7 @@ function AuthProvider({ children }) {
   const value = {
     user,
     setUser,
+    auth,
   };
 
   if (user.status === "pending") {
