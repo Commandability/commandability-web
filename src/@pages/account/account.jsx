@@ -367,6 +367,7 @@ function Account() {
                   <TextInput
                     id="password-input"
                     labelText="Current Password"
+                    variant="password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                   />
