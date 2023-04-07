@@ -31,8 +31,8 @@ const yellowFillShift = keyframes`
 
 const FireIconLoader = styled(UnstyledFireIcon)`
   fill: var(--color-yellow-4);
-  min-width: 128px;
-  min-height: 128px;
+  min-width: var(--fire-icon-width, 128px);
+  min-height: var(--fire-icon-height, 128px);
   animation: ${yellowFillShift} 2000ms;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
