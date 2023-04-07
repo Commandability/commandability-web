@@ -8,6 +8,7 @@ import {
   updateEmail,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 
 import AccountOption from "@components/account-option";
@@ -16,8 +17,12 @@ import Button from "@components/button";
 import { useAuth } from "@context/auth-context";
 import * as Dialog from "@components/dialog";
 import UnstyledButton from "@components/unstyled-button";
+import * as Toast from "@components/toast";
+import FireLoader from "@components/fire-loader";
+import { auth } from "firebase-config";
 
 const isOrganizationName = /^([a-zA-Z0-9]){3,16}$/;
+const MINIMUM_LOADING_TIME = 400;
 
 const inputErrors = {
   organizationName:
@@ -36,7 +41,7 @@ const passwordRequirements = {
 };
 
 function Account() {
-  const { auth, user } = useAuth();
+  const { user } = useAuth();
 
   const [organizationName, setOrganizationName] = React.useState(
     user.current.displayName
@@ -53,11 +58,20 @@ function Account() {
   const [confirmNewPassword, setConfirmNewPassword] = React.useState();
   const [confirmNewPasswordError, setConfirmNewPasswordError] =
     React.useState(false);
+
   const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
     React.useState(false);
   const [dialogAction, setDialogAction] = React.useState("");
   const [dialogButton, setDialogButton] = React.useState("");
   const [loginPassword, setLoginPassword] = React.useState("");
+
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    description: "",
+    icon: null,
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (
@@ -106,6 +120,37 @@ function Account() {
       }
     } catch (error) {
       return error;
+    }
+  }
+
+  async function onRecoverAccountSubmit(event) {
+    event.preventDefault();
+
+    const recoverAccountToastState = {
+      title: "Password reset email sent",
+      description:
+        "If an account exists, you will receive a password reset email",
+      icon: <FiMail />,
+    };
+    setLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, accountEmail);
+      setToastState(recoverAccountToastState);
+      setTimeout(() => {
+        setLoading(false);
+        setToastOpen(true);
+      }, MINIMUM_LOADING_TIME);
+    } catch (error) {
+      if (error.code === "auth/user-not-found") {
+        setToastState(recoverAccountToastState);
+      } else {
+        console.log(error);
+        setToastState(Toast.unknownState);
+      }
+      setTimeout(() => {
+        setLoading(false);
+        setToastOpen(true);
+      }, MINIMUM_LOADING_TIME);
     }
   }
 
@@ -206,6 +251,28 @@ function Account() {
             </Button>
           </div>
         </AccountOption>
+        <AccountOption header="Recover password" layout="horizontal">
+          <SubmitLoaderWrapper>
+            {loading ? (
+              <FireLoader
+                style={{
+                  "--fire-icon-width": "36px",
+                  "--fire-icon-height": "36px",
+                }}
+              />
+            ) : null}
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={(event) => {
+                onRecoverAccountSubmit(event);
+              }}
+            >
+              <FiMail />
+              Send
+            </Button>
+          </SubmitLoaderWrapper>
+        </AccountOption>
         <AccountOption header="Verify Email" layout="horizontal">
           <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
             <Button variant="primary" type="submit">
@@ -250,7 +317,14 @@ function Account() {
                   />
                 </DialogInputs>
                 <SubmitWrapper>
-                  <TextButton type="button">Forgot password?</TextButton>
+                  <TextButton
+                    type="button"
+                    onClick={(event) => {
+                      onRecoverAccountSubmit(event);
+                    }}
+                  >
+                    Forgot password?
+                  </TextButton>
                   <Button
                     type="submit"
                     onClick={(event) => {
@@ -265,6 +339,15 @@ function Account() {
           </Dialog.Overlay>
         </Dialog.Portal>
       </Dialog.Root>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title={toastState.title}
+        description={toastState.description}
+      >
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
+      </Toast.Root>
+      <Toast.Viewport />
     </Wrapper>
   );
 }
@@ -317,6 +400,13 @@ const TextButton = styled(UnstyledButton)`
       color: var(--color-yellow-1);
     }
   }
+`;
+
+const SubmitLoaderWrapper = styled.div`
+  display: flex;
+  width: fit-content;
+  align-self: flex-end;
+  gap: 16px;
 `;
 
 export default Account;
