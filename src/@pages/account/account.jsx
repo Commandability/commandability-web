@@ -40,6 +40,14 @@ const passwordRequirements = {
   minSymbols: 0,
 };
 
+const dialogActions = {
+  updateAccount: "updateAccount",
+  changePassword: "changePassword",
+  recoverPassword: "recoverPassword",
+  verifyEmail: "verifyEmail",
+  deleteAccount: "deleteAccount",
+};
+
 function Account() {
   const { user } = useAuth();
 
@@ -85,12 +93,12 @@ function Account() {
   }, [user, organizationName, accountEmail]);
 
   React.useEffect(() => {
-    if (dialogAction === "update") {
+    if (dialogAction === "updateAccount") {
       setDialogButton("update account");
     }
-    if (dialogAction === "delete") {
+    if (dialogAction === "deleteAccount") {
       setDialogButton("delete account");
-    }
+    } else return;
   }, [dialogAction, dialogButton]);
 
   async function handleAccountUpdate() {
@@ -106,24 +114,28 @@ function Account() {
 
   async function onReauthenticationSubmit(event) {
     event.preventDefault();
+    setReauthenticationDialogOpen(false);
+    setLoading(true);
     const credentials = await EmailAuthProvider.credential(
       user.current.email,
       loginPassword
     );
     try {
       await reauthenticateWithCredential(user.current, credentials);
-      if (dialogAction === "update") {
+      setLoading(false);
+      if (dialogAction === "updateAccount") {
         handleAccountUpdate();
       }
-      if (dialogAction === "delete") {
+      if (dialogAction === "deleteAccount") {
         handleAccountDelete();
       }
     } catch (error) {
+      console.log(error);
       return error;
     }
   }
 
-  async function onRecoverAccountSubmit(event) {
+  async function onRecoverPasswordSubmit(event) {
     event.preventDefault();
 
     const recoverAccountToastState = {
@@ -144,7 +156,6 @@ function Account() {
       if (error.code === "auth/user-not-found") {
         setToastState(recoverAccountToastState);
       } else {
-        console.log(error);
         setToastState(Toast.unknownState);
       }
       setTimeout(() => {
@@ -188,11 +199,19 @@ function Account() {
             }}
             errorText={!accountEmailError ? "" : inputErrors.email}
           />
-          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
+          <SubmitLoaderWrapper>
+            {loading && dialogAction === "updateAccount" ? (
+              <FireLoader
+                style={{
+                  "--fire-icon-width": "36px",
+                  "--fire-icon-height": "36px",
+                }}
+              />
+            ) : null}
             <Button
               type="button"
               onClick={() => {
-                setDialogAction("update");
+                setDialogAction(dialogActions.updateAccount);
                 setReauthenticationDialogOpen(true);
               }}
               disabled={generalUpdateCheck}
@@ -200,7 +219,7 @@ function Account() {
               <FiSave />
               Save
             </Button>
-          </div>
+          </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption header="Change Password">
           <TextInput
@@ -244,16 +263,29 @@ function Account() {
               !confirmNewPasswordError ? "" : inputErrors.confirmPassword
             }
           />
-          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button>
+          <SubmitLoaderWrapper>
+            {loading && dialogAction === "changePassword" ? (
+              <FireLoader
+                style={{
+                  "--fire-icon-width": "36px",
+                  "--fire-icon-height": "36px",
+                }}
+              />
+            ) : null}
+            <Button
+              type="button"
+              onClick={() => {
+                setDialogAction(dialogActions.changePassword);
+              }}
+            >
               <FiSave />
               Save
             </Button>
-          </div>
+          </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption header="Recover password" layout="horizontal">
           <SubmitLoaderWrapper>
-            {loading ? (
+            {loading && dialogAction === "recoverPassword" ? (
               <FireLoader
                 style={{
                   "--fire-icon-width": "36px",
@@ -265,7 +297,8 @@ function Account() {
               variant="primary"
               type="submit"
               onClick={(event) => {
-                onRecoverAccountSubmit(event);
+                setDialogAction(dialogActions.recoverPassword);
+                onRecoverPasswordSubmit(event);
               }}
             >
               <FiMail />
@@ -274,26 +307,48 @@ function Account() {
           </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption header="Verify Email" layout="horizontal">
-          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
-            <Button variant="primary" type="submit">
+          <SubmitLoaderWrapper>
+            {loading && dialogAction === "verifyEmail" ? (
+              <FireLoader
+                style={{
+                  "--fire-icon-width": "36px",
+                  "--fire-icon-height": "36px",
+                }}
+              />
+            ) : null}
+            <Button
+              variant="primary"
+              type="button"
+              onClick={() => {
+                setDialogAction(dialogActions.verifyEmail);
+              }}
+            >
               <FiMail />
               Send
             </Button>
-          </div>
+          </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption header="Delete Account" layout="horizontal">
-          <div style={{ width: "fit-content", alignSelf: "flex-end" }}>
+          <SubmitLoaderWrapper>
+            {loading && dialogAction === "deleteAccount" ? (
+              <FireLoader
+                style={{
+                  "--fire-icon-width": "36px",
+                  "--fire-icon-height": "36px",
+                }}
+              />
+            ) : null}
             <Button
               type="button"
               onClick={() => {
-                setDialogAction("delete");
+                setDialogAction(dialogActions.deleteAccount);
                 setReauthenticationDialogOpen(true);
               }}
             >
               <FiUserX />
               Delete
             </Button>
-          </div>
+          </SubmitLoaderWrapper>
         </AccountOption>{" "}
       </Options>
       <Dialog.Root
@@ -320,7 +375,9 @@ function Account() {
                   <TextButton
                     type="button"
                     onClick={(event) => {
-                      onRecoverAccountSubmit(event);
+                      setReauthenticationDialogOpen(false);
+                      setDialogAction(dialogActions.recoverPassword);
+                      onRecoverPasswordSubmit(event);
                     }}
                   >
                     Forgot password?
