@@ -20,7 +20,6 @@ import * as Dialog from "@components/dialog";
 import UnstyledButton from "@components/unstyled-button";
 import * as Toast from "@components/toast";
 import FireLoader from "@components/fire-loader";
-import { auth } from "firebase-config";
 
 const isOrganizationName = /^([a-zA-Z0-9]){3,16}$/;
 const MINIMUM_LOADING_TIME = 400;
@@ -50,7 +49,7 @@ const dialogActions = {
 };
 
 function Account() {
-  const { user } = useAuth();
+  const { user, auth } = useAuth();
 
   const [organizationName, setOrganizationName] = React.useState(
     user.current.displayName
