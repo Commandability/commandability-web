@@ -58,14 +58,15 @@ function Account() {
     React.useState(false);
   const [accountEmail, setAccountEmail] = React.useState(user.current.email);
   const [accountEmailError, setAccountEmailError] = React.useState(false);
-  const [generalUpdateCheck, setGeneralUpdateCheck] = React.useState(false);
-  const [currentPassword, setCurrentPassword] = React.useState();
-  const [currentPasswordError, setCurrentPasswordError] = React.useState(false);
-  const [newPassword, setNewPassword] = React.useState();
+  const [generalOptionEnable, setGeneralOptionEnable] = React.useState(false);
+
+  const [currentPassword, setCurrentPassword] = React.useState("");
+  const [newPassword, setNewPassword] = React.useState("");
   const [newPasswordError, setNewPasswordError] = React.useState(false);
-  const [confirmNewPassword, setConfirmNewPassword] = React.useState();
+  const [confirmNewPassword, setConfirmNewPassword] = React.useState("");
   const [confirmNewPasswordError, setConfirmNewPasswordError] =
     React.useState(false);
+  const [passwordOptionEnable, setPasswordOptionEnable] = React.useState(false);
 
   const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
     React.useState(false);
@@ -86,11 +87,24 @@ function Account() {
       organizationName === user.current.displayName &&
       accountEmail === user.current.email
     ) {
-      setGeneralUpdateCheck(true);
+      setGeneralOptionEnable(true);
     } else {
-      setGeneralUpdateCheck(false);
+      setGeneralOptionEnable(false);
     }
   }, [user, organizationName, accountEmail]);
+
+  React.useEffect(() => {
+    console.log(currentPassword);
+    if (
+      currentPassword !== "" &&
+      confirmNewPassword !== "" &&
+      !confirmNewPasswordError
+    ) {
+      setPasswordOptionEnable(false);
+    } else {
+      setPasswordOptionEnable(true);
+    }
+  }, [currentPassword, confirmNewPassword, confirmNewPasswordError]);
 
   React.useEffect(() => {
     if (dialogAction === "updateAccount") {
@@ -123,7 +137,6 @@ function Account() {
     try {
       await reauthenticateWithCredential(user.current, credentials);
       setLoading(false);
-      // clearInputs();
       if (dialogAction === "updateAccount") {
         handleAccountUpdate();
       }
@@ -167,10 +180,35 @@ function Account() {
 
   async function handlePasswordChange(event) {
     event.preventDefault();
-    setToastState(Toast.unknownState);
-    setToastOpen(true);
-    resetState(true);
-    return;
+    let changePasswordToastState = {
+      title: "Invalid password",
+      description:
+        "The current password that was entered for authentication was invalid",
+      icon: <FiX />,
+    };
+    setLoading(true);
+    const credentials = await EmailAuthProvider.credential(
+      user.current.email,
+      currentPassword
+    );
+    try {
+      await reauthenticateWithCredential(user.current, credentials);
+      setLoading(false);
+      resetState(true);
+    } catch (error) {
+      setLoading(false);
+      if (error.code === "auth/wrong-password") {
+        setToastState(changePasswordToastState);
+        setToastOpen(true);
+        resetState(true);
+        return;
+      } else {
+        setToastState(Toast.unknownState);
+        setToastOpen(true);
+        resetState(true);
+        return error;
+      }
+    }
   }
 
   async function handleRecoverPassword(event) {
@@ -223,14 +261,6 @@ function Account() {
     setDialogButton("");
   }
 
-  function clearInputs() {
-    setOrganizationName(user.current.displayName);
-    setAccountEmail(user.current.email);
-    setCurrentPassword("");
-    setConfirmNewPassword("");
-    setNewPassword("");
-  }
-
   return (
     <Wrapper>
       <Options>
@@ -280,7 +310,7 @@ function Account() {
                 setDialogAction(dialogActions.updateAccount);
                 setReauthenticationDialogOpen(true);
               }}
-              disabled={generalUpdateCheck}
+              disabled={generalOptionEnable}
             >
               <FiSave />
               Save
@@ -295,11 +325,7 @@ function Account() {
             variant="password"
             onChange={(e) => {
               setCurrentPassword(e.target.value);
-              isStrongPassword(e.target.value, passwordRequirements)
-                ? setCurrentPasswordError(false)
-                : setCurrentPasswordError(true);
             }}
-            errorText={!currentPasswordError ? "" : inputErrors.password}
           />
           <TextInput
             id="new-password-input"
@@ -340,6 +366,7 @@ function Account() {
             ) : null}
             <Button
               type="button"
+              disabled={passwordOptionEnable}
               onClick={(event) => {
                 setDialogAction(dialogActions.changePassword);
                 handlePasswordChange(event);
