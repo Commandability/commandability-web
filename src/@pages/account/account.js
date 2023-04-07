@@ -195,6 +195,7 @@ function Account() {
     try {
       await reauthenticateWithCredential(user.current, credentials);
       await updatePassword(user.current, newPassword);
+      clearPasswordInputs();
       setLoading(false);
       changePasswordToastState = {
         title: "Password changed",
@@ -268,6 +269,14 @@ function Account() {
   function resetState() {
     setDialogAction("");
     setDialogButton("");
+  }
+
+  function clearPasswordInputs() {
+    setCurrentPassword("");
+    setNewPassword("");
+    setNewPasswordError(false);
+    setConfirmNewPassword("");
+    setConfirmNewPasswordError(false);
   }
 
   return (
