@@ -95,7 +95,6 @@ function Account() {
   }, [user, organizationName, accountEmail]);
 
   React.useEffect(() => {
-    console.log(currentPassword);
     if (
       currentPassword !== "" &&
       confirmNewPassword !== "" &&
