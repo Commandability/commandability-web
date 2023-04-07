@@ -1,11 +1,12 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiSave, FiUserX, FiMail, FiX } from "react-icons/fi";
+import { FiSave, FiUserX, FiMail, FiX, FiCheck } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import {
   updateProfile,
   updateEmail,
+  updatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
@@ -193,7 +194,15 @@ function Account() {
     );
     try {
       await reauthenticateWithCredential(user.current, credentials);
+      await updatePassword(user.current, newPassword);
       setLoading(false);
+      changePasswordToastState = {
+        title: "Password changed",
+        description: "You have successfully changed your password",
+        icon: <FiCheck />,
+      };
+      setToastState(changePasswordToastState);
+      setToastOpen(true);
       resetState(true);
     } catch (error) {
       setLoading(false);
