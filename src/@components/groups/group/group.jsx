@@ -103,9 +103,9 @@ const Wrapper = styled.li`
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
   overflow: hidden;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.2s;
   &:hover {
-    transition: all 0.2s ease-in-out;
+    transition: all 0.2s;
     transform: scale(1.05);
   }
   & > :active {
