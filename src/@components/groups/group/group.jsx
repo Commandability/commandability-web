@@ -60,7 +60,7 @@ function Group({
           </AlertWrapper>
           <Dialog.Root open={editGroupOpen} onOpenChange={setEditGroupOpen}>
             <Dialog.Trigger asChild>
-              <EditGroupButton type="button" />
+              <EditGroupButton />
             </Dialog.Trigger>
             <Dialog.Portal>
               <DialogOverlay>
@@ -104,6 +104,10 @@ const Wrapper = styled.li`
   background-color: var(--color-white);
   overflow: hidden;
   transition: all 0.2s;
+  &:has(:focus-visible) {
+    outline: solid;
+    outline-offset: 8px;
+  }
   &:hover {
     transition: all 0.2s;
     transform: scale(1.05);
