@@ -11,17 +11,10 @@ import FireLoader from "@components/fire-loader";
 import TextInput from "@components/text-input";
 import { useAuth } from "@context/auth-context";
 import * as Toast from "@components/toast";
+import { passwordRequirements } from "site-config";
 
 const inputErrors = {
-  password: "Must contain at least 16 characters",
-};
-
-const passwordRequirements = {
-  minLength: 16,
-  minLowercase: 0,
-  minUppercase: 0,
-  minNumbers: 0,
-  minSymbols: 0,
+  password: `Must contain at least ${passwordRequirements.minLength} characters`,
 };
 
 function PasswordReset({ request }) {

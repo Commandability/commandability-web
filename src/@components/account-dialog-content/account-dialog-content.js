@@ -17,6 +17,7 @@ import FireLoader from "@components/fire-loader";
 import UnstyledButton from "@components/unstyled-button";
 import * as Toast from "@components/toast";
 import VisuallyHidden from "@components/visually-hidden";
+import { passwordRequirements } from "site-config";
 
 export const accountContentType = {
   NEW_USER: "NEW_USER",
@@ -32,15 +33,7 @@ const isDisplayName = /^([a-zA-Z0-9]){3,16}$/;
 const inputErrors = {
   displayName: "Must be alphanumeric and contain between 3 and 16 characters",
   email: "Must be a valid email",
-  password: "Must contain at least 16 characters",
-};
-
-const passwordRequirements = {
-  minLength: 16,
-  minLowercase: 0,
-  minUppercase: 0,
-  minNumbers: 0,
-  minSymbols: 0,
+  password: `Must contain at least ${passwordRequirements.minLength} characters`,
 };
 
 const defaultConfig = {
