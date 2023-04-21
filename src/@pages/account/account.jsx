@@ -20,24 +20,16 @@ import * as Dialog from "@components/dialog";
 import UnstyledButton from "@components/unstyled-button";
 import * as Toast from "@components/toast";
 import FireLoader from "@components/fire-loader";
+import { passwordRequirements } from "site-config";
 
 const isOrganizationName = /^([a-zA-Z0-9]){3,16}$/;
 const MINIMUM_LOADING_TIME = 400;
 
 const inputErrors = {
-  organizationName:
-    "Must be alphanumeric and contain between 3 and 16 characters",
-  email: "Must be a valid email",
-  password: "Must contain at least 16 characters",
-  confirmPassword: "Must match new password above",
-};
-
-const passwordRequirements = {
-  minLength: 16,
-  minLowercase: 0,
-  minUppercase: 0,
-  minNumbers: 0,
-  minSymbols: 0,
+  organizationName: `Must be alphanumeric and contain between 3 and 16 characters`,
+  email: `Must be a valid email`,
+  password: `Must contain at least ${passwordRequirements.minLength} characters`,
+  confirmPassword: `Must match new password above`,
 };
 
 const dialogActions = {
