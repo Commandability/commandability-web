@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import isStrongPassword from "validator/lib/isStrongPassword";
-import { FiSave } from "react-icons/fi";
+import { FiSave, FiX, FiCheck } from "react-icons/fi";
 import { confirmPasswordReset } from "firebase/auth";
 
 import { QUERIES } from "@constants";
@@ -9,6 +9,8 @@ import AccountOption from "@components/account-option";
 import Button from "@components/button";
 import FireLoader from "@components/fire-loader";
 import TextInput from "@components/text-input";
+import { useAuth } from "@context/auth-context";
+import * as Toast from "@components/toast";
 
 const inputErrors = {
   password: "Must contain at least 16 characters",
@@ -22,13 +24,49 @@ const passwordRequirements = {
   minSymbols: 0,
 };
 
-function PasswordReset() {
+function PasswordReset({ request }) {
+  const { auth } = useAuth();
+
   const [newPassword, setNewPassword] = React.useState("");
   const [newPasswordError, setNewPasswordError] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
+  const [toastState, setToastState] = React.useState({
+    title: "",
+    description: "",
+    icon: null,
+  });
+  const [toastOpen, setToastOpen] = React.useState(false);
+
+  const searchParameters = new URLSearchParams(window.location.search);
+  const code = searchParameters.get("oobCode");
+  console.log(code);
+
   async function handlePasswordReset(event) {
     event.preventDefault();
+    setLoading(true);
+    let passwordResetToastState = {
+      title: "Password reset error",
+      description:
+        "There was an error when trying to reset your password, please try again with",
+      icon: <FiX />,
+    };
+    setToastState(passwordResetToastState);
+    try {
+      await confirmPasswordReset(auth, code, newPassword);
+      passwordResetToastState = {
+        title: "Password changed",
+        description: "You have successfully changed your password",
+        icon: <FiCheck />,
+      };
+      setToastState(passwordResetToastState);
+      setToastOpen(true);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setToastOpen(true);
+      return error;
+    }
   }
 
   return (
@@ -70,6 +108,15 @@ function PasswordReset() {
           </SubmitLoaderWrapper>
         </AccountOption>
       </Content>
+      <Toast.Root
+        open={toastOpen}
+        onOpenChange={setToastOpen}
+        title={toastState.title}
+        description={toastState.description}
+      >
+        <Toast.Icon>{toastState.icon}</Toast.Icon>
+      </Toast.Root>
+      <Toast.Viewport />
     </Wrapper>
   );
 }
