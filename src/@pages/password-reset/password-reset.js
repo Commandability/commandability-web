@@ -17,7 +17,7 @@ const inputErrors = {
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
 };
 
-function PasswordReset({ request }) {
+function PasswordReset() {
   const { auth } = useAuth();
 
   const [newPassword, setNewPassword] = React.useState("");
@@ -33,7 +33,6 @@ function PasswordReset({ request }) {
 
   const searchParameters = new URLSearchParams(window.location.search);
   const code = searchParameters.get("oobCode");
-  console.log(code);
 
   async function handlePasswordReset(event) {
     event.preventDefault();
@@ -41,7 +40,7 @@ function PasswordReset({ request }) {
     let passwordResetToastState = {
       title: "Password reset error",
       description:
-        "There was an error when trying to reset your password, please try again with",
+        "There was an error when trying to reset your password, please try again",
       icon: <FiX />,
     };
     setToastState(passwordResetToastState);
