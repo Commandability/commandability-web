@@ -10,6 +10,7 @@ import {
   EmailAuthProvider,
   reauthenticateWithCredential,
   sendPasswordResetEmail,
+  sendEmailVerification,
 } from "firebase/auth";
 
 import AccountOption from "@components/account-option";
@@ -250,9 +251,22 @@ function Account() {
 
   async function handleVerifyEmail(event) {
     event.preventDefault();
-    setToastState(Toast.unknownState);
-    setToastOpen(true);
-    resetState(true);
+    const verifyEmailToastState = {
+      title: "Verification email sent",
+      description:
+        "If an account exists, you will receive an account verification email",
+      icon: <FiMail />,
+    };
+    try {
+      await sendEmailVerification(user);
+      setToastState(verifyEmailToastState);
+      setToastOpen(true);
+      resetState(true);
+    } catch (error) {
+      setToastState(Toast.unknownState);
+      setToastOpen(true);
+      resetState(true);
+    }
     return;
   }
 
