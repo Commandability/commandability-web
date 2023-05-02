@@ -433,17 +433,32 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              variant="primary"
-              type="button"
-              onClick={(event) => {
-                setDialogAction(dialogActions.verifyEmail);
-                handleVerifyEmail(event);
-              }}
-            >
-              <FiMail />
-              Send
-            </Button>
+            {user.current.emailVerified ? (
+              <Button
+                variant="primary"
+                type="button"
+                disabled={true}
+                onClick={(event) => {
+                  setDialogAction(dialogActions.verifyEmail);
+                  handleVerifyEmail(event);
+                }}
+              >
+                <FiCheck />
+                Verified
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                type="button"
+                onClick={(event) => {
+                  setDialogAction(dialogActions.verifyEmail);
+                  handleVerifyEmail(event);
+                }}
+              >
+                <FiMail />
+                Send
+              </Button>
+            )}
           </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption header="Delete Account" layout="horizontal">

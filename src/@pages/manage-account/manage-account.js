@@ -32,6 +32,7 @@ function ManageAccount() {
   const [toastOpen, setToastOpen] = React.useState(false);
 
   const searchParameters = new URLSearchParams(window.location.search);
+  const mode = searchParameters.get("mode");
   const code = searchParameters.get("oobCode");
 
   async function handlePasswordReset(event) {
@@ -64,41 +65,47 @@ function ManageAccount() {
   return (
     <Wrapper>
       <Content>
-        <AccountOption header="Reset Password">
-          <TextInput
-            id="new-password-input"
-            labelText="New password"
-            value={newPassword}
-            variant="password"
-            onChange={(e) => {
-              setNewPassword(e.target.value);
-              isStrongPassword(e.target.value, passwordRequirements)
-                ? setNewPasswordError(false)
-                : setNewPasswordError(true);
-            }}
-            errorText={!newPasswordError ? "" : inputErrors.password}
-          />
-          <SubmitLoaderWrapper>
-            {loading ? (
-              <FireLoader
-                style={{
-                  "--fire-icon-width": "36px",
-                  "--fire-icon-height": "36px",
-                }}
-              />
-            ) : null}
-            <Button
-              type="button"
-              onClick={(event) => {
-                handlePasswordReset(event);
+        {mode === "resetPassword" ? (
+          <AccountOption header="Reset Password">
+            <TextInput
+              id="new-password-input"
+              labelText="New password"
+              value={newPassword}
+              variant="password"
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                isStrongPassword(e.target.value, passwordRequirements)
+                  ? setNewPasswordError(false)
+                  : setNewPasswordError(true);
               }}
-              disabled={newPasswordError || newPassword === ""}
-            >
-              <FiSave />
-              Save
-            </Button>
-          </SubmitLoaderWrapper>
-        </AccountOption>
+              errorText={!newPasswordError ? "" : inputErrors.password}
+            />
+            <SubmitLoaderWrapper>
+              {loading ? (
+                <FireLoader
+                  style={{
+                    "--fire-icon-width": "36px",
+                    "--fire-icon-height": "36px",
+                  }}
+                />
+              ) : null}
+              <Button
+                type="button"
+                onClick={(event) => {
+                  handlePasswordReset(event);
+                }}
+                disabled={newPasswordError || newPassword === ""}
+              >
+                <FiSave />
+                Save
+              </Button>
+            </SubmitLoaderWrapper>
+          </AccountOption>
+        ) : (
+          <AccountOption header="Email Verified">
+            <div>Your email has been successfully verified!</div>
+          </AccountOption>
+        )}
       </Content>
       <Toast.Root
         open={toastOpen}
