@@ -258,7 +258,7 @@ function Account() {
       icon: <FiMail />,
     };
     try {
-      await sendEmailVerification(user);
+      await sendEmailVerification(user.current);
       setToastState(verifyEmailToastState);
       setToastOpen(true);
       resetState(true);
@@ -266,6 +266,7 @@ function Account() {
       setToastState(Toast.unknownState);
       setToastOpen(true);
       resetState(true);
+      console.log(error);
     }
     return;
   }

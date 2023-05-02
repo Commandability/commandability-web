@@ -17,7 +17,7 @@ const inputErrors = {
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
 };
 
-function PasswordReset() {
+function ManageAccount() {
   const { auth } = useAuth();
 
   const [newPassword, setNewPassword] = React.useState("");
@@ -142,4 +142,4 @@ const SubmitLoaderWrapper = styled.div`
   gap: 16px;
 `;
 
-export default PasswordReset;
+export default ManageAccount;
