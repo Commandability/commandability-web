@@ -10,7 +10,7 @@ import Home from "@pages/home";
 import Account from "@pages/account";
 import NotFound from "@pages/not-found";
 import PrivacyPolicy from "@pages/privacy-policy";
-import PasswordReset from "@pages/password-reset";
+import ManageAccount from "@pages/manage-account";
 
 import Layout from "@components/layout";
 import DashboardContainer from "@components/dashboard-container";
@@ -54,7 +54,7 @@ const router = createBrowserRouter(
       </Route>
       <Route element={<Layout type="outlet" />} errorElement={<NotFound />}>
         <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="password-reset" element={<PasswordReset />} />
+        <Route path="manage-account" element={<ManageAccount />} />
       </Route>
     </>
   )
