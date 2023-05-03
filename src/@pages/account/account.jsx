@@ -266,7 +266,6 @@ function Account() {
       setToastState(Toast.unknownState);
       setToastOpen(true);
       resetState(true);
-      console.log(error);
     }
     return;
   }
@@ -364,7 +363,7 @@ function Account() {
             errorText={!newPasswordError ? "" : inputErrors.password}
           />
           <TextInput
-            id="new-password-input"
+            id="confirm-new-password-input"
             labelText="Confirm new password"
             value={confirmNewPassword}
             variant="password"
@@ -544,19 +543,19 @@ function Account() {
 }
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 100%;
   width: 100%;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 `;
 
 const Options = styled.div`
+  padding-top: 72px;
+  padding-bottom: 72px;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  padding-top: 72px;
-  padding-bottom: 72px;
 `;
 
 const DialogContent = styled(Dialog.Content)`
@@ -567,8 +566,8 @@ const DialogForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  color: var(--color-yellow-2);
   gap: 16px;
+  color: var(--color-yellow-2);
 `;
 
 const DialogInputs = styled.div`
@@ -584,8 +583,8 @@ const SubmitWrapper = styled.div`
 `;
 
 const TextButton = styled(UnstyledButton)`
-  color: var(--color-yellow-2);
   font-weight: bold;
+  color: var(--color-yellow-2);
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--color-yellow-1);
@@ -594,8 +593,8 @@ const TextButton = styled(UnstyledButton)`
 `;
 
 const SubmitLoaderWrapper = styled.div`
-  display: flex;
   width: fit-content;
+  display: flex;
   align-self: flex-end;
   gap: 16px;
 `;

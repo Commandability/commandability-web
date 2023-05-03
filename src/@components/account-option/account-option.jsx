@@ -12,24 +12,24 @@ function AccountOption({ header, children, layout = "vertical", ...props }) {
 
 const Wrapper = styled.form`
   position: relative;
-  display: flex;
-  flex-direction: ${(props) =>
-    props.layout === "horizontal" ? "row" : "column"};
-  background-color: var(--color-gray-10);
-  border-radius: 8px;
   height: fit-content;
   width: 640px;
   padding: 24px;
+  display: flex;
+  flex-direction: ${(props) =>
+    props.layout === "horizontal" ? "row" : "column"};
   gap: 24px;
+  background-color: var(--color-gray-10);
+  border-radius: 8px;
 `;
 
 const Header = styled.header`
   flex: 1;
+  font-size: ${16 / 16}rem;
   font-weight: bold;
   text-transform: uppercase;
-  font-size: ${16 / 16}rem;
-  color: var(--color-gray-3);
   letter-spacing: 0.05em;
+  color: var(--color-gray-3);
 `;
 
 const Content = styled.div`
