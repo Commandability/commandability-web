@@ -107,8 +107,7 @@ function Account() {
     } else return;
   }, [dialogAction, dialogButton]);
 
-  async function handleReauthentication(event) {
-    event.preventDefault();
+  async function handleReauthentication() {
     setReauthenticationDialogOpen(false);
     let reauthenticationToastState = {
       title: "Invalid password",
@@ -170,8 +169,7 @@ function Account() {
     }
   }
 
-  async function handlePasswordChange(event) {
-    event.preventDefault();
+  async function handlePasswordChange() {
     let changePasswordToastState = {
       title: "Invalid password",
       description:
@@ -212,8 +210,7 @@ function Account() {
     }
   }
 
-  async function handleRecoverPassword(event) {
-    event.preventDefault();
+  async function handleRecoverPassword() {
     const recoverPasswordToastState = {
       title: "Password reset email sent",
       description:
@@ -249,8 +246,7 @@ function Account() {
     return;
   }
 
-  async function handleVerifyEmail(event) {
-    event.preventDefault();
+  async function handleVerifyEmail() {
     const verifyEmailToastState = {
       title: "Verification email sent",
       description:
@@ -288,7 +284,11 @@ function Account() {
       <Options>
         <AccountOption
           header="General"
-          onSubmit={handleAccountUpdate}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDialogAction(dialogActions.updateAccount);
+            setReauthenticationDialogOpen(true);
+          }}
           method="post"
         >
           <TextInput
@@ -326,20 +326,20 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              type="button"
-              onClick={() => {
-                setDialogAction(dialogActions.updateAccount);
-                setReauthenticationDialogOpen(true);
-              }}
-              disabled={generalOptionEnable}
-            >
+            <Button type="submit" disabled={generalOptionEnable}>
               <FiSave />
               Save
             </Button>
           </SubmitLoaderWrapper>
         </AccountOption>
-        <AccountOption header="Change Password">
+        <AccountOption
+          header="Change Password"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDialogAction(dialogActions.changePassword);
+            handlePasswordChange();
+          }}
+        >
           <TextInput
             id="current-password-input"
             labelText="Current password"
@@ -386,20 +386,21 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              type="button"
-              disabled={passwordOptionEnable}
-              onClick={(event) => {
-                setDialogAction(dialogActions.changePassword);
-                handlePasswordChange(event);
-              }}
-            >
+            <Button type="submit" disabled={passwordOptionEnable}>
               <FiSave />
               Save
             </Button>
           </SubmitLoaderWrapper>
         </AccountOption>
-        <AccountOption header="Recover password" layout="horizontal">
+        <AccountOption
+          header="Recover password"
+          layout="horizontal"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDialogAction(dialogActions.recoverPassword);
+            handleRecoverPassword(e);
+          }}
+        >
           <SubmitLoaderWrapper>
             {loading && dialogAction === "recoverPassword" ? (
               <FireLoader
@@ -409,20 +410,21 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              variant="primary"
-              type="submit"
-              onClick={(event) => {
-                setDialogAction(dialogActions.recoverPassword);
-                handleRecoverPassword(event);
-              }}
-            >
+            <Button variant="primary" type="submit">
               <FiMail />
               Send
             </Button>
           </SubmitLoaderWrapper>
         </AccountOption>
-        <AccountOption header="Verify Email" layout="horizontal">
+        <AccountOption
+          header="Verify Email"
+          layout="horizontal"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDialogAction(dialogActions.verifyEmail);
+            handleVerifyEmail(e);
+          }}
+        >
           <SubmitLoaderWrapper>
             {loading && dialogAction === "verifyEmail" ? (
               <FireLoader
@@ -433,34 +435,27 @@ function Account() {
               />
             ) : null}
             {user.current.emailVerified ? (
-              <Button
-                variant="primary"
-                type="button"
-                disabled={true}
-                onClick={(event) => {
-                  setDialogAction(dialogActions.verifyEmail);
-                  handleVerifyEmail(event);
-                }}
-              >
+              <Button disabled={true}>
                 <FiCheck />
                 Verified
               </Button>
             ) : (
-              <Button
-                variant="primary"
-                type="button"
-                onClick={(event) => {
-                  setDialogAction(dialogActions.verifyEmail);
-                  handleVerifyEmail(event);
-                }}
-              >
+              <Button variant="primary" type="submit">
                 <FiMail />
                 Send
               </Button>
             )}
           </SubmitLoaderWrapper>
         </AccountOption>
-        <AccountOption header="Delete Account" layout="horizontal">
+        <AccountOption
+          header="Delete Account"
+          layout="horizontal"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDialogAction(dialogActions.deleteAccount);
+            setReauthenticationDialogOpen(true);
+          }}
+        >
           <SubmitLoaderWrapper>
             {loading && dialogAction === "deleteAccount" ? (
               <FireLoader
@@ -470,18 +465,12 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              type="button"
-              onClick={() => {
-                setDialogAction(dialogActions.deleteAccount);
-                setReauthenticationDialogOpen(true);
-              }}
-            >
+            <Button type="submit">
               <FiUserX />
               Delete
             </Button>
           </SubmitLoaderWrapper>
-        </AccountOption>{" "}
+        </AccountOption>
       </Options>
       <Dialog.Root
         open={reauthenticationDialogOpen}
@@ -494,7 +483,12 @@ function Account() {
               title="Re-authentication required"
               description="For security purposes, please re-enter your login credentials to make the requested account changes"
             >
-              <DialogForm onSubmit={handleReauthentication}>
+              <DialogForm
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleReauthentication(e);
+                }}
+              >
                 <DialogInputs>
                   <TextInput
                     id="password-input"
@@ -507,22 +501,16 @@ function Account() {
                 <SubmitWrapper>
                   <TextButton
                     type="button"
-                    onClick={(event) => {
+                    onClick={(e) => {
+                      e.preventDefault();
                       setReauthenticationDialogOpen(false);
                       setDialogAction(dialogActions.recoverPassword);
-                      handleRecoverPassword(event);
+                      handleRecoverPassword(e);
                     }}
                   >
                     Forgot password?
                   </TextButton>
-                  <Button
-                    type="submit"
-                    onClick={(event) => {
-                      handleReauthentication(event);
-                    }}
-                  >
-                    {dialogButton}
-                  </Button>
+                  <Button type="submit">{dialogButton}</Button>
                 </SubmitWrapper>
               </DialogForm>
             </DialogContent>
