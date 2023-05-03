@@ -102,9 +102,7 @@ function ManageAccount() {
             </SubmitLoaderWrapper>
           </AccountOption>
         ) : (
-          <AccountOption header="Email Verified">
-            <div>Your email has been successfully verified!</div>
-          </AccountOption>
+          <AccountOption header="Email Successfully Verified"></AccountOption>
         )}
       </Content>
       <Toast.Root
@@ -124,7 +122,6 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 72px 16px;
-
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0;
   }
@@ -133,9 +130,8 @@ const Wrapper = styled.div`
 const Content = styled.div`
   --horizontal-padding: 64px;
   max-width: calc(75ch + var(--horizontal-padding) * 2);
-  background-color: var(--color-white);
   border-radius: var(--border-radius);
-
+  background-color: var(--color-white);
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0px 8px;
     border-radius: 0;
@@ -143,8 +139,8 @@ const Content = styled.div`
 `;
 
 const SubmitLoaderWrapper = styled.div`
-  display: flex;
   width: fit-content;
+  display: flex;
   align-self: flex-end;
   gap: 16px;
 `;
