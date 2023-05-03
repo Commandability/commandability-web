@@ -95,13 +95,13 @@ function Group({
 }
 
 const Wrapper = styled.li`
+  position: relative;
   height: clamp(124px, 45vh - 124px, 1200px);
   width: clamp(192px, 45vw - 192px, 292px);
-  border-radius: 8px;
   display: flex;
-  position: relative;
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
+  border-radius: 8px;
   overflow: hidden;
   transition: all 0.2s;
   &:has(:focus-visible) {
@@ -119,8 +119,8 @@ const Wrapper = styled.li`
 `;
 
 const Content = styled.div`
-  display: flex;
   position: relative;
+  display: flex;
   flex: 1;
   flex-direction: column;
   align-items: center;
@@ -143,17 +143,17 @@ const Heading = styled.h1`
 `;
 
 const DialogOverlay = styled(Dialog.Overlay)`
-  background-color: hsl(0 0% 0% / 0.5);
   position: fixed;
   inset: 0;
   display: grid;
   place-content: center;
   backdrop-filter: blur(1px);
+  background-color: hsl(0 0% 0% / 0.5);
 `;
 
 const AlertWrapper = styled.div`
-  display: flex;
   height: 36px;
+  display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
@@ -187,8 +187,8 @@ const EditGroupButton = styled(UnstyledButton)`
 `;
 
 const AddGroupButton = styled(UnstyledButton)`
-  flex: 1;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   border: none;

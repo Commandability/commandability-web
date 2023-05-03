@@ -101,22 +101,22 @@ const Wrapper = styled(Tabs.Root)`
 const TabsContent = styled.ol`
   height: 100%;
   list-style: none;
-  padding-left: 0;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
   grid-column-gap: 24px;
   grid-row-gap: 48px;
   place-items: center;
+  padding-left: 0;
   padding: 0px 48px;
 `;
 
 const Content = styled.div`
   height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  width: 100%;
   padding-top: 64px;
   padding-bottom: 32px;
 `;
