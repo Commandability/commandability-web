@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import { FiSave, FiX, FiCheck } from "react-icons/fi";
-import { confirmPasswordReset } from "firebase/auth";
+import { confirmPasswordReset, applyActionCode } from "firebase/auth";
 
 import { QUERIES } from "@constants";
 import AccountOption from "@components/account-option";
@@ -12,6 +12,8 @@ import TextInput from "@components/text-input";
 import { useAuth } from "@context/auth-context";
 import * as Toast from "@components/toast";
 import { passwordRequirements } from "site-config";
+import Pill from "@components/pill";
+import Spacer from "@components/spacer";
 
 const inputErrors = {
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
@@ -23,6 +25,7 @@ function ManageAccount() {
   const [newPassword, setNewPassword] = React.useState("");
   const [newPasswordError, setNewPasswordError] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
+  const [success, setSuccess] = React.useState(false);
 
   const [toastState, setToastState] = React.useState({
     title: "",
@@ -34,6 +37,23 @@ function ManageAccount() {
   const searchParameters = new URLSearchParams(window.location.search);
   const mode = searchParameters.get("mode");
   const code = searchParameters.get("oobCode");
+
+  React.useEffect(() => {
+    async function handleVerifyEmail() {
+      setLoading(true);
+      try {
+        await applyActionCode(auth, code);
+        setSuccess(true);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        return error;
+      }
+    }
+    if (mode === "verifyEmail") {
+      handleVerifyEmail();
+    }
+  }, [mode, auth, code]);
 
   async function handlePasswordReset(event) {
     event.preventDefault();
@@ -63,48 +83,65 @@ function ManageAccount() {
   }
 
   return (
-    <Wrapper>
-      <Content>
-        {mode === "resetPassword" ? (
-          <AccountOption header="Reset Password">
-            <TextInput
-              id="new-password-input"
-              labelText="New password"
-              value={newPassword}
-              variant="password"
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-                isStrongPassword(e.target.value, passwordRequirements)
-                  ? setNewPasswordError(false)
-                  : setNewPasswordError(true);
-              }}
-              errorText={!newPasswordError ? "" : inputErrors.password}
-            />
-            <SubmitLoaderWrapper>
-              {loading ? (
-                <FireLoader
-                  style={{
-                    "--fire-icon-width": "36px",
-                    "--fire-icon-height": "36px",
-                  }}
-                />
-              ) : null}
-              <Button
-                type="button"
-                onClick={(event) => {
-                  handlePasswordReset(event);
+    <>
+      {mode === "resetPassword" ? (
+        <Wrapper>
+          <Content>
+            <AccountOption header="Reset Password">
+              <TextInput
+                id="new-password-input"
+                labelText="New password"
+                value={newPassword}
+                variant="password"
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  isStrongPassword(e.target.value, passwordRequirements)
+                    ? setNewPasswordError(false)
+                    : setNewPasswordError(true);
                 }}
-                disabled={newPasswordError || newPassword === ""}
-              >
-                <FiSave />
-                Save
-              </Button>
-            </SubmitLoaderWrapper>
-          </AccountOption>
-        ) : (
-          <AccountOption header="Email Successfully Verified"></AccountOption>
-        )}
-      </Content>
+                errorText={!newPasswordError ? "" : inputErrors.password}
+              />
+              <SubmitLoaderWrapper>
+                {loading ? (
+                  <FireLoader
+                    style={{
+                      "--fire-icon-width": "36px",
+                      "--fire-icon-height": "36px",
+                    }}
+                  />
+                ) : null}
+                <Button
+                  type="button"
+                  onClick={(event) => {
+                    handlePasswordReset(event);
+                  }}
+                  disabled={newPasswordError || newPassword === ""}
+                >
+                  <FiSave />
+                  Save
+                </Button>
+              </SubmitLoaderWrapper>
+            </AccountOption>
+          </Content>
+        </Wrapper>
+      ) : loading ? (
+        <FireLoader />
+      ) : (
+        <VerifyWrapper>
+          <VerifyContent>
+            <VerifyTitle>{success ? "Success" : "Error"}</VerifyTitle>
+            <VerifyMessage>
+              {success
+                ? "Email Verified"
+                : `Something went wrong, please try again or contact support`}
+            </VerifyMessage>
+            <Spacer axis="vertical" size={64} />
+            <Pill to="/dashboard/account" theme="light" angle>
+              Return to account
+            </Pill>
+          </VerifyContent>
+        </VerifyWrapper>
+      )}
       <Toast.Root
         open={toastOpen}
         onOpenChange={setToastOpen}
@@ -114,7 +151,7 @@ function ManageAccount() {
         <Toast.Icon>{toastState.icon}</Toast.Icon>
       </Toast.Root>
       <Toast.Viewport />
-    </Wrapper>
+    </>
   );
 }
 
@@ -143,6 +180,36 @@ const SubmitLoaderWrapper = styled.div`
   display: flex;
   align-self: flex-end;
   gap: 16px;
+`;
+
+const VerifyWrapper = styled.div`
+  height: 100%;
+  padding: 0 48px;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  justify-content: center;
+`;
+
+const VerifyContent = styled.div`
+  grid-row: 2;
+  display: grid;
+  justify-items: start;
+`;
+
+const VerifyTitle = styled.div`
+  display: grid;
+  font-size: clamp(${32 / 16}rem, 8vw + 1rem, ${96 / 16}rem);
+  letter-spacing: 0.1em;
+  color: var(--color-yellow-9);
+`;
+
+const VerifyMessage = styled.div`
+  display: grid;
+  font-size: clamp(${24 / 16}rem, 2vw + 1rem, ${48 / 16}rem);
+  color: var(--color-white);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  max-width: 720px;
 `;
 
 export default ManageAccount;

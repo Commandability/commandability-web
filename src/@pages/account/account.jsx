@@ -422,7 +422,7 @@ function Account() {
           onSubmit={(e) => {
             e.preventDefault();
             setDialogAction(dialogActions.verifyEmail);
-            handleVerifyEmail(e);
+            handleVerifyEmail();
           }}
         >
           <SubmitLoaderWrapper>
