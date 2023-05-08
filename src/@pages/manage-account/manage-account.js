@@ -125,11 +125,15 @@ function ManageAccount() {
           </Content>
         </Wrapper>
       ) : loading ? (
-        <FireLoader />
+        <FireWrapper>
+          <FireLoader />
+        </FireWrapper>
       ) : (
         <VerifyWrapper>
           <VerifyContent>
-            <VerifyTitle>{success ? "Success" : "Error"}</VerifyTitle>
+            <VerifyTitle>
+              {success ? "Success" : "Verification Failed"}
+            </VerifyTitle>
             <VerifyMessage>
               {success
                 ? "Email Verified"
@@ -199,7 +203,7 @@ const VerifyContent = styled.div`
 const VerifyTitle = styled.div`
   display: grid;
   font-size: clamp(${32 / 16}rem, 8vw + 1rem, ${96 / 16}rem);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   color: var(--color-yellow-9);
 `;
 
@@ -207,9 +211,13 @@ const VerifyMessage = styled.div`
   display: grid;
   font-size: clamp(${24 / 16}rem, 2vw + 1rem, ${48 / 16}rem);
   color: var(--color-white);
-  text-transform: uppercase;
   letter-spacing: 0.05em;
-  max-width: 720px;
+  max-width: 900px;
+`;
+
+const FireWrapper = styled.div`
+  position: fixed;
+  inset: 0;
 `;
 
 export default ManageAccount;
