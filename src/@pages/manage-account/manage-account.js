@@ -20,7 +20,7 @@ const inputErrors = {
 };
 
 function ManageAccount() {
-  const { auth } = useAuth();
+  const { setUser, user, auth } = useAuth();
 
   const [newPassword, setNewPassword] = React.useState("");
   const [newPasswordError, setNewPasswordError] = React.useState(false);
@@ -43,6 +43,8 @@ function ManageAccount() {
       setLoading(true);
       try {
         await applyActionCode(auth, code);
+        setUser((prevUser) => ({ ...prevUser, current: user.current }));
+        user.current.reload();
         setSuccess(true);
         setLoading(false);
       } catch (error) {
@@ -53,7 +55,7 @@ function ManageAccount() {
     if (mode === "verifyEmail") {
       handleVerifyEmail();
     }
-  }, [mode, auth, code]);
+  }, [mode, auth, code, setUser, user, success]);
 
   async function handlePasswordReset(event) {
     event.preventDefault();
@@ -141,7 +143,7 @@ function ManageAccount() {
             </VerifyMessage>
             <Spacer axis="vertical" size={64} />
             <Pill to="/dashboard/account" theme="light" angle>
-              Return to account
+              Return to account page
             </Pill>
           </VerifyContent>
         </VerifyWrapper>
@@ -202,22 +204,25 @@ const VerifyContent = styled.div`
 
 const VerifyTitle = styled.div`
   display: grid;
-  font-size: clamp(${32 / 16}rem, 8vw + 1rem, ${96 / 16}rem);
+  font-size: clamp(${24 / 16}rem, 8vw + 1rem, ${48 / 16}rem);
   letter-spacing: 0.05em;
   color: var(--color-yellow-9);
+  text-transform: uppercase;
 `;
 
 const VerifyMessage = styled.div`
   display: grid;
-  font-size: clamp(${24 / 16}rem, 2vw + 1rem, ${48 / 16}rem);
+  font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${24 / 16}rem);
   color: var(--color-white);
   letter-spacing: 0.05em;
-  max-width: 900px;
+  max-width: 600px;
 `;
 
 const FireWrapper = styled.div`
   position: fixed;
   inset: 0;
+  background-color: var(--color-yellow-10);
+  z-index: 9999;
 `;
 
 export default ManageAccount;

@@ -42,7 +42,7 @@ const dialogActions = {
 };
 
 function Account() {
-  const { user, auth } = useAuth();
+  const { user, setUser, auth } = useAuth();
 
   const [organizationName, setOrganizationName] = React.useState(
     user.current.displayName
@@ -161,6 +161,7 @@ function Account() {
     }
     try {
       await updateProfile(user.current, { displayName: organizationName });
+      setUser((prevUser) => ({ ...prevUser, current: user.current }));
     } catch (error) {
       setToastState(Toast.unknownState);
       setToastOpen(true);
