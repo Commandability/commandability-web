@@ -11,6 +11,7 @@ import {
   reauthenticateWithCredential,
   sendPasswordResetEmail,
   sendEmailVerification,
+  deleteUser,
 } from "firebase/auth";
 
 import AccountOption from "@components/account-option";
@@ -241,10 +242,14 @@ function Account() {
   }
 
   async function handleAccountDelete() {
-    setToastState(Toast.unknownState);
-    setToastOpen(true);
-    resetState(true);
-    return;
+    try {
+      await deleteUser(user.current);
+      window.open("/");
+    } catch (error) {
+      setToastState(Toast.unknownState);
+      setToastOpen(true);
+      resetState(true);
+    }
   }
 
   async function handleVerifyEmail() {
