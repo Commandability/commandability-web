@@ -141,7 +141,7 @@ function ManageAccount() {
                 ? "Email Verified"
                 : `Something went wrong, please try again or contact support`}
             </VerifyMessage>
-            <Spacer axis="vertical" size={64} />
+            <Spacer axis="vertical" size={12} />
             <Pill to="/dashboard/account" theme="light" angle>
               Return to account page
             </Pill>
@@ -199,12 +199,12 @@ const VerifyWrapper = styled.div`
 const VerifyContent = styled.div`
   grid-row: 2;
   display: grid;
-  justify-items: start;
+  justify-items: center;
 `;
 
 const VerifyTitle = styled.div`
   display: grid;
-  font-size: clamp(${24 / 16}rem, 8vw + 1rem, ${48 / 16}rem);
+  font-size: clamp(${16 / 16}rem, 8vw + 1rem, ${32 / 16}rem);
   letter-spacing: 0.05em;
   color: var(--color-yellow-9);
   text-transform: uppercase;
@@ -215,7 +215,8 @@ const VerifyMessage = styled.div`
   font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${24 / 16}rem);
   color: var(--color-white);
   letter-spacing: 0.05em;
-  max-width: 600px;
+  text-align: center;
+  max-width: 400px;
 `;
 
 const FireWrapper = styled.div`
