@@ -31,7 +31,7 @@ function EditGroupDialogContent({
   const [groupName, setGroupName] = React.useState(groupData.name);
   const [alertTime, setAlertTime] = React.useState(groupData.alert);
 
-  const { ...newUserGroupData } = userGroupData;
+  const { [groupId]: _, ...newUserGroupData } = userGroupData;
 
   async function handleRemoveGroup(event) {
     event.preventDefault();
