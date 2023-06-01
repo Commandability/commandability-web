@@ -133,15 +133,16 @@ function ManageAccount() {
       ) : (
         <VerifyWrapper>
           <VerifyContent>
-            <VerifyTitle>
-              {success ? "Success" : "Verification Failed"}
-            </VerifyTitle>
-            <VerifyMessage>
-              {success
-                ? "Email Verified"
-                : `Something went wrong, please try again or contact support`}
-            </VerifyMessage>
-            <Spacer axis="vertical" size={12} />
+            <TextWrapper>
+              <VerifyTitle>
+                {success ? "Success" : "Verification Failed"}
+              </VerifyTitle>
+              <VerifyMessage>
+                {success
+                  ? "Email Verified"
+                  : `Something went wrong, please try again or contact support`}
+              </VerifyMessage>
+            </TextWrapper>
             <Pill to="/dashboard/account" theme="light" angle>
               Return to account page
             </Pill>
@@ -199,7 +200,15 @@ const VerifyWrapper = styled.div`
 const VerifyContent = styled.div`
   grid-row: 2;
   display: grid;
-  justify-items: center;
+  justify-items: start;
+  align-content: start;
+  gap: 32px;
+  width: 500px;
+`;
+
+const TextWrapper = styled.div`
+  display: grid;
+  gap: 16px;
 `;
 
 const VerifyTitle = styled.div`
@@ -215,8 +224,6 @@ const VerifyMessage = styled.div`
   font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${24 / 16}rem);
   color: var(--color-white);
   letter-spacing: 0.05em;
-  text-align: center;
-  max-width: 400px;
 `;
 
 const FireWrapper = styled.div`
