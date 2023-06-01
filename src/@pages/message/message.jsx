@@ -18,7 +18,7 @@ const inputErrors = {
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
 };
 
-function ManageAccount() {
+function Message() {
   const { setUser, user, auth } = useAuth();
 
   const [newPassword, setNewPassword] = React.useState("");
@@ -134,12 +134,12 @@ function ManageAccount() {
           <VerifyContent>
             <TextWrapper>
               <VerifyTitle>
-                {success ? "Success" : "Verification Failed"}
+                {success ? "Verified" : "Error"}
               </VerifyTitle>
               <VerifyMessage>
                 {success
-                  ? "Email Verified"
-                  : `Something went wrong, please try again or contact support`}
+                  ? "Your email account has been successfully verified"
+                  : "We were unable to verify your email, please try again or contact support"}
               </VerifyMessage>
             </TextWrapper>
             <Pill to="/dashboard/account" theme="light" angle>
@@ -202,7 +202,7 @@ const VerifyContent = styled.div`
   justify-items: start;
   align-content: start;
   gap: 32px;
-  width: 500px;
+  width: 544px;
 `;
 
 const TextWrapper = styled.div`
@@ -232,4 +232,4 @@ const FireWrapper = styled.div`
   z-index: 9999;
 `;
 
-export default ManageAccount;
+export default Message;
