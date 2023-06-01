@@ -13,7 +13,6 @@ import { useAuth } from "@context/auth-context";
 import * as Toast from "@components/toast";
 import { passwordRequirements } from "site-config";
 import Pill from "@components/pill";
-import Spacer from "@components/spacer";
 
 const inputErrors = {
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
