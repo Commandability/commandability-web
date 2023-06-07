@@ -339,6 +339,37 @@ function Account() {
           </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption
+          header="Verify Email"
+          layout="horizontal"
+          onSubmit={(e) => {
+            e.preventDefault();
+            setDialogAction(dialogActions.verifyEmail);
+            handleVerifyEmail();
+          }}
+        >
+          <SubmitLoaderWrapper>
+            {loading && dialogAction === "verifyEmail" ? (
+              <FireLoader
+                style={{
+                  "--fire-icon-width": "36px",
+                  "--fire-icon-height": "36px",
+                }}
+              />
+            ) : null}
+            {user.current.emailVerified ? (
+              <Button disabled={true}>
+                <FiCheck />
+                Verified
+              </Button>
+            ) : (
+              <Button variant="primary" type="submit">
+                <FiMail />
+                Send
+              </Button>
+            )}
+          </SubmitLoaderWrapper>
+        </AccountOption>
+        <AccountOption
           header="Change Password"
           onSubmit={(e) => {
             e.preventDefault();
@@ -420,37 +451,6 @@ function Account() {
               <FiMail />
               Send
             </Button>
-          </SubmitLoaderWrapper>
-        </AccountOption>
-        <AccountOption
-          header="Verify Email"
-          layout="horizontal"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setDialogAction(dialogActions.verifyEmail);
-            handleVerifyEmail();
-          }}
-        >
-          <SubmitLoaderWrapper>
-            {loading && dialogAction === "verifyEmail" ? (
-              <FireLoader
-                style={{
-                  "--fire-icon-width": "36px",
-                  "--fire-icon-height": "36px",
-                }}
-              />
-            ) : null}
-            {user.current.emailVerified ? (
-              <Button disabled={true}>
-                <FiCheck />
-                Verified
-              </Button>
-            ) : (
-              <Button variant="primary" type="submit">
-                <FiMail />
-                Send
-              </Button>
-            )}
           </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption
