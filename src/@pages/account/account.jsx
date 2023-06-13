@@ -152,6 +152,11 @@ function Account() {
   }
 
   async function handleAccountUpdate() {
+    let changeAccountIntoToastState = {
+      title: "Account updated",
+      description: "your account has been successfully updated",
+      icon: <FiX />,
+    };
     try {
       await updateEmail(user.current, accountEmail);
     } catch (error) {
@@ -163,6 +168,8 @@ function Account() {
     try {
       await updateProfile(user.current, { displayName: organizationName });
       setUser((prevUser) => ({ ...prevUser, current: user.current }));
+      setToastState(changeAccountIntoToastState);
+      setToastOpen(true);
     } catch (error) {
       setToastState(Toast.unknownState);
       setToastOpen(true);
