@@ -3,6 +3,7 @@ import styled from "styled-components";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import { FiSave, FiX, FiCheck } from "react-icons/fi";
 import { confirmPasswordReset, applyActionCode } from "firebase/auth";
+import isEmail from "validator/lib/isEmail";
 
 import { QUERIES } from "@constants";
 import AccountOption from "@components/account-option";
@@ -15,6 +16,7 @@ import { passwordRequirements } from "site-config";
 import Pill from "@components/pill";
 
 const inputErrors = {
+  email: `Must be a valid email`,
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
 };
 
@@ -23,7 +25,10 @@ function Message() {
 
   const [newPassword, setNewPassword] = React.useState("");
   const [newPasswordError, setNewPasswordError] = React.useState(false);
+  const [newEmail, setNewEmail] = React.useState("");
+  const [newEmailError, setNewEmailError] = React.useState("false");
   const [loading, setLoading] = React.useState(false);
+  const [pageLoading, setPageLoading] = React.useState(true);
   const [success, setSuccess] = React.useState(false);
 
   const [toastState, setToastState] = React.useState({
@@ -39,15 +44,14 @@ function Message() {
 
   React.useEffect(() => {
     async function handleVerifyEmail() {
-      setLoading(true);
       try {
         await applyActionCode(auth, code);
         setUser((prevUser) => ({ ...prevUser, current: user.current }));
         user.current.reload();
         setSuccess(true);
-        setLoading(false);
+        setPageLoading(false);
       } catch (error) {
-        setLoading(false);
+        setPageLoading(false);
         return error;
       }
     }
@@ -55,6 +59,33 @@ function Message() {
       handleVerifyEmail();
     }
   }, [mode, auth, code, setUser, user, success]);
+
+  async function handleEmailReset(event) {
+    event.preventDefault();
+    setLoading(true);
+    let emailResetToastState = {
+      title: "Email reset error",
+      description:
+        "There was an error when trying to reset your email, please try again",
+      icon: <FiX />,
+    };
+    setToastState(emailResetToastState);
+    try {
+      await updateEmail(user.current, newEmail);
+      emailResetToastState = {
+        title: "Email changed",
+        description: "You have successfully changed your email",
+        icon: <FiCheck />,
+      };
+      setToastState(emailResetToastState);
+      setToastOpen(true);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      setToastOpen(true);
+      return error;
+    }
+  }
 
   async function handlePasswordReset(event) {
     event.preventDefault();
@@ -83,69 +114,123 @@ function Message() {
     }
   }
 
+  let messageContent = (
+    <FireWrapper>
+      <FireLoader />
+    </FireWrapper>
+  );
+  if (mode === "verifyEmail" && pageLoading === false) {
+    messageContent = (
+      <VerifyWrapper>
+        <VerifyContent>
+          <TextWrapper>
+            <VerifyTitle>{success ? "Verified" : "Error"}</VerifyTitle>
+            <VerifyMessage>
+              {success
+                ? "Your email account has been successfully verified"
+                : "We were unable to verify your email, please try again or contact support"}
+            </VerifyMessage>
+          </TextWrapper>
+          <Pill to="/dashboard/account" theme="light" angle>
+            Return to account page
+          </Pill>
+        </VerifyContent>
+      </VerifyWrapper>
+    );
+  } else if (mode === "resetPassword") {
+    messageContent = (
+      <Wrapper>
+        <Content>
+          <AccountOption header="Reset Password">
+            <TextInput
+              id="new-password-input"
+              labelText="New password"
+              value={newPassword}
+              type="password"
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+                isStrongPassword(e.target.value, passwordRequirements)
+                  ? setNewPasswordError(false)
+                  : setNewPasswordError(true);
+              }}
+              errorText={!newPasswordError ? "" : inputErrors.password}
+            />
+            <SubmitLoaderWrapper>
+              {loading ? (
+                <FireLoader
+                  style={{
+                    "--fire-icon-width": "36px",
+                    "--fire-icon-height": "36px",
+                  }}
+                />
+              ) : null}
+              <Button
+                type="submit"
+                onClick={(event) => {
+                  handlePasswordReset(event);
+                }}
+                disabled={newPasswordError || newPassword === ""}
+              >
+                <FiSave />
+                Save
+              </Button>
+            </SubmitLoaderWrapper>
+          </AccountOption>
+        </Content>
+      </Wrapper>
+    );
+  } else if (mode === "recoverEmail") {
+    messageContent = (
+      <Wrapper>
+        <Content>
+          <AccountOption header="Reset Email">
+            <TextInput
+              id="new-email-input"
+              labelText="New email"
+              value={newEmail}
+              onChange={(e) => {
+                setNewEmail(e.target.value);
+                isEmail(e.target.value)
+                  ? setNewEmailError(false)
+                  : setNewEmailError(true);
+              }}
+              errorText={!newEmailError ? "" : inputErrors.email}
+            />
+            <SubmitLoaderWrapper>
+              {loading ? (
+                <FireLoader
+                  style={{
+                    "--fire-icon-width": "36px",
+                    "--fire-icon-height": "36px",
+                  }}
+                />
+              ) : null}
+              <Button
+                type="submit"
+                onClick={(event) => {
+                  handleEmailReset(event);
+                }}
+                disabled={newEmailError || newEmail === ""}
+              >
+                <FiSave />
+                Save
+              </Button>
+            </SubmitLoaderWrapper>
+          </AccountOption>
+        </Content>
+      </Wrapper>
+    );
+  } else {
+    <Wrapper>
+      <Content>Something went wrong</Content>
+    </Wrapper>;
+  }
+
   return (
     <>
-      {mode === "resetPassword" ? (
-        <Wrapper>
-          <Content>
-            <AccountOption header="Reset Password">
-              <TextInput
-                id="new-password-input"
-                label="New password"
-                value={newPassword}
-                type="password"
-                onChange={(e) => {
-                  setNewPassword(e.target.value);
-                  isStrongPassword(e.target.value, passwordRequirements)
-                    ? setNewPasswordError(false)
-                    : setNewPasswordError(true);
-                }}
-                errorText={!newPasswordError ? "" : inputErrors.password}
-              />
-              <SubmitLoaderWrapper>
-                {loading ? (
-                  <FireLoader
-                    style={{
-                      "--fire-icon-width": "36px",
-                      "--fire-icon-height": "36px",
-                    }}
-                  />
-                ) : null}
-                <Button
-                  type="button"
-                  onClick={(event) => {
-                    handlePasswordReset(event);
-                  }}
-                  disabled={newPasswordError || newPassword === ""}
-                >
-                  <FiSave />
-                  Save
-                </Button>
-              </SubmitLoaderWrapper>
-            </AccountOption>
-          </Content>
-        </Wrapper>
-      ) : loading ? (
-        <FireWrapper>
-          <FireLoader />
-        </FireWrapper>
-      ) : (
-        <VerifyWrapper>
-          <VerifyContent>
-            <TextWrapper>
-              <VerifyTitle>{success ? "Verified" : "Error"}</VerifyTitle>
-              <VerifyMessage>
-                {success
-                  ? "Your email account has been successfully verified"
-                  : "We were unable to verify your email, please try again or contact support"}
-              </VerifyMessage>
-            </TextWrapper>
-            <Pill to="/dashboard/account" theme="light" angle>
-              Return to account page
-            </Pill>
-          </VerifyContent>
-        </VerifyWrapper>
-      )}
+      <div aria-live="polite" aria-atomic="true">
+        {messageContent}
+      </div>
       <Toast.Root
         open={toastOpen}
         onOpenChange={setToastOpen}

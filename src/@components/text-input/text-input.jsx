@@ -5,11 +5,6 @@ import { FiEye, FiEyeOff } from "react-icons/fi";
 import UnstyledButton from "@components/unstyled-button";
 import VisuallyHidden from "@components/visually-hidden";
 
-const VARIANTS = {
-  dialog: "dialog",
-  page: "page",
-};
-
 const TextInput = ({
   id,
   className,
@@ -22,9 +17,6 @@ const TextInput = ({
   if (!id) {
     throw new Error("TextInput must have an id");
   }
-  if (!VARIANTS[variant] && variant)
-    throw new Error(`Unknown variant provided to TextInput.`);
-
   const [visiblePassword, setVisiblePassword] = React.useState(false);
   const passwordInputRef = React.useRef();
 
