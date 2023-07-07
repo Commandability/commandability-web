@@ -123,8 +123,8 @@ const Content = styled.div`
 
 const GroupTab = styled(Tabs.Content)`
   height: 100%;
-  display: flex;
-  align-self: center;
+  width: fit-content;
+  margin: auto;
 `;
 
 const GroupsPageNumbers = styled(Tabs.List)`
