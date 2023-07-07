@@ -2,7 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import { FiSave, FiX, FiCheck } from "react-icons/fi";
-import { confirmPasswordReset, applyActionCode } from "firebase/auth";
+import {
+  confirmPasswordReset,
+  applyActionCode,
+  updateEmail,
+} from "firebase/auth";
 import isEmail from "validator/lib/isEmail";
 
 import { QUERIES } from "@constants";
@@ -81,6 +85,7 @@ function Message() {
       setToastOpen(true);
       setLoading(false);
     } catch (error) {
+      console.log(error);
       setLoading(false);
       setToastOpen(true);
       return error;
@@ -108,6 +113,7 @@ function Message() {
       setToastOpen(true);
       setLoading(false);
     } catch (error) {
+      console.log(error);
       setLoading(false);
       setToastOpen(true);
       return error;
@@ -169,7 +175,7 @@ function Message() {
                 onClick={(event) => {
                   handlePasswordReset(event);
                 }}
-                disabled={newPasswordError || newPassword === ""}
+                disabled={newPasswordError}
               >
                 <FiSave />
                 Save
@@ -210,7 +216,7 @@ function Message() {
                 onClick={(event) => {
                   handleEmailReset(event);
                 }}
-                disabled={newEmailError || newEmail === ""}
+                disabled={newEmailError}
               >
                 <FiSave />
                 Save

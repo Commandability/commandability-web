@@ -155,7 +155,7 @@ function Account() {
     let changeAccountIntoToastState = {
       title: "Account updated",
       description: "your account has been successfully updated",
-      icon: <FiX />,
+      icon: <FiCheck />,
     };
     try {
       await updateEmail(user.current, accountEmail);
