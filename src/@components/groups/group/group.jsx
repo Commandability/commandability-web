@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { FiPlus } from "react-icons/fi";
 import { updateDoc } from "firebase/firestore";
 
@@ -52,18 +52,21 @@ function Group({
   } else {
     if (active === true) {
       groupContent = (
-        <Content>
-          <Heading>{groupData.name}</Heading>
-          <AlertWrapper>
-            <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
-            <AlertText>{alertTime === 0 ? "No alerts" : "Minutes"}</AlertText>
-          </AlertWrapper>
+        <>
           <Dialog.Root open={editGroupOpen} onOpenChange={setEditGroupOpen}>
             <Dialog.Trigger asChild>
-              <EditGroupButton />
+              <EditGroupButton>
+                <Heading>{groupData.name}</Heading>
+                <AlertWrapper>
+                  <AlertTime>{alertTime === 0 ? "" : alertTime}</AlertTime>
+                  <AlertText>
+                    {alertTime === 0 ? "No alerts" : "minutes"}
+                  </AlertText>
+                </AlertWrapper>
+              </EditGroupButton>
             </Dialog.Trigger>
             <Dialog.Portal>
-              <DialogOverlay>
+              <Dialog.Overlay>
                 <Dialog.Content
                   header
                   title="Edit Group"
@@ -76,14 +79,14 @@ function Group({
                     closeDialog={() => setEditGroupOpen(false)}
                   />
                 </Dialog.Content>
-              </DialogOverlay>
+              </Dialog.Overlay>
             </Dialog.Portal>
           </Dialog.Root>
-        </Content>
+        </>
       );
     } else if (active === false) {
       groupContent = (
-        <AddGroupButton type="button" onClick={handleAddGroup}>
+        <AddGroupButton onClick={handleAddGroup}>
           <Text>Add group</Text>
           <Spacer size={6} axis="horizontal" />
           <FiPlus />
@@ -101,38 +104,23 @@ const Wrapper = styled.li`
   display: flex;
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.2s;
-  &:has(:focus-visible) {
-    outline: solid;
-    outline-offset: 8px;
-  }
-  &:hover {
-    transition: all 0.2s;
-    transform: scale(1.05);
-  }
-  & > :active {
-    box-shadow: none;
-    border-color: red;
-  }
-`;
+  border-radius: var(--border-radius);
+  padding: 4px;
 
-const Content = styled.div`
-  position: relative;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
+  &:hover {
+    background-image: linear-gradient(
+      135deg,
+      var(--color-yellow-3),
+      var(--color-yellow-5)
+    );
+  }
 `;
 
 const GroupFallback = styled.div`
   ${Fallback.html}
   height: 324px;
   width: 292px;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 `;
 
 const Heading = styled.h1`
@@ -142,62 +130,49 @@ const Heading = styled.h1`
   font-size: ${20 / 16}rem;
 `;
 
-const DialogOverlay = styled(Dialog.Overlay)`
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-content: center;
-  backdrop-filter: blur(1px);
-  background-color: hsl(0 0% 0% / 0.5);
-`;
-
-const AlertWrapper = styled.div`
-  height: 36px;
+const AlertWrapper = styled.dl`
+  min-height: 36px;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: flex-end;
+  align-items: baseline;
   gap: 6px;
 `;
 
-const AlertTime = styled.h2`
+const AlertTime = styled.dd`
   font-size: ${24 / 16}rem;
   font-weight: bold;
   color: var(--color-yellow-3);
-  line-height: 1;
 `;
 
-const AlertText = styled.h2`
+const AlertText = styled.dt`
   color: var(--color-gray-4);
   font-size: ${16 / 16}rem;
   font-weight: bold;
-  line-height: 1;
+  line-height: 36px;
 `;
 
-const EditGroupButton = styled(UnstyledButton)`
-  &::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-  }
-`;
-
-const AddGroupButton = styled(UnstyledButton)`
-  display: flex;
+const groupButton = css`
   flex: 1;
+  display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  border-radius: calc(var(--border-radius) / 2);
+  background-color: var(--color-white);
+
   & > svg {
     stroke-width: 0.2rem;
     color: var(--color-yellow-3);
   }
+`;
+
+const EditGroupButton = styled(UnstyledButton)`
+  ${groupButton}
+  flex-direction: column;
+`;
+
+const AddGroupButton = styled(UnstyledButton)`
+  ${groupButton}
 `;
 
 const Text = styled.span`
