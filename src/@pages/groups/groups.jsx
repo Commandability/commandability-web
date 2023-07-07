@@ -63,6 +63,7 @@ function Groups() {
         />
       );
     });
+    // eslint-disable-next-line react/jsx-key
     return <TabsContent>{subGroupPageMap}</TabsContent>;
   });
 
@@ -100,15 +101,15 @@ const Wrapper = styled(Tabs.Root)`
 
 const TabsContent = styled.ol`
   height: 100%;
+  width: 100%;
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
-  grid-column-gap: 24px;
+  grid-column-gap: 48px;
   grid-row-gap: 48px;
   place-items: center;
   padding-left: 0;
-  padding: 0px 48px;
 `;
 
 const Content = styled.div`
@@ -116,13 +117,14 @@ const Content = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
   padding-top: 64px;
   padding-bottom: 32px;
 `;
 
 const GroupTab = styled(Tabs.Content)`
   height: 100%;
+  display: flex;
+  align-self: center;
 `;
 
 const GroupsPageNumbers = styled(Tabs.List)`
