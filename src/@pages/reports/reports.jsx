@@ -362,6 +362,7 @@ function Reports() {
 
       const urls = await Promise.all(urlPromises);
 
+      // https://firebase.google.com/docs/storage/web/download-files
       const blobPromises = [];
       urls.forEach((url, index) => {
         const xhr = new XMLHttpRequest();
@@ -374,8 +375,7 @@ function Reports() {
         xhr.addEventListener("progress", (event) => {
           if (event.lengthComputable) {
             setBlobs((prevBlobs) => {
-              // slice(0) is the most performant method of copying an array
-              const data = prevBlobs.data.slice(0);
+              const data = prevBlobs.data.slice();
               data[index] = {
                 loaded: event.loaded,
                 total: event.total,

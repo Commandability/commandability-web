@@ -5,38 +5,35 @@ import { auth } from "firebase-config";
 import FireLoader from "@components/fire-loader";
 
 type User = {
-  status: "pending" | "resolved"
-  current: FirebaseUser | null
-}
+  status: "pending" | "resolved";
+  current: FirebaseUser | null;
+};
 
 type Auth = {
-  user: User
-  setUser: React.Dispatch<React.SetStateAction<User>> | null
-}
+  user: User;
+  setUser: React.Dispatch<React.SetStateAction<User>> | null;
+};
 
 const initialUser: User = {
   status: "pending",
   current: null,
-}
+};
 
 const initialAuth: Auth = {
   user: initialUser,
   setUser: null,
-}
+};
 
 const AuthContext = React.createContext(initialAuth);
 AuthContext.displayName = "AuthContext";
 
-function AuthProvider({ children }: { children: React.ReactNode}) {
+function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState<User>(initialUser);
 
   React.useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (user) => {
-        setUser({ status: "resolved", current: user });
-      },
-    );
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser({ status: "resolved", current: user });
+    });
     return () => unsubscribe();
   }, []);
 

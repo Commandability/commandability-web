@@ -114,8 +114,8 @@ const GlobalStyles = createGlobalStyle`
     --color-cyan-9: hsl(${COLORS.cyan[9]});
     --color-cyan-10: hsl(${COLORS.cyan[10]});
 
-    --selection-color: hsl(${COLORS.yellow[9]});
-    --selection-background: hsl(${COLORS.yellow[2]});
+    --selection-color: var(--color-yellow-9);
+    --selection-background: var(--color-yellow-2);
 
     --box-shadow-color: hsl(${COLORS.gray[3]} / 50%);
 
@@ -124,16 +124,16 @@ const GlobalStyles = createGlobalStyle`
 
     --border-radius: 8px;
 
-    --scrollbar-thumb: hsl(${COLORS.gray[4]});
-    --scrollbar: hsl(${COLORS.gray[8]});
-
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar);
-    scrollbar-width: thin;
-
     & ::selection {
       color: var(--selection-color);
       background: var(--selection-background);
     }
+
+    --scrollbar-thumb: var(--color-gray-4);
+    --scrollbar: var(--color-gray-8);
+
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar);
+    scrollbar-width: thin;
 
     & ::-webkit-scrollbar {
       width: 12px;
@@ -150,22 +150,9 @@ const GlobalStyles = createGlobalStyle`
   }
 
   main {
-    scrollbar-color: var(--color-gray-5) var(--color-gray-10);
-    scrollbar-width: thin;
-
-    & ::-webkit-scrollbar {
-      width: 10px;
-      background-color: var(--color-gray-10);
-    }
-    & ::-webkit-scrollbar-thumb {
-      border-radius: 999999px;
-      border: 2px solid var(--color-gray-10);
-      background-color: var(--color-gray-5);
-    }
-    & ::-webkit-scrollbar-track {
-      margin: 2px 0;
-    }
+    --scrollbar: var(--color-gray-10);
+    --scrollbar-thumb: var(--color-gray-5);
   }
-  `;
+`;
 
 export default GlobalStyles;
