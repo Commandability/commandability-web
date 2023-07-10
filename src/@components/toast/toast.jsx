@@ -1,6 +1,7 @@
 import * as React from "react";
 import styled, { keyframes } from "styled-components";
 import * as RadixToast from "@radix-ui/react-toast";
+import { fullWidthClassName } from "react-remove-scroll-bar";
 import { FiAlertTriangle } from "react-icons/fi";
 
 export const unknownState = {
@@ -24,7 +25,7 @@ export const Viewport = styled(RadixToast.Viewport)`
   gap: 4px;
   min-width: 384px;
   width: fit-content;
-  max-width: 512px;
+  max-width: 576px;
   list-style: none;
   z-index: 2147483647;
 `;
@@ -58,9 +59,9 @@ const swipeOut = keyframes`
   }
 `;
 
-export function Root({ children, title, description, ...props }) {
+export function Root({ children, title, description, className, ...props }) {
   return (
-    <RadixToastRoot {...props}>
+    <RadixToastRoot {...props} className={`${fullWidthClassName} ${className}`}>
       {title ? <Title>{title}</Title> : null}
       {description ? <Description>{description}</Description> : null}
       {children}
