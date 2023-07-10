@@ -31,6 +31,7 @@ function EditGroupDialogContent({
   const [groupName, setGroupName] = React.useState(groupData.name);
   const [alertTime, setAlertTime] = React.useState(groupData.alert);
 
+  // eslint-disable-next-line no-unused-vars
   const { [groupId]: _, ...newUserGroupData } = userGroupData;
 
   async function handleRemoveGroup(event) {
@@ -84,10 +85,8 @@ function EditGroupDialogContent({
           defaultValue={
             groupData.alert ? groupData.alert.toString() : selectValues[0]
           }
-          aria-label="Alert time selector"
           variant="dialog"
-          selectHtmlFor="alert-time"
-          selectId="alert-time"
+          id="alert-time"
         >
           {range(0, 35, 5).map((value, index) => {
             return (

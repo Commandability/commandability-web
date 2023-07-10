@@ -12,26 +12,21 @@ const VARIANTS = {
 
 export const Root = React.forwardRef(
   (
-    {
-      className,
-      children,
-      label,
-      variant = "dialog",
-      selectHtmlFor,
-      selectId,
-      ...props
-    },
+    { className, children, label, variant = "dialog", id, ...props },
     forwardedRef
   ) => {
+    if (!VARIANTS[variant] && variant)
+      throw new Error(`Unknown variant provided to Select.`);
+
     return (
       <RootWrapper className={className} variant={variant}>
-        <LabelText variant={variant} htmlFor={selectHtmlFor}>
+        <LabelText variant={variant} htmlFor={id}>
           {label}
         </LabelText>
         <InputWrapper variant={variant}>
           <RadixSelect.Root {...props}>
             <RadixSelect.Trigger
-              id={selectId}
+              id={id}
               ref={forwardedRef}
               variant={variant}
               asChild

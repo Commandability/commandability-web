@@ -79,7 +79,7 @@ const Button = React.forwardRef(
     forwardedRef
   ) => {
     if (!THEMES[theme]) throw new Error(`Unknown theme provided to Button.`);
-    if (!VARIANTS[variant])
+    if (!VARIANTS[variant] && variant)
       throw new Error(`Unknown variant provided to Button.`);
     if (!SIZES[size]) throw new Error(`Unknown size provided to Button.`);
 

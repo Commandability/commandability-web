@@ -524,8 +524,6 @@ function Reports() {
             // Change the key to remount the select component when the URL has no s query param to synchronize its state with the URL
             key={key}
             variant="page"
-            selectHtmlFor="alert-time"
-            selectId="alert-time"
           >
             <Select.Item value={SELECT_VALUES.newest}>Newest first</Select.Item>
             <Select.Item value={SELECT_VALUES.oldest}>Oldest first</Select.Item>

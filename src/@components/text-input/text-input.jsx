@@ -21,7 +21,7 @@ const TextInput = ({
   if (!id) {
     throw new Error("TextInput must have an id");
   }
-  if (!VARIANTS[variant])
+  if (!VARIANTS[variant] && variant)
     throw new Error(`Unknown variant provided to TextInput.`);
 
   const [visiblePassword, setVisiblePassword] = React.useState(false);

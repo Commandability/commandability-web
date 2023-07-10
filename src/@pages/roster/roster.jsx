@@ -297,8 +297,7 @@ function Roster() {
           defaultValue={selectValues.firstName}
           label="Sort"
           variant="page"
-          selectHtmlFor="alert-time"
-          selectId="alert-time"
+          id="alert-time"
         >
           <Select.Item value={selectValues.firstName}>First name</Select.Item>
           <Select.Item value={selectValues.lastName}>Last name</Select.Item>
