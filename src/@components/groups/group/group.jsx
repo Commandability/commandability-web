@@ -33,6 +33,7 @@ function Group({
       },
     });
   }
+
   let active;
   let alertTime = 0;
   if (groupData === null) {
@@ -41,14 +42,10 @@ function Group({
     active = groupData.isVisible;
     alertTime = groupData.alert;
   }
-  let groupContent;
 
+  let groupContent;
   if (snapshotStatus === "pending") {
-    groupContent = (
-      <>
-        <GroupFallback />
-      </>
-    );
+    groupContent = <GroupFallback />;
   } else {
     if (active === true) {
       groupContent = (
@@ -123,14 +120,15 @@ const GroupFallback = styled.div`
   border-radius: var(--border-radius);
 `;
 
-const Heading = styled.h1`
+const Heading = styled.h2`
   justify-content: center;
   align-items: center;
   color: var(--color-gray-4);
   font-size: ${20 / 16}rem;
+  font-weight: normal;
 `;
 
-const AlertWrapper = styled.dl`
+const AlertWrapper = styled.div`
   min-height: 36px;
   display: flex;
   flex-direction: row;
@@ -139,16 +137,14 @@ const AlertWrapper = styled.dl`
   gap: 6px;
 `;
 
-const AlertTime = styled.dd`
+const AlertTime = styled.span`
   font-size: ${24 / 16}rem;
-  font-weight: bold;
   color: var(--color-yellow-3);
 `;
 
-const AlertText = styled.dt`
+const AlertText = styled.span`
   color: var(--color-gray-4);
   font-size: ${16 / 16}rem;
-  font-weight: bold;
   line-height: 36px;
 `;
 
