@@ -77,18 +77,14 @@ function Groups() {
         <GroupTab value="PAGE_5">{groupPageMap[4]}</GroupTab>
         <GroupTab value="PAGE_6">{groupPageMap[5]}</GroupTab>
         <GroupsPageNumbers>
-          <div
-            style={{ borderBottom: "1px solid var(--color-gray-6)", flex: 1 }}
-          />
+          <TabBorder />
           <PageNumber value="PAGE_1">Page 1</PageNumber>
           <PageNumber value="PAGE_2">Page 2</PageNumber>
           <PageNumber value="PAGE_3">Page 3</PageNumber>
           <PageNumber value="PAGE_4">Page 4</PageNumber>
           <PageNumber value="PAGE_5">Page 5</PageNumber>
           <PageNumber value="PAGE_6">Page 6</PageNumber>
-          <div
-            style={{ borderBottom: "1px solid var(--color-gray-6)", flex: 1 }}
-          />
+          <TabBorder />
         </GroupsPageNumbers>
       </Content>
     </Wrapper>
@@ -130,6 +126,7 @@ const GroupTab = styled(Tabs.Content)`
 const GroupsPageNumbers = styled(Tabs.List)`
   display: flex;
   padding-top: 32px;
+  --tab-border-color: var(--color-gray-8);
 `;
 
 const PageNumber = styled(Tabs.Trigger)`
@@ -145,9 +142,14 @@ const PageNumber = styled(Tabs.Trigger)`
   }
   &[data-state="inactive"] {
     color: var(--color-gray-3);
-    border-bottom: solid 1px var(--color-gray-6);
+    border-bottom: solid 1px var(--tab-border-color);
   }
   cursor: pointer;
+`;
+
+const TabBorder = styled.div`
+  flex: 1;
+  border-bottom: 1px solid var(--tab-border-color);
 `;
 
 export default Groups;
