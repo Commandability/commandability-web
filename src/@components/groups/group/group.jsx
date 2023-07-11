@@ -174,8 +174,7 @@ const AddGroupButton = styled(UnstyledButton)`
 const Text = styled.span`
   position: relative;
   top: -0.05rem;
-  font-size: ${16 / 16}rem;
-  font-weight: bold;
+  font-size: ${18 / 16}rem;
   color: var(--color-gray-4);
 `;
 

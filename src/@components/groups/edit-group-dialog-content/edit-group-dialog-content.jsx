@@ -79,12 +79,12 @@ function EditGroupDialogContent({
           value={groupName}
         />
         <Select.Root
-          select={alertTime}
-          label="Alert time"
+          value={alertTime}
           onValueChange={(alertTime) => setAlertTime(alertTime)}
           defaultValue={
             groupData.alert ? groupData.alert.toString() : selectValues[0]
           }
+          label="Alert time"
           variant="dialog"
           id="alert-time"
         >

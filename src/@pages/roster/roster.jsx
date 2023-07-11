@@ -292,7 +292,7 @@ function Roster() {
           role="search"
         />
         <SelectRoot
-          select={selectSort}
+          value={selectSort}
           onValueChange={(select) => setSelectSort(select)}
           defaultValue={selectValues.firstName}
           label="Sort"
