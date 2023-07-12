@@ -11,15 +11,7 @@ import * as Dialog from "@components/dialog";
 import InputGroup from "@components/input-group";
 import { range } from "@utils";
 
-const selectValues = {
-  0: "No alert",
-  5: "5",
-  10: "10",
-  15: "15",
-  20: "20",
-  25: "25",
-  30: "30",
-};
+const disabledSelectValue = "No alerts";
 
 function EditGroupDialogContent({
   groupData,
@@ -46,15 +38,11 @@ function EditGroupDialogContent({
 
   async function handleSubmitChanges(event) {
     event.preventDefault();
-    let alertSubmit = 0;
-    if (alertTime !== "No alert") {
-      alertSubmit = parseInt(alertTime, 10);
-    }
     await updateDoc(snapshots.user.ref, {
       groups: {
         ...userGroupData,
         [groupId]: {
-          alert: alertSubmit,
+          alert: alertTime,
           isVisible: true,
           name: groupName,
         },
@@ -79,19 +67,23 @@ function EditGroupDialogContent({
           value={groupName}
         />
         <Select.Root
-          value={alertTime}
-          onValueChange={(alertTime) => setAlertTime(alertTime)}
-          defaultValue={
-            groupData.alert ? groupData.alert.toString() : selectValues[0]
+          id="alert-time"
+          value={alertTime ? alertTime.toString() : disabledSelectValue}
+          onValueChange={(value) =>
+            setAlertTime(
+              value === disabledSelectValue ? 0 : parseInt(value, 10)
+            )
           }
           label="Alert time"
           variant="dialog"
-          id="alert-time"
         >
-          {range(0, 35, 5).map((value, index) => {
+          {range(0, 31, 5).map((rangeNumber, index) => {
+            const value = rangeNumber
+              ? rangeNumber.toString()
+              : disabledSelectValue;
             return (
-              <Select.Item key={index} value={selectValues[value]}>
-                {selectValues[value] ? selectValues[value] : "No alerts"}
+              <Select.Item key={index} value={value}>
+                {value}
               </Select.Item>
             );
           })}

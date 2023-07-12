@@ -26,7 +26,7 @@ function Group({
       groups: {
         ...userGroupData,
         [groupId]: {
-          alert: 15,
+          alert: 0,
           isVisible: true,
           name: groupId.replace("_", " "),
         },
