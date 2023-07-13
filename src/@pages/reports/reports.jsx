@@ -40,7 +40,7 @@ import {
   FiTrash2,
   FiDownload,
 } from "react-icons/fi";
-import * as JSZip from "jszip";
+import JSZip from "jszip";
 
 import { db, storage } from "firebase-config";
 import { debounce, sum } from "@utils";
@@ -357,8 +357,6 @@ function Reports() {
     setBlobs(() => ({ ...initialBlobsState, status: "pending" }));
 
     try {
-      const zip = new JSZip();
-
       const urlPromises = checkedItems.map((item) => {
         return getDownloadURL(
           ref(storage, `users/${user.current?.uid}/reports/${item}`)
@@ -407,6 +405,7 @@ function Reports() {
 
       const data = await Promise.all(dataPromises);
 
+      const zip = new JSZip();
       data.forEach((datum, index) => {
         zip.file(`${checkedItems[index]}.txt`, datum);
       });
@@ -418,6 +417,7 @@ function Reports() {
       a.click();
     } catch (error) {
       setToastState(Toast.unknownState);
+      setToastOpen(true);
     }
   }
 
