@@ -339,7 +339,11 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button type="submit" disabled={generalOptionEnable}>
+            <Button
+              type="submit"
+              disabled={generalOptionEnable}
+              style={{ width: "128px", justifyContent: "center" }}
+            >
               <FiSave />
               Save
             </Button>
@@ -364,12 +368,25 @@ function Account() {
               />
             ) : null}
             {user.current.emailVerified ? (
-              <Button disabled={true}>
+              <Button
+                disabled={true}
+                style={{
+                  width: "128px",
+                  justifyContent: "center",
+                }}
+              >
                 <FiCheck />
                 Verified
               </Button>
             ) : (
-              <Button variant="primary" type="submit">
+              <Button
+                variant="primary"
+                type="submit"
+                style={{
+                  width: "128px",
+                  justifyContent: "center",
+                }}
+              >
                 <FiMail />
                 Send
               </Button>
@@ -430,7 +447,11 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button type="submit" disabled={passwordOptionEnable}>
+            <Button
+              type="submit"
+              disabled={passwordOptionEnable}
+              style={{ width: "128px", justifyContent: "center" }}
+            >
               <FiSave />
               Save
             </Button>
@@ -454,7 +475,11 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              style={{ width: "128px", justifyContent: "center" }}
+            >
               <FiMail />
               Send
             </Button>
@@ -478,7 +503,10 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button type="submit">
+            <Button
+              type="submit"
+              style={{ width: "128px", justifyContent: "center" }}
+            >
               <FiUserX />
               Delete
             </Button>
