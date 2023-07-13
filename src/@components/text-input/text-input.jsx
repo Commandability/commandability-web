@@ -6,15 +6,16 @@ import UnstyledButton from "@components/unstyled-button";
 import VisuallyHidden from "@components/visually-hidden";
 
 const VARIANTS = {
-  text: "text",
-  password: "password",
+  dialog: "dialog",
+  page: "page",
 };
 
 const TextInput = ({
   id,
   className,
-  labelText,
-  variant = "text",
+  type = "text",
+  label,
+  variant = "dialog",
   errorText,
   ...props
 }) => {
@@ -35,19 +36,17 @@ const TextInput = ({
   return (
     <Wrapper>
       <InputGroup className={className}>
-        {labelText ? <label htmlFor={id}>{labelText}</label> : null}
+        {label ? <label htmlFor={id}>{label}</label> : null}
         <Input
           ref={passwordInputRef}
-          type={
-            variant === "password" && !visiblePassword ? "password" : "text"
-          }
+          type={type === "password" && !visiblePassword ? "password" : "text"}
           id={id}
-          placeholder={variant === "password" ? "password" : undefined}
-          required={variant === "password" ? true : false}
-          autoComplete={variant === "password" ? "current-password" : undefined}
+          placeholder={type === "password" ? "password" : undefined}
+          required={type === "password" ? true : false}
+          autoComplete={type === "password" ? "current-password" : undefined}
           {...props}
         />
-        {variant === "password" ? (
+        {type === "password" ? (
           <ToggleVisibilityButton
             type="button"
             aria-pressed={visiblePassword ? "true" : "false"}

@@ -59,7 +59,7 @@ function EditGroupDialogContent({
       <InputGroup>
         <TextInput
           id="group-name"
-          labelText="Group name"
+          label="Group name"
           type="text"
           required
           placeholder={groupData.name}

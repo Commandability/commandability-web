@@ -91,9 +91,9 @@ function Message() {
             <AccountOption header="Reset Password">
               <TextInput
                 id="new-password-input"
-                labelText="New password"
+                label="New password"
                 value={newPassword}
-                variant="password"
+                type="password"
                 onChange={(e) => {
                   setNewPassword(e.target.value);
                   isStrongPassword(e.target.value, passwordRequirements)
@@ -133,9 +133,7 @@ function Message() {
         <VerifyWrapper>
           <VerifyContent>
             <TextWrapper>
-              <VerifyTitle>
-                {success ? "Verified" : "Error"}
-              </VerifyTitle>
+              <VerifyTitle>{success ? "Verified" : "Error"}</VerifyTitle>
               <VerifyMessage>
                 {success
                   ? "Your email account has been successfully verified"

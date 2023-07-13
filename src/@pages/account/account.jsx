@@ -299,7 +299,7 @@ function Account() {
         >
           <TextInput
             id="organization-name-input"
-            labelText="Organization name"
+            label="Organization name"
             value={organizationName}
             onChange={(e) => {
               setOrganizationName(e.target.value);
@@ -313,7 +313,7 @@ function Account() {
           />
           <TextInput
             id="account-email-input"
-            labelText="Account email"
+            label="Account email"
             value={accountEmail}
             onChange={(e) => {
               setAccountEmail(e.target.value);
@@ -348,18 +348,18 @@ function Account() {
         >
           <TextInput
             id="current-password-input"
-            labelText="Current password"
+            label="Current password"
             value={currentPassword}
-            variant="password"
+            type="password"
             onChange={(e) => {
               setCurrentPassword(e.target.value);
             }}
           />
           <TextInput
             id="new-password-input"
-            labelText="New password"
+            label="New password"
             value={newPassword}
-            variant="password"
+            type="password"
             onChange={(e) => {
               setNewPassword(e.target.value);
               isStrongPassword(e.target.value, passwordRequirements)
@@ -370,9 +370,9 @@ function Account() {
           />
           <TextInput
             id="confirm-new-password-input"
-            labelText="Confirm new password"
+            label="Confirm new password"
             value={confirmNewPassword}
-            variant="password"
+            type="password"
             onChange={(e) => {
               setConfirmNewPassword(e.target.value);
               e.target.value === newPassword
@@ -498,8 +498,8 @@ function Account() {
                 <DialogInputs>
                   <TextInput
                     id="password-input"
-                    labelText="Current Password"
-                    variant="password"
+                    label="Current Password"
+                    type="password"
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
                   />

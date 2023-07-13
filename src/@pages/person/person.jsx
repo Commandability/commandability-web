@@ -138,27 +138,27 @@ function Person() {
                 <DialogInputs>
                   <TextInput
                     id="first-name-input"
-                    labelText="First name"
+                    label="First name"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     errorText={firstName ? "" : "Please enter a first name"}
                   />
                   <TextInput
                     id="last-name-input"
-                    labelText="Last name"
+                    label="Last name"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     errorText={lastName ? "" : "Please enter a last name"}
                   />
                   <TextInput
                     id="shift-input"
-                    labelText="Shift"
+                    label="Shift"
                     value={shift}
                     onChange={(e) => setShift(e.target.value)}
                   />
                   <TextInput
                     id="badge-input"
-                    labelText="Badge"
+                    label="Badge"
                     value={badge}
                     onChange={(e) => setBadge(e.target.value)}
                     errorText={badge ? "" : "Please enter a badge"}

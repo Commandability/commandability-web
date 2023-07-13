@@ -657,9 +657,9 @@ function Reports() {
                               <TextInput
                                 id="current-password"
                                 name="password"
-                                labelText="Password"
+                                label="Password"
                                 errorText={passwordError}
-                                variant="password"
+                                type="password"
                                 onChange={(e) => {
                                   setPassword(e.target.value);
                                 }}
@@ -784,9 +784,9 @@ function Reports() {
                       <TextInput
                         id="current-password"
                         name="password"
-                        labelText="Password"
+                        label="Password"
                         errorText={passwordError}
-                        variant="password"
+                        type="password"
                         onChange={(e) => {
                           setPassword(e.target.value);
                         }}
