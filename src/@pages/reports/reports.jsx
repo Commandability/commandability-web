@@ -106,7 +106,7 @@ export async function loader({ request }) {
   let reportsQueryParams;
   if (q) {
     reportsQueryParams = [
-      collection(db, "users", currentUser.uid, "reports"),
+      collection(db, "users", currentUser.uid, "reports-metadata"),
       orderBy(fields.location),
       where(fields.location, ">=", q.toLowerCase()),
       where(fields.location, "<=", q.toLowerCase() + "\uf8ff"),
@@ -117,7 +117,7 @@ export async function loader({ request }) {
     ];
   } else {
     reportsQueryParams = [
-      collection(db, "users", currentUser.uid, "reports"),
+      collection(db, "users", currentUser.uid, "reports-metadata"),
       orderBy(
         fields.startTimestamp,
         s === SELECT_VALUES.oldest ? undefined : "desc"
@@ -153,7 +153,12 @@ export async function action({ request }) {
     return errors;
   }
 
-  const reportsRef = collection(db, "users", currentUser.uid, "reports");
+  const reportsRef = collection(
+    db,
+    "users",
+    currentUser.uid,
+    "reports-metadata"
+  );
 
   if (formData.has("checked-items")) {
     const checkedItems = JSON.parse(formData.get("checked-items"));

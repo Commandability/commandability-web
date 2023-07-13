@@ -13,7 +13,7 @@ import { db, storage } from "firebase-config";
  * @param uid - A firebase userId
  */
 export async function deleteAllReports(uid: UserInfo["uid"]) {
-  const reportsRef = collection(db, "users", uid, "reports");
+  const reportsRef = collection(db, "users", uid, "reports-metadata");
   // Remove firestore metadata
   const batch = writeBatch(db);
   const reportsSnapshot = await getDocs(reportsRef);
