@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-import { defer, useLoaderData, Await } from "react-router-dom";
+import { defer, useLoaderData, useNavigate, Await } from "react-router-dom";
 import { FiArrowLeft, FiDownload } from "react-icons/fi";
 import { getAuth } from "firebase/auth";
 import { ref, getBlob } from "firebase/storage";
@@ -31,6 +31,7 @@ export async function loader({ params }) {
 
 function Report() {
   const loaderData = useLoaderData();
+  const navigate = useNavigate();
 
   const [downloadLink, setDownloadLink] = React.useState("");
 
@@ -71,7 +72,7 @@ function Report() {
 
   return (
     <Wrapper>
-      <Back to="/dashboard/reports" variant="tertiary" size="large">
+      <Back onClick={() => navigate(-1)} variant="tertiary" size="large">
         <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
@@ -210,6 +211,7 @@ const Entries = styled.ul`
   display: grid;
   grid-template-columns: var(--grid-columns);
   column-gap: var(--gap);
+  align-content: start;
   list-style: none;
   padding: 16px 0;
   padding-left: 0;
