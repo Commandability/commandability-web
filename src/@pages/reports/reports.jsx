@@ -85,6 +85,12 @@ export async function loader({ request }) {
   const l = url.searchParams.get("l");
   const urlSearchParams = { q, s, p, f, l };
 
+  const dateTimeStart = Date.parse(q) / 1000;
+  let dateTimeEnd = 0;
+  if (dateTimeStart) {
+    dateTimeEnd = dateTimeStart + 24 * 60 * 60;
+  }
+
   // Create a new Timestamp from the serialized one because
   // JSON.stringify does not serialize prototypes, which are necessary for firebase query cursors
   let rangeQueryParams = [limit(reportsPerPage)];
@@ -104,12 +110,19 @@ export async function loader({ request }) {
   if (f) prevDocsQueryParams = [endBefore(new Timestamp(parseInt(f), 0))];
 
   let reportsQueryParams;
-  if (q) {
+  if (q && dateTimeStart) {
     reportsQueryParams = [
       collection(db, "users", currentUser.uid, "reports-metadata"),
-      orderBy(fields.location),
-      where(fields.location, ">=", q.toLowerCase()),
-      where(fields.location, "<=", q.toLowerCase() + "\uf8ff"),
+      where(
+        fields.startTimestamp,
+        ">=",
+        new Timestamp(parseInt(dateTimeStart), 0)
+      ),
+      where(
+        fields.startTimestamp,
+        "<",
+        new Timestamp(parseInt(dateTimeEnd), 0)
+      ),
       orderBy(
         fields.startTimestamp,
         s === SELECT_VALUES.oldest ? undefined : "desc"
@@ -518,7 +531,8 @@ function Reports() {
             id="q"
             name="q"
             defaultValue={q}
-            placeholder="location"
+            maxLength="10"
+            placeholder="MM/DD/YYYY"
           />
           <SelectRoot
             id="s"
