@@ -5,14 +5,14 @@ import { FiSearch as UnstyledFiSearch } from "react-icons/fi";
 import VisuallyHidden from "@components/visually-hidden";
 import UnstyledButton from "@components/unstyled-button";
 
-const SearchInput = ({ id, className, variant, ...props }) => {
+export const Root = ({ id, className, variant, children, ...props }) => {
   if (!id) {
     throw new Error("SearchInput must have an id");
   }
 
   return (
     <Wrapper className={className}>
-      <Label htmlFor={id}>Search</Label>
+      {children}
       <InputWrapper>
         <TextInput id={id} {...props} />
         {variant === "button" ? (
@@ -40,11 +40,6 @@ const InputWrapper = styled.div`
   align-items: center;
   position: relative;
   flex: 1;
-`;
-
-const Label = styled.label`
-  color: var(--color-gray-2);
-  font-size: ${14 / 16}rem;
 `;
 
 const TextInput = styled.input`
@@ -98,4 +93,7 @@ const SearchButton = styled(UnstyledButton)`
   }
 `;
 
-export default SearchInput;
+export const Label = styled.label`
+  color: var(--color-gray-2);
+  font-size: ${14 / 16}rem;
+`;

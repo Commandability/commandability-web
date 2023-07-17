@@ -22,12 +22,12 @@ import * as Toast from "@components/toast";
 import * as Dialog from "@components/dialog";
 import * as AlertDialog from "@components/alert-dialog";
 import * as Select from "@components/select";
+import * as SearchInput from "@components/search-input";
 import IconItem, { ItemContents } from "@components/icon-item";
 import TextInput from "@components/text-input";
 import Checkbox from "@components/checkbox";
 import Button from "@components/button";
 import VisuallyHidden from "@components/visually-hidden";
-import SearchInput from "@components/search-input";
 import * as Fallback from "@components/fallback";
 import FireLoader from "@components/fire-loader";
 import InputGroup from "@components/input-group";
@@ -284,13 +284,16 @@ function Roster() {
   return (
     <Wrapper>
       <Top>
-        <RosterSearch
+        <SearchInput.Root
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           id="roster-search"
           placeholder="name, badge, shift"
-          role="search"
-        />
+        >
+          <SearchInput.Label htmlFor="roster-search">
+            Search<VisuallyHidden>Enter a name, badge, or shift</VisuallyHidden>
+          </SearchInput.Label>
+        </SearchInput.Root>
         <SelectRoot
           value={selectSort}
           onValueChange={(select) => setSelectSort(select)}
@@ -547,10 +550,6 @@ const Top = styled.div`
   align-items: flex-end;
   gap: 24px;
   padding: 32px 48px;
-`;
-
-const RosterSearch = styled(SearchInput)`
-  width: 256px;
 `;
 
 const SelectRoot = styled(Select.Root)`

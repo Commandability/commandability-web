@@ -52,9 +52,9 @@ import * as Select from "@components/select";
 import * as AlertDialog from "@components/alert-dialog";
 import * as Progress from "@components/progress";
 import * as Fallback from "@components/fallback";
+import * as SearchInput from "@components/search-input";
 import FireLoader from "@components/fire-loader";
 import Checkbox from "@components/checkbox";
-import SearchInput from "@components/search-input";
 import TextInput from "@components/text-input";
 import Button from "@components/button";
 import VisuallyHidden from "@components/visually-hidden";
@@ -527,13 +527,20 @@ function Reports() {
         }}
       >
         <Filter>
-          <ReportsSearch
+          <SearchInput.Root
             id="q"
             name="q"
             defaultValue={q}
             maxLength="10"
             placeholder="MM/DD/YYYY"
-          />
+          >
+            <SearchInput.Label htmlFor="q">
+              Search
+              <VisuallyHidden>
+                Enter a date in the format MM/DD/YYYY
+              </VisuallyHidden>
+            </SearchInput.Label>
+          </SearchInput.Root>
           <SelectRoot
             id="s"
             name="s"
@@ -861,10 +868,6 @@ const Filter = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 24px;
-`;
-
-const ReportsSearch = styled(SearchInput)`
-  width: 256px;
 `;
 
 const SelectRoot = styled(Select.Root)`

@@ -1,1 +1,1 @@
-export { default } from "./search-input";
+export { Root, Label } from "./search-input";
