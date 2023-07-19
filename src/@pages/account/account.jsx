@@ -295,6 +295,40 @@ function Account() {
   return (
     <Wrapper>
       <Options>
+        {user.current.emailVerified ? (
+          <></>
+        ) : (
+          <AccountOption
+            header="Verify Email"
+            layout="horizontal"
+            onSubmit={(e) => {
+              e.preventDefault();
+              setDialogAction(dialogActions.verifyEmail);
+              handleVerifyEmail();
+            }}
+          >
+            <SubmitLoaderWrapper>
+              {loading && dialogAction === "verifyEmail" ? (
+                <FireLoader
+                  style={{
+                    "--fire-icon-width": "36px",
+                    "--fire-icon-height": "36px",
+                  }}
+                />
+              ) : null}
+              <Button
+                variant="primary"
+                type="submit"
+                style={{
+                  width: "var(--button-width)",
+                }}
+              >
+                <FiMail />
+                Send
+              </Button>
+            </SubmitLoaderWrapper>
+          </AccountOption>
+        )}
         <AccountOption
           header="General"
           onSubmit={(e) => {
@@ -347,48 +381,6 @@ function Account() {
               <FiSave />
               Save
             </Button>
-          </SubmitLoaderWrapper>
-        </AccountOption>
-        <AccountOption
-          header="Verify Email"
-          layout="horizontal"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setDialogAction(dialogActions.verifyEmail);
-            handleVerifyEmail();
-          }}
-        >
-          <SubmitLoaderWrapper>
-            {loading && dialogAction === "verifyEmail" ? (
-              <FireLoader
-                style={{
-                  "--fire-icon-width": "36px",
-                  "--fire-icon-height": "36px",
-                }}
-              />
-            ) : null}
-            {user.current.emailVerified ? (
-              <Button
-                disabled={true}
-                style={{
-                  width: "var(--button-width)",
-                }}
-              >
-                <FiCheck />
-                Verified
-              </Button>
-            ) : (
-              <Button
-                variant="primary"
-                type="submit"
-                style={{
-                  width: "var(--button-width)",
-                }}
-              >
-                <FiMail />
-                Send
-              </Button>
-            )}
           </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption
