@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { useLocation, Link } from "react-router-dom";
-import { FiCheckSquare, FiChevronDown } from "react-icons/fi";
+import { FiCheckSquare } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
 
 import { useAuth } from "@context/auth-context";
@@ -16,9 +16,7 @@ import IconItem, { ItemContents } from "@components/icon-item";
 import Pill from "@components/pill";
 import Spacer from "@components/spacer";
 import { LandingNav } from "@components/nav";
-import VisuallyHidden from "@components/visually-hidden";
 import Skip from "@components/skip";
-import SmoothScrollTo from "@components/smooth-scroll-to";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
@@ -148,12 +146,6 @@ function Home() {
                 Download for iOS
               </Download>
             </DownloadsWrapper>
-            <ScrollDown targetRef={featuresScrollRef}>
-              <ScrollDownContents>
-                <FiChevronDown />
-                <VisuallyHidden>Scroll down</VisuallyHidden>
-              </ScrollDownContents>
-            </ScrollDown>
           </Hero>
         </HeroImage>
         <FeaturesWrapper id={hashIds.features} ref={featuresRef}>
@@ -424,45 +416,6 @@ const Download = styled.a`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--color-white);
-    }
-  }
-`;
-
-const ScrollDown = styled(SmoothScrollTo)`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: ${64 / 16}rem;
-  bottom: 92px;
-  color: var(--color-gray-10);
-  -webkit-tap-highlight-color: transparent;
-
-  @media ${QUERIES.tabletAndSmaller} {
-    font-size: ${48 / 16}rem;
-    bottom: calc(24px - 0.2em);
-    right: 24px;
-    transform: revert;
-    left: revert;
-  }
-
-  @media (orientation: landscape) and (max-height: 600px) {
-    font-size: ${48 / 16}rem;
-    bottom: calc(24px - 0.2em);
-    right: 24px;
-    transform: revert;
-    left: revert;
-  }
-`;
-
-const ScrollDownContents = styled.div`
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: transform;
-    transition: transform 200ms;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      transform: translateY(-8px);
     }
   }
 `;
