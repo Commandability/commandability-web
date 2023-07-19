@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  RouterProvider,
-  Route,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "@pages/home";
 import Account from "@pages/account";
@@ -25,40 +20,79 @@ import Groups from "@pages/groups";
 import Report, { loader as reportLoader } from "@pages/report";
 import Person from "@pages/person";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <>
-      <Route path="/" element={<Home />} errorElement={<NotFound />} />
-      <Route
-        path="dashboard"
-        element={<Layout type="outlet" />}
-        errorElement={<NotFound />}
-      >
-        <Route path="reports" element={<DashboardContainer />}>
-          <Route
-            index
-            element={<Reports />}
-            loader={reportsLoader}
-            action={reportsAction}
-          />
-          <Route path=":reportId" element={<Report />} loader={reportLoader} />
-        </Route>
-        <Route path="roster" element={<DashboardContainer />}>
-          <Route index element={<Roster />} />
-          <Route path=":badge" element={<Person />} />
-        </Route>
-        <Route path="groups" element={<DashboardContainer />}>
-          <Route index element={<Groups />} />
-        </Route>
-        <Route path="account" element={<Account />} />
-      </Route>
-      <Route element={<Layout type="outlet" />} errorElement={<NotFound />}>
-        <Route path="privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="message" element={<Message />} />
-      </Route>
-    </>
-  )
-);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <NotFound />,
+  },
+  {
+    path: "dashboard",
+    element: <Layout type="outlet" />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        path: "reports",
+        element: <DashboardContainer />,
+        children: [
+          {
+            index: true,
+            element: <Reports />,
+            loader: reportsLoader,
+            action: reportsAction,
+          },
+          {
+            path: ":reportId",
+            element: <Report />,
+            loader: reportLoader,
+          },
+        ],
+      },
+      {
+        path: "roster",
+        element: <DashboardContainer />,
+        children: [
+          {
+            index: true,
+            element: <Roster />,
+          },
+          {
+            path: ":badge",
+            element: <Person />,
+          },
+        ],
+      },
+      {
+        path: "groups",
+        element: <DashboardContainer />,
+        children: [
+          {
+            index: true,
+            element: <Groups />,
+          },
+        ],
+      },
+      {
+        path: "account",
+        element: <Account />,
+      },
+    ],
+  },
+  {
+    element: <Layout type="outlet" />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        path: "privacy-policy",
+        element: <PrivacyPolicy />,
+      },
+      {
+        path: "message",
+        element: <Message />,
+      },
+    ],
+  },
+]);
 
 function AuthenticatedApp() {
   return <RouterProvider router={router} />;
