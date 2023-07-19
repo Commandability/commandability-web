@@ -342,7 +342,7 @@ function Account() {
             <Button
               type="submit"
               disabled={generalOptionEnable}
-              style={{ width: "128px", justifyContent: "center" }}
+              style={{ width: "var(--button-width)" }}
             >
               <FiSave />
               Save
@@ -371,8 +371,7 @@ function Account() {
               <Button
                 disabled={true}
                 style={{
-                  width: "128px",
-                  justifyContent: "center",
+                  width: "var(--button-width)",
                 }}
               >
                 <FiCheck />
@@ -383,8 +382,7 @@ function Account() {
                 variant="primary"
                 type="submit"
                 style={{
-                  width: "128px",
-                  justifyContent: "center",
+                  width: "var(--button-width)",
                 }}
               >
                 <FiMail />
@@ -450,7 +448,7 @@ function Account() {
             <Button
               type="submit"
               disabled={passwordOptionEnable}
-              style={{ width: "128px", justifyContent: "center" }}
+              style={{ width: "var(--button-width)" }}
             >
               <FiSave />
               Save
@@ -478,7 +476,7 @@ function Account() {
             <Button
               variant="primary"
               type="submit"
-              style={{ width: "128px", justifyContent: "center" }}
+              style={{ width: "var(--button-width)" }}
             >
               <FiMail />
               Send
@@ -503,10 +501,7 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              type="submit"
-              style={{ width: "128px", justifyContent: "center" }}
-            >
+            <Button type="submit" style={{ width: "var(--button-width)" }}>
               <FiUserX />
               Delete
             </Button>
@@ -577,6 +572,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  --button-width: 112px;
 `;
 
 const Options = styled.div`

@@ -122,6 +122,7 @@ Button.displayName = "Button";
 const ButtonWrapper = styled.button`
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
