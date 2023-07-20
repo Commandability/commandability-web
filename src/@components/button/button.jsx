@@ -6,10 +6,10 @@ const THEMES = {
   light: {
     "--background-color": "var(--color-yellow-9)",
     "--background-color-hover": "var(--color-yellow-10)",
-    "--background-color-disabled": "var(--color-gray-6)",
+    "--background-color-disabled": "var(--color-gray-1)",
 
     "--color": "var(--color-yellow-2)",
-    "--color-disabled": "var(--color-gray-1)",
+    "--color-disabled": "var(--color-gray-6)",
 
     "--color-alternate": "var(--color-yellow-9)",
     "--color-alternate-hover": "var(--color-yellow-10)",
@@ -20,15 +20,15 @@ const THEMES = {
     "--accent-color-disabled": "var(--color-gray-4)",
 
     "--accent-color-alternate": "var(--color-yellow-3)",
-    "--accent-color-alternate-disabled": "var(--color-gray-3)",
+    "--accent-color-alternate-disabled": "var(--color-gray-5)",
   },
   dark: {
     "--background-color": "var(--color-yellow-2)",
     "--background-color-hover": "var(--color-yellow-1)",
-    "--background-color-disabled": "var(--color-gray-4)",
+    "--background-color-disabled": "var(--color-gray-9)",
 
     "--color": "var(--color-yellow-9)",
-    "--color-disabled": "var(--color-gray-9)",
+    "--color-disabled": "var(--color-gray-4)",
 
     "--color-alternate": "var(--color-yellow-2)",
     "--color-alternate-hover": "var(--color-yellow-1)",
@@ -39,7 +39,7 @@ const THEMES = {
     "--accent-color-disabled": "var(--color-gray-6)",
 
     "--accent-color-alternate": "var(--color-yellow-8)",
-    "--accent-color-alternate-disabled": "var(--color-gray-8)",
+    "--accent-color-alternate-disabled": "var(--color-gray-5)",
   },
 };
 
