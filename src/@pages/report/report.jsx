@@ -158,7 +158,9 @@ const Back = styled(Button)`
 
 const ReportLoader = styled(FireLoader)`
   grid-column: 2 / 3;
-  place-self: center;
+  position: absolute;
+  inset: 0;
+  margin: auto;
 
   & > svg {
     ${Fallback.svg}
