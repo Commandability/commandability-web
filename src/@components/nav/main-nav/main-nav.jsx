@@ -206,7 +206,7 @@ function MainNav() {
                       href="mailto:support@commandability.app?"
                     >
                       <FiHelpCircle />
-                      Contact us
+                      Support
                     </DropdownMenuAction>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
