@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { defer, useLoaderData, useNavigate, Await } from "react-router-dom";
-import { FiArrowLeft, FiDownload } from "react-icons/fi";
+import { FiArrowLeft, FiDownload, FiAlertTriangle } from "react-icons/fi";
 import { getAuth } from "firebase/auth";
 import { ref, getBlob } from "firebase/storage";
 
@@ -48,7 +48,7 @@ function Report() {
     effect();
   }, [loaderData]);
 
-  const reportAreaFallback = (
+  const fallbackReportArea = (
     <ReportArea>
       <Header>
         <DatumList>
@@ -70,14 +70,35 @@ function Report() {
     </ReportArea>
   );
 
+  const errorReportArea = (
+    <ReportArea>
+      <Header>
+        <DatumList>
+          <DatumTerm>Location:</DatumTerm>
+          <DatumDetails data-default="true">Unknown</DatumDetails>
+        </DatumList>
+        <DatumList>
+          <DatumTerm>Description: </DatumTerm>
+          <DatumDetails data-default="true">Unknown</DatumDetails>
+        </DatumList>
+      </Header>
+      <Entries>
+        <ReportError>
+          <FiAlertTriangle />
+          Error loading report
+        </ReportError>
+      </Entries>
+    </ReportArea>
+  );
+
   return (
     <Wrapper>
       <Back onClick={() => navigate(-1)} variant="tertiary" size="large">
         <FiArrowLeft />
         <VisuallyHidden>Back</VisuallyHidden>
       </Back>
-      <React.Suspense fallback={reportAreaFallback}>
-        <Await resolve={loaderData.report} errorElement={<></>}>
+      <React.Suspense fallback={fallbackReportArea}>
+        <Await resolve={loaderData.report} errorElement={errorReportArea}>
           {(report) => {
             const reportLines = report.split("\n");
             const [location, description] = reportLines.slice(0, HEADER_LINES);
@@ -157,13 +178,30 @@ const Back = styled(Button)`
 `;
 
 const ReportLoader = styled(FireLoader)`
-  grid-column: 2 / 3;
-  position: absolute;
-  inset: 0;
-  margin: auto;
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  display: grid;
+  place-content: center;
 
   & > svg {
     ${Fallback.svg}
+  }
+`;
+
+const ReportError = styled.div`
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  display: grid;
+  grid-auto-flow: column;
+  place-content: center;
+  align-items: center;
+  gap: 16px;
+  font-size: ${24 / 16}rem;
+  color: var(--color-gray-4);
+
+  & > svg {
+    font-size: ${32 / 16}rem;
+    stroke: var(--color-gray-6);
   }
 `;
 
@@ -212,6 +250,7 @@ const Entries = styled.ul`
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: var(--grid-columns);
+  grid-template-rows: repeat(auto-fill, calc(1rem * var(--line-height)));
   column-gap: var(--gap);
   align-content: start;
   list-style: none;

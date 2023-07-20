@@ -481,7 +481,7 @@ function Reports() {
       {errorListHeader}
       <ReportsError>
         <FiAlertTriangle />
-        Unknown error
+        Error loading reports
       </ReportsError>
     </ListArea>
   );
