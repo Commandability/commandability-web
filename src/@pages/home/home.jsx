@@ -341,6 +341,9 @@ const Wrapper = styled.div`
 
 const Main = styled.main`
   height: 85%;
+  @media ${QUERIES.phoneAndSmaller} {
+    height: 90%;
+  }
 `;
 
 const Hero = styled.section`
