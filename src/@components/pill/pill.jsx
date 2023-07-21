@@ -5,17 +5,24 @@ import { Link } from "react-router-dom";
 
 import usePrefersReducedMotion from "@hooks/use-prefers-reduced-motion";
 import Spacer from "@components/spacer";
+import { COLORS } from "@constants";
 
 const THEMES = {
   light: {
-    "--background-color": "var(--color-yellow-9)",
-    "--hover-background-color": "var(--color-yellow-10)",
+    "--background-color":
+      "linear-gradient(135deg,var(--color-yellow-9),var(--color-white))",
+    "--hover-background-color": `hsl(${COLORS.yellow[10]} / 0.6)`,
+    "--hover-text-background-color": `hsl(${COLORS.gray[7]})`,
     "--color": "var(--color-yellow-2)",
+    "--icon-color": "var(--color-yellow-4)",
   },
   dark: {
-    "--background-color": "var(--color-yellow-2)",
-    "--hover-background-color": "var(--color-yellow-1)",
+    "--background-color":
+      "linear-gradient(135deg,var(--color-yellow-1),var(--color-yellow-3))",
+    "--hover-background-color": `hsl(${COLORS.yellow[3]} / 0.6)`,
+    "--hover-text-background-color": `hsl(${COLORS.gray[2]})`,
     "--color": "var(--color-yellow-9)",
+    "--icon-color": "var(--color-yellow-7)",
     "--selection-color": "var(--color-yellow-3)",
     "--selection-background": "var(--color-yellow-10)",
   },
@@ -76,7 +83,7 @@ const PillWrapper = styled.button`
   border: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--background-color);
+  background-image: var(--background-color);
   font-weight: bold;
   color: var(--color);
   text-decoration: none;
@@ -88,6 +95,7 @@ const PillWrapper = styled.button`
 
   & > svg {
     stroke-width: 0.175rem;
+    color: var(--icon-color);
   }
 
   &:focus {
@@ -95,12 +103,15 @@ const PillWrapper = styled.button`
   }
 
   &:active {
-    background-color: var(--hover-background-color);
+    /* background-color: var(--hover-background-color); */
+    box-shadow: var(--hover-background-color) 0px 1px 24px;
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      background-color: var(--hover-background-color);
+      transition: all 120ms ease 0s;
+      box-shadow: var(--hover-background-color) 0px 1px 24px;
+      text-shadow: var(--hover-text-background-color) 0px 3px 12px;
     }
   }
 `;
