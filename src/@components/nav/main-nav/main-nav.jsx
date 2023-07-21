@@ -4,7 +4,13 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { zeroRightClassName } from "react-remove-scroll-bar";
-import { FiChevronDown, FiHelpCircle, FiUsers, FiLogOut } from "react-icons/fi";
+import {
+  FiChevronDown,
+  FiHelpCircle,
+  FiUsers,
+  FiLogOut,
+  FiAlertCircle,
+} from "react-icons/fi";
 
 import { useAuth } from "@context/auth-context";
 import * as NavBase from "@components/nav/nav-base";
@@ -189,48 +195,57 @@ function MainNav() {
       ) : null}
       <NavBase.RightSide>
         {user.current ? (
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger asChild>
-              <DropdownMenuButton>
-                {user.current.displayName}
-                <FiChevronDown />
-              </DropdownMenuButton>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-              <DropdownMenuContent>
-                <DropdownMenuArrow />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
-                    <DropdownMenuAction
-                      as="a"
-                      href="mailto:support@commandability.app?"
-                    >
-                      <FiHelpCircle />
-                      Support
-                    </DropdownMenuAction>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <DropdownMenuAction to="/dashboard/account">
-                      <FiUsers />
-                      Account
-                    </DropdownMenuAction>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem asChild>
-                    <DropdownMenuAction
-                      as={UnstyledButton}
-                      onClick={handleSignOut}
-                    >
-                      <FiLogOut />
-                      Sign out
-                    </DropdownMenuAction>
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-              </DropdownMenuContent>
-            </DropdownMenu.Portal>
-          </DropdownMenu.Root>
+          <>
+            {user.current.emailVerified ? (
+              <></>
+            ) : (
+              <TooltipWrapper>
+                <FiAlertCircle></FiAlertCircle>
+              </TooltipWrapper>
+            )}
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger asChild>
+                <DropdownMenuButton>
+                  {user.current.displayName}
+                  <FiChevronDown />
+                </DropdownMenuButton>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Portal>
+                <DropdownMenuContent>
+                  <DropdownMenuArrow />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <DropdownMenuAction
+                        as="a"
+                        href="mailto:support@commandability.app?"
+                      >
+                        <FiHelpCircle />
+                        Contact us
+                      </DropdownMenuAction>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <DropdownMenuAction to="/dashboard/account">
+                        <FiUsers />
+                        Account
+                      </DropdownMenuAction>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem asChild>
+                      <DropdownMenuAction
+                        as={UnstyledButton}
+                        onClick={handleSignOut}
+                      >
+                        <FiLogOut />
+                        Sign out
+                      </DropdownMenuAction>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu.Portal>
+            </DropdownMenu.Root>
+          </>
         ) : (
           <NavBase.AccountOptions>
             <Dialog.Root open={newAccountOpen} onOpenChange={setNewAccountOpen}>
@@ -364,6 +379,19 @@ const DropdownMenuButton = styled(UnstyledButton)`
   color: var(--color-gray-1);
   font-size: ${16 / 16}rem;
 
+  & > svg {
+    position: relative;
+    top: 0.05rem;
+    stroke: var(--color-red-4);
+    stroke-width: 0.175rem;
+    font-size: ${18 / 16}rem;
+  }
+`;
+
+const TooltipWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding-right: 12px;
   & > svg {
     position: relative;
     top: 0.05rem;
