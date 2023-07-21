@@ -194,8 +194,8 @@ function Home() {
         <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
           <StepOne
             style={{
-              "--background-color-1": "var(--color-red-4)",
-              "--background-color-2": "var(--color-red-3)",
+              "--accent-color-1": "var(--color-yellow-5)",
+              "--accent-color-2": "var(--color-yellow-3)",
             }}
             subheader="Step 1"
             header="Setup an account"
@@ -223,8 +223,8 @@ function Home() {
           </StepOne>
           <StepTwo
             style={{
-              "--background-color-1": "var(--color-red-3)",
-              "--background-color-2": "var(--color-red-2)",
+              "--accent-color-1": "var(--color-yellow-4)",
+              "--accent-color-2": "var(--color-yellow-2)",
             }}
             subheader="Step 2"
             header="Take control of incidents"
@@ -254,8 +254,8 @@ function Home() {
           </StepTwo>
           <StepThree
             style={{
-              "--background-color-1": "var(--color-red-2)",
-              "--background-color-2": "var(--color-red-1)",
+              "--accent-color-1": "var(--color-yellow-3)",
+              "--accent-color-2": "var(--color-yellow-1)",
             }}
             subheader="Step 3"
             header="Stay accountable"
@@ -570,13 +570,17 @@ const StepThree = styled(Card)`
 `;
 
 const UnorderedList = styled.ul`
-  flex: 1;
+  padding-left: 16px;
   display: flex;
   flex-direction: column;
   gap: 24px;
   list-style: none;
-  padding: 48px;
   font-size: ${18 / 16}rem;
+  color: var(--color-gray-4);
+
+  & svg {
+    stroke: var(--accent-color-1);
+  }
 `;
 
 const Footer = styled.footer`

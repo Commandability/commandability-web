@@ -6,72 +6,83 @@ import { QUERIES } from "@constants";
 function Card({ subheader, header, children, ...props }) {
   return (
     <Wrapper {...props}>
-      <Title>
-        <Subheader>{subheader}</Subheader>
-        <Header>{header}</Header>
-      </Title>
-      {children}
+      <Content>
+        <Title>
+          <Subheader>{subheader}</Subheader>
+          <Header>{header}</Header>
+        </Title>
+        {children}
+      </Content>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.article`
   display: flex;
-  flex-direction: column;
-  min-height: 512px;
+  min-height: 448px;
   max-width: 384px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
-  background: var(--color-white);
+  background-image: linear-gradient(
+    135deg,
+    var(--accent-color-1),
+    var(--accent-color-2)
+  );
 
   @media ${QUERIES.laptopAndSmaller} {
     max-width: 768px;
     min-height: 256px;
-    flex-direction: row;
   }
 
   @media ${QUERIES.phoneAndSmaller} {
     min-height: 512px;
     max-width: 384px;
+  }
+`;
+
+const Content = styled.div`
+  flex: 1;
+  margin: 4px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background-color: var(--color-white);
+  border-radius: calc(var(--border-radius) / 2);
+
+  @media ${QUERIES.laptopAndSmaller} {
+    flex-direction: row;
+  }
+
+  @media ${QUERIES.phoneAndSmaller} {
     flex-direction: column;
   }
 `;
 
 const Title = styled.div`
-  padding: 36px;
-  border-radius: var(--border-radius) var(--border-radius) 0 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  background-image: linear-gradient(
-    135deg,
-    var(--background-color-1),
-    var(--background-color-2)
-  );
 
   @media ${QUERIES.laptopAndSmaller} {
-    border-radius: var(--border-radius) 0 0 var(--border-radius);
     width: 256px;
   }
 
   @media ${QUERIES.phoneAndSmaller} {
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
     width: revert;
   }
 `;
 
 const Subheader = styled.h3`
-  color: var(--color-yellow-9);
   font-size: ${18 / 16}rem;
-  font-weight: bold;
+  color: var(--accent-color-2);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 `;
 
 const Header = styled.h2`
   font-size: ${20 / 16}rem;
-  color: var(--color-white);
-  font-weight: bold;
+  color: var(--color-gray-1);
+  font-weight: normal;
 `;
 
 export default Card;
