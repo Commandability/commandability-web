@@ -11,7 +11,7 @@ import webp1200 from "@assets/images/footer_gaugzs_c_scale,w_1200.webp";
 import webp2449 from "@assets/images/footer_gaugzs_c_scale,w_2449.webp";
 import webp2917 from "@assets/images/footer_gaugzs_c_scale,w_2917.webp";
 import jpg1920 from "@assets/images/footer_apkfbg_c_scale,w_1920.jpg";
-import { COLORS } from "@constants";
+import { COLORS, QUERIES } from "@constants";
 
 function Firetruck({ children }) {
   return (
@@ -77,10 +77,18 @@ const Gradient = styled.div`
   inset: 0;
   background: linear-gradient(
     90deg,
-    hsl(${COLORS.red[5]} / 0.5) 0%,
-    hsl(${COLORS.red[5]} / 0.2) 30%,
-    hsl(0 0% 0% / 0.5) 70%
+    hsl(${COLORS.red[5]} / 0.24) 0%,
+    hsl(${COLORS.red[5]} / 0.12) 36%,
+    hsl(0 0% 0% / 0.96) 88%
   );
+  @media ${QUERIES.phoneAndSmaller} {
+    background: linear-gradient(
+      90deg,
+      hsl(${COLORS.red[5]} / 0.24) 0%,
+      hsl(${COLORS.red[5]} / 0.12) 36%,
+      hsl(0 0% 0% / 0.96) 88%
+    );
+  }
 `;
 
 const Content = styled.div`

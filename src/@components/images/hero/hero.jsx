@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-import { BREAKPOINTS, COLORS } from "@constants";
+import { BREAKPOINTS, COLORS, QUERIES } from "@constants";
 
 function Hero({ blur, children, ...props }) {
   return (
@@ -86,12 +86,22 @@ const Gradient = styled.div`
   inset: 0;
   background: linear-gradient(
     270deg,
-    hsl(${COLORS.red[5]} / 0.5) 10%,
-    hsl(${COLORS.red[5]} / 0.4) 20%,
+    hsl(${COLORS.red[5]} / 0.4) 10%,
+    hsl(${COLORS.red[5]} / 0.3) 20%,
     hsl(${COLORS.red[5]} / 0.2) 30%,
     hsl(${COLORS.red[1]} / 0.1) 60%,
     hsl(0 0% 0% / 0.45) 75%
   );
+  @media ${QUERIES.phoneAndSmaller} {
+    background: linear-gradient(
+      270deg,
+      hsl(${COLORS.red[5]} / 0.35) 10%,
+      hsl(${COLORS.red[5]} / 0.25) 20%,
+      hsl(${COLORS.red[5]} / 0.15) 30%,
+      hsl(${COLORS.red[1]} / 0.05) 60%,
+      hsl(0 0% 0% / 0.45) 75%
+    );
+  }
 `;
 
 const Blur = styled.div`
