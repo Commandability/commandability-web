@@ -215,9 +215,13 @@ function MainNav() {
                         align="end"
                         alignOffset={-12}
                       >
-                        Your email is unverified! Click here to navigate to the
-                        account page to verify!
-                        <TooltipArrow className="TooltipArrow" height={8} />
+                        Your email is unverified! Click to continue to account
+                        page
+                        <TooltipArrow
+                          className="TooltipArrow"
+                          height={12}
+                          width={12}
+                        />
                       </TooltipContent>
                     </Link>
                   </Tooltip.Portal>
@@ -417,7 +421,7 @@ const TooltipTrigger = styled(Tooltip.Trigger)`
   cursor: pointer;
   & > svg {
     position: relative;
-    top: 0.05rem;
+    top: 0.1rem;
     stroke: var(--color-red-4);
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
@@ -425,18 +429,18 @@ const TooltipTrigger = styled(Tooltip.Trigger)`
 `;
 
 const TooltipContent = styled(Tooltip.Content)`
-  width: 224px;
+  width: 256px;
   padding: 12px;
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
-  color: var(--color-gray-10);
+  color: var(--color-gray-1);
   text-align: center;
-  background-color: var(--color-gray-4);
+  background-color: var(--color-gray-9);
   cursor: pointer;
 `;
 
 const TooltipArrow = styled(Tooltip.Arrow)`
-  fill: var(--color-gray-4);
+  fill: var(--color-gray-9);
 `;
 
 export default MainNav;
