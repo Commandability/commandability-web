@@ -289,7 +289,6 @@ function Home() {
         <FiretruckImage>
           <Footer id={hashIds.footer} ref={footerRef}>
             <Contact>
-              <QuestionText>Have questions?</QuestionText>
               <MessageText>Send us a message</MessageText>
               <Spacer size={32} axis="vertical" />
               <Pill
@@ -429,7 +428,7 @@ const DownloadsWrapper = styled.div`
 `;
 
 const Download = styled.a`
-  color: var(--color-yellow-9);
+  color: var(--color-gray-7);
   text-decoration: none;
 
   @media (prefers-reduced-motion: no-preference) {
@@ -614,20 +613,14 @@ const Footer = styled.footer`
 
 const Contact = styled.div`
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
 `;
 
-const QuestionText = styled.p`
-  color: var(--color-yellow-9);
-  font-size: clamp(1rem, 1vw + 1rem, 2rem);
-  font-weight: bold;
-  align-self: flex-start;
-`;
-
 const MessageText = styled.p`
   color: var(--color-gray-10);
-  font-size: clamp(1rem, 2vw + 1rem, 3rem);
+  font-size: clamp(1rem, 2vw + 1rem, 4rem);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 `;
