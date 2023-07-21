@@ -11,6 +11,7 @@ import {
   FiLogOut,
   FiAlertCircle,
 } from "react-icons/fi";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 import { useAuth } from "@context/auth-context";
 import * as NavBase from "@components/nav/nav-base";
@@ -199,9 +200,29 @@ function MainNav() {
             {user.current.emailVerified ? (
               <></>
             ) : (
-              <TooltipWrapper>
-                <FiAlertCircle></FiAlertCircle>
-              </TooltipWrapper>
+              <Tooltip.Provider>
+                <Tooltip.Root>
+                  <Link to="/dashboard/account">
+                    <TooltipTrigger>
+                      <FiAlertCircle></FiAlertCircle>
+                    </TooltipTrigger>
+                  </Link>
+                  <Tooltip.Portal>
+                    <Link to="/dashboard/account">
+                      <TooltipContent
+                        side="bottom"
+                        sideOffset={12}
+                        align="end"
+                        alignOffset={-12}
+                      >
+                        Your email is unverified! Click here to navigate to the
+                        account page to verify!
+                        <TooltipArrow className="TooltipArrow" height={8} />
+                      </TooltipContent>
+                    </Link>
+                  </Tooltip.Portal>
+                </Tooltip.Root>
+              </Tooltip.Provider>
             )}
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
@@ -388,10 +409,12 @@ const DropdownMenuButton = styled(UnstyledButton)`
   }
 `;
 
-const TooltipWrapper = styled.div`
+const TooltipTrigger = styled(Tooltip.Trigger)`
+  border: none;
   display: flex;
   align-items: center;
   padding-right: 12px;
+  cursor: pointer;
   & > svg {
     position: relative;
     top: 0.05rem;
@@ -399,6 +422,21 @@ const TooltipWrapper = styled.div`
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
   }
+`;
+
+const TooltipContent = styled(Tooltip.Content)`
+  width: 224px;
+  padding: 12px;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  color: var(--color-gray-10);
+  text-align: center;
+  background-color: var(--color-gray-4);
+  cursor: pointer;
+`;
+
+const TooltipArrow = styled(Tooltip.Arrow)`
+  fill: var(--color-gray-4);
 `;
 
 export default MainNav;
