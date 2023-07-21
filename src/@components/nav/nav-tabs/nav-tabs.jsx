@@ -20,6 +20,7 @@ export const Root = styled.ul`
     width: var(--tab-width);
     height: 4px;
     background-color: var(--color-active);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
 
     @media (prefers-reduced-motion: no-preference) {
       will-change: left, width, background-color;

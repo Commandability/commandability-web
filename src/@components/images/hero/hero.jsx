@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import { BREAKPOINTS, COLORS } from "@constants";
 
-function Hero({ blur, offset, children, ...props }) {
+function Hero({ blur, children, ...props }) {
   return (
     <Picture {...props}>
       {/* Images generated with https://responsivebreakpoints.com/ */}
@@ -69,10 +69,11 @@ const Picture = styled.picture`
 `;
 
 const Img = styled.img`
+  position: absolute;
   height: 100%;
   width: 100%;
   object-fit: cover;
-  object-position: ${(props) => (props.offset ? "left" : "top left")};
+  object-position: top left;
   filter: saturate(40%);
 
   @media (min-height: ${BREAKPOINTS.laptop}px) {
