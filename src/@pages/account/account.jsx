@@ -316,13 +316,7 @@ function Account() {
                   }}
                 />
               ) : null}
-              <Button
-                variant="primary"
-                type="submit"
-                style={{
-                  width: "var(--button-width)",
-                }}
-              >
+              <Button variant="primary" type="submit">
                 <FiMail />
                 Send
               </Button>
@@ -373,11 +367,7 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              type="submit"
-              disabled={generalOptionEnable}
-              style={{ width: "var(--button-width)" }}
-            >
+            <Button type="submit" disabled={generalOptionEnable}>
               <FiSave />
               Save
             </Button>
@@ -437,11 +427,7 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              type="submit"
-              disabled={passwordOptionEnable}
-              style={{ width: "var(--button-width)" }}
-            >
+            <Button type="submit" disabled={passwordOptionEnable}>
               <FiSave />
               Save
             </Button>
@@ -465,11 +451,7 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button
-              variant="primary"
-              type="submit"
-              style={{ width: "var(--button-width)" }}
-            >
+            <Button variant="primary" type="submit">
               <FiMail />
               Send
             </Button>
@@ -493,7 +475,7 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button type="submit" style={{ width: "var(--button-width)" }}>
+            <Button type="submit">
               <FiUserX />
               Delete
             </Button>
@@ -564,7 +546,6 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  --button-width: 112px;
 `;
 
 const Options = styled.div`
