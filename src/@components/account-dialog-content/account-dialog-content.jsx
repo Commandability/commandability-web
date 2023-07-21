@@ -497,6 +497,10 @@ const Input = styled.input`
   border: solid 1px var(--color-gray-5);
   border-radius: var(--border-radius);
 
+  ::-ms-reveal {
+    display: none;
+  }
+
   &::placeholder {
     color: var(--color-gray-5);
   }

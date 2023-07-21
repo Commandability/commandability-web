@@ -10,7 +10,6 @@ const TextInput = ({
   className,
   type = "text",
   label,
-  variant = "dialog",
   errorText,
   ...props
 }) => {
@@ -75,6 +74,10 @@ const Input = styled.input`
   padding: 8px 12px;
   color: inherit;
   width: 320px;
+
+  ::-ms-reveal {
+    display: none;
+  }
 
   &::placeholder {
     color: var(--color-gray-5);
