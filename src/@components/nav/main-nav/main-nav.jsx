@@ -10,6 +10,7 @@ import {
   FiUsers,
   FiLogOut,
   FiAlertCircle,
+  FiArrowRight,
 } from "react-icons/fi";
 import * as Tooltip from "@radix-ui/react-tooltip";
 
@@ -25,6 +26,7 @@ import AccountDialogContent, {
   accountContentType,
 } from "@components/account-dialog-content";
 import { QUERIES } from "@constants";
+import Spacer from "@components/spacer/spacer";
 
 function MainNav() {
   const { pathname } = useLocation();
@@ -215,8 +217,10 @@ function MainNav() {
                         align="end"
                         alignOffset={-12}
                       >
-                        Your email is unverified! Click to continue to account
-                        page
+                        <TooltipContentWrapper>
+                          Verify your account
+                          <FiArrowRight />
+                        </TooltipContentWrapper>
                         <TooltipArrow
                           className="TooltipArrow"
                           height={12}
@@ -228,6 +232,7 @@ function MainNav() {
                 </Tooltip.Root>
               </Tooltip.Provider>
             )}
+            <Spacer size={8} axis="horizontal" />
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <DropdownMenuButton>
@@ -417,19 +422,22 @@ const TooltipTrigger = styled(Tooltip.Trigger)`
   border: none;
   display: flex;
   align-items: center;
-  padding-right: 12px;
+  background-color: var(--color-white);
   cursor: pointer;
   & > svg {
     position: relative;
     top: 0.1rem;
-    stroke: var(--color-red-4);
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
+    stroke: var(--color-red-3);
+    &:hover {
+      stroke: var(--color-yellow-3);
+    }
   }
 `;
 
 const TooltipContent = styled(Tooltip.Content)`
-  width: 256px;
+  width: fit-content;
   padding: 12px;
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
@@ -437,6 +445,24 @@ const TooltipContent = styled(Tooltip.Content)`
   text-align: center;
   background-color: var(--color-gray-9);
   cursor: pointer;
+`;
+
+const TooltipContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  & > svg {
+    position: relative;
+    top: 0.1rem;
+    stroke-width: 0.175rem;
+    font-size: ${18 / 16}rem;
+    stroke: var(--color-red-3);
+  }
+  &:hover {
+    & > svg {
+      stroke: var(--color-yellow-2);
+    }
+  }
 `;
 
 const TooltipArrow = styled(Tooltip.Arrow)`
