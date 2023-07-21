@@ -19,7 +19,7 @@ function Card({ subheader, header, children, ...props }) {
 
 const Wrapper = styled.article`
   display: flex;
-  min-height: 448px;
+  min-height: 496px;
   max-width: 384px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
@@ -31,7 +31,7 @@ const Wrapper = styled.article`
 
   @media ${QUERIES.laptopAndSmaller} {
     max-width: 768px;
-    min-height: 256px;
+    min-height: 304px;
   }
 
   @media ${QUERIES.phoneAndSmaller} {

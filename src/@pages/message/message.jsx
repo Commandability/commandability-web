@@ -264,6 +264,7 @@ const Content = styled.div`
   max-width: calc(75ch + var(--horizontal-padding) * 2);
   border-radius: var(--border-radius);
   background-color: var(--color-white);
+
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0px 8px;
     border-radius: 0;
@@ -312,13 +313,14 @@ const VerifyMessage = styled.div`
   font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${24 / 16}rem);
   color: var(--color-white);
   letter-spacing: 0.05em;
+  line-height: var(--content-line-height);
 `;
 
 const FireWrapper = styled.div`
   position: fixed;
   inset: 0;
-  background-color: var(--color-yellow-10);
-  z-index: 9999;
+  background-color: var(--color-gray-8);
+  z-index: 2147483647;
 `;
 
 export default Message;

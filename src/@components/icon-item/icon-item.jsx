@@ -23,6 +23,7 @@ export const ItemContents = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  line-height: var(--content-line-height);
 `;
 
 export default IconItem;

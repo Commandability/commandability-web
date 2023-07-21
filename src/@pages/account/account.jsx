@@ -583,6 +583,7 @@ const SubmitWrapper = styled.div`
 const TextButton = styled(UnstyledButton)`
   font-weight: bold;
   color: var(--color-yellow-2);
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       color: var(--color-yellow-1);

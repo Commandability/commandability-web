@@ -94,7 +94,7 @@ function Home() {
         />
       </header>
       <Main>
-        <HeroImage offset>
+        <HeroImage>
           <Hero id={hashIds.hero} ref={heroRef}>
             <Heading>Keep your department safe and accountable</Heading>
             <Subheading>
@@ -370,6 +370,7 @@ const Heading = styled.h1`
   color: var(--color-gray-10);
   font-size: clamp(${18 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
   font-weight: normal;
+  line-height: var(--header-line-height);
   max-width: 22ch;
   letter-spacing: 0.05em;
   opacity: 0;
@@ -380,6 +381,7 @@ const Subheading = styled.h2`
   color: var(--color-gray-8);
   font-size: clamp(${18 / 16}rem, 0.5vw + 1rem, ${32 / 16}rem);
   font-weight: normal;
+  line-height: var(--content-line-height);
   max-width: 48ch;
   opacity: 0;
   animation: ${fadeIn} 1200ms ease-in-out 800ms forwards;
@@ -450,6 +452,7 @@ const Content = styled.div`
     var(--color-white),
     var(--color-gray-10)
   );
+  line-height: var(--content-line-height);
 `;
 
 const Grid = styled.div`

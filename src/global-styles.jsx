@@ -114,6 +114,9 @@ const GlobalStyles = createGlobalStyle`
     --color-cyan-9: hsl(${COLORS.cyan[9]});
     --color-cyan-10: hsl(${COLORS.cyan[10]});
 
+    --content-line-height: 1.675;
+    --header-line-height: 1.25;
+
     --selection-color: var(--color-yellow-9);
     --selection-background: var(--color-yellow-2);
 
