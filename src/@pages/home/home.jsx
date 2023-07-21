@@ -378,7 +378,7 @@ const Subheading = styled.h2`
   font-weight: normal;
   max-width: 48ch;
   opacity: 0;
-  animation: ${fadeIn} 2s ease-out 1.5s forwards;
+  animation: ${fadeIn} 2s ease-out 1s forwards;
 
   @media ${QUERIES.phoneAndSmaller} {
     max-width: 28ch;
@@ -394,7 +394,7 @@ const HeaderPills = styled.div`
   gap: 32px;
   flex-wrap: wrap;
   opacity: 0;
-  animation: ${fadeIn} 2s ease-out 3s forwards;
+  animation: ${fadeIn} 2s ease-out 2s forwards;
 `;
 
 const DesktopPill = styled(Pill)`
@@ -410,7 +410,7 @@ const DownloadsWrapper = styled.div`
   display: flex;
   gap: 8px 16px;
   opacity: 0;
-  animation: ${fadeIn} 2s ease-out 4.5s forwards;
+  animation: ${fadeIn} 2s ease-out 3s forwards;
 
   @media ${QUERIES.phoneAndSmaller} {
     bottom: 24px;
