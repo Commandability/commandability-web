@@ -344,6 +344,7 @@ const Wrapper = styled.div`
 
 const Main = styled.main`
   height: 85%;
+
   @media ${QUERIES.phoneAndSmaller} {
     height: 90%;
   }
@@ -372,7 +373,7 @@ const Heading = styled.h1`
   max-width: 22ch;
   letter-spacing: 0.05em;
   opacity: 0;
-  animation: ${fadeIn} 2s ease-out forwards;
+  animation: ${fadeIn} 1200ms ease-in-out forwards;
 `;
 
 const Subheading = styled.h2`
@@ -381,7 +382,7 @@ const Subheading = styled.h2`
   font-weight: normal;
   max-width: 48ch;
   opacity: 0;
-  animation: ${fadeIn} 2s ease-out 1s forwards;
+  animation: ${fadeIn} 1200ms ease-in-out 800ms forwards;
 
   @media ${QUERIES.phoneAndSmaller} {
     max-width: 28ch;
@@ -397,7 +398,7 @@ const HeaderPills = styled.div`
   gap: 32px;
   flex-wrap: wrap;
   opacity: 0;
-  animation: ${fadeIn} 2s ease-out 2s forwards;
+  animation: ${fadeIn} 1200ms ease-in-out 1600ms forwards;
 `;
 
 const DesktopPill = styled(Pill)`
@@ -412,8 +413,6 @@ const DownloadsWrapper = styled.div`
   left: 48px;
   display: flex;
   gap: 8px 16px;
-  opacity: 0;
-  animation: ${fadeIn} 2s ease-out 3s forwards;
 
   @media ${QUERIES.phoneAndSmaller} {
     bottom: 24px;
