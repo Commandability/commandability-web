@@ -94,7 +94,7 @@ function Home() {
         />
       </header>
       <Main>
-        <HeroImage>
+        <HeroImage offset>
           <Hero id={hashIds.hero} ref={heroRef}>
             <Heading>Keep your department safe and accountable</Heading>
             <Subheading>
@@ -331,7 +331,7 @@ const Wrapper = styled.div`
 `;
 
 const Main = styled.main`
-  height: 100%;
+  height: 85%;
 `;
 
 const Hero = styled.section`
@@ -427,8 +427,8 @@ const FeaturesWrapper = styled.section`
   gap: 64px;
   background-color: var(--color-gray-10);
   color: var(--color-gray-1);
-  padding: 96px 24px;
-  padding-bottom: 48px;
+  padding: 48px 24px;
+  padding-bottom: 0px;
   scroll-margin: calc(72px - 1px);
 `;
 
@@ -514,8 +514,8 @@ const HowItWorks = styled.section`
   display: flex;
   justify-content: center;
   gap: 64px;
-  min-height: calc(512px + 96px * 3);
-  padding: 96px 24px;
+  min-height: calc(512px + 64px * 3);
+  padding: 48px 24px;
   padding-top: 48px;
   background-color: var(--color-gray-10);
   scroll-margin: calc(72px - 1px);
