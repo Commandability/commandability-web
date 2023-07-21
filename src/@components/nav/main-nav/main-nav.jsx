@@ -221,11 +221,7 @@ function MainNav() {
                           Verify your account
                           <FiArrowRight />
                         </TooltipContentWrapper>
-                        <TooltipArrow
-                          className="TooltipArrow"
-                          height={12}
-                          width={12}
-                        />
+                        <TooltipArrow />
                       </TooltipContent>
                     </Link>
                   </Tooltip.Portal>
@@ -241,8 +237,11 @@ function MainNav() {
                 </DropdownMenuButton>
               </DropdownMenu.Trigger>
               <DropdownMenu.Portal>
-                <DropdownMenuContent>
-                  <DropdownMenuArrow />
+                <DropdownMenuContent
+                  side="bottom"
+                  align="end"
+                  alignOffset={-12}
+                >
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
                       <DropdownMenuAction
@@ -272,6 +271,7 @@ function MainNav() {
                       </DropdownMenuAction>
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
+                  <DropdownMenuArrow />
                 </DropdownMenuContent>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>
@@ -359,8 +359,6 @@ const DropdownMenuContent = styled(DropdownMenu.Content)`
 
 const DropdownMenuArrow = styled(DropdownMenu.Arrow)`
   fill: var(--color-gray-9);
-  position: relative;
-  right: calc(160px / 2 - 16px);
 `;
 
 const DropdownMenuGroup = styled(DropdownMenu.Group)`

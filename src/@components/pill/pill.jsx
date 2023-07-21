@@ -12,7 +12,7 @@ const THEMES = {
     "--background-color":
       "linear-gradient(135deg,var(--color-yellow-9),var(--color-white))",
     "--hover-background-color": `hsl(${COLORS.yellow[10]} / 0.6)`,
-    "--hover-text-background-color": `hsl(${COLORS.gray[7]})`,
+    "--hover-text-background-color": `hsl(${COLORS.gray[5]})`,
     "--color": "var(--color-yellow-2)",
     "--icon-color": "var(--color-yellow-4)",
   },
@@ -87,11 +87,8 @@ const PillWrapper = styled.button`
   font-weight: bold;
   color: var(--color);
   text-decoration: none;
-
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: background-color;
-    transition: background-color 200ms;
-  }
+  box-shadow: none;
+  text-shadow: none;
 
   & > svg {
     stroke-width: 0.175rem;
@@ -103,13 +100,13 @@ const PillWrapper = styled.button`
   }
 
   &:active {
-    /* background-color: var(--hover-background-color); */
     box-shadow: var(--hover-background-color) 0px 1px 24px;
   }
 
+  transition: box-shadow 300ms ease, text-shadow 300ms ease;
+
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      transition: all 120ms ease 0s;
       box-shadow: var(--hover-background-color) 0px 1px 24px;
       text-shadow: var(--hover-text-background-color) 0px 3px 12px;
     }
