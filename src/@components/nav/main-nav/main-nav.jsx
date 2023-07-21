@@ -201,7 +201,7 @@ function MainNav() {
               <></>
             ) : (
               <Tooltip.Provider>
-                <Tooltip.Root>
+                <Tooltip.Root delayDuration={200}>
                   <Link to="/dashboard/account">
                     <TooltipTrigger>
                       <FiAlertCircle></FiAlertCircle>
