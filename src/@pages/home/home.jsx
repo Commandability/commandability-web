@@ -1,5 +1,5 @@
 import * as React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useLocation, Link } from "react-router-dom";
 import { FiCheckSquare } from "react-icons/fi";
 import { useInView } from "react-intersection-observer";
@@ -322,6 +322,15 @@ function Home() {
   );
 }
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
 const Wrapper = styled.div`
   height: 100%;
 
@@ -356,6 +365,8 @@ const Heading = styled.h1`
   font-weight: normal;
   max-width: 22ch;
   letter-spacing: 0.05em;
+  opacity: 0;
+  animation: ${fadeIn} 2s ease-out forwards;
 `;
 
 const Subheading = styled.h2`
@@ -363,6 +374,8 @@ const Subheading = styled.h2`
   font-size: clamp(${18 / 16}rem, 0.5vw + 1rem, ${32 / 16}rem);
   font-weight: normal;
   max-width: 48ch;
+  opacity: 0;
+  animation: ${fadeIn} 2s ease-out 1.5s forwards;
 
   @media ${QUERIES.phoneAndSmaller} {
     max-width: 28ch;
@@ -377,6 +390,8 @@ const HeaderPills = styled.div`
   display: flex;
   gap: 32px;
   flex-wrap: wrap;
+  opacity: 0;
+  animation: ${fadeIn} 2s ease-out 3s forwards;
 `;
 
 const DesktopPill = styled(Pill)`
@@ -391,6 +406,8 @@ const DownloadsWrapper = styled.div`
   left: 48px;
   display: flex;
   gap: 8px 16px;
+  opacity: 0;
+  animation: ${fadeIn} 2s ease-out 4.5s forwards;
 
   @media ${QUERIES.phoneAndSmaller} {
     bottom: 24px;
