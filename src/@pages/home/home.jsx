@@ -148,141 +148,144 @@ function Home() {
             </DownloadsWrapper>
           </Hero>
         </HeroImage>
-        <FeaturesWrapper id={hashIds.features} ref={featuresRef}>
-          <Feature>
-            <ManageIcon />
-            <FeatureContent>
-              <FeatureHeader style={{ "--color": "var(--color-yellow-1)" }}>
-                Manage
-              </FeatureHeader>
-              <FeatureText>
-                Use the Commandability app’s interactive interface to move
-                personnel between on-site groups and track the location of all
-                personnel throughout an incident. Monitor the time personnel are
-                exposed to high risk areas using group alerts.
-              </FeatureText>
-            </FeatureContent>
-          </Feature>
-          <Feature>
-            <FeatureContent>
-              <FeatureHeader style={{ "--color": "var(--color-yellow-2)" }}>
-                Customize
-              </FeatureHeader>
-              <FeatureText>
-                Use the Commandability website to configure your department’s
-                preferred groups and alert times, as well as to upload your
-                department’s roster for use during incidents.
-              </FeatureText>
-            </FeatureContent>
-            <CustomizeIcon />
-          </Feature>
-          <Feature>
-            <ReviewIcon />
-            <FeatureContent>
-              <FeatureHeader style={{ "--color": "var(--color-yellow-3)" }}>
-                Review
-              </FeatureHeader>
-              <FeatureText>
-                View auto-generated reports of all in-app events on the
-                Commandability website. Reports include timestamped entries of
-                personnel movements, group changes, and overdue alerts, as well
-                as additional notes about each incident.
-              </FeatureText>
-            </FeatureContent>
-          </Feature>
-        </FeaturesWrapper>
-        <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
-          <StepOne
-            style={{
-              "--accent-color-1": "var(--color-yellow-5)",
-              "--accent-color-2": "var(--color-yellow-3)",
-            }}
-            subheader="Step 1"
-            header="Setup an account"
-          >
-            <UnorderedList>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Create an account on the Commandability website homepage
-                </ItemContents>
-              </IconItem>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Add or import personnel on the website roster page
-                </ItemContents>
-              </IconItem>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Configure group names and alerts on the website groups page
-                </ItemContents>
-              </IconItem>
-            </UnorderedList>
-          </StepOne>
-          <StepTwo
-            style={{
-              "--accent-color-1": "var(--color-yellow-4)",
-              "--accent-color-2": "var(--color-yellow-2)",
-            }}
-            subheader="Step 2"
-            header="Take control of incidents"
-          >
-            <UnorderedList>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Download the Commandability app on your tablet device
-                </ItemContents>
-              </IconItem>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Sign in and update to load your department’s data, then start
-                  an incident
-                </ItemContents>
-              </IconItem>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Customize your groups to match the incident, and begin
-                  managing on-site personnel in real time
-                </ItemContents>
-              </IconItem>
-            </UnorderedList>
-          </StepTwo>
-          <StepThree
-            style={{
-              "--accent-color-1": "var(--color-yellow-3)",
-              "--accent-color-2": "var(--color-yellow-1)",
-            }}
-            subheader="Step 3"
-            header="Stay accountable"
-          >
-            <UnorderedList>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  After the incident, enter the incident location and any
-                  additional notes
-                </ItemContents>
-              </IconItem>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Upload the report to your Commandability account
-                </ItemContents>
-              </IconItem>
-              <IconItem>
-                <FiCheckSquare />
-                <ItemContents>
-                  Review all uploaded reports on the Commandability website
-                </ItemContents>
-              </IconItem>
-            </UnorderedList>
-          </StepThree>
-        </HowItWorks>
+        <Content>
+          <Grid />
+          <FeaturesWrapper id={hashIds.features} ref={featuresRef}>
+            <Feature>
+              <ManageIcon />
+              <FeatureContent>
+                <FeatureHeader style={{ "--color": "var(--color-yellow-1)" }}>
+                  Manage
+                </FeatureHeader>
+                <FeatureText>
+                  Use the Commandability app’s interactive interface to move
+                  personnel between on-site groups and track the location of all
+                  personnel throughout an incident. Monitor the time personnel
+                  are exposed to high risk areas using group alerts.
+                </FeatureText>
+              </FeatureContent>
+            </Feature>
+            <Feature>
+              <FeatureContent>
+                <FeatureHeader style={{ "--color": "var(--color-yellow-2)" }}>
+                  Customize
+                </FeatureHeader>
+                <FeatureText>
+                  Use the Commandability website to configure your department’s
+                  preferred groups and alert times, as well as to upload your
+                  department’s roster for use during incidents.
+                </FeatureText>
+              </FeatureContent>
+              <CustomizeIcon />
+            </Feature>
+            <Feature>
+              <ReviewIcon />
+              <FeatureContent>
+                <FeatureHeader style={{ "--color": "var(--color-yellow-3)" }}>
+                  Review
+                </FeatureHeader>
+                <FeatureText>
+                  View auto-generated reports of all in-app events on the
+                  Commandability website. Reports include timestamped entries of
+                  personnel movements, group changes, and overdue alerts, as
+                  well as additional notes about each incident.
+                </FeatureText>
+              </FeatureContent>
+            </Feature>
+          </FeaturesWrapper>
+          <HowItWorks id={hashIds.howItWorks} ref={howItWorksRef}>
+            <StepOne
+              style={{
+                "--accent-color-1": "var(--color-yellow-5)",
+                "--accent-color-2": "var(--color-yellow-3)",
+              }}
+              subheader="Step 1"
+              header="Setup an account"
+            >
+              <UnorderedList>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Create an account on the Commandability website homepage
+                  </ItemContents>
+                </IconItem>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Add or import personnel on the website roster page
+                  </ItemContents>
+                </IconItem>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Configure group names and alerts on the website groups page
+                  </ItemContents>
+                </IconItem>
+              </UnorderedList>
+            </StepOne>
+            <StepTwo
+              style={{
+                "--accent-color-1": "var(--color-yellow-4)",
+                "--accent-color-2": "var(--color-yellow-2)",
+              }}
+              subheader="Step 2"
+              header="Take control of incidents"
+            >
+              <UnorderedList>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Download the Commandability app on your tablet device
+                  </ItemContents>
+                </IconItem>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Sign in and update to load your department’s data, then
+                    start an incident
+                  </ItemContents>
+                </IconItem>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Customize your groups to match the incident, and begin
+                    managing on-site personnel in real time
+                  </ItemContents>
+                </IconItem>
+              </UnorderedList>
+            </StepTwo>
+            <StepThree
+              style={{
+                "--accent-color-1": "var(--color-yellow-3)",
+                "--accent-color-2": "var(--color-yellow-1)",
+              }}
+              subheader="Step 3"
+              header="Stay accountable"
+            >
+              <UnorderedList>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    After the incident, enter the incident location and any
+                    additional notes
+                  </ItemContents>
+                </IconItem>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Upload the report to your Commandability account
+                  </ItemContents>
+                </IconItem>
+                <IconItem>
+                  <FiCheckSquare />
+                  <ItemContents>
+                    Review all uploaded reports on the Commandability website
+                  </ItemContents>
+                </IconItem>
+              </UnorderedList>
+            </StepThree>
+          </HowItWorks>
+        </Content>
         <FiretruckImage>
           <Footer id={hashIds.footer} ref={footerRef}>
             <Contact>
@@ -440,15 +443,33 @@ const Download = styled.a`
   }
 `;
 
+const Content = styled.div`
+  isolation: isolate;
+  position: relative;
+  background-image: linear-gradient(
+    135deg,
+    var(--color-white),
+    var(--color-gray-10)
+  );
+`;
+
+const Grid = styled.div`
+  position: absolute;
+  inset: 0;
+  background-image: url("graphics/grid-pattern.svg");
+  background-size: 32px;
+  background-repeat: repeat;
+`;
+
 const FeaturesWrapper = styled.section`
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 64px;
-  background-color: var(--color-gray-10);
   color: var(--color-gray-1);
   padding: 48px 24px;
-  padding-bottom: 0px;
   scroll-margin: calc(72px - 1px);
 `;
 
@@ -531,13 +552,13 @@ const ReviewIcon = styled(UnstyledReviewIcon)`
 `;
 
 const HowItWorks = styled.section`
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   gap: 64px;
-  min-height: calc(512px + 64px * 3);
+  min-height: calc(512px + 96px * 3);
   padding: 48px 24px;
-  padding-top: 48px;
-  background-color: var(--color-gray-10);
   scroll-margin: calc(72px - 1px);
 
   @media ${QUERIES.laptopAndSmaller} {
