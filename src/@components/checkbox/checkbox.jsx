@@ -22,11 +22,12 @@ const Select = React.forwardRef(({ label, ...props }, forwardedRef) => {
 Select.displayName = "Select";
 
 const RadixCheckboxRoot = styled(RadixCheckbox.Root)`
+  color: var(--text-primary);
   background-color: var(--color-white);
   width: 24px;
   height: 24px;
   border-radius: 4px;
-  border: 1px solid var(--color-gray-5);
+  border: 1px solid var(--text-accent-primary);
   display: flex;
   align-items: center;
   justify-content: center;

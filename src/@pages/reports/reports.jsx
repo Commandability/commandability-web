@@ -881,7 +881,7 @@ const Pagination = styled.div`
   display: flex;
   gap: 32px;
   align-items: center;
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 `;
 
 const PaginationButtons = styled.div`
@@ -903,7 +903,7 @@ const ListHeader = styled.div`
   justify-content: space-between;
   padding: var(--header-padding-vertical) 48px;
   background-color: var(--color-gray-10);
-  color: var(--color-gray-2);
+  color: var(--text-secondary);
   position: sticky;
   top: 0;
   z-index: 1;
@@ -917,11 +917,11 @@ const ListMessage = styled.div`
   justify-content: center;
   gap: 16px;
   font-size: ${18 / 16}rem;
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 
   & > svg {
     font-size: ${24 / 16}rem;
-    stroke: var(--color-gray-6);
+    stroke: var(--text-accent-primary);
   }
 `;
 
@@ -941,12 +941,12 @@ const ReportsError = styled.div`
   align-items: center;
   justify-content: center;
   gap: 16px;
-  font-size: ${24 / 16}rem;
-  color: var(--color-gray-4);
+  font-size: ${18 / 16}rem;
+  color: var(--text-secondary);
 
   & > svg {
-    font-size: ${32 / 16}rem;
-    stroke: var(--color-gray-6);
+    font-size: ${24 / 16}rem;
+    stroke: var(--text-accent-primary);
   }
 `;
 
@@ -997,7 +997,7 @@ const Bottom = styled.div`
 `;
 
 const Capacity = styled.div`
-  color: var(--color-gray-3);
+  color: var(--text-secondary);
 `;
 
 const Highlight = styled.span`

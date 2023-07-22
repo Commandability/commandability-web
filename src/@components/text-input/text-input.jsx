@@ -80,7 +80,7 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: var(--color-gray-5);
+    color: var(--text-secondary);
   }
 
   &:focus-visible {

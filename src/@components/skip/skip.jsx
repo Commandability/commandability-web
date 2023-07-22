@@ -12,14 +12,14 @@ const SkipLink = styled.a`
   transform: translate(-50%, -100%);
   padding: 8px;
   border-radius: var(--border-radius);
-  background-color: var(--color-yellow-9);
-  color: var(--color-yellow-2);
+  background-color: var(--color-yellow-2);
+  color: var(--color-yellow-9);
   font-weight: bold;
   text-decoration: none;
 
   @media (prefers-reduced-motion: no-preference) {
     will-change: transform;
-    transition: transform 0.3s;
+    transition: transform 200ms ease-out;
   }
 
   &:focus {

@@ -67,7 +67,7 @@ const Wrapper = styled.li`
   padding: 16px 48px;
   border-bottom: 1px solid var(--color-gray-9);
   background-color: var(--color-white);
-  color: var(--color-gray-3);
+  color: var(--text-secondary);
   // Prevent height: 1px and position: absolute in VisuallyHidden in CheckBox
   // from stacking outside root html element and causing vertical overflow
   // Also add name pseudo-element containing position
@@ -81,6 +81,7 @@ const Wrapper = styled.li`
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
+      color: var(--text-primary);
       background-color: var(--selected-background-color);
     }
   }
@@ -108,7 +109,7 @@ const Group = styled.div`
 const Name = styled(Link)`
   width: 256px;
   text-decoration: none;
-  color: var(--color-gray-3);
+  color: inherit;
 
   &::after {
     content: "";

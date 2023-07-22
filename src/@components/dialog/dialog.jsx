@@ -90,7 +90,7 @@ const RadixDialogContent = styled(RadixDialog.Content)`
   padding-top: var(--padding-top);
   border-radius: var(--border-radius);
   background-color: var(--color-gray-10);
-  color: var(--color-gray-2);
+  color: var(--text-secondary);
 
   @media (prefers-reduced-motion: no-preference) {
     animation: ${fadeIn} 200ms ease-out forwards;
@@ -106,11 +106,11 @@ const Header = styled.div`
 const RadixDialogTitle = styled(RadixDialog.Title)`
   font-size: ${18 / 16}rem;
   font-weight: bold;
-  color: var(--color-gray-3);
+  color: var(--text-primary);
 `;
 
 const RadixDialogDescription = styled(RadixDialog.Description)`
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 `;
 
 const CloseButton = styled(UnstyledButton)`

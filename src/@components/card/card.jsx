@@ -81,7 +81,7 @@ const Subheader = styled.h3`
 
 const Header = styled.h2`
   font-size: ${20 / 16}rem;
-  color: var(--color-gray-1);
+  color: var(--text-primary);
   font-weight: normal;
 `;
 

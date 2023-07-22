@@ -103,7 +103,10 @@ const PillWrapper = styled.button`
     box-shadow: var(--hover-background-color) 0px 1px 24px;
   }
 
-  transition: box-shadow 300ms ease, text-shadow 300ms ease;
+  @media (prefers-reduced-motion: no-preference) {
+    will-change: box-shadow, text-shadow;
+    transition: box-shadow 300ms ease, text-shadow 300ms ease;
+  }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {

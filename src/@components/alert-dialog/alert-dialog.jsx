@@ -101,9 +101,9 @@ const Header = styled.div`
 const RadixAlertDialogTitle = styled(RadixAlertDialog.Title)`
   font-size: ${18 / 16}rem;
   font-weight: bold;
-  color: var(--color-gray-3);
+  color: var(--text-primary);
 `;
 
 const RadixAlertDialogDescription = styled(RadixAlertDialog.Description)`
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 `;

@@ -34,7 +34,10 @@ const IndicatorWrapper = styled(RadixProgress.Indicator)`
   width: 100%;
   height: 100%;
 
-  &[data-transition="true"] {
-    transition: transform ${(props) => props.duration}ms ease-in-out;
+  @media (prefers-reduced-motion: no-preference) {
+    &[data-transition="true"] {
+      will-change: transform;
+      transition: transform ${(props) => props.duration}ms ease-in-out;
+    }
   }
 `;

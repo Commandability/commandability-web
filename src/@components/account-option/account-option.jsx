@@ -29,7 +29,7 @@ const Header = styled.header`
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--color-gray-3);
+  color: var(--text-secondary);
 `;
 
 const Content = styled.div`

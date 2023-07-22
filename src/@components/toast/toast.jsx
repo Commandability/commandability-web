@@ -96,6 +96,7 @@ const RadixToastRoot = styled(RadixToast.Root)`
     }
     &ToastRoot[data-swipe="cancel"] {
       transform: translateX(0);
+      will-change: transform;
       transition: transform 200ms ease-out;
     }
     &[data-swipe="end"] {
@@ -118,12 +119,12 @@ export const Icon = styled.div`
 const Title = styled(RadixToast.Title)`
   grid-area: title;
   font-weight: bold;
-  color: var(--color-gray-1);
+  color: var(--text-primary);
 `;
 
 const Description = styled(RadixToast.Description)`
   grid-area: description;
-  color: var(--color-gray-3);
+  color: var(--text-secondary);
 `;
 
 export const Buttons = styled.div`

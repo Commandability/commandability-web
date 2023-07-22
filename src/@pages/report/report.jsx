@@ -196,12 +196,12 @@ const ReportError = styled.div`
   place-content: center;
   align-items: center;
   gap: 16px;
-  font-size: ${24 / 16}rem;
-  color: var(--color-gray-4);
+  font-size: ${18 / 16}rem;
+  color: var(--text-secondary);
 
   & > svg {
-    font-size: ${32 / 16}rem;
-    stroke: var(--color-gray-6);
+    font-size: ${24 / 16}rem;
+    stroke: var(--text-accent-primary);
   }
 `;
 
@@ -231,7 +231,7 @@ const DatumList = styled.dl`
 
 const DatumTerm = styled.dt`
   font-size: ${16 / 16}rem;
-  color: var(--color-gray-3);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 `;
@@ -241,7 +241,7 @@ const DatumDetails = styled.dd`
   color: var(--color-yellow-1);
 
   &[data-default="true"] {
-    color: var(--color-gray-4);
+    color: var(--text-secondary);
   }
 `;
 
@@ -258,7 +258,7 @@ const Entries = styled.ul`
   padding-left: 0;
   overflow-y: auto;
   background-color: var(--color-white);
-  color: var(--color-gray-3);
+  color: var(--text-secondary);
   margin-left: -2ch;
 `;
 
@@ -271,7 +271,7 @@ const Entry = styled.li`
 `;
 
 const LineNumber = styled.span`
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 `;
 
 const Highlight = styled.span`

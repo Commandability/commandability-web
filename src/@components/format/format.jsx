@@ -6,27 +6,27 @@ function Format({ children, ...props }) {
 }
 
 const Wrapper = styled.div`
-  color: var(--color-gray-1);
+  color: var(--text-secondary);
 
   h1 {
     font-size: 2em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: var(--color-gray-2);
+    color: var(--text-primary);
     padding-bottom: 0.3em;
-    border-bottom: 1px solid var(--color-gray-8);
+    border-bottom: 1px solid var(--text-accent-secondary);
   }
 
   h2 {
     font-size: 1.5em;
-    color: var(--color-gray-3);
+    color: var(--text-primary);
     padding-bottom: 0.3em;
-    border-bottom: 1px solid var(--color-gray-8);
+    border-bottom: 1px solid var(--text-accent-secondary);
   }
 
   h3 {
     font-size: 1.25em;
-    color: var(--color-gray-3);
+    color: var(--text-primary);
   }
 
   h4 {
@@ -73,8 +73,10 @@ const Wrapper = styled.div`
     color: var(--color-yellow-2);
     text-decoration: none;
 
-    &:hover {
-      text-decoration: underline;
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 

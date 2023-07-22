@@ -469,7 +469,7 @@ const FeaturesWrapper = styled.section`
   flex-direction: column;
   align-items: center;
   gap: 64px;
-  color: var(--color-gray-1);
+  color: var(--text-secondary);
   padding: 48px 24px;
   scroll-margin: calc(72px - 1px);
 `;
@@ -598,7 +598,7 @@ const UnorderedList = styled.ul`
   gap: 24px;
   list-style: none;
   font-size: ${18 / 16}rem;
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 
   & svg {
     stroke: var(--accent-color-1);
@@ -628,11 +628,10 @@ const MessageText = styled.p`
 const Legal = styled.div`
   position: absolute;
   bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   width: 100%;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
   gap: 24px 64px;
   padding: 24px;

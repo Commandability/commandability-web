@@ -103,18 +103,12 @@ const GlobalStyles = createGlobalStyle`
     --color-gray-9: hsl(${COLORS.gray[9]});
     --color-gray-10: hsl(${COLORS.gray[10]});
 
-    --color-cyan-1: hsl(${COLORS.cyan[1]});
-    --color-cyan-2: hsl(${COLORS.cyan[2]});
-    --color-cyan-3: hsl(${COLORS.cyan[3]});
-    --color-cyan-4: hsl(${COLORS.cyan[4]});
-    --color-cyan-5: hsl(${COLORS.cyan[5]});
-    --color-cyan-6: hsl(${COLORS.cyan[6]});
-    --color-cyan-7: hsl(${COLORS.cyan[7]});
-    --color-cyan-8: hsl(${COLORS.cyan[8]});
-    --color-cyan-9: hsl(${COLORS.cyan[9]});
-    --color-cyan-10: hsl(${COLORS.cyan[10]});
+    --text-primary: var(--color-gray-2);
+    --text-secondary: var(--color-gray-4);
+    --text-accent-primary: var(--color-gray-6);
+    --text-accent-secondary: var(--color-gray-8);
 
-    --content-line-height: 1.675;
+    --content-line-height: 1.75;
     --header-line-height: 1.25;
 
     --selection-color: var(--color-yellow-9);

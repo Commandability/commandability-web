@@ -301,7 +301,7 @@ function LandingNav({
             href="/"
             style={{
               "--color": `${
-                scrolled ? "var(--color-gray-1)" : "var(--color-white)"
+                scrolled ? "var(--text-primary)" : "var(--color-white)"
               }`,
             }}
           >
@@ -325,7 +325,7 @@ function LandingNav({
             <NavTabs.Root
               style={{
                 "--color": `${
-                  scrolled ? "var(--color-gray-3)" : "var(--color-gray-9)"
+                  scrolled ? "var(--text-secondary)" : "var(--color-gray-9)"
                 }`,
                 "--color-active": `${
                   scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"

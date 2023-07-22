@@ -254,6 +254,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 72px 16px;
+
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0;
   }

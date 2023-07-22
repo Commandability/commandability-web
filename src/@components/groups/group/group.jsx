@@ -123,7 +123,7 @@ const GroupFallback = styled.div`
 const Heading = styled.h2`
   justify-content: center;
   align-items: center;
-  color: var(--color-gray-4);
+  color: var(--text-primary);
   font-size: ${20 / 16}rem;
   font-weight: normal;
 `;
@@ -143,7 +143,7 @@ const AlertTime = styled.span`
 `;
 
 const AlertText = styled.span`
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
   font-size: ${16 / 16}rem;
   line-height: 36px;
 `;
@@ -175,7 +175,7 @@ const Text = styled.span`
   position: relative;
   top: -0.05rem;
   font-size: ${18 / 16}rem;
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 `;
 
 export default Group;

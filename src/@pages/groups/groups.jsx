@@ -126,30 +126,32 @@ const GroupTab = styled(Tabs.Content)`
 const GroupsPageNumbers = styled(Tabs.List)`
   display: flex;
   padding-top: 32px;
-  --tab-border-color: var(--color-gray-8);
+  --tab-border-color: var(--text-accent-secondary);
 `;
 
 const PageNumber = styled(Tabs.Trigger)`
   flex: 2;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  cursor: pointer;
   border: none;
   background-color: var(--color-gray-10);
+
   &[data-state="active"] {
     font-weight: bold;
     color: var(--color-yellow-3);
     border-bottom: solid 3px var(--color-yellow-3);
   }
+
   &[data-state="inactive"] {
-    color: var(--color-gray-3);
-    border-bottom: solid 1px var(--tab-border-color);
+    color: var(--text-secondary);
+    border-bottom: solid 2px var(--tab-border-color);
   }
-  cursor: pointer;
 `;
 
 const TabBorder = styled.div`
   flex: 1;
-  border-bottom: 1px solid var(--tab-border-color);
+  border-bottom: 2px solid transparent;
 `;
 
 export default Groups;

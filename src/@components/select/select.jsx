@@ -119,7 +119,7 @@ const LabelText = styled.span`
       case VARIANTS.dialog:
         return "var(--color-yellow-2)";
       case VARIANTS.page:
-        return "var(--color-gray-2)";
+        return "var(--text-secondary)";
       default:
     }
   }};
@@ -146,7 +146,7 @@ const TriggerButton = styled(UnstyledButton)`
         case VARIANTS.dialog:
           return "var(--color-yellow-3)";
         case VARIANTS.page:
-          return "var(--color-gray-5)";
+          return "var(--text-accent-primary)";
         default:
       }
     }};
@@ -156,7 +156,7 @@ const TriggerButton = styled(UnstyledButton)`
       case VARIANTS.dialog:
         return "var(--color-yellow-2)";
       case VARIANTS.page:
-        return "var(--color-gray-2)";
+        return "var(--text-primary)";
       default:
     }
   }};

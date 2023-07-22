@@ -97,7 +97,7 @@ const ButtonWrapper = styled(UnstyledButton)`
 const Bar = styled.span`
   width: 24px;
   height: 2px;
-  background-color: var(--color-gray-1);
+  background-color: var(--text-secondary);
 `;
 
 const BarOne = styled(Bar)`
@@ -147,7 +147,7 @@ const List = styled.ul`
   -webkit-tap-highlight-color: transparent;
   padding: 24px 48px;
   padding-top: 16px;
-  box-shadow: var(--box-shadow);
+  box-shadow: var(--nav-box-shadow);
   list-style: none;
 `;
 
@@ -160,7 +160,7 @@ export function Link({ ...props }) {
 }
 
 const LinkInternals = styled.a`
-  color: var(--color-gray-1);
+  color: var(--text-secondary);
   text-decoration: none;
   text-transform: uppercase;
 

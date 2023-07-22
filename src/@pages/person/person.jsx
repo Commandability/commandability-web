@@ -230,7 +230,7 @@ const Name = styled.span`
   grid-row: 1;
   grid-column: 2;
   font-size: ${72 / 16}rem;
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
 `;
 
 const EditButton = styled(Button)`
@@ -240,7 +240,8 @@ const EditButton = styled(Button)`
 `;
 
 const Hr = styled.hr`
-  border-top: 1px solid var(--color-gray-7);
+  border: 0;
+  border-top: 2px solid var(--text-accent-secondary);
   grid-column: 2 / 3;
   grid-row: 2;
   align-self: start;
@@ -277,7 +278,7 @@ const DatumList = styled.dl`
 
 const DatumTerm = styled.dt`
   font-size: ${24 / 16}rem;
-  color: var(--color-gray-4);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 `;
@@ -288,7 +289,7 @@ const DatumDetails = styled.dd`
 `;
 
 const EmptyDatum = styled.span`
-  color: var(--color-gray-5);
+  color: var(--text-secondary);
 `;
 
 export default Person;

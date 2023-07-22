@@ -2,10 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { FiSearch as UnstyledFiSearch } from "react-icons/fi";
 
-import VisuallyHidden from "@components/visually-hidden";
-import UnstyledButton from "@components/unstyled-button";
-
-export const Root = ({ id, className, variant, children, ...props }) => {
+export const Root = ({ id, className, children, ...props }) => {
   if (!id) {
     throw new Error("SearchInput must have an id");
   }
@@ -15,14 +12,7 @@ export const Root = ({ id, className, variant, children, ...props }) => {
       {children}
       <InputWrapper>
         <TextInput id={id} {...props} />
-        {variant === "button" ? (
-          <SearchButton type="submit">
-            <VisuallyHidden>Search</VisuallyHidden>
-            <UnstyledFiSearch />
-          </SearchButton>
-        ) : (
-          <StyledFiSearch />
-        )}
+        <StyledFiSearch />
       </InputWrapper>
     </Wrapper>
   );
@@ -32,7 +22,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: var(--color-gray-2);
+  color: var(--text-primary);
 `;
 
 const InputWrapper = styled.div`
@@ -43,7 +33,7 @@ const InputWrapper = styled.div`
 `;
 
 const TextInput = styled.input`
-  border: 1px solid var(--color-gray-5);
+  border: 1px solid var(--text-accent-primary);
   border-radius: var(--border-radius);
   padding: 8px 12px;
   padding-left: 36px;
@@ -51,7 +41,7 @@ const TextInput = styled.input`
   color: inherit;
 
   &::placeholder {
-    color: var(--color-gray-5);
+    color: var(--text-secondary);
   }
 
   &:focus-visible {
@@ -63,37 +53,14 @@ const TextInput = styled.input`
 const StyledFiSearch = styled(UnstyledFiSearch)`
   position: absolute;
   left: 12px;
-  stroke: var(--color-gray-2);
+  stroke: var(--text-primary);
 
   ${TextInput}:focus-visible + & {
     stroke: var(--color-yellow-3);
   }
 `;
 
-const SearchButton = styled(UnstyledButton)`
-  position: absolute;
-  left: 8px;
-  padding: 4px;
-  & > svg {
-    stroke: var(--color-gray-2);
-  }
-  ${TextInput}:focus-visible + & {
-    & > svg {
-      stroke: var(--color-yellow-3);
-    }
-  }
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      border-radius: 100%;
-      background-color: var(--color-gray-9);
-      ${TextInput}:focus-visible + & {
-        background-color: var(--color-yellow-9);
-      }
-    }
-  }
-`;
-
 export const Label = styled.label`
-  color: var(--color-gray-2);
+  color: var(--text-secondary);
   font-size: ${14 / 16}rem;
 `;

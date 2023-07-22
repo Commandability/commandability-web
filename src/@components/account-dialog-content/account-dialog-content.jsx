@@ -494,7 +494,7 @@ const Label = styled.label`
 const Input = styled.input`
   flex: 1;
   padding: 8px 12px;
-  border: solid 1px var(--color-gray-5);
+  border: solid 1px var(--text-accent-primary);
   border-radius: var(--border-radius);
 
   ::-ms-reveal {
@@ -502,7 +502,7 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: var(--color-gray-5);
+    color: var(--text-secondary);
   }
 
   &:focus-visible {
@@ -518,7 +518,7 @@ const TogglePasswordButton = styled(UnstyledButton)`
   padding: 4px;
 
   & > svg {
-    stroke: var(--color-gray-4);
+    stroke: var(--text-accent-primary);
   }
 
   ${Input}:focus-visible + & {
@@ -532,7 +532,7 @@ const TogglePasswordButton = styled(UnstyledButton)`
       border-radius: 100%;
 
       & > svg {
-        stroke: var(--color-gray-2);
+        stroke: var(--color-gray-3);
 
         ${Input}:focus-visible + & {
           stroke: var(--color-yellow-2);

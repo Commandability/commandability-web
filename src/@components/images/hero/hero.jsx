@@ -92,6 +92,7 @@ const Gradient = styled.div`
     hsl(${COLORS.red[1]} / 0.1) 60%,
     hsl(0 0% 0% / 0.45) 75%
   );
+
   @media ${QUERIES.phoneAndSmaller} {
     background: linear-gradient(
       270deg,

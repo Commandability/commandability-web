@@ -108,7 +108,7 @@ function MainNav() {
           <NavBase.SiteID
             href="/"
             style={{
-              "--color": "var(--color-gray-1)",
+              "--color": "var(--text-primary)",
             }}
           >
             <NavBase.FireIcon
@@ -132,16 +132,13 @@ function MainNav() {
                     : "none",
                   "--tab-width": `${activeTabRect?.width}px`,
                   "--tab-left": `${activeTabRect?.left}px`,
+                  "--color": "var(--text-secondary)",
                   "--color-active": "var(--color-red-3)",
                   "--max-width": "512px",
                 }}
               >
                 <NavTabs.Tab
                   ref={reportsTabRef}
-                  style={{
-                    "--color": "var(--color-gray-4)",
-                    "--color-active": "var(--color-red-3)",
-                  }}
                   to="/dashboard/reports"
                   onClick={() => setTabTransition(true)}
                   as={NavLink}
@@ -150,10 +147,6 @@ function MainNav() {
                 </NavTabs.Tab>
                 <NavTabs.Tab
                   ref={rosterTabRef}
-                  style={{
-                    "--color": "var(--color-gray-4)",
-                    "--color-active": "var(--color-red-3)",
-                  }}
                   to="/dashboard/roster"
                   onClick={() => setTabTransition(true)}
                   as={NavLink}
@@ -162,10 +155,6 @@ function MainNav() {
                 </NavTabs.Tab>
                 <NavTabs.Tab
                   ref={groupsTabRef}
-                  style={{
-                    "--color": "var(--color-gray-4)",
-                    "--color-active": "var(--color-red-3)",
-                  }}
                   to="/dashboard/groups"
                   onClick={() => setTabTransition(true)}
                   as={NavLink}
@@ -218,7 +207,7 @@ function MainNav() {
                         alignOffset={-12}
                       >
                         <TooltipContentWrapper>
-                          Verify your account
+                          Verify your email
                           <FiArrowRight />
                         </TooltipContentWrapper>
                         <TooltipArrow />
@@ -369,7 +358,6 @@ const DropdownMenuGroup = styled(DropdownMenu.Group)`
 const DropdownMenuItem = styled(DropdownMenu.Item)`
   width: 100%;
   padding: 0px 16px;
-  color: var(--color-gray-1);
   stroke: var(--color-red-3);
 
   @media (hover: hover) and (pointer: fine) {
@@ -385,7 +373,7 @@ const DropdownMenuAction = styled(Link)`
   display: flex;
   gap: 8px;
   text-decoration: none;
-  color: inherit;
+  color: var(--text-primary);
 
   & > svg {
     stroke: inherit;
@@ -397,14 +385,14 @@ const DropdownMenuAction = styled(Link)`
 const DropdownMenuSeparator = styled(DropdownMenu.Separator)`
   height: 1px;
   width: "100%";
-  background-color: var(--color-gray-6);
+  background-color: var(--text-accent-primary);
 `;
 
 const DropdownMenuButton = styled(UnstyledButton)`
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--color-gray-1);
+  color: var(--text-primary);
   font-size: ${16 / 16}rem;
 
   & > svg {
@@ -413,6 +401,12 @@ const DropdownMenuButton = styled(UnstyledButton)`
     stroke: var(--color-red-4);
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        stroke: var(--color-yellow-3);
+      }
+    }
   }
 `;
 
@@ -422,14 +416,18 @@ const TooltipTrigger = styled(Tooltip.Trigger)`
   align-items: center;
   background-color: var(--color-white);
   cursor: pointer;
+
   & > svg {
     position: relative;
     top: 0.1rem;
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
     stroke: var(--color-red-3);
-    &:hover {
-      stroke: var(--color-yellow-3);
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        stroke: var(--color-yellow-3);
+      }
     }
   }
 `;
@@ -449,17 +447,13 @@ const TooltipContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
   & > svg {
     position: relative;
     top: 0.1rem;
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
     stroke: var(--color-red-3);
-  }
-  &:hover {
-    & > svg {
-      stroke: var(--color-yellow-2);
-    }
   }
 `;
 

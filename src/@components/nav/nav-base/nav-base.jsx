@@ -53,7 +53,7 @@ export const SiteID = styled.a`
   }
 
   @media ${QUERIES.tabletAndSmaller} {
-    color: var(--color-gray-1);
+    color: var(--text-primary);
   }
 `;
 
@@ -111,6 +111,7 @@ export const RightSide = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  gap: 4px;
   // Match padding to the SiteID padding, accounting for space between the SiteID icon and it's container
   padding-right: calc((32px - 18.67px) / 2);
 
