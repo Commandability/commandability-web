@@ -47,6 +47,7 @@ const VARIANTS = {
   primary: "primary",
   secondary: "secondary",
   tertiary: "tertiary",
+  quaternary: "quaternary",
 };
 
 const SIZES = {
@@ -126,16 +127,31 @@ const ButtonWrapper = styled.button`
   gap: 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  letter-spacing: 0.05em;
   font-weight: bold;
   font-size: var(--font-size);
-  text-transform: uppercase;
   text-decoration: none;
 
+  letter-spacing: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.quaternary:
+        return "normal";
+      default:
+        return "0.05em";
+    }
+  }};
+  text-transform: ${(props) => {
+    switch (props.variant) {
+      case VARIANTS.quaternary:
+        return "normal";
+      default:
+        return "uppercase";
+    }
+  }};
   color: ${(props) => {
     switch (props.variant) {
       case VARIANTS.secondary:
       case VARIANTS.tertiary:
+      case VARIANTS.quaternary:
         return "var(--color-alternate)";
       default:
         return "var(--color)";
@@ -145,6 +161,7 @@ const ButtonWrapper = styled.button`
     switch (props.variant) {
       case VARIANTS.secondary:
       case VARIANTS.tertiary:
+      case VARIANTS.quaternary:
         return "transparent";
       default:
         return "var(--background-color)";
@@ -155,6 +172,7 @@ const ButtonWrapper = styled.button`
       case VARIANTS.secondary:
         return "calc(8px - 2px) calc(16px - 2px)";
       case VARIANTS.tertiary:
+      case VARIANTS.quaternary:
         return "0";
       default:
         return "8px 16px";
@@ -171,6 +189,7 @@ const ButtonWrapper = styled.button`
   border-radius: ${(props) => {
     switch (props.variant) {
       case VARIANTS.tertiary:
+      case VARIANTS.quaternary:
         return "0";
       default:
         return "var(--border-radius);";
@@ -184,6 +203,7 @@ const ButtonWrapper = styled.button`
       switch (props.variant) {
         case VARIANTS.secondary:
         case VARIANTS.tertiary:
+        case VARIANTS.quaternary:
           return "var(--accent-color);";
         default:
           return "var(--accent-color-alternate);";
@@ -199,6 +219,7 @@ const ButtonWrapper = styled.button`
     switch (props.variant) {
       case VARIANTS.secondary:
       case VARIANTS.tertiary:
+      case VARIANTS.quaternary:
         return "var(--color);";
       default:
         return "var(--color-alternate);";
@@ -208,6 +229,7 @@ const ButtonWrapper = styled.button`
     switch (props.variant) {
       case VARIANTS.secondary:
       case VARIANTS.tertiary:
+      case VARIANTS.quaternary:
         return "var(--color-alternate);";
       default:
         return "var(--color);";
@@ -219,6 +241,7 @@ const ButtonWrapper = styled.button`
       switch (props.variant) {
         case VARIANTS.secondary:
         case VARIANTS.tertiary:
+        case VARIANTS.quaternary:
           return "var(--color-alternate-hover);";
         default:
           return "var(--color);";
@@ -229,6 +252,7 @@ const ButtonWrapper = styled.button`
         switch (props.variant) {
           case VARIANTS.secondary:
           case VARIANTS.tertiary:
+          case VARIANTS.quaternary:
             return "var(--accent-color-hover)";
           default:
             return "var(--accent-color-alternate)";
@@ -247,6 +271,7 @@ const ButtonWrapper = styled.button`
       switch (props.variant) {
         case VARIANTS.secondary:
         case VARIANTS.tertiary:
+        case VARIANTS.quaternary:
           return "transparent";
         default:
           return "var(--background-color-hover);";
@@ -260,6 +285,7 @@ const ButtonWrapper = styled.button`
         switch (props.variant) {
           case VARIANTS.secondary:
           case VARIANTS.tertiary:
+          case VARIANTS.quaternary:
             return "var(--color-alternate-hover);";
           default:
             return "var(--color);";
@@ -270,6 +296,7 @@ const ButtonWrapper = styled.button`
           switch (props.variant) {
             case VARIANTS.secondary:
             case VARIANTS.tertiary:
+            case VARIANTS.quaternary:
               return "var(--accent-color-hover)";
             default:
               return "var(--accent-color-alternate)";
@@ -288,6 +315,7 @@ const ButtonWrapper = styled.button`
         switch (props.variant) {
           case VARIANTS.secondary:
           case VARIANTS.tertiary:
+          case VARIANTS.quaternary:
             return "transparent";
           default:
             return "var(--background-color-hover);";
@@ -302,6 +330,7 @@ const ButtonWrapper = styled.button`
       switch (props.variant) {
         case VARIANTS.secondary:
         case VARIANTS.tertiary:
+        case VARIANTS.quaternary:
           return "var(--color-alternate-disabled)";
         default:
           return "var(--color-disabled)";
@@ -312,6 +341,7 @@ const ButtonWrapper = styled.button`
         switch (props.variant) {
           case VARIANTS.secondary:
           case VARIANTS.tertiary:
+          case VARIANTS.quaternary:
             return "var(--accent-color-disabled)";
           default:
             return "var(--accent-color-alternate-disabled)";
@@ -330,6 +360,7 @@ const ButtonWrapper = styled.button`
       switch (props.variant) {
         case VARIANTS.secondary:
         case VARIANTS.tertiary:
+        case VARIANTS.quaternary:
           return "transparent";
         default:
           return "var(--background-color-disabled)";

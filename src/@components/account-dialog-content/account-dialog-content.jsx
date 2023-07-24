@@ -15,6 +15,7 @@ import { db, auth } from "firebase-config";
 import { useAuth } from "@context/auth-context";
 import FireLoader from "@components/fire-loader";
 import UnstyledButton from "@components/unstyled-button";
+import Button from "@components/button";
 import * as Toast from "@components/toast";
 import VisuallyHidden from "@components/visually-hidden";
 import { passwordRequirements } from "site-config";
@@ -305,11 +306,12 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
             Create Account
           </SubmitButton>
         </AccountForm>
-        <TextButton
+        <Button
+          variant="quaternary"
           onClick={() => handleContentSwitch(accountContentType.CURRENT_USER)}
         >
           Already have an account?
-        </TextButton>
+        </Button>
       </Content>
     );
   } else if (content === accountContentType.CURRENT_USER) {
@@ -359,24 +361,26 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                 </TogglePasswordButton>
               </InputWrapper>
             </InputGroup>
-            <TextButton
+            <Button
               type="button"
+              variant="quaternary"
               onClick={() =>
                 handleContentSwitch(accountContentType.FORGOT_PASSWORD)
               }
             >
               Forgot password?
-            </TextButton>
+            </Button>
           </FormInputs>
           <SubmitButton type="submit" onClick={onSignInSubmit}>
             Sign in
           </SubmitButton>
         </AccountForm>
-        <TextButton
+        <Button
+          variant="quaternary"
           onClick={() => handleContentSwitch(accountContentType.NEW_USER)}
         >
           Create an account
-        </TextButton>
+        </Button>
       </Content>
     );
   } else {
@@ -405,11 +409,12 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
             Request password reset
           </SubmitButton>
         </AccountForm>
-        <TextButton
+        <Button
+          variant="quaternary"
           onClick={() => handleContentSwitch(accountContentType.CURRENT_USER)}
         >
           Return to sign in
-        </TextButton>
+        </Button>
       </Content>
     );
   }
@@ -545,18 +550,6 @@ const TogglePasswordButton = styled(UnstyledButton)`
 const InputWrapper = styled.div`
   display: flex;
   position: relative;
-`;
-
-const TextButton = styled(UnstyledButton)`
-  align-self: center;
-  color: var(--color-yellow-2);
-  font-weight: bold;
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-yellow-1);
-    }
-  }
 `;
 
 const InputError = styled.div`

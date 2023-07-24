@@ -19,7 +19,6 @@ import TextInput from "@components/text-input";
 import Button from "@components/button";
 import { useAuth } from "@context/auth-context";
 import * as Dialog from "@components/dialog";
-import UnstyledButton from "@components/unstyled-button";
 import * as Toast from "@components/toast";
 import FireLoader from "@components/fire-loader";
 import { passwordRequirements } from "site-config";
@@ -509,8 +508,9 @@ function Account() {
                   />
                 </DialogInputs>
                 <SubmitWrapper>
-                  <TextButton
+                  <Button
                     type="button"
+                    variant="quaternary"
                     onClick={(e) => {
                       e.preventDefault();
                       setReauthenticationDialogOpen(false);
@@ -519,7 +519,7 @@ function Account() {
                     }}
                   >
                     Forgot password?
-                  </TextButton>
+                  </Button>
                   <Button type="submit">{dialogButton}</Button>
                 </SubmitWrapper>
               </DialogForm>
@@ -578,17 +578,6 @@ const SubmitWrapper = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-between;
-`;
-
-const TextButton = styled(UnstyledButton)`
-  font-weight: bold;
-  color: var(--color-yellow-2);
-
-  @media (hover: hover) and (pointer: fine) {
-    &:hover {
-      color: var(--color-yellow-1);
-    }
-  }
 `;
 
 const SubmitLoaderWrapper = styled.div`

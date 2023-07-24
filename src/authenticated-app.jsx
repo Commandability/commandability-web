@@ -18,7 +18,6 @@ import Roster from "@pages/roster";
 import Groups from "@pages/groups";
 
 import Report, { loader as reportLoader } from "@pages/report";
-import Person from "@pages/person";
 
 const router = createBrowserRouter([
   {
@@ -55,10 +54,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Roster />,
-          },
-          {
-            path: ":badge",
-            element: <Person />,
           },
         ],
       },
