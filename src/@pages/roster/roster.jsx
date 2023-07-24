@@ -23,14 +23,14 @@ import * as Dialog from "@components/dialog";
 import * as AlertDialog from "@components/alert-dialog";
 import * as Select from "@components/select";
 import * as SearchInput from "@components/search-input";
+import * as Fallback from "@components/fallback";
 import IconItem, { ItemContents } from "@components/icon-item";
 import TextInput from "@components/text-input";
 import Checkbox from "@components/checkbox";
 import Button from "@components/button";
+import Stack from "@components/stack";
 import VisuallyHidden from "@components/visually-hidden";
-import * as Fallback from "@components/fallback";
 import FireLoader from "@components/fire-loader";
-import InputGroup from "@components/input-group";
 import Item from "@components/roster/item";
 
 const selectValues = {
@@ -324,7 +324,7 @@ function Roster() {
                   style={Dialog.contentChildrenStyles}
                   onSubmit={onAddPersonSubmit}
                 >
-                  <InputGroup>
+                  <Stack>
                     <TextInput
                       id="first-name-input"
                       label="First name"
@@ -351,11 +351,19 @@ function Roster() {
                       onChange={(e) => setBadge(e.target.value)}
                       errorText={badge ? "" : "Please enter a badge"}
                     />
-                  </InputGroup>
-                  <Button type="submit">
-                    <FiSave />
-                    Save person
-                  </Button>
+                  </Stack>
+                  <Stack axis="horizontal">
+                    <Dialog.Close asChild>
+                      <Button variant="secondary">
+                        <FiX />
+                        Cancel
+                      </Button>
+                    </Dialog.Close>
+                    <Button type="submit">
+                      <FiSave />
+                      Save person
+                    </Button>
+                  </Stack>
                 </DialogForm>
               </Dialog.Content>
             </Dialog.Overlay>

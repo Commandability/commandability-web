@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { writeBatch, arrayUnion, arrayRemove } from "firebase/firestore";
-import { FiAlertTriangle, FiCheck, FiSave } from "react-icons/fi";
+import { FiAlertTriangle, FiCheck, FiX, FiSave } from "react-icons/fi";
 
 import { useSnapshots } from "@context/snapshot-context";
 import * as Toast from "@components/toast";
@@ -10,6 +10,7 @@ import TextInput from "@components/text-input";
 import Checkbox from "@components/checkbox";
 import Button from "@components/button";
 import UnstyledButton from "@components/unstyled-button";
+import Stack from "@components/stack";
 
 function Item({
   setCheckedItems,
@@ -177,10 +178,18 @@ function Item({
                         errorText={badge ? "" : "Please enter a badge"}
                       />
                     </DialogInputs>
-                    <Button type="submit">
-                      <FiSave />
-                      Save person
-                    </Button>
+                    <Stack axis="horizontal">
+                      <Dialog.Close asChild>
+                        <Button variant="secondary">
+                          <FiX />
+                          Cancel
+                        </Button>
+                      </Dialog.Close>
+                      <Button type="submit">
+                        <FiSave />
+                        Save person
+                      </Button>
+                    </Stack>
                   </DialogForm>
                 </Dialog.Content>
               </Dialog.Overlay>

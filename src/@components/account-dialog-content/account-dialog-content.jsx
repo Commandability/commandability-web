@@ -13,10 +13,11 @@ import { FiAlertTriangle, FiMail, FiEye, FiEyeOff } from "react-icons/fi";
 
 import { db, auth } from "firebase-config";
 import { useAuth } from "@context/auth-context";
+import * as Toast from "@components/toast";
+import Stack from "@components/stack";
 import FireLoader from "@components/fire-loader";
 import UnstyledButton from "@components/unstyled-button";
 import Button from "@components/button";
-import * as Toast from "@components/toast";
 import VisuallyHidden from "@components/visually-hidden";
 import { passwordRequirements } from "site-config";
 
@@ -233,7 +234,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
       <Content>
         <AccountForm>
           <FormInputs>
-            <InputGroup>
+            <Stack gap={4}>
               <Label htmlFor="display-name">Display name</Label>
               <Input
                 id="display-name"
@@ -251,8 +252,8 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
               <InputError>
                 {displayNameError ? inputErrors.displayName : null}
               </InputError>
-            </InputGroup>
-            <InputGroup>
+            </Stack>
+            <Stack gap={4}>
               <Label htmlFor="new-email">Email</Label>
               <Input
                 id="new-email"
@@ -269,8 +270,8 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                 value={email}
               />
               <InputError>{emailError ? inputErrors.email : null}</InputError>
-            </InputGroup>
-            <InputGroup>
+            </Stack>
+            <Stack gap={4}>
               <Label htmlFor="new-password">Password</Label>
               <InputWrapper>
                 <Input
@@ -300,7 +301,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
               <InputError>
                 {passwordError ? inputErrors.password : null}
               </InputError>
-            </InputGroup>
+            </Stack>
           </FormInputs>
           <SubmitButton type="submit" onClick={onCreateAccountSubmit}>
             Create Account
@@ -319,7 +320,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
       <Content>
         <AccountForm>
           <FormInputs>
-            <InputGroup>
+            <Stack gap={4}>
               <Label htmlFor="current-email">Email</Label>
               <Input
                 id="current-email"
@@ -334,8 +335,8 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                 value={email}
               />
               <InputError>{emailError ? inputErrors.email : null}</InputError>
-            </InputGroup>
-            <InputGroup>
+            </Stack>
+            <Stack gap={4}>
               <Label htmlFor="current-password">Password</Label>
               <InputWrapper>
                 <Input
@@ -360,7 +361,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                   {visiblePassword ? <FiEyeOff /> : <FiEye />}
                 </TogglePasswordButton>
               </InputWrapper>
-            </InputGroup>
+            </Stack>
             <Button
               type="button"
               variant="quaternary"
@@ -388,7 +389,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
       <Content>
         <AccountForm>
           <FormInputs>
-            <InputGroup>
+            <Stack gap={4}>
               <Label htmlFor="current-email">Email</Label>
               <Input
                 id="current-email"
@@ -403,7 +404,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
                 value={email}
               />
               <InputError>{emailError ? inputErrors.email : null}</InputError>
-            </InputGroup>
+            </Stack>
           </FormInputs>
           <SubmitButton type="submit" onClick={onRecoverAccountSubmit}>
             Request password reset
@@ -483,12 +484,6 @@ const FormInputs = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-`;
-
-const InputGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
 `;
 
 const Label = styled.label`

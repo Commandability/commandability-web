@@ -20,6 +20,7 @@ import Button from "@components/button";
 import { useAuth } from "@context/auth-context";
 import * as Dialog from "@components/dialog";
 import * as Toast from "@components/toast";
+import Stack from "@components/stack";
 import FireLoader from "@components/fire-loader";
 import { passwordRequirements } from "site-config";
 
@@ -520,7 +521,15 @@ function Account() {
                   >
                     Forgot password?
                   </Button>
-                  <Button type="submit">{dialogButton}</Button>
+                  <Stack axis="horizontal">
+                    <Dialog.Close asChild>
+                      <Button variant="secondary">
+                        <FiX />
+                        Cancel
+                      </Button>
+                    </Dialog.Close>
+                    <Button type="submit">{dialogButton}</Button>
+                  </Stack>
                 </SubmitWrapper>
               </DialogForm>
             </DialogContent>

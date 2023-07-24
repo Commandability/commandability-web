@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { updateDoc } from "firebase/firestore";
 import { FiX, FiSave, FiTrash } from "react-icons/fi";
 
-import * as Select from "@components/select";
-import TextInput from "@components/text-input";
 import { useSnapshots } from "@context/snapshot-context";
-import Button from "@components/button";
+import * as Select from "@components/select";
 import * as Dialog from "@components/dialog";
-import InputGroup from "@components/input-group";
+import TextInput from "@components/text-input";
+import Button from "@components/button";
+import Stack from "@components/stack";
 import { range } from "@utils";
 
 const disabledSelectValue = "No alerts";
@@ -56,7 +56,7 @@ function EditGroupDialogContent({
       onSubmit={handleSubmitChanges}
       style={Dialog.contentChildrenStyles}
     >
-      <InputGroup>
+      <Stack>
         <TextInput
           id="group-name"
           label="Group name"
@@ -88,13 +88,13 @@ function EditGroupDialogContent({
             );
           })}
         </Select.Root>
-      </InputGroup>
+      </Stack>
       <ButtonWrapper>
         <DeleteButton variant="tertiary" onClick={handleRemoveGroup}>
           <FiTrash />
           Delete Group
         </DeleteButton>
-        <EditSubmitWrapper>
+        <Stack axis="horizontal">
           <Dialog.Close asChild>
             <Button variant="secondary">
               <FiX />
@@ -105,7 +105,7 @@ function EditGroupDialogContent({
             <FiSave />
             Save Changes
           </Button>
-        </EditSubmitWrapper>
+        </Stack>
       </ButtonWrapper>
     </AccountForm>
   );
@@ -123,11 +123,6 @@ const ButtonWrapper = styled.div`
 const DeleteButton = styled(Button)`
   position: relative;
   left: 16px;
-`;
-
-const EditSubmitWrapper = styled.div`
-  display: flex;
-  gap: 24px;
 `;
 
 export default EditGroupDialogContent;
