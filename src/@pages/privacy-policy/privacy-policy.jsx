@@ -532,9 +532,10 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   padding: 72px 16px;
+  line-height: var(--content-line-height);
 
   @media ${QUERIES.phoneAndSmaller} {
-    padding: 0;
+    padding: 36px 16px;
   }
 `;
 
@@ -542,12 +543,15 @@ const Content = styled.div`
   --horizontal-padding: 64px;
   max-width: calc(75ch + var(--horizontal-padding) * 2);
   padding: 32px var(--horizontal-padding);
-  background-color: var(--color-white);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-white),
+    var(--color-gray-10)
+  );
   border-radius: var(--border-radius);
 
   @media ${QUERIES.phoneAndSmaller} {
-    padding: 0px 8px;
-    border-radius: 0;
+    padding: 18px 16px;
   }
 `;
 

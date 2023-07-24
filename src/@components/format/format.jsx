@@ -70,13 +70,21 @@ const Wrapper = styled.div`
   }
 
   a {
-    color: var(--color-yellow-2);
-    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    color: var(--text-primary);
+    text-decoration-color: var(--color-yellow-3);
+    text-underline-offset: 0.3em;
+    text-decoration-thickness: 0.1em;
+    transition: text-decoration-color 200ms;
 
-    @media (hover: hover) and (pointer: fine) {
+    @media (pointer: fine) {
       &:hover {
-        text-decoration: underline;
+        text-decoration-color: var(--color-yellow-1);
       }
+    }
+
+    &:active {
+      text-decoration-color: var(--color-yellow-1);
     }
   }
 
