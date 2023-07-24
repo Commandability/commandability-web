@@ -86,7 +86,7 @@ const Wrapper = styled.li`
   // Also add name pseudo-element containing position
   position: relative;
 
-  --selected-background-color: var(--color-gray-8);
+  --selected-background-color: var(--color-gray-9);
 
   &[data-checked="true"] {
     background-color: var(--selected-background-color);
