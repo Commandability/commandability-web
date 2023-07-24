@@ -77,7 +77,10 @@ function Roster() {
   if (selectSort === selectValues.badge) sortFunction = sortByBadge;
 
   const [removePersonnelOpen, setRemovePersonnelOpen] = React.useState(false);
-  const [checkedAll, setCheckedAll] = React.useState(false);
+  const [checkedAll, setCheckedAll] = React.useState({
+    status: false,
+    origin: "",
+  });
   const [checkedItems, setCheckedItems] = React.useState([]);
 
   const [addPersonOpen, setAddPersonOpen] = React.useState(false);
@@ -185,7 +188,7 @@ function Roster() {
 
   async function onRemovePersonnelAction() {
     setRemovePersonnelOpen(false);
-    setCheckedAll(false);
+    setCheckedAll({ status: false, origin: "header" });
     setAction("pending");
 
     try {
