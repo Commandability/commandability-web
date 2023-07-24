@@ -16,8 +16,6 @@ import AccountDialogContent, {
   accountContentType,
 } from "@components/account-dialog-content";
 
-const NAV_TRANSITION_DURATION = 800;
-const TAB_TRANSITION_DURATION = 400;
 const RENDER_TIMEOUT = 100;
 
 function LandingNav({
@@ -239,7 +237,7 @@ function LandingNav({
     if (status === "idle" && tabTransition !== "inactive") {
       transitionTimeoutID = setTimeout(
         () => setTabTransition("inactive"),
-        TAB_TRANSITION_DURATION
+        NavBase.TAB_TRANSITION_DURATION
       );
     }
     return () => clearTimeout(transitionTimeoutID);
@@ -332,8 +330,8 @@ function LandingNav({
                 }`,
                 "--tab-transition":
                   tabTransition === "active"
-                    ? `left ${TAB_TRANSITION_DURATION}ms, width ${TAB_TRANSITION_DURATION}ms, background-color ${NAV_TRANSITION_DURATION}ms`
-                    : `background-color ${NAV_TRANSITION_DURATION}ms`,
+                    ? `left ${NavBase.TAB_TRANSITION_DURATION}ms, width ${NavBase.TAB_TRANSITION_DURATION}ms, background-color ${NavBase.NAV_TRANSITION_DURATION}ms`
+                    : `background-color ${NavBase.NAV_TRANSITION_DURATION}ms`,
                 "--tab-width": `${rectsById[state.activeTargetId]?.width}px`,
                 "--tab-left": `${rectsById[state.activeTargetId]?.left}px`,
                 "--max-width": "640px",

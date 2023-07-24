@@ -192,7 +192,7 @@ function MainNav() {
               <></>
             ) : (
               <Tooltip.Provider>
-                <Tooltip.Root delayDuration={200}>
+                <Tooltip.Root delayDuration={NavBase.NAV_TRANSITION_DURATION}>
                   <Link to="/dashboard/account">
                     <TooltipTrigger>
                       <FiAlertCircle></FiAlertCircle>
@@ -330,6 +330,62 @@ function MainNav() {
   );
 }
 
+const TooltipTrigger = styled(Tooltip.Trigger)`
+  border: none;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-white);
+  cursor: pointer;
+
+  & > svg {
+    position: relative;
+    top: 0.1rem;
+    stroke-width: 0.175rem;
+    font-size: ${18 / 16}rem;
+    stroke: var(--color-red-3);
+
+    @media (prefers-reduced-motion: no-preference) {
+      will-change: stroke;
+      transition: stroke ${NavBase.NAV_TRANSITION_DURATION}ms;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      &:hover {
+        stroke: var(--color-yellow-3);
+      }
+    }
+  }
+`;
+
+const TooltipContent = styled(Tooltip.Content)`
+  width: fit-content;
+  padding: 12px;
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  color: var(--color-gray-1);
+  text-align: center;
+  background-color: var(--color-gray-9);
+  cursor: pointer;
+`;
+
+const TooltipContentWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  & > svg {
+    position: relative;
+    top: 0.1rem;
+    stroke-width: 0.175rem;
+    font-size: ${18 / 16}rem;
+    stroke: var(--color-red-3);
+  }
+`;
+
+const TooltipArrow = styled(Tooltip.Arrow)`
+  fill: var(--color-gray-9);
+`;
+
 const DropdownMenuContent = styled(DropdownMenu.Content)`
   width: 160px;
   background-color: var(--color-gray-9);
@@ -395,70 +451,28 @@ const DropdownMenuButton = styled(UnstyledButton)`
   color: var(--text-primary);
   font-size: ${16 / 16}rem;
 
+  @media (prefers-reduced-motion: no-preference) {
+    & > svg {
+      will-change: stroke;
+      transition: stroke ${NavBase.NAV_TRANSITION_DURATION}ms;
+    }
+  }
+
   & > svg {
     position: relative;
     top: 0.05rem;
     stroke: var(--color-red-4);
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
+  }
 
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      & > svg {
         stroke: var(--color-yellow-3);
       }
     }
   }
-`;
-
-const TooltipTrigger = styled(Tooltip.Trigger)`
-  border: none;
-  display: flex;
-  align-items: center;
-  background-color: var(--color-white);
-  cursor: pointer;
-
-  & > svg {
-    position: relative;
-    top: 0.1rem;
-    stroke-width: 0.175rem;
-    font-size: ${18 / 16}rem;
-    stroke: var(--color-red-3);
-
-    @media (hover: hover) and (pointer: fine) {
-      &:hover {
-        stroke: var(--color-yellow-3);
-      }
-    }
-  }
-`;
-
-const TooltipContent = styled(Tooltip.Content)`
-  width: fit-content;
-  padding: 12px;
-  box-shadow: var(--box-shadow);
-  border-radius: var(--border-radius);
-  color: var(--color-gray-1);
-  text-align: center;
-  background-color: var(--color-gray-9);
-  cursor: pointer;
-`;
-
-const TooltipContentWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-
-  & > svg {
-    position: relative;
-    top: 0.1rem;
-    stroke-width: 0.175rem;
-    font-size: ${18 / 16}rem;
-    stroke: var(--color-red-3);
-  }
-`;
-
-const TooltipArrow = styled(Tooltip.Arrow)`
-  fill: var(--color-gray-9);
 `;
 
 export default MainNav;

@@ -4,8 +4,8 @@ import UnstyledButton from "@components/unstyled-button";
 import { QUERIES } from "@constants";
 import { ReactComponent as UnstyledFireIcon } from "@assets/icons/fire-icon.svg";
 
-export const TAB_TRANSITION_DURATION = 400;
-export const NAV_TRANSITION_DURATION = 800;
+export const TAB_TRANSITION_DURATION = 500;
+export const NAV_TRANSITION_DURATION = 300;
 
 export const Root = styled.nav`
   position: fixed;
