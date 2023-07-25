@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Layout from "@components/layout";
 import Home from "@pages/home";
-import NotFound from "@pages/not-found";
+import RouteError from "@pages/route-error";
 import PrivacyPolicy from "@pages/privacy-policy";
 import Message from "@pages/message";
 
@@ -11,11 +11,11 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
-    errorElement: <NotFound />,
+    errorElement: <RouteError />,
   },
   {
     element: <Layout type="outlet" />,
-    errorElement: <NotFound />,
+    errorElement: <RouteError />,
     children: [
       {
         path: "privacy-policy",

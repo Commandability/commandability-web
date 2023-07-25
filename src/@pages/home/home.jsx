@@ -620,7 +620,7 @@ const Contact = styled.div`
 
 const MessageText = styled.p`
   color: var(--color-gray-10);
-  font-size: clamp(1rem, 2vw + 1rem, 4rem);
+  font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 `;

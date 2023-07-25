@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "@pages/home";
 import Account from "@pages/account";
-import NotFound from "@pages/not-found";
+import RouteError from "@pages/route-error";
 import PrivacyPolicy from "@pages/privacy-policy";
 import Message from "@pages/message";
 
@@ -23,12 +23,12 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
-    errorElement: <NotFound />,
+    errorElement: <RouteError />,
   },
   {
     path: "dashboard",
     element: <Layout type="outlet" />,
-    errorElement: <NotFound />,
+    errorElement: <RouteError />,
     children: [
       {
         path: "reports",
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
   },
   {
     element: <Layout type="outlet" />,
-    errorElement: <NotFound />,
+    errorElement: <RouteError />,
     children: [
       {
         path: "privacy-policy",

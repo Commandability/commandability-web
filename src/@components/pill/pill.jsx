@@ -77,6 +77,7 @@ Pill.displayName = "Pill";
 
 const PillWrapper = styled.button`
   display: flex;
+  justify-content: center;
   align-items: center;
   padding: 8px 16px;
   border-radius: 999999px;
