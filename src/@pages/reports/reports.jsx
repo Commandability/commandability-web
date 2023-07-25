@@ -189,6 +189,8 @@ export async function action({ request }) {
   } else {
     await deleteAllReports(currentUser.uid);
   }
+
+  return null;
 }
 
 const SEARCH_DEBOUNCE = 400;
