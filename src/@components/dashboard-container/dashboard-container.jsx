@@ -15,10 +15,12 @@ function DashboardContainer() {
 }
 
 const Wrapper = styled.div`
-  display: flex;
-  justify-content: center;
   height: 100%;
   padding: 32px 16px;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
+  align-items: center;
 
   @media ${QUERIES.phoneAndSmaller} {
     padding: 0;
@@ -26,9 +28,9 @@ const Wrapper = styled.div`
 `;
 
 const Content = styled.div`
-  width: 100%;
-  height: 100%;
-  max-width: 1200px;
+  width: 1200px;
+  height: 800px;
+  grid-row: 2;
   background-color: var(--color-gray-10);
   border-radius: var(--border-radius);
 

@@ -552,14 +552,15 @@ function Account() {
 const Wrapper = styled.div`
   height: 100%;
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  justify-items: center;
   align-items: center;
 `;
 
 const Options = styled.div`
-  padding-top: 72px;
-  padding-bottom: 72px;
+  padding: 32px 16px;
+  grid-row: 2;
   display: flex;
   flex-direction: column;
   gap: 32px;
