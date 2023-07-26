@@ -495,7 +495,7 @@ const FeatureHeader = styled.h2`
 
 const FeatureText = styled.p`
   font-size: ${18 / 16}rem;
-  max-width: 64ch;
+  max-width: 72ch;
 `;
 
 const ManageIcon = styled(UnstyledManageIcon)`

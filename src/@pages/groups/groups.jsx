@@ -64,27 +64,25 @@ function Groups() {
       );
     });
     // eslint-disable-next-line react/jsx-key
-    return <TabsContent>{subGroupPageMap}</TabsContent>;
+    return <GroupPage>{subGroupPageMap}</GroupPage>;
   });
 
   return (
     <Wrapper defaultValue="PAGE_1" orientation="horizontal">
       <Content>
-        <GroupTab value="PAGE_1">{groupPageMap[0]}</GroupTab>
-        <GroupTab value="PAGE_2">{groupPageMap[1]}</GroupTab>
-        <GroupTab value="PAGE_3">{groupPageMap[2]}</GroupTab>
-        <GroupTab value="PAGE_4">{groupPageMap[3]}</GroupTab>
-        <GroupTab value="PAGE_5">{groupPageMap[4]}</GroupTab>
-        <GroupTab value="PAGE_6">{groupPageMap[5]}</GroupTab>
+        <TabContent value="PAGE_1">{groupPageMap[0]}</TabContent>
+        <TabContent value="PAGE_2">{groupPageMap[1]}</TabContent>
+        <TabContent value="PAGE_3">{groupPageMap[2]}</TabContent>
+        <TabContent value="PAGE_4">{groupPageMap[3]}</TabContent>
+        <TabContent value="PAGE_5">{groupPageMap[4]}</TabContent>
+        <TabContent value="PAGE_6">{groupPageMap[5]}</TabContent>
         <GroupsPageNumbers>
-          <TabSpacer />
           <PageNumber value="PAGE_1">Page 1</PageNumber>
           <PageNumber value="PAGE_2">Page 2</PageNumber>
           <PageNumber value="PAGE_3">Page 3</PageNumber>
           <PageNumber value="PAGE_4">Page 4</PageNumber>
           <PageNumber value="PAGE_5">Page 5</PageNumber>
           <PageNumber value="PAGE_6">Page 6</PageNumber>
-          <TabSpacer />
         </GroupsPageNumbers>
       </Content>
     </Wrapper>
@@ -93,17 +91,17 @@ function Groups() {
 
 const Wrapper = styled(Tabs.Root)`
   height: 100%;
+  padding: 0 120px;
 `;
 
-const TabsContent = styled.ol`
+const GroupPage = styled.ol`
   height: 100%;
   width: 100%;
   list-style: none;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: auto;
-  grid-column-gap: 48px;
-  grid-row-gap: 48px;
+  gap: 48px;
   place-items: center;
   padding-left: 0;
 `;
@@ -117,9 +115,9 @@ const Content = styled.div`
   padding-bottom: 32px;
 `;
 
-const GroupTab = styled(Tabs.Content)`
+const TabContent = styled(Tabs.Content)`
   height: 100%;
-  width: fit-content;
+  width: 100%;
   margin: auto;
 `;
 
@@ -130,7 +128,7 @@ const GroupsPageNumbers = styled(Tabs.List)`
 `;
 
 const PageNumber = styled(Tabs.Trigger)`
-  flex: 2;
+  width: 100%;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   cursor: pointer;
@@ -146,10 +144,6 @@ const PageNumber = styled(Tabs.Trigger)`
     color: var(--text-secondary);
     border-bottom: solid 1px var(--tab-border-color);
   }
-`;
-
-const TabSpacer = styled.div`
-  flex: 1;
 `;
 
 export default Groups;

@@ -20,7 +20,7 @@ function Card({ subheader, header, children, ...props }) {
 const Wrapper = styled.article`
   display: flex;
   min-height: 496px;
-  max-width: 384px;
+  max-width: 448px;
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
   background-image: linear-gradient(
@@ -36,7 +36,7 @@ const Wrapper = styled.article`
 
   @media ${QUERIES.phoneAndSmaller} {
     min-height: 512px;
-    max-width: 384px;
+    max-width: 448px;
   }
 `;
 

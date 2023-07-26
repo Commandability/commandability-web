@@ -96,8 +96,8 @@ function Group({
 
 const Wrapper = styled.li`
   position: relative;
-  height: clamp(124px, 45vh - 124px, 1200px);
-  width: clamp(192px, 45vw - 192px, 292px);
+  width: 100%;
+  height: 100%;
   display: flex;
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
