@@ -26,7 +26,6 @@ import AccountDialogContent, {
   accountContentType,
 } from "@components/account-dialog-content";
 import { QUERIES } from "@constants";
-import Spacer from "@components/spacer/spacer";
 
 function MainNav() {
   const { pathname } = useLocation();
@@ -214,7 +213,6 @@ function MainNav() {
                 </Tooltip.Root>
               </Tooltip.Provider>
             )}
-            <Spacer size={8} axis="horizontal" />
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <DropdownMenuButton>
