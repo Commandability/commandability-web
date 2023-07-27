@@ -307,6 +307,7 @@ function LandingNav({
               "--fill-active": `${
                 scrolled ? "var(--color-yellow-3)" : "var(--color-white)"
               }`,
+              "--fill-static": "var(--color-red-3)",
             }}
           >
             <NavBase.FireIcon />

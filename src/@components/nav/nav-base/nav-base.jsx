@@ -59,6 +59,10 @@ export const SiteID = styled.a`
   & > svg {
     fill: var(--fill);
 
+    @media ${QUERIES.tabletAndSmaller} {
+      fill: var(--fill-static, var(--fill));
+    }
+
     @media (prefers-reduced-motion: no-preference) {
       will-change: fill;
       transition: fill ${NAV_TRANSITION_DURATION}ms;
