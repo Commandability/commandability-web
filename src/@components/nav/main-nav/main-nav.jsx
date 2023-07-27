@@ -109,14 +109,11 @@ function MainNav() {
             href="/"
             style={{
               "--color": "var(--text-primary)",
+              "--fill": "var(--color-red-3)",
+              "--fill-active": "var(--color-yellow-3)",
             }}
           >
-            <NavBase.FireIcon
-              style={{
-                "--fill": "var(--color-red-3)",
-                "--fill-active": "var(--color-yellow-3)",
-              }}
-            />
+            <NavBase.FireIcon />
             Commandability
           </NavBase.SiteID>
         </h1>
@@ -238,7 +235,7 @@ function MainNav() {
                         href="mailto:support@commandability.app?"
                       >
                         <FiHelpCircle />
-                        Contact us
+                        Support
                       </DropdownMenuAction>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

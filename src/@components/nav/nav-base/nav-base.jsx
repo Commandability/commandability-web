@@ -55,27 +55,28 @@ export const SiteID = styled.a`
   @media ${QUERIES.tabletAndSmaller} {
     color: var(--text-primary);
   }
-`;
 
-export const FireIcon = styled(UnstyledFireIcon)`
-  fill: var(--fill);
-  min-width: 32px;
-  min-height: 32px;
+  & > svg {
+    fill: var(--fill);
 
-  @media (prefers-reduced-motion: no-preference) {
-    will-change: fill;
-    transition: fill ${NAV_TRANSITION_DURATION}ms;
+    @media (prefers-reduced-motion: no-preference) {
+      will-change: fill;
+      transition: fill ${NAV_TRANSITION_DURATION}ms;
+    }
   }
 
   @media (hover: hover) and (pointer: fine) {
     &:hover {
-      fill: var(--fill-active);
+      & > svg {
+        fill: var(--fill-active);
+      }
     }
   }
+`;
 
-  @media ${QUERIES.tabletAndSmaller} {
-    fill: var(--color-red-3);
-  }
+export const FireIcon = styled(UnstyledFireIcon)`
+  min-width: 32px;
+  min-height: 32px;
 `;
 
 export const Middle = styled.div`

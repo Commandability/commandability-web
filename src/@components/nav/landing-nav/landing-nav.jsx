@@ -301,18 +301,15 @@ function LandingNav({
               "--color": `${
                 scrolled ? "var(--text-primary)" : "var(--color-white)"
               }`,
+              "--fill": `${
+                scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
+              }`,
+              "--fill-active": `${
+                scrolled ? "var(--color-yellow-3)" : "var(--color-white)"
+              }`,
             }}
           >
-            <NavBase.FireIcon
-              style={{
-                "--fill": `${
-                  scrolled ? "var(--color-red-3)" : "var(--color-yellow-9)"
-                }`,
-                "--fill-active": `${
-                  scrolled ? "var(--color-yellow-3)" : "var(--color-white)"
-                }`,
-              }}
-            />
+            <NavBase.FireIcon />
             Commandability
           </NavBase.SiteID>
         </h1>
