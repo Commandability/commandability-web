@@ -42,6 +42,71 @@ const dialogActions = {
   deleteAccount: "deleteAccount",
 };
 
+function SecurityDialog({
+  actionHandler,
+  actionLabel,
+  handleReauthentication,
+  children,
+}) {
+  const [securityDialogOpen, setSecurityDialogOpen] = React.useState(false);
+  const [loginPassword, setLoginPassword] = React.useState("");
+  return (
+    <Dialog.Root open={securityDialogOpen} onOpenChange={setSecurityDialogOpen}>
+      {children}
+      <Dialog.Portal>
+        <Dialog.Overlay>
+          <DialogContent
+            header
+            title="Re-authentication required"
+            description="For security purposes, please re-enter your login credentials to make the requested account changes"
+          >
+            <DialogForm
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSecurityDialogOpen(false);
+                handleReauthentication(actionHandler, loginPassword);
+              }}
+            >
+              <DialogInputs>
+                <TextInput
+                  id="password-input"
+                  label="Current Password"
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                />
+              </DialogInputs>
+              <SubmitWrapper>
+                <Button
+                  type="button"
+                  variant="quaternary"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSecurityDialogOpen(false);
+                    setDialogAction(dialogActions.recoverPassword);
+                    handleRecoverPassword();
+                  }}
+                >
+                  Forgot password?
+                </Button>
+                <Stack axis="horizontal">
+                  <Dialog.Close asChild>
+                    <Button variant="secondary">
+                      <FiX />
+                      Cancel
+                    </Button>
+                  </Dialog.Close>
+                  <Button type="submit">{actionLabel}</Button>
+                </Stack>
+              </SubmitWrapper>
+            </DialogForm>
+          </DialogContent>
+        </Dialog.Overlay>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
 function Account() {
   const { user, setUser, auth } = useAuth();
 
@@ -62,11 +127,7 @@ function Account() {
     React.useState(false);
   const [passwordOptionEnable, setPasswordOptionEnable] = React.useState(false);
 
-  const [reauthenticationDialogOpen, setReauthenticationDialogOpen] =
-    React.useState(false);
   const [dialogAction, setDialogAction] = React.useState("");
-  const [dialogButton, setDialogButton] = React.useState("");
-  const [loginPassword, setLoginPassword] = React.useState("");
 
   const [toastState, setToastState] = React.useState({
     title: "",
@@ -99,17 +160,8 @@ function Account() {
     }
   }, [currentPassword, confirmNewPassword, confirmNewPasswordError]);
 
-  React.useEffect(() => {
-    if (dialogAction === "updateAccount") {
-      setDialogButton("update account");
-    }
-    if (dialogAction === "deleteAccount") {
-      setDialogButton("delete account");
-    } else return;
-  }, [dialogAction, dialogButton]);
-
-  async function handleReauthentication() {
-    setReauthenticationDialogOpen(false);
+  async function handleReauthentication(actionHandler, loginPassword) {
+    console.log(loginPassword);
     let reauthenticationToastState = {
       title: "Invalid password",
       description: "The password given for reauthentication was invalid",
@@ -129,12 +181,7 @@ function Account() {
     try {
       await reauthenticateWithCredential(user.current, credentials);
       setLoading(false);
-      if (dialogAction === "updateAccount") {
-        handleAccountUpdate();
-      }
-      if (dialogAction === "deleteAccount") {
-        handleAccountDelete();
-      }
+      actionHandler();
     } catch (error) {
       setLoading(false);
       if (error.code === "auth/wrong-password") {
@@ -281,7 +328,6 @@ function Account() {
 
   function resetState() {
     setDialogAction("");
-    setDialogButton("");
   }
 
   function clearPasswordInputs() {
@@ -328,7 +374,6 @@ function Account() {
           onSubmit={(e) => {
             e.preventDefault();
             setDialogAction(dialogActions.updateAccount);
-            setReauthenticationDialogOpen(true);
           }}
           method="post"
         >
@@ -367,10 +412,18 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button type="submit" disabled={generalOptionEnable}>
-              <FiSave />
-              Save
-            </Button>
+            <SecurityDialog
+              actionHandler={handleAccountUpdate}
+              actionLabel={"update account"}
+              handleReauthentication={handleReauthentication}
+            >
+              <Dialog.Trigger asChild>
+                <Button type="submit" disabled={generalOptionEnable}>
+                  <FiSave />
+                  Save
+                </Button>
+              </Dialog.Trigger>
+            </SecurityDialog>
           </SubmitLoaderWrapper>
         </AccountOption>
         <AccountOption
@@ -463,7 +516,6 @@ function Account() {
           onSubmit={(e) => {
             e.preventDefault();
             setDialogAction(dialogActions.deleteAccount);
-            setReauthenticationDialogOpen(true);
           }}
         >
           <SubmitLoaderWrapper>
@@ -475,67 +527,22 @@ function Account() {
                 }}
               />
             ) : null}
-            <Button type="submit">
-              <FiUserX />
-              Delete
-            </Button>
+            <SecurityDialog
+              actionHandler={handleAccountDelete}
+              actionLabel={"update account"}
+              handleReauthentication={handleReauthentication}
+            >
+              <Dialog.Trigger asChild>
+                <Button type="submit">
+                  <FiUserX />
+                  Delete
+                </Button>
+              </Dialog.Trigger>
+            </SecurityDialog>
           </SubmitLoaderWrapper>
         </AccountOption>
       </Options>
-      <Dialog.Root
-        open={reauthenticationDialogOpen}
-        onOpenChange={setReauthenticationDialogOpen}
-      >
-        <Dialog.Portal>
-          <Dialog.Overlay>
-            <DialogContent
-              header
-              title="Re-authentication required"
-              description="For security purposes, please re-enter your login credentials to make the requested account changes"
-            >
-              <DialogForm
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleReauthentication(e);
-                }}
-              >
-                <DialogInputs>
-                  <TextInput
-                    id="password-input"
-                    label="Current Password"
-                    type="password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                  />
-                </DialogInputs>
-                <SubmitWrapper>
-                  <Button
-                    type="button"
-                    variant="quaternary"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setReauthenticationDialogOpen(false);
-                      setDialogAction(dialogActions.recoverPassword);
-                      handleRecoverPassword(e);
-                    }}
-                  >
-                    Forgot password?
-                  </Button>
-                  <Stack axis="horizontal">
-                    <Dialog.Close asChild>
-                      <Button variant="secondary">
-                        <FiX />
-                        Cancel
-                      </Button>
-                    </Dialog.Close>
-                    <Button type="submit">{dialogButton}</Button>
-                  </Stack>
-                </SubmitWrapper>
-              </DialogForm>
-            </DialogContent>
-          </Dialog.Overlay>
-        </Dialog.Portal>
-      </Dialog.Root>
+
       <Toast.Root
         open={toastOpen}
         onOpenChange={setToastOpen}
