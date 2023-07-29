@@ -45,7 +45,7 @@ const dialogActions = {
 function SecurityDialog({
   actionHandler,
   actionLabel,
-  handleReauthentication,
+  handleAccountRequest,
   children,
 }) {
   const [securityDialogOpen, setSecurityDialogOpen] = React.useState(false);
@@ -64,7 +64,7 @@ function SecurityDialog({
               onSubmit={(e) => {
                 e.preventDefault();
                 setSecurityDialogOpen(false);
-                handleReauthentication(actionHandler, loginPassword);
+                handleAccountRequest(actionHandler, loginPassword);
               }}
             >
               <DialogInputs>
@@ -160,8 +160,16 @@ function Account() {
     }
   }, [currentPassword, confirmNewPassword, confirmNewPasswordError]);
 
-  async function handleReauthentication(actionHandler, loginPassword) {
-    console.log(loginPassword);
+  async function handleAccountRequest(actionHandler, loginPassword) {
+    let reauthenticationStatus = await handleReauthentication(loginPassword);
+    if (reauthenticationStatus) {
+      actionHandler();
+    } else {
+      return;
+    }
+  }
+
+  async function handleReauthentication(loginPassword) {
     let reauthenticationToastState = {
       title: "Invalid password",
       description: "The password given for reauthentication was invalid",
@@ -171,7 +179,7 @@ function Account() {
       setToastState(reauthenticationToastState);
       setToastOpen(true);
       resetState();
-      return;
+      return false;
     }
     setLoading(true);
     const credentials = await EmailAuthProvider.credential(
@@ -181,19 +189,19 @@ function Account() {
     try {
       await reauthenticateWithCredential(user.current, credentials);
       setLoading(false);
-      actionHandler();
+      return true;
     } catch (error) {
       setLoading(false);
       if (error.code === "auth/wrong-password") {
         setToastState(reauthenticationToastState);
         setToastOpen(true);
         resetState(true);
-        return;
+        return false;
       } else {
         setToastState(Toast.unknownState);
         setToastOpen(true);
         resetState(true);
-        return error;
+        return false;
       }
     }
   }
@@ -415,7 +423,7 @@ function Account() {
             <SecurityDialog
               actionHandler={handleAccountUpdate}
               actionLabel={"update account"}
-              handleReauthentication={handleReauthentication}
+              handleAccountRequest={handleAccountRequest}
             >
               <Dialog.Trigger asChild>
                 <Button type="submit" disabled={generalOptionEnable}>
@@ -530,7 +538,7 @@ function Account() {
             <SecurityDialog
               actionHandler={handleAccountDelete}
               actionLabel={"update account"}
-              handleReauthentication={handleReauthentication}
+              handleAccountRequest={handleAccountRequest}
             >
               <Dialog.Trigger asChild>
                 <Button type="submit">
