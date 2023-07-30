@@ -50,6 +50,12 @@ function SecurityDialog({
 }) {
   const [securityDialogOpen, setSecurityDialogOpen] = React.useState(false);
   const [loginPassword, setLoginPassword] = React.useState("");
+
+  React.useEffect(() => {
+    if (!securityDialogOpen) {
+      setLoginPassword("");
+    }
+  }, [securityDialogOpen, setLoginPassword]);
   return (
     <Dialog.Root open={securityDialogOpen} onOpenChange={setSecurityDialogOpen}>
       {children}
