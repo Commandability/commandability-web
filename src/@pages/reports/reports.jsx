@@ -1,28 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
+import { ref, getDownloadURL } from "firebase/storage";
 import {
-  getAuth,
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-} from "firebase/auth";
-import {
-  doc,
-  writeBatch,
-  collection,
-  query,
-  orderBy,
-  limit,
-  startAfter,
-  endBefore,
-  getDocs,
-  where,
-  Timestamp,
-  limitToLast,
-  getCountFromServer,
-} from "firebase/firestore";
-import { ref, deleteObject, getDownloadURL } from "firebase/storage";
-import {
-  defer,
   useLoaderData,
   Await,
   useNavigation,
@@ -42,11 +21,10 @@ import {
 } from "react-icons/fi";
 import JSZip from "jszip";
 
-import { db, storage } from "firebase-config";
+import { storage } from "firebase-config";
 import { debounce, sum } from "@utils";
 import { useAuth } from "@context/auth-context";
 import { useSnapshots } from "@context/snapshot-context";
-import { deleteAllReports } from "@helpers/reports.helpers";
 import * as Toast from "@components/toast";
 import * as Select from "@components/select";
 import * as AlertDialog from "@components/alert-dialog";
@@ -60,140 +38,11 @@ import Button from "@components/button";
 import VisuallyHidden from "@components/visually-hidden";
 import Item from "@components/reports/item";
 
-export const REPORTS_CONFIGURATION = {
-  reportsPerPage: 20,
-  fields: {
-    startTimestamp: "startTimestamp",
-    location: "location",
-  },
-};
-const SELECT_VALUES = {
-  newest: "newest",
-  oldest: "oldest",
-};
-
-export async function loader({ request }) {
-  const { currentUser } = getAuth();
-
-  const { reportsPerPage, fields } = REPORTS_CONFIGURATION;
-
-  const url = new URL(request.url);
-  const q = url.searchParams.get("q");
-  const s = url.searchParams.get("s");
-  const p = url.searchParams.get("p");
-  const f = url.searchParams.get("f");
-  const l = url.searchParams.get("l");
-  const urlSearchParams = { q, s, p, f, l };
-
-  const dateTimeStart = Date.parse(q) / 1000;
-  let dateTimeEnd = 0;
-  if (dateTimeStart) {
-    dateTimeEnd = dateTimeStart + 24 * 60 * 60;
-  }
-
-  // Create a new Timestamp from the serialized one because
-  // JSON.stringify does not serialize prototypes, which are necessary for firebase query cursors
-  let rangeQueryParams = [limit(reportsPerPage)];
-  if (p === "next" && f && l) {
-    rangeQueryParams = [
-      limit(reportsPerPage),
-      startAfter(new Timestamp(parseInt(l), 0)),
-    ];
-  } else if (p === "prev" && f && l) {
-    rangeQueryParams = [
-      limitToLast(reportsPerPage),
-      endBefore(new Timestamp(parseInt(f), 0)),
-    ];
-  }
-
-  let prevDocsQueryParams = [];
-  if (f) prevDocsQueryParams = [endBefore(new Timestamp(parseInt(f), 0))];
-
-  let reportsQueryParams;
-  if (q && dateTimeStart) {
-    reportsQueryParams = [
-      collection(db, "users", currentUser.uid, "reports-metadata"),
-      where(
-        fields.startTimestamp,
-        ">=",
-        new Timestamp(parseInt(dateTimeStart), 0)
-      ),
-      where(
-        fields.startTimestamp,
-        "<",
-        new Timestamp(parseInt(dateTimeEnd), 0)
-      ),
-      orderBy(
-        fields.startTimestamp,
-        s === SELECT_VALUES.oldest ? undefined : "desc"
-      ),
-    ];
-  } else {
-    reportsQueryParams = [
-      collection(db, "users", currentUser.uid, "reports-metadata"),
-      orderBy(
-        fields.startTimestamp,
-        s === SELECT_VALUES.oldest ? undefined : "desc"
-      ),
-    ];
-  }
-
-  return defer({
-    ...urlSearchParams,
-    reportsData: Promise.all([
-      getDocs(query(...reportsQueryParams, ...rangeQueryParams)),
-      getCountFromServer(query(...reportsQueryParams, ...prevDocsQueryParams)),
-      getCountFromServer(query(...reportsQueryParams)),
-    ]),
-  });
-}
-
-export async function action({ request }) {
-  const errors = {};
-  const formData = await request.formData();
-  const password = formData.get("password");
-
-  const { currentUser } = getAuth();
-
-  const userCredentials = await EmailAuthProvider.credential(
-    currentUser.email,
-    password
-  );
-  try {
-    await reauthenticateWithCredential(currentUser, userCredentials);
-  } catch (error) {
-    errors.password = error.code;
-    return errors;
-  }
-
-  const reportsRef = collection(
-    db,
-    "users",
-    currentUser.uid,
-    "reports-metadata"
-  );
-
-  if (formData.has("checked-items")) {
-    const checkedItems = JSON.parse(formData.get("checked-items"));
-    // Remove firestore metadata
-    const batch = writeBatch(db);
-    checkedItems.forEach((item) => {
-      batch.delete(doc(reportsRef, item));
-    });
-    await batch.commit();
-    // Remove files from storage
-    for (const item of checkedItems) {
-      const itemRef = ref(storage, `users/${currentUser.uid}/reports/${item}`);
-      await deleteObject(itemRef);
-    }
-  } else {
-    await deleteAllReports(currentUser.uid);
-  }
-
-  return null;
-}
-
-const SEARCH_DEBOUNCE = 400;
+import {
+  REPORTS_CONFIGURATION,
+  SELECT_VALUES,
+  SEARCH_DEBOUNCE,
+} from "./config";
 
 const initialBlobsState = {
   status: "idle",
