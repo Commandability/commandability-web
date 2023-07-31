@@ -14,7 +14,7 @@ import * as NavMenu from "@components/nav/nav-menu";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
-} from "@components/account-dialog-content";
+} from "@components/account/account-dialog-content";
 
 const RENDER_TIMEOUT = 100;
 
