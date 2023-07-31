@@ -110,7 +110,7 @@ function MainNav() {
             style={{
               "--color": "var(--text-primary)",
               "--fill": "var(--color-red-3)",
-              "--fill-active": "var(--color-yellow-3)",
+              "--fill-active": "var(--color-red-1)",
             }}
           >
             <NavBase.FireIcon />
@@ -348,7 +348,7 @@ const TooltipTrigger = styled(Tooltip.Trigger)`
 
     @media (hover: hover) and (pointer: fine) {
       &:hover {
-        stroke: var(--color-yellow-3);
+        stroke: var(--color-red-1);
       }
     }
   }
@@ -376,6 +376,14 @@ const TooltipContentWrapper = styled.div`
     stroke-width: 0.175rem;
     font-size: ${18 / 16}rem;
     stroke: var(--color-red-3);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      & > svg {
+        stroke: var(--color-red-1);
+      }
+    }
   }
 `;
 
@@ -466,7 +474,7 @@ const DropdownMenuButton = styled(UnstyledButton)`
   @media (hover: hover) and (pointer: fine) {
     &:hover {
       & > svg {
-        stroke: var(--color-yellow-3);
+        stroke: var(--color-red-1);
       }
     }
   }
