@@ -155,8 +155,14 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
           error.code === "auth/wrong-password"
         ) {
           setToastState({
-            title: "Login failed",
+            title: "Sign in failed",
             description: "Incorrect email or password",
+            icon: <FiAlertTriangle />,
+          });
+        } else if (error.code === "auth/too-many-requests") {
+          setToastState({
+            title: "Sign in failed",
+            description: "Too many sign in attempts",
             icon: <FiAlertTriangle />,
           });
         } else {
@@ -304,7 +310,7 @@ function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
             </Stack>
           </FormInputs>
           <SubmitButton type="submit" onClick={onCreateAccountSubmit}>
-            Create Account
+            Create account
           </SubmitButton>
         </AccountForm>
         <Button
@@ -489,6 +495,7 @@ const FormInputs = styled.div`
 const Label = styled.label`
   text-transform: uppercase;
   color: var(--color-yellow-2);
+  letter-spacing: 0.05em;
 `;
 
 const Input = styled.input`
