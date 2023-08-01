@@ -1,6 +1,13 @@
 import * as React from "react";
 import styled from "styled-components";
-import { FiSave, FiUserX, FiMail, FiX, FiCheck } from "react-icons/fi";
+import {
+  FiSave,
+  FiUserX,
+  FiMail,
+  FiX,
+  FiCheck,
+  FiRotateCw,
+} from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
 import {
@@ -43,7 +50,10 @@ const dialogActions = {
 };
 
 function SecurityDialog({
+  actionTitle,
+  actionDescription,
   actionHandler,
+  actionIcon,
   actionLabel,
   handleAccountRequest,
   children,
@@ -63,8 +73,8 @@ function SecurityDialog({
         <Dialog.Overlay>
           <DialogContent
             header
-            title="Re-authentication required"
-            description="For security purposes, please re-enter your login credentials to make the requested account changes"
+            title={actionTitle}
+            description={actionDescription}
           >
             <DialogForm
               onSubmit={(e) => {
@@ -83,18 +93,6 @@ function SecurityDialog({
                 />
               </DialogInputs>
               <SubmitWrapper>
-                <Button
-                  type="button"
-                  variant="quaternary"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setSecurityDialogOpen(false);
-                    setDialogAction(dialogActions.recoverPassword);
-                    handleRecoverPassword();
-                  }}
-                >
-                  Forgot password?
-                </Button>
                 <Stack axis="horizontal">
                   <Dialog.Close asChild>
                     <Button variant="secondary">
@@ -102,7 +100,10 @@ function SecurityDialog({
                       Cancel
                     </Button>
                   </Dialog.Close>
-                  <Button type="submit">{actionLabel}</Button>
+                  <Button type="submit">
+                    {actionIcon}
+                    {actionLabel}
+                  </Button>
                 </Stack>
               </SubmitWrapper>
             </DialogForm>
@@ -324,7 +325,7 @@ function Account() {
     const verifyEmailToastState = {
       title: "Verification email sent",
       description:
-        "If an account exists, you will receive an account verification email",
+        "If an account exists, you will receive an account verification email.",
       icon: <FiMail />,
     };
     try {
@@ -427,14 +428,19 @@ function Account() {
               />
             ) : null}
             <SecurityDialog
+              actionTitle={"Are you sure?"}
+              actionDescription={
+                "This action will update your account to reflect your changes."
+              }
               actionHandler={handleAccountUpdate}
-              actionLabel={"update account"}
+              actionIcon={<FiCheck />}
+              actionLabel={"yes, update account"}
               handleAccountRequest={handleAccountRequest}
             >
               <Dialog.Trigger asChild>
                 <Button type="submit" disabled={generalOptionEnable}>
-                  <FiSave />
-                  Save
+                  <FiRotateCw />
+                  Update
                 </Button>
               </Dialog.Trigger>
             </SecurityDialog>
@@ -542,8 +548,13 @@ function Account() {
               />
             ) : null}
             <SecurityDialog
+              actionTitle={"Are you absolutely sure?"}
+              actionDescription={
+                "This action is cannot be undone, and will permanently remove you account and all data associated with it."
+              }
               actionHandler={handleAccountDelete}
-              actionLabel={"update account"}
+              actionIcon={<FiCheck />}
+              actionLabel={"yes, delete account"}
               handleAccountRequest={handleAccountRequest}
             >
               <Dialog.Trigger asChild>
@@ -588,7 +599,7 @@ const Options = styled.div`
 `;
 
 const DialogContent = styled(Dialog.Content)`
-  max-width: 664px;
+  max-width: 512px;
 `;
 
 const DialogForm = styled.form`
@@ -608,7 +619,7 @@ const DialogInputs = styled.div`
 const SubmitWrapper = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 `;
 
 const SubmitLoaderWrapper = styled.div`
