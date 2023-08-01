@@ -22,9 +22,9 @@ import * as Toast from "@components/toast";
 import useRect from "@hooks/use-rect";
 import UnstyledButton from "@components/unstyled-button";
 import * as Dialog from "@components/dialog";
-import AccountDialogContent, {
+import CreateAccountDialogContent, {
   accountContentType,
-} from "@components/account-dialog-content";
+} from "@components/create-account-dialog-content";
 import { QUERIES } from "@constants";
 
 function MainNav() {
@@ -276,7 +276,7 @@ function MainNav() {
               {/* Render without portal so toast is not unmounted */}
               <Dialog.Overlay>
                 <Dialog.Content title="Create an account">
-                  <AccountDialogContent
+                  <CreateAccountDialogContent
                     defaultContent={accountContentType.NEW_USER}
                     setToastOpen={setToastOpen}
                     setToastState={setToastState}
@@ -301,7 +301,7 @@ function MainNav() {
               {/* Render without portal so toast is not unmounted */}
               <Dialog.Overlay>
                 <Dialog.Content title="Sign in">
-                  <AccountDialogContent
+                  <CreateAccountDialogContent
                     defaultContent={accountContentType.CURRENT_USER}
                     setToastOpen={setToastOpen}
                     setToastState={setToastState}

@@ -62,7 +62,11 @@ const defaultConfig = {
   personnel: [],
 };
 
-function AccountDialogContent({ defaultContent, setToastState, setToastOpen }) {
+function CreateAccountDialogContent({
+  defaultContent,
+  setToastState,
+  setToastOpen,
+}) {
   const { setUser } = useAuth();
 
   const [displayName, setDisplayName] = React.useState("");
@@ -586,4 +590,4 @@ const SubmitButton = styled(UnstyledButton)`
   }
 `;
 
-export default AccountDialogContent;
+export default CreateAccountDialogContent;

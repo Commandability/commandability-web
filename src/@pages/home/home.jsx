@@ -18,9 +18,9 @@ import Spacer from "@components/spacer";
 import { LandingNav } from "@components/nav";
 import Skip from "@components/skip";
 import * as Dialog from "@components/dialog";
-import AccountDialogContent, {
+import CreateAccountDialogContent, {
   accountContentType,
-} from "@components/account-dialog-content";
+} from "@components/create-account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "@assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "@assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "@assets/icons/customize-icon.svg";
@@ -128,7 +128,7 @@ function Home() {
                   {/* Render without portal so toast is not unmounted */}
                   <Dialog.Overlay>
                     <Dialog.Content title="Get started">
-                      <AccountDialogContent
+                      <CreateAccountDialogContent
                         defaultContent={accountContentType.NEW_USER}
                         setToastOpen={setToastOpen}
                         setToastState={setToastState}
