@@ -127,21 +127,21 @@ function Message() {
   );
   if (mode === "verifyEmail" && pageLoading === false) {
     messageContent = (
-      <VerifyWrapper>
-        <VerifyContent>
+      <MessageWrapper>
+        <MessageContent>
           <TextWrapper>
-            <VerifyTitle>{success ? "Verified" : "Error"}</VerifyTitle>
-            <VerifyMessage>
+            <MessageTitle>{success ? "Verified" : "Error"}</MessageTitle>
+            <MessageDescription>
               {success
                 ? "Your email account has been successfully verified"
                 : "We were unable to verify your email, please try again or contact support"}
-            </VerifyMessage>
+            </MessageDescription>
           </TextWrapper>
           <Pill to="/dashboard/account" theme="light" angle>
             Return to account page
           </Pill>
-        </VerifyContent>
-      </VerifyWrapper>
+        </MessageContent>
+      </MessageWrapper>
     );
   } else if (mode === "resetPassword") {
     messageContent = (
@@ -227,9 +227,22 @@ function Message() {
       </Wrapper>
     );
   } else {
-    <Wrapper>
-      <Content>Something went wrong</Content>
-    </Wrapper>;
+    messageContent = (
+      <MessageWrapper>
+        <MessageContent>
+          <TextWrapper>
+            <MessageTitle>Unknown Error</MessageTitle>
+            <MessageDescription>
+              There is a problem with the page you are trying to access, please
+              try again
+            </MessageDescription>
+          </TextWrapper>
+          <Pill to="/dashboard/account" theme="light" angle>
+            Return to account page
+          </Pill>
+        </MessageContent>
+      </MessageWrapper>
+    );
   }
 
   return (
@@ -279,7 +292,7 @@ const SubmitLoaderWrapper = styled.div`
   gap: 16px;
 `;
 
-const VerifyWrapper = styled.div`
+const MessageWrapper = styled.div`
   height: 100%;
   padding: 0 48px;
   display: grid;
@@ -287,7 +300,7 @@ const VerifyWrapper = styled.div`
   justify-content: center;
 `;
 
-const VerifyContent = styled.div`
+const MessageContent = styled.div`
   grid-row: 2;
   display: grid;
   justify-items: start;
@@ -301,20 +314,20 @@ const TextWrapper = styled.div`
   gap: 16px;
 `;
 
-const VerifyTitle = styled.div`
+const MessageTitle = styled.div`
   display: grid;
   font-size: clamp(${16 / 16}rem, 8vw + 1rem, ${32 / 16}rem);
   letter-spacing: 0.05em;
-  color: var(--color-yellow-9);
+  color: var(--text-primary-bg-dark);
   text-transform: uppercase;
 `;
 
-const VerifyMessage = styled.div`
+const MessageDescription = styled.div`
   display: grid;
-  font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${24 / 16}rem);
-  color: var(--color-white);
+  font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${18 / 16}rem);
+  color: var(--text-secondary-bg-dark);
   letter-spacing: 0.05em;
-  line-height: var(--content-line-height);
+  line-height: var(--header-line-height);
 `;
 
 const FireWrapper = styled.div`

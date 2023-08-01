@@ -104,9 +104,12 @@ const GlobalStyles = createGlobalStyle`
     --color-gray-10: hsl(${COLORS.gray[10]});
 
     --text-primary: var(--color-gray-2);
-    --text-secondary: var(--color-gray-4);
+    --text-secondary: var(--color-gray-4);    
+    --text-primary-bg-dark: var(--color-gray-10);
+    --text-secondary-bg-dark: var(--color-gray-8);
     --text-accent-primary: var(--color-gray-6);
     --text-accent-secondary: var(--color-gray-8);
+
 
     --content-line-height: 1.75;
     --header-line-height: 1.25;

@@ -366,7 +366,7 @@ const Hero = styled.section`
 
 const Heading = styled.h1`
   text-transform: uppercase;
-  color: var(--color-gray-10);
+  color: var(--text-primary-bg-dark);
   font-size: clamp(${18 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
   font-weight: normal;
   line-height: var(--header-line-height);
@@ -377,7 +377,7 @@ const Heading = styled.h1`
 `;
 
 const Subheading = styled.h2`
-  color: var(--color-gray-8);
+  color: var(--text-secondary-bg-dark);
   font-size: clamp(${18 / 16}rem, 0.5vw + 1rem, ${32 / 16}rem);
   font-weight: normal;
   line-height: var(--content-line-height);
@@ -619,7 +619,7 @@ const Contact = styled.div`
 `;
 
 const MessageText = styled.p`
-  color: var(--color-gray-10);
+  color: var(--text-primary-bg-dark);
   font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
   letter-spacing: 0.05em;
   text-transform: uppercase;
