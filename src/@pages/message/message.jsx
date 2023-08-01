@@ -50,8 +50,10 @@ function Message() {
     async function handleVerifyEmail() {
       try {
         await applyActionCode(auth, code);
-        setUser((prevUser) => ({ ...prevUser, current: user.current }));
-        user.current.reload();
+        if (user.current) {
+          setUser((prevUser) => ({ ...prevUser, current: user.current }));
+          user.current.reload();
+        }
         setSuccess(true);
         setPageLoading(false);
       } catch (error) {
@@ -85,7 +87,6 @@ function Message() {
       setToastOpen(true);
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
       setToastOpen(true);
       return error;
@@ -113,7 +114,6 @@ function Message() {
       setToastOpen(true);
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
       setToastOpen(true);
       return error;
@@ -137,9 +137,15 @@ function Message() {
                 : "We were unable to verify your email, please try again or contact support"}
             </MessageDescription>
           </TextWrapper>
-          <Pill to="/dashboard/account" theme="light" angle>
-            Return to account page
-          </Pill>
+          {user.current ? (
+            <Pill to="/dashboard/account" theme="light" angle>
+              Return to account
+            </Pill>
+          ) : (
+            <Pill to="/" theme="light" angle>
+              Return to home
+            </Pill>
+          )}
         </MessageContent>
       </MessageWrapper>
     );

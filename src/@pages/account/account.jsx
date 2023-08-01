@@ -7,6 +7,7 @@ import {
   FiX,
   FiCheck,
   FiRotateCw,
+  FiAlertTriangle,
 } from "react-icons/fi";
 import isEmail from "validator/lib/isEmail";
 import isStrongPassword from "validator/lib/isStrongPassword";
@@ -39,6 +40,43 @@ const inputErrors = {
   email: `Must be a valid email`,
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
   confirmPassword: `Must match new password above`,
+};
+
+const toastStates = {
+  defaultToastState: { title: "", description: "", icon: null },
+  reauthenticationToastState: {
+    title: "Invalid password",
+    description: "The password given for reauthentication was invalid",
+    icon: <FiX />,
+  },
+  signInErrorToastState: {
+    title: "Sign in failed",
+    description: "Too many sign in attempts",
+    icon: <FiAlertTriangle />,
+  },
+  changeAccountToastState: {
+    title: "Account updated",
+    description: "your account has been successfully updated",
+    icon: <FiCheck />,
+  },
+  changePasswordToastState: {
+    title: "Invalid password",
+    description:
+      "The current password that was entered for authentication was invalid",
+    icon: <FiX />,
+  },
+  recoverPasswordToastState: {
+    title: "Password reset email sent",
+    description:
+      "If an account exists, you will receive a password reset email",
+    icon: <FiMail />,
+  },
+  verifyEmailToastState: {
+    title: "Verification email sent",
+    description:
+      "If an account exists, you will receive an account verification email.",
+    icon: <FiMail />,
+  },
 };
 
 const dialogActions = {
@@ -136,11 +174,9 @@ function Account() {
 
   const [dialogAction, setDialogAction] = React.useState("");
 
-  const [toastState, setToastState] = React.useState({
-    title: "",
-    description: "",
-    icon: null,
-  });
+  const [toastState, setToastState] = React.useState(
+    toastStates.defaultToastState
+  );
   const [toastOpen, setToastOpen] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
@@ -177,13 +213,8 @@ function Account() {
   }
 
   async function handleReauthentication(loginPassword) {
-    let reauthenticationToastState = {
-      title: "Invalid password",
-      description: "The password given for reauthentication was invalid",
-      icon: <FiX />,
-    };
     if (loginPassword === "") {
-      setToastState(reauthenticationToastState);
+      setToastState(toastStates.reauthenticationToastState);
       setToastOpen(true);
       resetState();
       return false;
@@ -200,7 +231,12 @@ function Account() {
     } catch (error) {
       setLoading(false);
       if (error.code === "auth/wrong-password") {
-        setToastState(reauthenticationToastState);
+        setToastState(toastStates.reauthenticationToastState);
+        setToastOpen(true);
+        resetState(true);
+        return false;
+      } else if (error.code === "auth/too-many-requests") {
+        setToastState(toastStates.signInErrorToastState);
         setToastOpen(true);
         resetState(true);
         return false;
@@ -214,11 +250,6 @@ function Account() {
   }
 
   async function handleAccountUpdate() {
-    let changeAccountIntoToastState = {
-      title: "Account updated",
-      description: "your account has been successfully updated",
-      icon: <FiCheck />,
-    };
     try {
       await updateEmail(user.current, accountEmail);
     } catch (error) {
@@ -230,7 +261,7 @@ function Account() {
     try {
       await updateProfile(user.current, { displayName: organizationName });
       setUser((prevUser) => ({ ...prevUser, current: user.current }));
-      setToastState(changeAccountIntoToastState);
+      setToastState(toastStates.changeAccountToastState);
       setToastOpen(true);
     } catch (error) {
       setToastState(Toast.unknownState);
@@ -241,12 +272,6 @@ function Account() {
   }
 
   async function handlePasswordChange() {
-    let changePasswordToastState = {
-      title: "Invalid password",
-      description:
-        "The current password that was entered for authentication was invalid",
-      icon: <FiX />,
-    };
     setLoading(true);
     const credentials = await EmailAuthProvider.credential(
       user.current.email,
@@ -257,21 +282,21 @@ function Account() {
       await updatePassword(user.current, newPassword);
       clearPasswordInputs();
       setLoading(false);
-      changePasswordToastState = {
-        title: "Password changed",
-        description: "You have successfully changed your password",
-        icon: <FiCheck />,
-      };
-      setToastState(changePasswordToastState);
+      setToastState(toastStates.changePasswordToastState);
       setToastOpen(true);
       resetState(true);
     } catch (error) {
       setLoading(false);
       if (error.code === "auth/wrong-password") {
-        setToastState(changePasswordToastState);
+        setToastState(toastStates.changePasswordToastState);
         setToastOpen(true);
         resetState(true);
         return;
+      } else if (error.code === "auth/too-many-requests") {
+        setToastState(toastStates.signInErrorToastState);
+        setToastOpen(true);
+        resetState(true);
+        return false;
       } else {
         setToastState(Toast.unknownState);
         setToastOpen(true);
@@ -282,23 +307,17 @@ function Account() {
   }
 
   async function handleRecoverPassword() {
-    const recoverPasswordToastState = {
-      title: "Password reset email sent",
-      description:
-        "If an account exists, you will receive a password reset email",
-      icon: <FiMail />,
-    };
     setLoading(true);
     try {
       await sendPasswordResetEmail(auth, accountEmail);
-      setToastState(recoverPasswordToastState);
+      setToastState(toastStates.recoverPasswordToastState);
       setTimeout(() => {
         setLoading(false);
         setToastOpen(true);
       }, MINIMUM_LOADING_TIME);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        setToastState(recoverPasswordToastState);
+        setToastState(toastStates.recoverPasswordToastState);
       } else {
         setToastState(Toast.unknownState);
       }
@@ -322,15 +341,9 @@ function Account() {
   }
 
   async function handleVerifyEmail() {
-    const verifyEmailToastState = {
-      title: "Verification email sent",
-      description:
-        "If an account exists, you will receive an account verification email.",
-      icon: <FiMail />,
-    };
     try {
       await sendEmailVerification(user.current);
-      setToastState(verifyEmailToastState);
+      setToastState(toastStates.verifyEmailToastState);
       setToastOpen(true);
       resetState(true);
     } catch (error) {
