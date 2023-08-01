@@ -44,6 +44,12 @@ const inputErrors = {
 
 const toastStates = {
   defaultToastState: { title: "", description: "", icon: null },
+  emailInUseToastState: {
+    title: "Email already in use",
+    description:
+      "There is already an account associated with this email address",
+    icon: <FiAlertTriangle />,
+  },
   reauthenticationToastState: {
     title: "Invalid password",
     description: "The password given for reauthentication was invalid",
@@ -253,10 +259,18 @@ function Account() {
     try {
       await updateEmail(user.current, accountEmail);
     } catch (error) {
-      setToastState(Toast.unknownState);
-      setToastOpen(true);
-      resetState(true);
-      return error;
+      console.log(error.code);
+      if (error.code === "auth/email-already-in-use") {
+        setToastState(toastStates.emailInUseToastState);
+        setToastOpen(true);
+        resetState(true);
+        return error;
+      } else {
+        setToastState(Toast.unknownState);
+        setToastOpen(true);
+        resetState(true);
+        return error;
+      }
     }
     try {
       await updateProfile(user.current, { displayName: organizationName });

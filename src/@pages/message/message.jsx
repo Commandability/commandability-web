@@ -50,11 +50,12 @@ function Message() {
     async function handleVerifyEmail() {
       try {
         await applyActionCode(auth, code);
+        setSuccess(true);
         if (user.current) {
           setUser((prevUser) => ({ ...prevUser, current: user.current }));
           user.current.reload();
         }
-        setSuccess(true);
+
         setPageLoading(false);
       } catch (error) {
         setPageLoading(false);
@@ -63,6 +64,8 @@ function Message() {
     }
     if (mode === "verifyEmail") {
       handleVerifyEmail();
+    } else {
+      setPageLoading(false);
     }
   }, [mode, auth, code, setUser, user, success]);
 
@@ -232,7 +235,7 @@ function Message() {
         </Content>
       </Wrapper>
     );
-  } else {
+  } else if (pageLoading === false) {
     messageContent = (
       <MessageWrapper>
         <MessageContent>
