@@ -10,7 +10,7 @@ import {
 import isEmail from "validator/lib/isEmail";
 
 import { QUERIES } from "@constants";
-import AccountOption from "@components/account/account-option";
+import AccountOption from "@components/account-option";
 import Button from "@components/button";
 import FireLoader from "@components/fire-loader";
 import TextInput from "@components/text-input";

@@ -14,7 +14,7 @@ import {
   deleteUser,
 } from "firebase/auth";
 
-import AccountOption from "@components/account/account-option";
+import AccountOption from "@components/account-option";
 import TextInput from "@components/text-input";
 import Button from "@components/button";
 import { useAuth } from "@context/auth-context";

@@ -20,7 +20,7 @@ import Skip from "@components/skip";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
-} from "@components/account/account-dialog-content";
+} from "@components/account-dialog-content";
 import { ReactComponent as UnstyledFireIcon } from "@assets/icons/fire-icon.svg";
 import { ReactComponent as UnstyledManageIcon } from "@assets/icons/manage-icon.svg";
 import { ReactComponent as UnstyledCustomizeIcon } from "@assets/icons/customize-icon.svg";

@@ -24,7 +24,7 @@ import UnstyledButton from "@components/unstyled-button";
 import * as Dialog from "@components/dialog";
 import AccountDialogContent, {
   accountContentType,
-} from "@components/account/account-dialog-content";
+} from "@components/account-dialog-content";
 import { QUERIES } from "@constants";
 
 function MainNav() {
