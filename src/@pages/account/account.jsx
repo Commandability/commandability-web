@@ -39,7 +39,7 @@ const inputErrors = {
   organizationName: `Must be alphanumeric and contain between 3 and 16 characters`,
   email: `Must be a valid email`,
   password: `Must contain at least ${passwordRequirements.minLength} characters`,
-  confirmPassword: `Must match new password above`,
+  confirmPassword: `Must match new password`,
 };
 
 const toastStates = {
@@ -130,7 +130,7 @@ function SecurityDialog({
               <DialogInputs>
                 <TextInput
                   id="password-input"
-                  label="Current Password"
+                  label="Password"
                   type="password"
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
@@ -210,7 +210,7 @@ function Account() {
   }, [currentPassword, confirmNewPassword, confirmNewPasswordError]);
 
   async function handleAccountRequest(actionHandler, loginPassword) {
-    let reauthenticationStatus = await handleReauthentication(loginPassword);
+    const reauthenticationStatus = await handleReauthentication(loginPassword);
     if (reauthenticationStatus) {
       actionHandler();
     } else {

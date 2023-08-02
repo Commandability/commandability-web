@@ -110,25 +110,28 @@ function Reports() {
 
   const [removeSelectedReportsOpen, setRemoveSelectedReportsOpen] =
     React.useState(false);
-  const [checkedAll, setCheckedAll] = React.useState({
-    status: false,
-    origin: "",
-  });
+  const [checkedAll, setCheckedAll] = React.useState(false);
   const [checkedItems, setCheckedItems] = React.useState([]);
 
   const [removeAllReportsOpen, setRemoveAllReportsOpen] = React.useState(false);
-
-  const isAnyItemChecked = !!checkedItems.length;
 
   const [password, setPassword] = React.useState("");
   const [passwordError, setPasswordError] = React.useState("");
 
   const [isRemovingReports, setIsRemovingReports] = React.useState(false);
 
-  // Stop showing fallback when remove action completes
   React.useEffect(() => {
-    if (isRemovingReports && fetcher.state === "idle" && !errors?.password) {
+    // Stop showing fallback when remove action completes
+    if (isRemovingReports && fetcher.state === "idle") {
       setIsRemovingReports(false);
+
+      // Close dialog if there are no password errors
+      if (typeof errors?.password !== "string") {
+        setRemoveSelectedReportsOpen(false);
+        setRemoveAllReportsOpen(false);
+        setCheckedAll(false);
+        setCheckedItems([]);
+      }
     }
   }, [isRemovingReports, fetcher.state, errors]);
 
@@ -136,6 +139,8 @@ function Reports() {
     if (!errors?.password) setPasswordError("");
     else if (errors.password === "auth/wrong-password")
       setPasswordError("Incorrect password");
+    else if (errors.password === "auth/too-many-requests")
+      setPasswordError("Too many sign in attempts");
     else setPasswordError("Unknown error");
   }, [errors]);
 
@@ -151,11 +156,6 @@ function Reports() {
     if (!s && prevS === SELECT_VALUES.oldest) setKey((prevKey) => !prevKey);
     if (prevS !== SELECT_VALUES.oldest) setPrevS(s);
   }, [s, prevS, setKey, setPrevS]);
-
-  // Ensure checkedAll is unchecked even if a delete is unsuccessful
-  React.useEffect(() => {
-    if (!isAnyItemChecked) setCheckedAll({ status: false, origin: "form" });
-  }, [isAnyItemChecked]);
 
   React.useEffect(() => {
     if (blobsPercent === 100) {
@@ -190,21 +190,13 @@ function Reports() {
     }
   }, [blobs.status, downloadStatus.timeoutId]);
 
-  async function onRemoveSelectedReports() {
-    setRemoveSelectedReportsOpen(false);
+  function onRemoveReports() {
     setIsRemovingReports(true);
-    setCheckedAll({ status: false, origin: "form" });
-    setCheckedItems([]);
   }
 
   function onRemoveReportsClose() {
     setPassword("");
     setPasswordError("");
-  }
-
-  async function onRemoveAllReports() {
-    setRemoveAllReportsOpen(false);
-    setIsRemovingReports(true);
   }
 
   const handleSearchChange = React.useMemo(
@@ -311,7 +303,7 @@ function Reports() {
   const fallbackListHeader = (
     <ListHeader>
       <Group>
-        <Checkbox label="Select all" checked={checkedAll.status} disabled />
+        <Checkbox label="Select all" checked={checkedAll} disabled />
         <Location>Location</Location>
       </Group>
       <span>Timestamp</span>
@@ -437,7 +429,7 @@ function Reports() {
                       value={"prev"}
                       disabled={prevReportsCount === 0}
                       onClick={() => {
-                        setCheckedAll({ status: false, origin: "header" });
+                        setCheckedAll(false);
                         setCheckedItems([]);
                       }}
                       variant="tertiary"
@@ -452,7 +444,7 @@ function Reports() {
                       value={"next"}
                       disabled={reportsDocs.docs.length < reportsPerPage}
                       onClick={() => {
-                        setCheckedAll({ status: false, origin: "header" });
+                        setCheckedAll(false);
                         setCheckedItems([]);
                       }}
                       variant="tertiary"
@@ -498,10 +490,23 @@ function Reports() {
                   <Group>
                     <Checkbox
                       label="Select all"
-                      checked={checkedAll.status}
-                      onCheckedChange={(checked) =>
-                        setCheckedAll({ status: checked, origin: "header" })
-                      }
+                      checked={checkedAll}
+                      onCheckedChange={(checked) => {
+                        setCheckedAll(checked);
+
+                        // Check all items
+                        if (checked) {
+                          [...reportsDocs.docs].forEach((report) =>
+                            setCheckedItems((checkedItems) => [
+                              ...checkedItems,
+                              report.id,
+                            ])
+                          );
+                          // Uncheck all items
+                        } else {
+                          setCheckedItems([]);
+                        }
+                      }}
                     />
                     {checkedItems.length === 0 && !removeSelectedReportsOpen ? (
                       <Location>Location</Location>
@@ -528,7 +533,7 @@ function Reports() {
                           >
                             <fetcher.Form
                               method="post"
-                              onSubmit={onRemoveSelectedReports}
+                              onSubmit={onRemoveReports}
                               style={AlertDialog.contentChildrenStyles}
                             >
                               <TextInput
@@ -595,10 +600,28 @@ function Reports() {
                           reportId={report.id}
                           location={location}
                           startTimestamp={startTimestamp}
-                          checkedAll={checkedAll}
-                          setCheckedAll={setCheckedAll}
-                          setCheckedItems={setCheckedItems}
-                          isAnyItemChecked={isAnyItemChecked}
+                          checkboxProps={{
+                            checked:
+                              // Derive checked from both checkedItems and checkedAll
+                              checkedItems.includes(report.id) || checkedAll,
+                            onCheckedChange: (checked) => {
+                              // Must reflect derived checked value
+                              if (checked) {
+                                setCheckedItems((checkedItems) => [
+                                  ...checkedItems,
+                                  report.id,
+                                ]);
+                              } else {
+                                setCheckedItems((checkedItems) =>
+                                  checkedItems.filter(
+                                    (item) => item !== report.id
+                                  )
+                                );
+                                // Disable checked all when a single person has been unchecked
+                                setCheckedAll(false);
+                              }
+                            },
+                          }}
                         />
                       );
                     })}
@@ -632,8 +655,6 @@ function Reports() {
                 <AlertDialog.Root
                   open={removeAllReportsOpen}
                   onOpenChange={(removeAllReportsOpen) => {
-                    setCheckedAll({ status: false, origin: "form" });
-                    setCheckedItems([]);
                     setRemoveAllReportsOpen(removeAllReportsOpen);
                   }}
                 >
@@ -655,7 +676,7 @@ function Reports() {
                   >
                     <fetcher.Form
                       method="post"
-                      onSubmit={onRemoveAllReports}
+                      onSubmit={onRemoveReports}
                       style={AlertDialog.contentChildrenStyles}
                     >
                       <TextInput

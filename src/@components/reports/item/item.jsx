@@ -8,54 +8,15 @@ function Item({
   reportId,
   location,
   startTimestamp,
-  checkedAll,
-  setCheckedAll,
-  setCheckedItems,
-  isAnyItemChecked,
+  checkboxProps: { checked, onCheckedChange },
   ...props
 }) {
-  const { status, origin } = checkedAll;
-
-  const [checked, setChecked] = React.useState(false);
-
-  React.useEffect(() => {
-    // Check item when checkedAll is checked
-    if (status) {
-      setChecked(true);
-      setCheckedItems((checkedItems) => [...checkedItems, reportId]);
-      // Uncheck item when checkedAll is unchecked, but not when a single person has been unchecked
-    } else if (origin !== "list-item") {
-      setChecked(false);
-      setCheckedItems((checkedItems) =>
-        checkedItems.filter((item) => item !== reportId)
-      );
-    }
-  }, [status, origin, setCheckedItems, reportId]);
-
-  // Ensure the item is unchecked even if a delete is unsuccessful
-  React.useEffect(() => {
-    if (!isAnyItemChecked) setChecked(false);
-  }, [isAnyItemChecked]);
-
   return (
-    <Wrapper data-checked={checked ? "true" : "false"} {...props}>
+    <Wrapper data-checked={checked} {...props}>
       <PositionedCheckbox
         label="Select"
         checked={checked}
-        onCheckedChange={(checked) => {
-          setChecked(checked);
-
-          if (checked) {
-            setCheckedItems((checkedItems) => [...checkedItems, reportId]);
-          } else {
-            setCheckedItems((checkedItems) =>
-              checkedItems.filter((item) => item !== reportId)
-            );
-
-            // Disable checked all when a single person has been unchecked
-            setCheckedAll({ status: false, origin: "list-item" });
-          }
-        }}
+        onCheckedChange={onCheckedChange}
       />
       <Contents>
         <Group>
