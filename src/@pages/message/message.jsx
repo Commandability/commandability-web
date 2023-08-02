@@ -247,7 +247,7 @@ function Message() {
             </MessageDescription>
           </TextWrapper>
           <Pill to="/dashboard/account" theme="light" angle>
-            Return to account page
+            Return to account
           </Pill>
         </MessageContent>
       </MessageWrapper>
@@ -336,7 +336,7 @@ const MessageDescription = styled.div`
   font-size: clamp(${16 / 16}rem, 2vw + 1rem, ${18 / 16}rem);
   color: var(--text-secondary-bg-dark);
   letter-spacing: 0.05em;
-  line-height: var(--header-line-height);
+  line-height: var(--content-line-height);
 `;
 
 const FireWrapper = styled.div`
