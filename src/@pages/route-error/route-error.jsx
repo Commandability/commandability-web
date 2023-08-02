@@ -41,19 +41,18 @@ const Content = styled.div`
   align-content: start;
   gap: 32px;
   --font-size: clamp(${18 / 16}rem, 2vw + 1rem, ${64 / 16}rem);
+  color: var(--text-primary-bg-dark);
 `;
 
 const Code = styled.span`
   font-size: var(--font-size);
   letter-spacing: 0.05em;
-  color: var(--color-yellow-9);
 `;
 
 const Message = styled.span`
   font-size: var(--font-size);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--color-white);
 `;
 
 export default RouteError;

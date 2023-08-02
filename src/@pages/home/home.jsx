@@ -342,10 +342,10 @@ const Wrapper = styled.div`
 `;
 
 const Main = styled.main`
-  height: 85%;
+  height: 84%;
 
   @media ${QUERIES.phoneAndSmaller} {
-    height: 90%;
+    height: 88%;
   }
 `;
 
@@ -356,10 +356,16 @@ const Hero = styled.section`
   justify-content: center;
   align-items: flex-start;
   gap: 48px;
-  padding-left: clamp(24px, 8vw, 160px);
+  padding: 0 8vw;
   padding-right: 24px;
 
-  @media (orientation: landscape) and (max-height: 600px) {
+  @media ${QUERIES.tabletAndSmaller} {
+    padding-left: 48px;
+  }
+
+  @media (orientation: landscape) and (max-height: ${BREAKPOINTS.phone}),
+    ${QUERIES.phoneAndSmaller} {
+    padding-left: 24px;
     gap: 24px;
   }
 `;
@@ -428,7 +434,7 @@ const DownloadsWrapper = styled.div`
 `;
 
 const Download = styled.a`
-  color: var(--color-gray-7);
+  color: var(--text-secondary-bg-dark);
   text-decoration: none;
 
   @media (prefers-reduced-motion: no-preference) {
@@ -635,6 +641,7 @@ const Legal = styled.div`
   flex-wrap: wrap;
   gap: 24px 64px;
   padding: 24px;
+  --color: var(--text-secondary-bg-dark);
 `;
 
 const Copyright = styled.p`
@@ -642,7 +649,7 @@ const Copyright = styled.p`
   align-items: center;
   gap: 8px;
   font-size: ${14 / 16}rem;
-  color: var(--color-gray-7);
+  color: var(--color);
 `;
 
 const Policies = styled.div`
@@ -656,7 +663,7 @@ const Policy = styled(Link)`
 `;
 
 const FooterFireIcon = styled(UnstyledFireIcon)`
-  fill: var(--color-yellow-9);
+  fill: var(--color);
   min-width: 1em;
 `;
 

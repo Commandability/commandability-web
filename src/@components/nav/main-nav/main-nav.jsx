@@ -224,7 +224,8 @@ function MainNav() {
                 <DropdownMenuContent
                   side="bottom"
                   align="end"
-                  alignOffset={-12}
+                  // Match --border-radius
+                  arrowPadding={8}
                 >
                   <DropdownMenuGroup>
                     <DropdownMenuItem asChild>
