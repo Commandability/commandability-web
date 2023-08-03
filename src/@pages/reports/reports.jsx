@@ -442,7 +442,10 @@ function Reports() {
                       type="submit"
                       name="p"
                       value={"next"}
-                      disabled={reportsDocs.docs.length < reportsPerPage}
+                      disabled={
+                        prevReportsCount + reportsDocs.docs.length >=
+                        allReportsCount
+                      }
                       onClick={() => {
                         setCheckedAll(false);
                         setCheckedItems([]);
