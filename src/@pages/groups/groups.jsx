@@ -100,6 +100,7 @@ const GroupPage = styled.ol`
   list-style: none;
   display: grid;
   grid-template: 1fr 1fr / 1fr 1fr 1fr;
+  grid-auto-flow: column;
   gap: 48px;
   place-items: center;
   padding-left: 0;
