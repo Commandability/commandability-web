@@ -102,7 +102,8 @@ const Wrapper = styled.li`
   box-shadow: var(--box-shadow);
   background-color: var(--color-white);
   border-radius: var(--border-radius);
-  padding: 4px;
+  --group-padding: 4px;
+  padding: var(--group-padding);
 
   &:hover {
     background-image: linear-gradient(
@@ -111,13 +112,6 @@ const Wrapper = styled.li`
       var(--color-yellow-5)
     );
   }
-`;
-
-const GroupFallback = styled.div`
-  ${Fallback.html}
-  height: 324px;
-  width: 292px;
-  border-radius: var(--border-radius);
 `;
 
 const Heading = styled.h2`
@@ -160,6 +154,12 @@ const groupButton = css`
     stroke-width: 0.2rem;
     color: var(--color-yellow-3);
   }
+`;
+
+const GroupFallback = styled.div`
+  ${Fallback.html}
+  ${groupButton}
+  margin: calc(var(--group-padding) * -1);
 `;
 
 const EditGroupButton = styled(UnstyledButton)`
