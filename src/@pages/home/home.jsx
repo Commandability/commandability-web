@@ -139,9 +139,6 @@ function Home() {
               )}
             </HeaderPills>
             <DownloadsWrapper>
-              <Download href="https://play.google.com/store/apps/details?id=com.commandability&hl=en_US&gl=US">
-                Download for Android
-              </Download>
               <Download href="https://apps.apple.com/us/app/commandability/id1579180681">
                 Download for iOS
               </Download>
